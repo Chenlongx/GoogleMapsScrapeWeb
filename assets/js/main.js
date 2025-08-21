@@ -122,10 +122,10 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('mobile-nav-toggle').addEventListener('click', this.toggleMobileNav);
             document.getElementById('theme-toggle').addEventListener('click', () => this.toggleTheme());
             document.getElementById('lang-toggle').addEventListener('click', () => this.toggleLang());
-            const contactForm = document.getElementById('contact-form');
-            if (contactForm) {
-                contactForm.addEventListener('submit', this.handleFormSubmit);
-            }
+            // const contactForm = document.getElementById('contact-form');
+            // if (contactForm) {
+            //     contactForm.addEventListener('submit', this.handleFormSubmit);
+            // }
         },
 
         toggleMobileNav() {
@@ -191,35 +191,35 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         },
 
-        async handleFormSubmit(event) {
-            event.preventDefault();
-            const form = event.target;
-            const formData = new FormData(form);
-            const data = Object.fromEntries(formData.entries());
-            const submitButton = form.querySelector('button[type="submit"]');
-            submitButton.disabled = true;
-            submitButton.textContent = 'Sending...';
-            try {
-                const response = await fetch('https://jsonplaceholder.typicode.com/posts', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data),
-                });
-                if (response.ok) {
-                    App.showNotification('Message sent successfully!', 'success');
-                    form.reset();
-                } else {
-                    throw new Error('Network response was not ok.');
-                }
-            } catch (error) {
-                App.showNotification('Failed to send message. Please try again.', 'error');
-                console.error('Form submission error:', error);
-            } finally {
-                submitButton.disabled = false;
-                const originalText = App.state.currentLang === 'zh' ? '发送消息' : 'Send Message';
-                submitButton.textContent = originalText;
-            }
-        },
+        // async handleFormSubmit(event) {
+        //     event.preventDefault();
+        //     const form = event.target;
+        //     const formData = new FormData(form);
+        //     const data = Object.fromEntries(formData.entries());
+        //     const submitButton = form.querySelector('button[type="submit"]');
+        //     submitButton.disabled = true;
+        //     submitButton.textContent = 'Sending...';
+        //     try {
+        //         const response = await fetch('https://jsonplaceholder.typicode.com/posts', {
+        //             method: 'POST',
+        //             headers: { 'Content-Type': 'application/json' },
+        //             body: JSON.stringify(data),
+        //         });
+        //         if (response.ok) {
+        //             App.showNotification('Message sent successfully!', 'success');
+        //             form.reset();
+        //         } else {
+        //             throw new Error('Network response was not ok.');
+        //         }
+        //     } catch (error) {
+        //         App.showNotification('Failed to send message. Please try again.', 'error');
+        //         console.error('Form submission error:', error);
+        //     } finally {
+        //         submitButton.disabled = false;
+        //         const originalText = App.state.currentLang === 'zh' ? '发送消息' : 'Send Message';
+        //         submitButton.textContent = originalText;
+        //     }
+        // },
 
         showNotification(message, type = 'success') {
             const banner = document.getElementById('notification-banner');

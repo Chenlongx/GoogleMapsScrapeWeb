@@ -8,6 +8,11 @@
     <link rel="stylesheet" href="./assets/css/style.css">
     <script src="./assets/js/main.js" defer></script>
 </head>
+<style>
+    .main-footer{
+        margin-top: 5%;
+    }
+</style>
 <body>
     <div id="notification-banner" class="notification-banner" role="alert" aria-live="assertive"></div>
     <header id="main-header" class="main-header"></header>
@@ -43,4 +48,19 @@
 
     <footer id="main-footer" class="main-footer"></footer>
 </body>
+<script>
+    document.getElementById("contact-form").addEventListener("submit", function(event) {
+        event.preventDefault(); // 阻止默认提交
+
+        const name = document.getElementById("name").value;
+        const email = document.getElementById("email").value;
+        const message = document.getElementById("message").value;
+
+        // 拼接 mailto 链接
+        const subject = encodeURIComponent("来自 " + name + " 的联系请求");
+        const body = encodeURIComponent("姓名: " + name + "\n邮箱: " + email + "\n\n消息:\n" + message);
+
+        window.location.href = `mailto:service@summitgearhub.com?subject=${subject}&body=${body}`;
+    });
+</script>
 </html>
