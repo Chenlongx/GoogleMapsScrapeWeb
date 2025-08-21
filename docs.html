@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文档 | GoogleMapsScraper</title>
+    <meta name="description" content="GoogleMapsScraper 官方文档中心。查找有关如何使用 Google Maps Scraper 的详细指南、API 参考和常见问题解答。">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <script src="./assets/js/main.js" defer></script>
+</head>
+<style>
+    .docs-image-container {
+        margin-top: 1.5rem; /* 图片与上方文字的间距 */
+    }
+    .docs-image {
+        max-width: 100%; /* 确保图片响应式，不超过容器宽度 */
+        height: auto;
+        border-radius: 8px; /* 为图片添加圆角 */
+        border: 1px solid var(--border-color); /* 添加细边框 */
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08); /* 添加柔和的阴影 */
+    }
+    html[data-theme="dark"] .docs-image {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+</style>
+
+<body>
+    <div id="notification-banner" class="notification-banner" role="alert" aria-live="assertive"></div>
+    <header id="main-header" class="main-header"></header>
+
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1 data-lang-zh="文档中心" data-lang-en="Documentation Center">文档中心</h1>
+                <p data-lang-zh="在这里找到您需要的所有信息。" data-lang-en="Find all the information you need right here.">
+                    在这里找到您需要的所有信息。</p>
+            </div>
+        </section>
+
+        <div class="container">
+            <div class="docs-layout">
+                <aside class="docs-sidebar">
+                    <nav>
+                        <ul>
+                            <li><a href="#getting-started" class="active" data-lang-zh="入门指南"
+                                    data-lang-en="Getting Started">入门指南</a></li>
+                            <li><a href="#interface" data-lang-zh="界面概览" data-lang-en="Interface Overview">界面概览</a></li>
+                            <li><a href="#scraping" data-lang-zh="执行抓取" data-lang-en="Performing a Scraping">执行抓取</a>
+                            </li>
+                            <li><a href="#api" data-lang-zh="API 使用" data-lang-en="API Usage">API 使用</a></li>
+                        </ul>
+                    </nav>
+                </aside>
+                <article class="docs-content">
+                    <section id="getting-started">
+                        <h2 data-lang-zh="入门指南" data-lang-en="Getting Started">入门指南</h2>
+                        <p data-lang-zh="欢迎使用 GoogleMapsScraper！首次使用，请确保您已经拥有一个有效的账户和订阅。登录后，您将看到我们的主控制面板。"
+                            data-lang-en="Welcome to GoogleMapsScraper! To get started, ensure you have a valid account and subscription. After logging in, you will see our main dashboard.">
+                            欢迎使用 GoogleMapsScraper！首次使用，请确保您已经拥有一个有效的账户。登录后，您将看到我们的主控制面板。</p>
+                        <div class="docs-image-container">
+                            <img src="./assets/img/docs-start.png" alt="入门指南示意图" class="docs-image">
+                        </div>
+                    </section>
+                    <section id="interface">
+                        <h2 data-lang-zh="界面概览" data-lang-en="Interface Overview">界面概览</h2>
+                        <p data-lang-zh="我们的界面主要分为三个部分：任务创建区、任务列表区和账户设置。您可以在任务创建区输入关键词和地点来开始一个新的抓取任务。"
+                            data-lang-en="Our interface is divided into three main parts: the Task Creation area, the Task List area, and Account Settings. You can start a new scraping task by entering keywords and locations in the Task Creation area.">
+                            我们的界面主要分为三个部分：关键词、地区选择和AI功能。您可以在左上角输入框输入关键词和选择一个地点来开始一个新的抓取任务。</p>
+                        <div class="docs-image-container">
+                            <img src="./assets/img/docs-interface.png" alt="界面概览示意图" class="docs-image">
+                        </div>
+                    </section>
+                    <section id="scraping">
+                        <h2 data-lang-zh="开始搜索" data-lang-en="Performing a Scraping">开始搜索</h2>
+                        <p data-lang-zh="输入至少一个关键词和一个地点，然后点击“开始抓取”按钮。任务将进入队列并开始执行。任务状态会实时更新，完成后您可以下载结果。"
+                            data-lang-en="Enter at least one keyword and one location, then click the 'Start Scraping' button. The task will be queued and begin execution. The task status will update in real-time, and you can download the results upon completion.">
+                            输入至少一个关键词和一个地点（选填地区），然后点击“开始搜索”按钮。任务将进入队列并开始执行。任务状态会实时更新，完成后您可以下载结果。</p>
+                        <div class="docs-image-container">
+                            <img src="./assets/img/docs-scraping.png" alt="开始搜索示意图" class="docs-image">
+                        </div>
+                    </section>
+                    <section id="exportresults">
+                        <h2 data-lang-zh="导出结果" data-lang-en="Export Results">导出结果</h2>
+                        <p data-lang-zh="目前，我们仅支持将结果导出为 CSV 格式。" 
+                        data-lang-en="Currently, we only support exporting results in CSV format.">
+                        目前，我们仅支持将结果导出为 CSV 格式。
+                        </p>
+                        <div class="docs-image-container">
+                            <img src="./assets/img/docs-export.png" alt="导出结果示意图" class="docs-image">
+                        </div>
+                    </section>
+                </article>
+            </div>
+        </div>
+    </main>
+
+    <footer id="main-footer" class="main-footer"></footer>
+</body>
+
+</html>

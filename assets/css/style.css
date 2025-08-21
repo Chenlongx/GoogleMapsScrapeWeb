@@ -1,0 +1,585 @@
+/* * LeadScout - Main Stylesheet
+ *
+ * - 响应式: 移动优先
+ * - 可访问性: 焦点可见, 高对比度
+ * - 主题: 支持浅色/深色模式
+ */
+
+/* --- 1. 变量与基础设定 --- */
+:root {
+    --primary-color: #2563eb;
+    --secondary-color: #10b981;
+    --background-color: #ffffff;
+    --surface-color: #f8fafc;
+    --text-primary-color: #0f172a;
+    --text-secondary-color: #64748b;
+    --border-color: #e2e8f0;
+    --focus-ring-color: #60a5fa;
+
+    --font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    --header-height: 60px;
+}
+
+html[data-theme="dark"] {
+    --primary-color: #3b82f6;
+    --secondary-color: #10b981;
+    --background-color: #0f172a;
+    --surface-color: #1e293b;
+    --text-primary-color: #f8fafc;
+    --text-secondary-color: #94a3b8;
+    --border-color: #334155;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-family-base);
+    background-color: var(--background-color);
+    color: var(--text-primary-color);
+    line-height: 1.6;
+    font-size: 16px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* --- 2. 可访问性与通用类 --- */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+:focus-visible {
+    outline: 2px solid var(--focus-ring-color);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+.container {
+    width: 100%;
+    max-width: 85%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+/* --- 3. 头部与导航 --- */
+.main-header {
+    height: var(--header-height);
+    background-color: #f0f0f0; /* 修改这里 */
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.main-header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+}
+
+.logo a {
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: var(--text-primary-color);
+    display: flex;
+    align-items: center;
+}
+.logo svg {
+    width: 32px;
+    height: 32px;
+    margin-right: 0.5rem;
+    fill: var(--primary-color);
+}
+.logo-text {
+    font-size: 1.5rem; /* 设置字体大小 */
+    font-weight: bold; /* 设置字体加粗 */
+    color: #002887; /* 使用主要颜色 */
+    margin-left: 10px; /* 图标和文本之间添加间距 */
+    vertical-align: middle; /* 垂直对齐 */
+}
+.main-nav ul {
+    list-style: none;
+    display: flex;
+    gap: 1.5rem;
+}
+
+.main-nav a {
+    text-decoration: none;
+    color: #333; /* 修改这里 */
+    font-weight: 500;
+    transition: color 0.2s ease;
+    padding: 0.5rem 0;
+    border-bottom: 2px solid transparent;
+}
+
+.main-nav a:hover, .main-nav a.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.theme-toggle, .lang-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-secondary-color);
+    padding: 0.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s, color 0.2s;
+}
+.theme-toggle:hover, .lang-toggle:hover {
+    background-color: var(--background-color);
+    color: var(--text-primary-color);
+}
+.theme-toggle svg, .lang-toggle span {
+    width: 20px;
+    height: 20px;
+}
+.lang-toggle { font-weight: bold; }
+
+.mobile-nav-toggle { display: none; }
+
+/* --- 4. 尾部 --- */
+.main-footer {
+    background-color: var(--surface-color);
+    padding: 3rem 0;
+    border-top: 1px solid var(--border-color);
+    color: var(--text-secondary-color);
+    font-size: 0.9rem;
+}
+
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.footer-about .logo { margin-bottom: 1rem; }
+
+.footer-links h3 {
+    color: var(--text-primary-color);
+    margin-bottom: 1rem;
+    font-size: 1rem;
+}
+.footer-links ul { list-style: none; }
+.footer-links li { margin-bottom: 0.5rem; }
+.footer-links a {
+    text-decoration: none;
+    color: var(--text-secondary-color);
+    transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--primary-color); }
+
+.footer-bottom {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+    text-align: center;
+}
+
+/* --- 5. 按钮与表单 --- */
+.btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+.btn:hover { transform: translateY(-2px); }
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+.btn-primary:hover { background-color: #1d4ed8; }
+
+.btn-secondary {
+    background-color: var(--surface-color);
+    color: var(--text-primary-color);
+    border-color: var(--border-color);
+}
+.btn-secondary:hover { background-color: var(--background-color); }
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+.form-group input, .form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background-color: var(--background-color);
+    color: var(--text-primary-color);
+    font-family: inherit;
+    font-size: 1rem;
+}
+.form-group input:focus, .form-group textarea:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px var(--focus-ring-color);
+}
+
+/* --- 6. 页面特定内容 --- */
+/* 首页 Hero */
+.hero {
+    text-align: center;
+    padding: 5rem 0;
+}
+.hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+.hero .subtitle {
+    font-size: 1.25rem;
+    color: var(--text-secondary-color);
+    max-width: 600px;
+    margin: 0 auto 2rem;
+}
+.hero-actions { display: flex; gap: 1rem; }
+
+/* 特性 */
+.features { padding: 4rem 0; }
+.features h2, .cta-section h2, .page-header h1 { text-align: center; margin-bottom: 2rem; font-size: 2rem; }
+.features-grid { display: grid; gap: 2rem; }
+.feature-card {
+    background-color: var(--surface-color);
+    padding: 2rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+.feature-card h3 { margin-bottom: 0.5rem; }
+
+/* CTA */
+.cta-section { padding: 4rem 0; background-color: var(--surface-color); text-align: center; }
+.cta-section p { margin-bottom: 2rem; }
+
+/* 定价 */
+.pricing-grid { display: grid; gap: 2rem; }
+.pricing-card {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: center;
+    background-color: var(--surface-color);
+    display: flex;
+    flex-direction: column;
+}
+.pricing-card.popular {
+    border-color: var(--primary-color);
+    border-width: 2px;
+    position: relative;
+    transform: scale(1.05);
+}
+.popular-badge {
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--primary-color);
+    color: #fff;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+.pricing-card h2 { font-size: 1.5rem; }
+.price { font-size: 2.5rem; font-weight: bold; margin: 1rem 0; }
+.price-period { font-size: 1rem; font-weight: normal; color: var(--text-secondary-color); }
+.pricing-features { list-style: none; margin: 1.5rem 0; flex-grow: 1; }
+.pricing-features li { margin-bottom: 0.75rem; }
+
+/* 联系表单 */
+.contact-form { max-width: 600px; margin: 0 auto; }
+.page-header { padding: 4rem 0; text-align: center; }
+.page-header p { max-width: 600px; margin: 1rem auto 0; color: var(--text-secondary-color); }
+
+/* 产品页: How it works */
+.how-it-works { padding: 4rem 0; background-color: var(--surface-color); }
+.how-it-works h2 { text-align: center; margin-bottom: 3rem; font-size: 2rem; }
+.steps-container { 
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+}
+.step { text-align: center; }
+.step-number {
+    width: 50px;
+    height: 50px;
+    background-color: var(--primary-color);
+    color: #fff;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+.step h3 { margin-bottom: 0.5rem; }
+
+/* 文档页 */
+.docs-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 2rem 0;
+}
+.docs-sidebar {
+    width: 100%;
+}
+.docs-sidebar nav ul {
+    list-style: none;
+    position: sticky;
+    top: calc(var(--header-height) + 2rem);
+}
+.docs-sidebar nav a {
+    display: block;
+    padding: 0.75rem 1rem;
+    text-decoration: none;
+    color: var(--text-secondary-color);
+    border-left: 2px solid var(--border-color);
+    transition: all 0.2s ease;
+}
+.docs-sidebar nav a:hover {
+    color: var(--text-primary-color);
+    background-color: var(--surface-color);
+}
+.docs-sidebar nav a.active {
+    color: var(--primary-color);
+    border-left-color: var(--primary-color);
+    font-weight: 600;
+}
+.docs-content section {
+    margin-bottom: 3rem;
+    scroll-margin-top: calc(var(--header-height) + 1rem);
+}
+.docs-content h2 {
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* 代码块 */
+.code-block {
+    background-color: var(--surface-color);
+    padding: 1rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+    font-size: 0.9rem;
+    border: 1px solid var(--border-color);
+}
+
+/* FAQ 页 */
+.faq-section { 
+    padding-bottom: 4rem;
+    /* 修正: --background -> --background-color */
+    background: var(--background-color); 
+}
+.faq-section h1 {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  /* 修正: --text -> --text-primary-color */
+  color: var(--text-primary-color);
+}
+.faq-accordion { 
+    max-width: 800px;
+    margin: 0 auto;
+}
+.faq-item {
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 0;
+}
+.faq-question button {
+    all: unset;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    padding: 0.5rem 0;
+    transition: color 0.2s ease;
+}
+.faq-question button:hover {
+  color: var(--primary);
+}
+
+.faq-question button::after {
+    content: '+';
+    font-size: 1.5rem;
+    color: var(--text-secondary-color);
+    transition: transform 0.2s ease;
+}
+.faq-question button[aria-expanded="true"]::after {
+    content: '−';
+    transform: rotate(180deg);
+}
+.faq-answer {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: all 0.3s ease;
+  padding-left: 0.5rem;
+}
+h2.faq-question:has(button[aria-expanded="true"]) + .faq-answer {
+  max-height: 300px; /* 确保这个高度足够容纳最长的答案 */
+  opacity: 1;
+  padding-top: 0.5rem;
+}
+
+.faq-answer p {
+  margin: 0;
+  color: var(--text-light);
+  line-height: 1.6;
+  font-size: 1rem;
+}
+/* 法律文本页 */
+.legal-content {
+    padding: 4rem 0;
+    max-width: 800px;
+    margin: 0 auto;
+}
+.legal-content h1 { margin-bottom: 1rem; }
+.legal-content p { margin-bottom: 1rem; color: var(--text-secondary-color); }
+.legal-content h2 { margin-top: 2.5rem; margin-bottom: 1rem; }
+.legal-content a { color: var(--primary-color); }
+
+/* --- 7. 通知横幅 --- */
+.notification-banner {
+    padding: 1rem;
+    text-align: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 200;
+    transform: translateY(-100%);
+    transition: transform 0.3s ease-in-out;
+    font-weight: 500;
+}
+.notification-banner.show {
+    transform: translateY(0);
+}
+.notification-banner.success {
+    background-color: var(--secondary-color);
+    color: #fff;
+}
+.notification-banner.error {
+    background-color: #ef4444;
+    color: #fff;
+}
+
+
+/* --- 8. 响应式设计 (移动优先) --- */
+
+/* 移动端样式 (360px+) - 这是基础 */
+@media (max-width: 767px) {
+    .main-nav {
+        display: none;
+        position: absolute;
+        top: var(--header-height);
+        left: 0;
+        right: 0;
+        background-color: var(--surface-color);
+        border-bottom: 1px solid var(--border-color);
+    }
+    .main-nav.active { display: block; }
+    .main-nav ul {
+        flex-direction: column;
+        padding: 1rem;
+        gap: 0;
+    }
+    .main-nav li { width: 100%; }
+    .main-nav a {
+        display: block;
+        padding: 1rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+     .main-nav a.active, .main-nav a:hover {
+        border-bottom: 1px solid var(--border-color);
+        background-color: var(--background-color);
+     }
+
+    .mobile-nav-toggle {
+        display: block;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0.5rem;
+    }
+    .mobile-nav-toggle .icon-bar {
+        display: block;
+        width: 22px;
+        height: 2px;
+        background-color: var(--text-primary-color);
+        border-radius: 1px;
+        transition: transform 0.2s, opacity 0.2s;
+    }
+    .mobile-nav-toggle .icon-bar + .icon-bar { margin-top: 4px; }
+
+    /* 打开菜单时的汉堡图标动画 */
+    .mobile-nav-toggle[aria-expanded="true"] .icon-bar:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+    .mobile-nav-toggle[aria-expanded="true"] .icon-bar:nth-child(2) { opacity: 0; }
+    .mobile-nav-toggle[aria-expanded="true"] .icon-bar:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+    .footer-content { flex-direction: column; }
+}
+
+/* 平板端样式 */
+@media (min-width: 768px) {
+    .features-grid { grid-template-columns: repeat(2, 1fr); }
+    .pricing-grid { grid-template-columns: repeat(2, 1fr); }
+    .steps-container { flex-direction: row; }
+    .docs-layout { flex-direction: row; gap: 3rem; }
+    .docs-sidebar { flex: 0 0 220px; } /* 固定宽度 */
+    .docs-content { flex: 1; }
+}
+
+/* 桌面端样式 */
+@media (min-width: 1024px) {
+    .features-grid { grid-template-columns: repeat(3, 1fr); }
+    .pricing-grid { grid-template-columns: repeat(3, 1fr); }
+    .pricing-card.popular { margin-top: -1rem; margin-bottom: -1rem; }
+    .hero h1 { font-size: 3.5rem; }
+}

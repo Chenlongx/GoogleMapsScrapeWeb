@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>首页 | GoogleMapsScraper - 领先的自动化拓客工具</title>
+    <meta name="description" content="GoogleMapsScraper 提供强大的 Google Maps Scraper 工具，帮助您自动化地发现潜在客户，高效拓展业务。">
+    <link rel="canonical" href="https://example.com/index.html">
+
+    <link rel="stylesheet" href="./assets/css/style.css">
+    
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    
+    <script src="./assets/js/main.js" defer></script>
+
+    <style>
+        /* --- 全局悬浮动效 --- */
+        .card-hover-effect {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover-effect:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+        html[data-theme="dark"] .card-hover-effect:hover {
+            box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+        }
+
+        .logo-text {
+            font-size: 1.5rem; /* 设置字体大小 */
+            font-weight: bold; /* 设置字体加粗 */
+            color: #002887; /* 使用主要颜色 */
+            margin-left: 10px; /* 图标和文本之间添加间距 */
+            vertical-align: middle; /* 垂直对齐 */
+        }
+
+        /* --- 新 Hero 区域 --- */
+        .hero-new {
+            position: relative;
+            padding: 7rem 0;
+            color: #ffffff;
+            background-image: url('https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .hero-new::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(15, 23, 42, 0.7);
+            z-index: 1;
+        }
+        .hero-new .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 3rem;
+        }
+        .hero-text h1 {
+            font-size: 3.5rem;
+            line-height: 1.2;
+        }
+        .hero-text .subtitle {
+            font-size: 1.25rem;
+            color: #e2e8f0;
+            margin: 1.5rem 0;
+        }
+        .hero-actions { display: flex; gap: 1rem; }
+        
+        /* --- 修改开始: 调整了磨砂玻璃容器和新增了GIF样式 --- */
+        .hero-visual {
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            padding: 0; /* 移除内边距，让GIF填满 */
+            overflow: hidden; /* 确保内部图片的圆角生效 */
+        }
+        .hero-gif {
+            width: 100%;
+            height: auto;
+            display: block; /* 消除图片底部的微小空隙 */
+        }
+        /* --- 修改结束 --- */
+
+        /* --- 为何选择我们 (新功能区) --- */
+        .why-us-section {
+            padding: 5rem 0;
+            background-color: var(--surface-color);
+        }
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .section-header h2 { font-size: 2.25rem; }
+        .section-header .section-subtitle {
+            max-width: 600px;
+            margin: 0.5rem auto 0;
+            color: var(--text-secondary-color);
+            font-size: 1.1rem;
+        }
+        .new-features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        .new-feature-card {
+            background-color: var(--background-color);
+            padding: 2.5rem 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+        .icon-wrapper {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+        .new-feature-card h3 { font-size: 1.25rem; margin-bottom: 0.5rem; }
+        .new-feature-card p { color: var(--text-secondary-color); }
+
+        /* --- 客户评价 --- */
+        .testimonials-section { 
+            padding: 5rem 0; 
+        }
+        .testimonials-grid { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 2rem; 
+        }
+        .testimonial-card {
+            background-color: var(--surface-color);
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+        .testimonial-card blockquote { 
+            margin: 0 0 1rem; 
+            font-style: italic; 
+            color: var(--text-secondary-color); 
+            border-left: 3px solid var(--primary-color); 
+            padding-left: 1rem; 
+        }
+        .testimonial-author { 
+            font-weight: bold; 
+        }
+        .how-it-works .steps-container {
+            position: relative;
+        }
+        /* --- How It Works 板块图片样式 --- */
+        .step-card {
+            background-color: var(--background-color);
+            border: 1px solid var(--border-color);
+            padding: 2.5rem 2rem;
+            border-radius: 12px;
+            position: relative;
+            text-align: center;
+        }
+
+        .step-image {
+            width: 80px; /* 设置图片宽度 */
+            height: 80px; /* 设置图片高度 */
+            margin-bottom: 1rem; /* 图片和文字之间的间距 */
+        }
+
+        .step-image img {
+            width: 100%; /* 让图片填充容器 */
+            height: 100%;
+            object-fit: contain; /* 保持图片比例 */
+        }
+
+        .step-icon-wrapper {
+            width: 70px;
+            height: 70px;
+            background-color: var(--primary-color);
+            color: #fff;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+        /* whatsapp按钮 */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+        }
+
+        .whatsapp-float img {
+            width: 40px;
+            height: 40px;
+        }
+        @media screen and (max-width: 600px) {
+            .whatsapp-float {
+            bottom: 15px;
+            right: 15px;
+            width: 50px;
+            height: 50px;
+            }
+        }
+        /* --- 响应式调整 --- */
+        @media (max-width: 1023px) {
+            .hero-grid { grid-template-columns: 1fr; text-align: center; }
+            .hero-actions { justify-content: center; }
+            .hero-visual { margin-top: 3rem; }
+            .new-features-grid, .testimonials-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 767px) {
+            .hero-new { padding: 4rem 0; }
+            .hero-text h1 { font-size: 2.5rem; }
+            .why-us-section, .testimonials-section { padding: 3rem 0; }
+            .new-features-grid, .testimonials-grid { grid-template-columns: 1fr; }
+        }
+        @media (min-width: 768px) {
+            .step-card:not(:last-child)::after {
+                content: '';
+                position: absolute;
+                top: 55px; /* 调整箭头垂直位置 */
+                right: -40px; /* 调整箭头水平位置 */
+                width: 32px;
+                height: 32px;
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='%2364748b' class='w-6 h-6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3' /%3E%3C/svg%3E%0A");
+                background-size: contain;
+                background-repeat: no-repeat;
+                opacity: 0.5;
+            }
+             /* 暗黑模式下的箭头颜色 */
+            html[data-theme="dark"] .step-card:not(:last-child)::after {
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='%2394a3b8' class='w-6 h-6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3' /%3E%3C/svg%3E%0A");
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="notification-banner" class="notification-banner" role="alert" aria-live="assertive"></div>
+    
+    <header id="main-header" class="main-header"></header>
+
+    <main>
+        <section class="hero-new">
+            <div class="container">
+                <div class="hero-grid">
+                    <div class="hero-text">
+                        <h1 data-lang-zh="洞察商机，增长无限" data-lang-en="Unlock Insights, Ignite Growth">洞察商机，增长无限</h1>
+                        <p class="subtitle" data-lang-zh="利用我们的自动化数据工具，将全球公开商业信息转化为您触手可及的增长机会。" data-lang-en="Turn public business data from around the globe into actionable growth opportunities at your fingertips.">利用我们的自动化数据工具，将全球公开商业信息转化为您触手可及的增长机会。</p>
+                        <div class="hero-actions">
+                            <a href="./pricing.html" class="btn btn-primary" data-lang-zh="立即开始" data-lang-en="Get Started">立即开始</a>
+                            <a href="./docs.html" class="btn btn-secondary" data-lang-zh="查看文档" data-lang-en="View Docs">查看文档</a>
+                        </div>
+                    </div>
+                    <div class="hero-visual">
+                        <img src="./assets/img/home-background.png" alt="GoogleMapsScraper自动化工作流程演示" class="hero-gif">
+                        </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="why-us-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 data-lang-zh="您的智能增长引擎" data-lang-en="Your Intelligent Growth Engine">您的智能增长引擎</h2>
+                    <p class="section-subtitle" data-lang-zh="我们提供强大、易用且可靠的工具，助您在竞争中脱颖而出。" data-lang-en="We provide powerful, easy-to-use, and reliable tools to help you stand out from the competition.">我们提供强大、易用且可靠的工具，助您在竞争中脱颖而出。</p>
+                </div>
+                <div class="new-features-grid">
+                    <div class="new-feature-card card-hover-effect">
+                        <div class="icon-wrapper"><i class='bx bx-target-lock'></i></div>
+                        <h3 data-lang-zh="精准数据抓取" data-lang-en="Precise Data Scraping">精准数据抓取</h3>
+                        <p data-lang-zh="提取商家全方位信息，包括名称、地址、电话、网站和最新评价。" data-lang-en="Extract comprehensive business info: name, address, phone, website, and recent reviews."></p>
+                    </div>
+                    <div class="new-feature-card card-hover-effect">
+                        <div class="icon-wrapper"><i class='bx bx-infinite'></i></div>
+                        <h3 data-lang-zh="无限关键词" data-lang-en="Unlimited Keywords">无限关键词</h3>
+                        <p data-lang-zh="支持任意关键词和地点组合搜索，覆盖全球范围，不受任何限制。" data-lang-en="Search with any combination of keywords and locations, covering the entire globe without limits."></p>
+                    </div>
+                    <div class="new-feature-card card-hover-effect">
+                        <div class="icon-wrapper"><i class='bx bxs-file-export'></i></div>
+                        <h3 data-lang-zh="一键导出数据" data-lang-en="One-Click Data Export">一键导出数据</h3>
+                        <p data-lang-zh="轻松将数据导出为 CSV 或 Excel 格式，无缝对接到您的工作流。" data-lang-en="Easily export scraped data to CSV or Excel, seamlessly integrating with your workflow."></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="how-it-works">
+            <div class="container">
+                <div class="section-header">
+                    <h2 data-lang-zh="三步即可上手" data-lang-en="Get Started in Three Steps">三步即可上手</h2>
+                </div>
+                <div class="steps-container">
+                    <div class="step step-card card-hover-effect">
+                        <div class="step-icon-wrapper"><i class='bx bx-search-alt'></i></div>
+                        <h3 data-lang-zh="定义目标" data-lang-en="Define Target">定义目标</h3>
+                        <p data-lang-zh="输入您想搜索的关键词和城市，例如“纽约 律师”。" data-lang-en="Enter your target keywords and city, like 'Lawyers in New York'."></p>
+                    </div>
+                    <div class="step step-card card-hover-effect">
+                        <div class="step-icon-wrapper"><i class='bx bx-bot'></i></div>
+                        <h3 data-lang-zh="开始抓取" data-lang-en="Start Scraping">开始抓取</h3>
+                        <p data-lang-zh="我们的工具会自动开始工作，为您搜集成百上千条潜在客户信息。" data-lang-en="Our tool works automatically to gather hundreds or thousands of leads for you."></p>
+                    </div>
+                    <div class="step step-card card-hover-effect">
+                        <div class="step-icon-wrapper"><i class='bx bxs-download'></i></div>
+                        <h3 data-lang-zh="导出数据" data-lang-en="Export Data">导出数据</h3>
+                        <p data-lang-zh="将所有数据一键导出为表格，用于您的市场营销活动。" data-lang-en="Export all data with one click for your marketing campaigns."></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="testimonials-section">
+            <div class="container">
+                 <div class="section-header">
+                    <h2 data-lang-zh="听听我们的客户怎么说" data-lang-en="What Our Customers Say">听听我们的客户怎么说</h2>
+                </div>
+                <div class="testimonials-grid">
+                    <div class="testimonial-card card-hover-effect">
+                        <blockquote><p data-lang-zh="“这款工具彻底改变了我们的拓客方式。在短短一周内，我们获得的有效潜在客户比之前一个月还多。”" data-lang-en="This tool completely changed our lead generation process. We got more qualified leads in a week than we did in the previous month.">这款工具彻底改变了我们的拓客方式。在短短一周内，我们获得的有效潜在客户比之前一个月还多。</p></blockquote>
+                        <p class="testimonial-author" data-lang-zh="—— 李明, 市场总监" data-lang-en="— John Doe, Marketing Director">—— 李明, 市场总监</p>
+                    </div>
+                    <div class="testimonial-card card-hover-effect">
+                        <blockquote><p data-lang-zh="“界面非常直观，几乎没有学习成本。数据的准确性也非常高，为我们节省了大量手动核对的时间。”" data-lang-en="The interface is incredibly intuitive, with almost no learning curve. The data accuracy is also very high, saving us tons of time.">界面非常直观，几乎没有学习成本。数据的准确性也非常高，为我们节省了大量手动核对的时间。</p></blockquote>
+                        <p class="testimonial-author" data-lang-zh="—— Sarah Lee, 创业公司创始人" data-lang-en="— Sarah Lee, Startup Founder">—— Sarah Lee, 创业公司创始人</p>
+                    </div>
+                    <div class="testimonial-card card-hover-effect">
+                        <blockquote><p data-lang-zh="“性价比极高。相比其他昂贵的解决方案，GoogleMapsScraper 提供了我们需要的一切功能，而且价格更合理。”" data-lang-en="Excellent value for money. Compared to other expensive solutions, GoogleMapsScraper provides everything we need at a more reasonable price.">性价比极高。相比其他昂贵的解决方案，GoogleMapsScraper 提供了我们需要的一切功能，而且价格更合理。</p></blockquote>
+                        <p class="testimonial-author" data-lang-zh="—— 王强, 销售经理" data-lang-en="— Mike Chen, Sales Manager">—— 王强, 销售经理</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <div class="container">
+                <h2 data-lang-zh="准备好提升您的业务了吗？" data-lang-en="Ready to Elevate Your Business?">准备好提升您的业务了吗？</h2>
+                <p data-lang-zh="立即开始使用 GoogleMapsScraper，将繁琐的拓客工作自动化。" data-lang-en="Start using GoogleMapsScraper today and automate the tedious work of lead generation."></p>
+                <a href="./pricing.html" class="btn btn-primary" data-lang-zh="选择您的计划" data-lang-en="Choose Your Plan">选择您的计划</a>
+            </div>
+        </section>
+        <a href="https://wa.me/8619189026051" class="whatsapp-float" target="_blank" rel="noopener noreferrer">
+            <img src="assets\img\whatsapp.png" alt="WhatsApp" width="60" height="60">
+        </a>
+    </main>
+
+    <footer id="main-footer" class="main-footer"></footer>
+</body>
+</html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>下载 | GoogleMapsScraper</title>
+    <meta name="description" content="下载最新版本的 GoogleMapsScraper 桌面应用，支持 Windows 和 macOS。">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="./assets/js/main.js" defer></script>
+</head>
+<style>
+    /* --- 9. 下载页面样式 --- */
+    .download-section {
+        padding: 4rem 0;
+    }
+
+    .download-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    @media (min-width: 768px) {
+        .download-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    .download-card {
+        background-color: var(--surface-color);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 2.5rem 2rem;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .download-icon {
+        font-size: 4rem;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+    }
+
+    .download-card h2 {
+        font-size: 1.75rem;
+        color: var(--text-primary-color);
+    }
+
+    .version-info {
+        color: var(--text-secondary-color);
+        font-size: 0.9rem;
+        margin: 0.25rem 0 1.5rem;
+    }
+
+    .download-card .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        width: 100%;
+        justify-content: center;
+        max-width: 280px;
+        /* 限制按钮最大宽度 */
+        font-size: 1.1rem;
+        padding: 0.8rem 1.5rem;
+    }
+    
+    /* ===== 新增的禁用按钮样式 开始 ===== */
+    .download-card .btn.disabled {
+        background-color: #94a3b8; /* 灰色背景 */
+        background-image: none; /* 移除渐变 */
+        cursor: not-allowed; /* 鼠标样式变为不可用 */
+        transform: none; /* 移除悬浮效果 */
+    }
+    html[data-theme="dark"] .download-card .btn.disabled {
+        background-color: #475569;
+    }
+    /* ===== 新增的禁用按钮样式 结束 ===== */
+
+
+    .os-info {
+        margin-top: 1.5rem;
+        font-size: 0.85rem;
+        color: var(--text-secondary-color);
+    }
+
+    .release-notes {
+        text-align: center;
+        margin-top: 4rem;
+        padding-top: 2rem;
+        border-top: 1px solid var(--border-color);
+    }
+</style>
+
+<body>
+    <div id="notification-banner" class="notification-banner" role="alert" aria-live="assertive"></div>
+    <header id="main-header" class="main-header"></header>
+
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1 data-lang-zh="下载 GoogleMapsScraper" data-lang-en="Download GoogleMapsScraper">下载 GoogleMapsScraper
+                </h1>
+                <p data-lang-zh="获取适用于您操作系统的最新版本。" data-lang-en="Get the latest version for your operating system.">
+                    获取适用于您操作系统的最新版本。</p>
+            </div>
+        </section>
+
+        <section class="download-section">
+            <div class="container">
+                <div class="download-grid">
+                    <div class="download-card" id="windows-card">
+                        <i class='bx bxl-windows download-icon'></i>
+                        <h2 data-lang-zh="Windows 版本" data-lang-en="Windows Version">Windows 版本</h2>
+                        <p class="version-info" data-lang-zh="正在获取最新版本..." data-lang-en="Fetching latest version...">
+                            正在获取最新版本...</p>
+                        <a href="#" class="btn btn-primary" download>
+                            <i class='bx bxs-download'></i>
+                            <span data-lang-zh="下载 .zip" data-lang-en="Download .zip">下载 .zip</span>
+                        </a>
+                        <p class="os-info" data-lang-zh="需要 Windows 7/10 或更高版本"
+                            data-lang-en="Requires Windows 10 or newer">需要 Windows 7/10 或更高版本</p>
+                    </div>
+
+                    <div class="download-card" id="macos-card">
+                        <i class='bx bxl-apple download-icon'></i>
+                        <h2 data-lang-zh="macOS 版本" data-lang-en="macOS Version">macOS 版本</h2>
+                        <p class="version-info" data-lang-zh="正在获取最新版本..." data-lang-en="Fetching latest version...">
+                            正在获取最新版本...</p>
+                        <a href="#" class="btn btn-primary" download>
+                            <i class='bx bxs-download'></i>
+                            <span data-lang-zh="下载 .zip" data-lang-en="Download .zip">下载 .zip</span>
+                        </a>
+                        <p class="os-info" data-lang-zh="需要 macOS 11 (Big Sur) 或更高版本"
+                            data-lang-en="Requires macOS 11 (Big Sur) or newer">需要 macOS 11 (Big Sur) 或更高版本</p>
+                    </div>
+                </div>
+
+                <div class="release-notes">
+                    <h3 data-lang-zh="发行说明" data-lang-en="Release Notes">发行说明</h3>
+                    <p data-lang-zh="查看我们的 <a href='https://github.com/Chenlongx/gogole_maps/releases' target='_blank'>更新日志</a> 来了解每个版本的详细改动。"
+                        data-lang-en="Check our <a href='https://github.com/Chenlongx/gogole_maps/releases' target='_blank'>changelog</a> for detailed changes in each version.">
+                        查看我们的 <a href='https://github.com/Chenlongx/gogole_maps/releases' target='_blank'>更新日志</a> 来了解每个版本的详细改动。</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer id="main-footer" class="main-footer"></footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const GITHUB_USERNAME = 'Chenlongx';
+            const GITHUB_REPO_NAME = 'gogole_maps';
+            const apiUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO_NAME}/releases/latest`;
+
+            // --- 1. 修改 macOS 卡片的静态内容和行为 ---
+            const macosCard = document.getElementById('macos-card');
+            if (macosCard) {
+                const macosVersionInfo = macosCard.querySelector('.version-info');
+                const macosDownloadBtn = macosCard.querySelector('.btn');
+                const macosBtnSpan = macosDownloadBtn.querySelector('span');
+
+                // 更新文本内容
+                macosVersionInfo.textContent = '敬请期待';
+                macosVersionInfo.setAttribute('data-lang-zh', '敬请期待');
+                macosVersionInfo.setAttribute('data-lang-en', 'Coming Soon');
+
+                macosBtnSpan.textContent = '暂未支持';
+                macosBtnSpan.setAttribute('data-lang-zh', '暂未支持');
+                macosBtnSpan.setAttribute('data-lang-en', 'Not Supported');
+
+                // 添加禁用样式并阻止链接跳转
+                macosDownloadBtn.classList.add('disabled');
+                macosDownloadBtn.href = '#';
+                macosDownloadBtn.removeAttribute('download');
+
+                // 添加点击提示事件
+                macosDownloadBtn.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    if (window.App && typeof window.App.showNotification === 'function') {
+                        // 使用您网站已有的通知系统
+                        App.showNotification('macOS 版本即将推出，敬请期待！', 'success');
+                    } else {
+                        // 如果通知系统不可用，则使用原生提示框
+                        alert('macOS 版本即将推出，敬请期待！');
+                    }
+                });
+            }
+
+            // --- 2. 继续执行 Windows 卡片的动态更新 ---
+            const windowsCard = document.getElementById('windows-card');
+            if (windowsCard) {
+                const windowsVersionInfo = windowsCard.querySelector('.version-info');
+                const windowsDownloadBtn = windowsCard.querySelector('.btn');
+                
+                fetch(apiUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.tag_name) throw new Error('No release found');
+
+                        const version = data.tag_name;
+                        const publishedDate = new Date(data.published_at).toLocaleDateString();
+                        const versionTextZh = `版本 ${version.replace('v', '')} | ${publishedDate}`;
+                        const versionTextEn = `Version ${version.replace('v', '')} | ${publishedDate}`;
+                        
+                        // 寻找 Windows 的文件或通用的 zip 文件
+                        const asset = data.assets.find(asset => asset.name.toLowerCase().includes('win') || asset.name.endsWith('.exe') || asset.name.endsWith('.zip'));
+
+                        if (asset) {
+                            windowsVersionInfo.textContent = versionTextZh;
+                            windowsVersionInfo.setAttribute('data-lang-zh', versionTextZh);
+                            windowsVersionInfo.setAttribute('data-lang-en', versionTextEn);
+                            windowsDownloadBtn.href = asset.browser_download_url;
+                        } else {
+                            throw new Error('No suitable download asset found for Windows.');
+                        }
+                        
+                        if (window.App && typeof window.App.applyLang === 'function') {
+                            setTimeout(() => window.App.applyLang(), 0);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching latest release:', error);
+                        const errorTextZh = '获取失败, 请前往GitHub查看';
+                        const errorTextEn = 'Failed to fetch, please check GitHub';
+                        windowsVersionInfo.textContent = errorTextZh;
+                        windowsVersionInfo.setAttribute('data-lang-zh', errorTextZh);
+                        windowsVersionInfo.setAttribute('data-lang-en', errorTextEn);
+                    });
+            }
+        });
+    </script>
+    </body>
+
+</html>

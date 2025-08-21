@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>产品: Google Maps Scraper | LeadScout</title>
+    <meta name="description" content="深入了解 LeadScout 的 Google Maps Scraper 工具。探索其强大的数据抓取功能、简单的操作流程和多样化的应用场景。">
+    <link rel="canonical" href="https://example.com/product.html">
+
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="./assets/js/main.js" defer></script>
+
+    <style>
+        /* --- 新版 Hero 区域 --- */
+        .product-hero {
+            padding: 5rem 0;
+            background-color: var(--surface-color);
+        }
+        .product-hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 4rem;
+        }
+        .product-hero-text h1 {
+            font-size: 3rem;
+            line-height: 1.2;
+        }
+        .product-hero-text p.subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary-color);
+            margin: 1.5rem 0;
+        }
+        .product-hero-visual img {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+        html[data-theme="dark"] .product-hero-visual img {
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+        }
+
+        /* --- 新版功能卡片 --- */
+        .product-feature-card {
+            background-color: var(--background-color);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            text-align: left;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .product-feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+        }
+        .p-icon-wrapper {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        /* --- 新版 How It Works --- */
+        .how-it-works-reimagined {
+            padding: 5rem 0;
+        }
+        .step-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 4rem;
+            margin-bottom: 5rem;
+        }
+        .step-row:nth-child(even) .step-text-content {
+            order: 2;
+        }
+        .step-visual-content img {
+            width: 100%;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+        .step-label {
+            display: block;
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .step-text-content h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        .step-text-content p {
+            color: var(--text-secondary-color);
+        }
+
+        /* --- 新增数据字段/应用场景板块 --- */
+        .extra-info-section {
+            padding: 5rem 0;
+            background-color: var(--surface-color);
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        .info-item {
+            background: var(--background-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .info-item .bx {
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+        }
+        .use-case-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+        .tag {
+            background-color: var(--background-color);
+            color: var(--text-secondary-color);
+            padding: 0.5rem 1.25rem;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            font-weight: 500;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 991px) {
+            .product-hero-grid, .step-row {
+                grid-template-columns: 1fr;
+            }
+            .product-hero-visual {
+                margin-top: 3rem;
+            }
+            .step-row:nth-child(even) .step-text-content {
+                order: 0;
+            }
+            .step-visual-content {
+                margin-top: 2rem;
+            }
+        }
+    </style>
+    </head>
+
+<body>
+    <div id="notification-banner" class="notification-banner" role="alert" aria-live="assertive"></div>
+    <header id="main-header" class="main-header"></header>
+
+    <main>
+        <section class="product-hero">
+            <div class="container">
+                <div class="product-hero-grid">
+                    <div class="product-hero-text">
+                        <h1 data-lang-zh="您的智能拓客引擎" data-lang-en="Your Intelligent Lead Generation Engine">您的智能拓客引擎</h1>
+                        <p class="subtitle" data-lang-zh="告别繁琐的手动搜索。利用我们的自动化工具，从全球最大的地图数据中，精准、高效地为您挖掘最有价值的商业线索。" data-lang-en="Say goodbye to tedious manual searches. Leverage our automated tool to accurately and efficiently unearth the most valuable business leads from the world's largest map database.">告别繁琐的手动搜索。利用我们的自动化工具，从全球最大的地图数据中，精准、高效地为您挖掘最有价值的商业线索。</p>
+                        <a href="./pricing.html" class="btn btn-primary" data-lang-zh="立即开始免费试用" data-lang-en="Start Your Free Trial">立即开始免费试用</a>
+                    </div>
+                    <div class="product-hero-visual">
+                        <img src="assets\img\home-background.png" alt="Google Maps Scraper 软件界面">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="product-details" style="padding: 5rem 0;">
+            <div class="container">
+                <div class="section-header" style="margin-bottom: 3rem;">
+                    <h2 data-lang-zh="专为增长而设计" data-lang-en="Designed for Growth">专为增长而设计</h2>
+                </div>
+                <div class="features-grid">
+                    <div class="product-feature-card">
+                        <div class="p-icon-wrapper"><i class='bx bx-time-five'></i></div>
+                        <h3 data-lang-zh="节省90%的时间" data-lang-en="Save 90% of Your Time">节省90%的时间</h3>
+                        <p data-lang-zh="将数周的手动搜索工作缩短为几分钟的自动化任务，让您专注于业务本身。" data-lang-en="Reduce weeks of manual searching to a few minutes of automated tasks, letting you focus on your business."></p>
+                    </div>
+                    <div class="product-feature-card">
+                        <div class="p-icon-wrapper"><i class='bx bx-data'></i></div>
+                        <h3 data-lang-zh="超过20个数据字段" data-lang-en="Over 20+ Data Fields">超过20个数据字段</h3>
+                        <p data-lang-zh="获取全面、深入的商业信息，包括最难找到的邮箱和社交媒体链接。" data-lang-en="Access comprehensive and in-depth business information, including hard-to-find emails and social media links."></p>
+                    </div>
+                    <div class="product-feature-card">
+                        <div class="p-icon-wrapper"><i class='bx bx-mouse'></i></div>
+                        <h3 data-lang-zh="一键轻松操作" data-lang-en="One-Click Simplicity">一键轻松操作</h3>
+                        <p data-lang-zh="无需任何编程知识。直观的界面设计，让任何人都能轻松上手，立即产出结果。" data-lang-en="No programming knowledge required. An intuitive interface designed for anyone to get started and see results immediately."></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="how-it-works-reimagined">
+            <div class="container">
+                <div class="section-header" style="margin-bottom: 5rem;">
+                    <h2 data-lang-zh="工作流程，一目了然" data-lang-en="Your Workflow, Simplified">工作流程，一目了然</h2>
+                </div>
+                <div class="step-row">
+                    <div class="step-text-content">
+                        <span class="step-label" data-lang-zh="步骤 01" data-lang-en="STEP 01">步骤 01</span>
+                        <h3 data-lang-zh="定义您的理想客户" data-lang-en="Define Your Ideal Customer">定义您的理想客户</h3>
+                        <p data-lang-zh="只需输入您想触达的行业关键词（如“律师事务所”）和目标城市或地区（如“伦敦”），精准锁定您的目标市场。" data-lang-en="Simply enter the industry keywords you want to target (e.g., 'Law Firms') and the target city or region (e.g., 'London') to precisely lock onto your target market."></p>
+                    </div>
+                    <div class="step-visual-content">
+                        <img src="./assets/img/step-1.png" alt="输入关键词和地点">
+                    </div>
+                </div>
+                <div class="step-row">
+                    <div class="step-text-content">
+                        <span class="step-label" data-lang-zh="步骤 02" data-lang-en="STEP 02">步骤 02</span>
+                        <h3 data-lang-zh="启动自动化引擎" data-lang-en="Launch the Automation Engine">启动自动化引擎</h3>
+                        <p data-lang-zh="点击“开始”按钮，我们的云端服务器将立即开始为您工作，在后台高速、稳定地搜集成百上千条潜在客户数据。" data-lang-en="Click the 'Start' button, and our cloud servers will immediately begin working for you, collecting hundreds or thousands of potential lead data points at high speed and stability in the background."></p>
+                    </div>
+                    <div class="step-visual-content">
+                        <img src="./assets/img/step-2.png" alt="软件正在抓取数据">
+                    </div>
+                </div>
+                <div class="step-row">
+                    <div class="step-text-content">
+                        <span class="step-label" data-lang-zh="步骤 03" data-lang-en="STEP 03">步骤 03</span>
+                        <h3 data-lang-zh="下载并利用您的数据" data-lang-en="Download & Utilize Your Data">下载并利用您的数据</h3>
+                        <p data-lang-zh="任务完成后，一键将所有结构化的数据导出为 CSV 或 Excel 文件。轻松导入到您的CRM系统，开始您的营销活动。" data-lang-en="Once the task is complete, export all the structured data to a CSV or Excel file with a single click. Easily import it into your CRM system and start your marketing campaigns."></p>
+                    </div>
+                    <div class="step-visual-content">
+                        <img src="./assets/img/docs-export.png" alt="导出数据为表格">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="extra-info-section">
+            <div class="container">
+                <div class="section-header" style="margin-bottom: 3rem;">
+                    <h2 data-lang-zh="您将获得的数据" data-lang-en="The Data You'll Get">您将获得的数据</h2>
+                </div>
+                <div class="info-grid">
+                    <div class="info-item"><i class='bx bx-buildings'></i><span data-lang-zh="公司名称" data-lang-en="Company Name">公司名称</span></div>
+                    <div class="info-item"><i class='bx bx-map'></i><span data-lang-zh="详细地址" data-lang-en="Full Address">详细地址</span></div>
+                    <div class="info-item"><i class='bx bx-phone'></i><span data-lang-zh="电话号码" data-lang-en="Phone Number">电话号码</span></div>
+                    <div class="info-item"><i class='bx bx-at'></i><span data-lang-zh="电子邮箱" data-lang-en="Email Address">电子邮箱</span></div>
+                    <div class="info-item"><i class='bx bx-globe'></i><span data-lang-zh="官方网站" data-lang-en="Website">官方网站</span></div>
+                    <div class="info-item"><i class='bx bxl-linkedin-square'></i><span data-lang-zh="社交媒体链接" data-lang-en="Social Media Links">社交媒体链接</span></div>
+                    <div class="info-item"><i class='bx bx-star'></i><span data-lang-zh="平均评分" data-lang-en="Average Rating">平均评分</span></div>
+                    <div class="info-item"><i class='bx bx-message-square-dots'></i><span data-lang-zh="评论数量" data-lang-en="Review Count">评论数量</span></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="extra-info-section" style="background-color: var(--background-color);">
+            <div class="container">
+                <div class="section-header" style="margin-bottom: 3rem;">
+                    <h2 data-lang-zh="为谁而设计？" data-lang-en="Who Is It For?">为谁而设计？</h2>
+                </div>
+                <div class="use-case-tags">
+                    <span class="tag" data-lang-zh="B2B销售团队" data-lang-en="B2B Sales Teams">B2B销售团队</span>
+                    <span class="tag" data-lang-zh="市场营销机构" data-lang-en="Marketing Agencies">市场营销机构</span>
+                    <span class="tag" data-lang-zh="房地产中介" data-lang-en="Real Estate Agents">房地产中介</span>
+                    <span class="tag" data-lang-zh="自由职业者" data-lang-en="Freelancers">自由职业者</span>
+                    <span class="tag" data-lang-zh="活动策划人" data-lang-en="Event Planners">活动策划人</span>
+                    <span class="tag" data-lang-zh="本地服务提供商" data-lang-en="Local Service Providers">本地服务提供商</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <div class="container">
+                <h2 data-lang-zh="准备好获取您的第一批客户线索了吗？" data-lang-en="Ready to Get Your First Batch of Leads?">准备好获取您的第一批客户线索了吗？</h2>
+                <a href="./pricing.html" class="btn btn-primary" data-lang-zh="查看定价计划" data-lang-en="View Pricing Plans">查看定价计划</a>
+            </div>
+        </section>
+
+    </main>
+
+    <footer id="main-footer" class="main-footer"></footer>
+</body>
+
+</html>
