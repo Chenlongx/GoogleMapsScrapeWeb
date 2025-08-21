@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="footer-links">
                             <h3 data-lang-zh="公司" data-lang-en="Company">公司</h3>
                             <ul>
-                                <li><a href="./faq.html" data-lang-zh="关于我们" data-lang-en="About Us">关于我们</a></li>
+                                <li><a href="./about.html" data-lang-zh="关于我们" data-lang-en="About Us">关于我们</a></li>
                                 <li><a href="./contact.html" data-lang-zh="联系我们" data-lang-en="Contact">联系我们</a></li>
                             </ul>
                         </div>

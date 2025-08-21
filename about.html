@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于我们 | LeadScout</title>
+    <meta name="description" content="了解 LeadScout 背后的团队、我们的使命以及我们致力于帮助您成功的价值观。">
+    
+    <link rel="stylesheet" href="./assets/css/style.css">
+    
+    <script src="./assets/js/main.js" defer></script>
+
+    <style>
+        /* --- 我们的故事 Section --- */
+        .about-story-section {
+            padding: 4rem 0;
+            background-color: var(--surface-color);
+        }
+        
+        .story-grid {
+            display: grid;
+            grid-template-columns: 1fr; /* 移动端默认单列 */
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .story-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .story-content h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .story-content p {
+            color: var(--text-secondary-color);
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+        
+        /* --- 团队介绍 Section --- */
+        .team-section {
+            padding: 4rem 0;
+        }
+        
+        .team-section .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .team-section .section-header h2 {
+            font-size: 2rem;
+        }
+        
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr); /* 移动端默认单列 */
+            gap: 2rem;
+        }
+
+        .team-card {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .team-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .team-member-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover; /* 确保图片不变形 */
+            margin: 0 auto 1.5rem;
+            border: 4px solid var(--background-color);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .team-member-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .team-member-role {
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        /* --- 响应式调整 --- */
+        /* 平板及以上设备 */
+        @media (min-width: 768px) {
+            .story-grid {
+                grid-template-columns: 1fr 1fr; /* 两列布局 */
+            }
+            .team-grid {
+                grid-template-columns: repeat(2, 1fr); /* 两列布局 */
+            }
+        }
+
+        /* 桌面设备 */
+        @media (min-width: 1024px) {
+            .team-grid {
+                grid-template-columns: repeat(3, 1fr); /* 三列布局 */
+            }
+        }
+    </style>
+    </head>
+<body>
+    <div id="notification-banner" class="notification-banner" role="alert" aria-live="assertive"></div>
+    
+    <header id="main-header" class="main-header"></header>
+
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1 data-lang-zh="关于我们" data-lang-en="About Us">关于我们</h1>
+                <p data-lang-zh="我们是一支充满激情的团队，致力于通过创新的数据解决方案帮助企业成长。" data-lang-en="We are a passionate team dedicated to helping businesses grow through innovative data solutions.">我们是一支充满激情的团队，致力于通过创新的数据解决方案帮助企业成长。</p>
+            </div>
+        </section>
+
+        <section class="about-story-section">
+            <div class="container">
+                <div class="story-grid">
+                    <div class="story-image">
+                        <img src="https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="团队协作">
+                    </div>
+                    <div class="story-content">
+                        <h2 data-lang-zh="我们的使命" data-lang-en="Our Mission">我们的使命</h2>
+                        <p data-lang-zh="在当今快节奏的商业环境中，获取精准、及时的潜在客户信息是成功的关键。LeadScout 诞生于一个简单的想法：让拓客过程变得自动化、高效且人人可用。我们相信，无论企业规模大小，都应该有能力利用数据驱动决策，轻松连接到他们的理想客户。" data-lang-en="In today's fast-paced business environment, accessing accurate and timely lead information is key to success. LeadScout was born from a simple idea: to make lead generation automated, efficient, and accessible to everyone. We believe that businesses of all sizes should have the power to make data-driven decisions and easily connect with their ideal customers."></p>
+                        <p data-lang-zh="我们的使命是为您提供最强大、最直观的工具，将繁琐的数据搜集工作交给我们，让您能专注于最重要的事情——建立客户关系和拓展业务。" data-lang-en="Our mission is to provide you with the most powerful and intuitive tools, leaving the tedious work of data collection to us, so you can focus on what matters most—building customer relationships and growing your business."></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="team-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 data-lang-zh="认识我们的团队" data-lang-en="Meet Our Team">认识我们的团队</h2>
+                </div>
+                <div class="team-grid">
+                    <div class="team-card">
+                        <img src="./assets/img/陈龙.jpg" alt="团队成员" class="team-member-photo">
+                        <h3 class="team-member-name">陈龙</h3>
+                        <p class="team-member-role" data-lang-zh="创始人 & CEO" data-lang-en="Founder & CEO">创始人 & CEO</p>
+                    </div>
+                    <div class="team-card">
+                         <img src="./assets/img/王丽.jpg" alt="团队成员" class="team-member-photo">
+                        <h3 class="team-member-name">王丽</h3>
+                        <p class="team-member-role" data-lang-zh="首席技术官" data-lang-en="Chief Technology Officer">首席技术官</p>
+                    </div>
+                    <div class="team-card">
+                         <img src="./assets/img/李娜.jpg" alt="团队成员" class="team-member-photo">
+                        <h3 class="team-member-name">李娜</h3>
+                        <p class="team-member-role" data-lang-zh="市场总监" data-lang-en="Marketing Director">市场总监</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <div class="container">
+                <h2 data-lang-zh="准备好加入我们，改变您的拓客方式了吗？" data-lang-en="Ready to join us and change the way you find leads?">准备好加入我们，改变您的拓客方式了吗？</h2>
+                <a href="./pricing.html" class="btn btn-primary" data-lang-zh="查看定价" data-lang-en="View Pricing">查看定价</a>
+            </div>
+        </section>
+
+    </main>
+
+    <footer id="main-footer" class="main-footer"></footer>
+</body>
+</html>
