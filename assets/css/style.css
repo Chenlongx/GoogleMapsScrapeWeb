@@ -514,7 +514,26 @@ h2.faq-question:has(button[aria-expanded="true"]) + .faq-answer {
 /* --- 8. 响应式设计 (移动优先) --- */
 
 /* 移动端样式 (360px+) - 这是基础 */
+/* --- 8. 响应式设计 (移动优先) --- */
+
+/* 移动端样式 (屏幕宽度小于 768px 时生效) */
 @media (max-width: 767px) {
+    .main-header .container{
+        display: block;
+    }
+    /* --- 基础与布局优化 --- */
+    .container {
+        max-width: 95%; /* 增加内容宽度，减少左右留白 */
+    }
+    .section-header h2 {
+        font-size: 1.8rem; /* 统一调整分区标题在手机上的大小 */
+    }
+    /* 减少所有分区的垂直间距，让页面更紧凑 */
+    .why-us-section, .how-it-works, .testimonials-section, .cta-section {
+        padding: 3rem 0;
+    }
+
+    /* --- 头部与移动导航 --- */
     .main-nav {
         display: none;
         position: absolute;
@@ -540,30 +559,52 @@ h2.faq-question:has(button[aria-expanded="true"]) + .faq-answer {
         border-bottom: 1px solid var(--border-color);
         background-color: var(--background-color);
      }
-
-    .mobile-nav-toggle {
-        display: block;
-        background: none;
-        border: none;
-        cursor: pointer;
-        padding: 0.5rem;
-    }
+    .mobile-nav-toggle { display: block; /* ... (汉堡菜单样式保持不变) ... */ }
     .mobile-nav-toggle .icon-bar {
-        display: block;
-        width: 22px;
-        height: 2px;
+        display: block; width: 22px; height: 2px;
         background-color: var(--text-primary-color);
-        border-radius: 1px;
-        transition: transform 0.2s, opacity 0.2s;
+        border-radius: 1px; transition: transform 0.2s, opacity 0.2s;
     }
     .mobile-nav-toggle .icon-bar + .icon-bar { margin-top: 4px; }
-
-    /* 打开菜单时的汉堡图标动画 */
     .mobile-nav-toggle[aria-expanded="true"] .icon-bar:nth-child(1) { transform: translateY(6px) rotate(45deg); }
     .mobile-nav-toggle[aria-expanded="true"] .icon-bar:nth-child(2) { opacity: 0; }
     .mobile-nav-toggle[aria-expanded="true"] .icon-bar:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
 
-    .footer-content { flex-direction: column; }
+    /* --- 顶部 Hero 区域 --- */
+    .hero-new { padding: 4rem 0; }
+    .hero-grid { text-align: center; }
+    .hero-text h1 { font-size: 2.5rem; } /* 调整主标题大小 */
+    .hero-actions {
+        flex-direction: column; /* 按钮垂直堆叠 */
+        align-items: center;
+        gap: 1rem;
+    }
+    .hero-actions .btn {
+        width: 80%;
+        max-width: 280px;
+    }
+
+    /* --- “为何选择我们” & “客户评价”板块 --- */
+    .new-features-grid, .testimonials-grid {
+        grid-template-columns: 1fr; /* 强制单列显示 */
+    }
+
+    /* --- “三步上手”板块 --- */
+    .steps-container {
+        flex-direction: column; /* 确保垂直堆叠 */
+        gap: 2rem;
+    }
+
+    /* --- 尾部 --- */
+    .footer-content {
+        flex-direction: column; /* 垂直堆叠尾部链接 */
+        
+    }
+    .footer-about{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 }
 
 /* 平板端样式 */
