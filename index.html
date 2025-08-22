@@ -288,7 +288,19 @@
             transform: translate(-50%, -50%) scale(1);
         }
 
-
+        .modal-image-large {
+            padding: 1rem; /* 减少内边距，让图片更大 */
+            background-color: transparent; /* 背景设为透明，视觉效果更好 */
+            box-shadow: none; /* 去掉白色背景的阴影 */
+        }
+        
+        .modal-image-large img {
+            max-width: 90vw;  /* 图片最大宽度为屏幕宽度的90% */
+            max-height: 90vh; /* 图片最大高度为屏幕高度的90% */
+            width: auto;      /* 宽度自适应 */
+            height: auto;     /* 高度自适应 */
+            border-radius: 8px; /* 为放大的图片也加上圆角 */
+        }
         /* 移动端响应式调整 */
         @media screen and (max-width: 600px) {
             .floating-contact-container {
@@ -363,8 +375,10 @@
                         </div>
                     </div>
                     <div class="hero-visual">
-                        <img src="./assets/img/home-background.png" alt="GoogleMapsScraper自动化工作流程演示" class="hero-gif">
-                        </div>
+                        <label for="hero-modal-toggle" style="cursor: pointer; display: block;">
+                            <img src="./assets/img/home-background.png" alt="GoogleMapsScraper自动化工作流程演示" class="hero-gif">
+                        </label>
+                    </div>
                 </div>
             </div>
         </section>
@@ -469,6 +483,15 @@
         <div class="modal-content">
             <img src="assets/img/wechat.png" alt="请扫描微信二维码">
             <p data-lang-zh="扫一扫，添加我的微信" data-lang-en="Scan QR code to add me on WeChat">扫一扫，添加我的微信</p>
+        </div>
+    </div>
+    <div class="modal-container">
+        <input type="checkbox" id="hero-modal-toggle" class="modal-toggle">
+        
+        <label for="hero-modal-toggle" class="modal-backdrop"></label>
+
+         <div class="modal-content modal-image-large">
+            <img src="./assets/img/home-background.png" alt="GoogleMapsScraper自动化工作流程演示（放大版）">
         </div>
     </div>
 </body>
