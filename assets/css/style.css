@@ -523,7 +523,14 @@ h2.faq-question:has(button[aria-expanded="true"]) + .faq-answer {
     }
     /* --- 基础与布局优化 --- */
     .container {
-        max-width: 95%; /* 增加内容宽度，减少左右留白 */
+        max-width: 100%; /* 增加内容宽度，减少左右留白 */
+        padding: 0%;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    .header-actions{
+        justify-content: flex-end;
+        margin-right: 10px;
     }
     .section-header h2 {
         font-size: 1.8rem; /* 统一调整分区标题在手机上的大小 */
