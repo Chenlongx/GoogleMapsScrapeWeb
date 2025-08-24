@@ -3,11 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>定价 | GoogleMapsScraper</title>
-    <meta name="description" content="查看 GoogleMapsScraper 的灵活定价计划。选择最适合您业务需求的方案，立即开始自动化拓客之旅。">
+    <title data-lang-zh="定价 | GoogleMapsScraper"
+          data-lang-en="Pricing | GoogleMapsScraper"></title>
+    <meta name="description"
+          data-lang-zh="查看 GoogleMapsScraper 的灵活定价计划。选择最适合您业务需求的方案，立即开始自动化拓客之旅。"
+          data-lang-en="Check out GoogleMapsScraper's flexible pricing plans. Choose the one that best fits your business needs and start your automated lead generation journey today.">
+
     <link rel="stylesheet" href="./assets/css/style.css">
     <script src="./assets/js/main.js" defer></script>
     
+    <!-- JSON-LD 保持原样，无需多语言 -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -36,42 +41,32 @@
       ]
     }
     </script>
+
     <style>
-        /* 为价格区域创建一个包裹容器，方便对齐 */
         .price-wrapper {
             display: flex;
             justify-content: center;
-            align-items: baseline; /* 基线对齐，让 $ 符号和原价对齐 */
-            gap: 0.75rem; /* 在折扣价和原价之间添加一些间距 */
+            align-items: baseline;
+            gap: 0.75rem;
             margin: 1rem 0;
         }
-
-        /* 重新调整 .price 的外边距，因为外层容器已经有了 */
-        .price {
-            margin: 0;
-        }
-
-        /* 原价样式：灰色、小字号、删除线 */
+        .price { margin: 0; }
         .original-price {
             font-size: 1.25rem;
             color: var(--text-secondary-color);
-            text-decoration: line-through; /* 添加删除线 */
+            text-decoration: line-through;
         }
-
-        /* 折扣标签样式 */
         .discount-badge {
-            background-color: var(--secondary-color); /* 使用主题的次要颜色 */
+            background-color: var(--secondary-color);
             color: #fff;
             padding: 0.25rem 0.75rem;
             border-radius: 12px;
             font-size: 0.8rem;
             font-weight: bold;
-            display: inline-block; /* 让标签成为块状元素 */
-            margin-bottom: 1rem; /* 与下方的标题分开 */
+            display: inline-block;
+            margin-bottom: 1rem;
         }
-        .main-footer{
-            margin-top: 10%;
-        }
+        .main-footer { margin-top: 10%; }
     </style>
 </head>
 <body>
@@ -81,55 +76,60 @@
     <main>
         <section class="page-header">
             <div class="container">
-                <h1 data-lang-zh="选择适合您的计划" data-lang-en="Choose the Right Plan for You">选择适合您的计划</h1>
-                <p data-lang-zh="透明、简单的定价，无任何隐藏费用。" data-lang-en="Transparent, simple pricing with no hidden fees.">透明、简单的定价，无任何隐藏费用。</p>
+                <h1 data-lang-zh="选择适合您的计划" data-lang-en="Choose the Right Plan for You"></h1>
+                <p data-lang-zh="透明、简单的定价，无任何隐藏费用。"
+                   data-lang-en="Transparent, simple pricing with no hidden fees."></p>
             </div>
         </section>
 
         <section class="pricing-section">
             <div class="container">
                 <div class="pricing-grid">
+                    <!-- Starter Plan -->
                     <div class="pricing-card">
-                        <span class="discount-badge" data-lang-zh="限时折扣" data-lang-en="Limited Offer">限时折扣</span>
-                        <h2 data-lang-zh="基础版" data-lang-en="Starter">基础版</h2>
+                        <span class="discount-badge" data-lang-zh="限时折扣" data-lang-en="Limited Offer"></span>
+                        <h2 data-lang-zh="基础版" data-lang-en="Starter"></h2>
                         <div class="price-wrapper">
-                            <div class="price">$4<span class="price-period" data-lang-zh="/月" data-lang-en="/mo">/月</span></div>
-                            <del class="original-price">$8/月</del>
+                            <div class="price">$4<span class="price-period" data-lang-zh="/月" data-lang-en="/mo"></span></div>
+                            <del class="original-price" data-lang-zh="$8/月" data-lang-en="$8/mo"></del>
                         </div>
                         <ul class="pricing-features">
-                            <li data-lang-zh="每天限制50次爬取数据" data-lang-en="10,000 records per month">每天限制50次爬取数据</li>
-                            <li data-lang-zh="基础技术支持" data-lang-en="Basic Support">基础技术支持</li>
-                            <li data-lang-zh="CSV 导出" data-lang-en="CSV Export">CSV 导出</li>
+                            <li data-lang-zh="每天限制50次爬取数据" data-lang-en="10,000 records per month"></li>
+                            <li data-lang-zh="基础技术支持" data-lang-en="Basic Support"></li>
+                            <li data-lang-zh="CSV 导出" data-lang-en="CSV Export"></li>
                         </ul>
-                        <a href="#" class="btn btn-secondary" data-lang-zh="开始使用" data-lang-en="Get Started">开始使用</a>
+                        <a href="#" class="btn btn-secondary" data-lang-zh="开始使用" data-lang-en="Get Started"></a>
                     </div>
 
+                    <!-- Business Plan -->
                     <div class="pricing-card popular">
-                        <span class="popular-badge" data-lang-zh="推荐" data-lang-en="Popular">推荐</span>
-                        <span class="discount-badge" data-lang-zh="限时折扣" data-lang-en="Limited Offer">限时折扣</span>
-                        <h2 data-lang-zh="商业版" data-lang-en="Business">商业版</h2>
+                        <span class="popular-badge" data-lang-zh="推荐" data-lang-en="Popular"></span>
+                        <span class="discount-badge" data-lang-zh="限时折扣" data-lang-en="Limited Offer"></span>
+                        <h2 data-lang-zh="商业版" data-lang-en="Business"></h2>
                         <div class="price-wrapper">
-                            <div class="price">$9<span class="price-period" data-lang-zh="/月" data-lang-en="/mo">/月</span></div>
-                            <del class="original-price">$18/月</del>
+                            <div class="price">$9<span class="price-period" data-lang-zh="/月" data-lang-en="/mo"></span></div>
+                            <del class="original-price" data-lang-zh="$18/月" data-lang-en="$18/mo"></del>
                         </div>
                         <ul class="pricing-features">
-                            <li data-lang-zh="无限数据" data-lang-en="Unlimited Records">无限数据</li>
-                            <li data-lang-zh="优先技术支持" data-lang-en="Priority Support">优先技术支持</li>
-                            <li data-lang-zh="CSV & Excel 导出" data-lang-en="CSV & Excel Export">CSV & Excel 导出</li>
-                            <li data-lang-zh="API 访问" data-lang-en="API Access">API 访问</li>
+                            <li data-lang-zh="无限数据" data-lang-en="Unlimited Records"></li>
+                            <li data-lang-zh="优先技术支持" data-lang-en="Priority Support"></li>
+                            <li data-lang-zh="CSV & Excel 导出" data-lang-en="CSV & Excel Export"></li>
+                            <li data-lang-zh="API 访问" data-lang-en="API Access"></li>
                         </ul>
-                        <a href="#" class="btn btn-primary" data-lang-zh="立即选择" data-lang-en="Choose Plan">立即选择</a>
+                        <a href="#" class="btn btn-primary" data-lang-zh="立即选择" data-lang-en="Choose Plan"></a>
                     </div>
 
+                    <!-- Enterprise Plan -->
                     <div class="pricing-card">
-                        <h2 data-lang-zh="企业版" data-lang-en="Enterprise">企业版</h2>
-                        <div class="price" data-lang-zh="定制" data-lang-en="Custom">定制</div>
+                        <h2 data-lang-zh="企业版" data-lang-en="Enterprise"></h2>
+                        <div class="price" data-lang-zh="定制" data-lang-en="Custom"></div>
                         <ul class="pricing-features">
-                            <li data-lang-zh="所有商业版功能" data-lang-en="All Business features">所有商业版功能</li>
-                            <li data-lang-zh="专属客户经理" data-lang-en="Dedicated Account Manager">专属客户经理</li>
-                            <li data-lang-zh="定制化集成" data-lang-en="Custom Integrations">定制化集成</li>
+                            <li data-lang-zh="所有商业版功能" data-lang-en="All Business features"></li>
+                            <li data-lang-zh="专属客户经理" data-lang-en="Dedicated Account Manager"></li>
+                            <li data-lang-zh="定制化集成" data-lang-en="Custom Integrations"></li>
                         </ul>
-                        <a href="./contact.html" class="btn btn-secondary" data-lang-zh="联系我们" data-lang-en="Contact Us">联系我们</a>
+                        <a href="./contact.html" class="btn btn-secondary"
+                           data-lang-zh="联系我们" data-lang-en="Contact Us"></a>
                     </div>
                 </div>
             </div>
