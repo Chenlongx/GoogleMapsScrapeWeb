@@ -7,8 +7,8 @@
     <title data-lang-zh="首页 | GoogleMapsScraper - 领先的自动化拓客工具"
           data-lang-en="Home | GoogleMapsScraper - Advanced Lead Generation Tool"></title>
     <meta name="description"
-          data-lang-zh="GoogleMapsScraper 提供强大的 Google Maps Scraper 工具，帮助您自动化地发现潜在客户，高效拓展业务。"
-          data-lang-en="GoogleMapsScraper offers a powerful Google Maps Scraper tool to help you automate lead discovery and efficiently grow your business.">
+          data-lang-zh="GoogleMapsScraper 提供强大的 Google Maps Scraper 工具，集成智能邮箱发现与AI深度分析，帮助您自动化地发现潜在客户，高效拓展业务。"
+          data-lang-en="GoogleMapsScraper offers a powerful Google Maps Scraper tool with intelligent email discovery and AI analysis to help you automate lead discovery and efficiently grow your business.">
     <link rel="canonical" href="https://example.com/index.html">
 
     <link rel="stylesheet" href="./assets/css/style.css">
@@ -26,14 +26,6 @@
         }
         html[data-theme="dark"] .card-hover-effect:hover {
             box-shadow: 0 15px 30px rgba(0,0,0,0.25);
-        }
-
-        .logo-text {
-            font-size: 1.5rem; /* 设置字体大小 */
-            font-weight: bold; /* 设置字体加粗 */
-            color: #002887; /* 使用主要颜色 */
-            margin-left: 10px; /* 图标和文本之间添加间距 */
-            vertical-align: middle; /* 垂直对齐 */
         }
 
         /* --- 新 Hero 区域 --- */
@@ -78,24 +70,23 @@
         }
         .hero-actions { display: flex; gap: 1rem; }
         
-        /* --- 修改开始: 调整了磨砂玻璃容器和新增了GIF样式 --- */
         .hero-visual {
             background-color: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            padding: 0; /* 移除内边距，让GIF填满 */
-            overflow: hidden; /* 确保内部图片的圆角生效 */
+            padding: 0;
+            overflow: hidden;
+            border-radius: 8px;
         }
         .hero-gif {
             width: 100%;
             height: auto;
-            display: block; /* 消除图片底部的微小空隙 */
+            display: block;
         }
-        /* --- 修改结束 --- */
 
-        /* --- 为何选择我们 (新功能区) --- */
+        /* --- 核心功能区 (原 Why Us) --- */
         .why-us-section {
             padding: 5rem 0;
             background-color: var(--surface-color);
@@ -113,7 +104,7 @@
         }
         .new-features-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
         }
         .new-feature-card {
@@ -130,231 +121,119 @@
         }
         .new-feature-card h3 { font-size: 1.25rem; margin-bottom: 0.5rem; }
         .new-feature-card p { color: var(--text-secondary-color); }
+        
+        /* --- FAQ 区域内部样式 --- */
+        .faq-section {
+            padding: 5rem 0;
+            background-color: var(--background-color);
+        }
+        #faq-accordion {
+            max-width: 800px;
+            margin: 0 auto;
+            border-top: 1px solid var(--border-color);
+        }
+        .faq-item {
+            border-bottom: 1px solid var(--border-color);
+        }
+        .faq-question button {
+            all: unset; /* 重置所有按钮默认样式 */
+            box-sizing: border-box;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0.5rem;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary-color);
+            transition: color 0.2s ease;
+        }
+        .faq-question button:hover {
+            color: var(--primary-color);
+        }
+        .faq-question button::after {
+            content: '+';
+            font-size: 1.8rem;
+            font-weight: 300;
+            color: var(--text-secondary-color);
+            transition: transform 0.3s ease;
+        }
+        .faq-question button[aria-expanded="true"]::after {
+            content: '−';
+            transform: rotate(180deg);
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+        }
+        .faq-answer.open {
+            max-height: 500px; /* 给个足够大的值，保证能展开 */
+            padding: 0 0.5rem 1.5rem;
+        }
+        .faq-answer p {
+            padding: 0 0.5rem 1.5rem;
+            color: var(--text-secondary-color);
+            line-height: 1.7;
+        }
 
         /* --- 客户评价 --- */
         .testimonials-section { 
             padding: 5rem 0; 
-        }
-        .testimonials-grid { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 2rem; 
-        }
-        .testimonial-card {
             background-color: var(--surface-color);
+        }
+        .testimonials-slider {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            /* 添加左右渐变遮罩，效果更佳 */
+            -webkit-mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
+            mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
+        }
+        .testimonials-track {
+            display: flex;
+            width: fit-content; /* 宽度由JS动态计算后的内容撑开 */
+            animation: scroll 40s linear infinite; /* 动画效果 */
+        }
+        .testimonials-slider:hover .testimonials-track {
+            animation-play-state: paused; /* 鼠标悬浮时暂停 */
+        }
+
+        .testimonial-card {
+            width: 350px; /* 固定每个卡片的宽度 */
+            flex-shrink: 0; /* 防止卡片被压缩 */
+            margin: 0 1rem; /* 卡片之间的间距 */
+            background-color: var(--background-color);
             padding: 2rem;
             border-radius: 8px;
             border: 1px solid var(--border-color);
         }
         .testimonial-card blockquote { 
-            margin: 0 0 1rem; 
-            font-style: italic; 
-            color: var(--text-secondary-color); 
-            border-left: 3px solid var(--primary-color); 
-            padding-left: 1rem; 
+            margin: 0 0 1rem; font-style: italic; color: var(--text-secondary-color); 
+            border-left: 3px solid var(--primary-color); padding-left: 1rem; 
         }
-        .testimonial-author { 
-            font-weight: bold; 
-        }
-        .how-it-works .steps-container {
-            position: relative;
-        }
-        /* --- How It Works 板块图片样式 --- */
-        .step-card {
-            background-color: var(--background-color);
-            border: 1px solid var(--border-color);
-            padding: 2.5rem 2rem;
-            border-radius: 12px;
-            position: relative;
-            text-align: center;
-        }
-
-        .step-image {
-            width: 80px; /* 设置图片宽度 */
-            height: 80px; /* 设置图片高度 */
-            margin-bottom: 1rem; /* 图片和文字之间的间距 */
-        }
-
-        .step-image img {
-            width: 100%; /* 让图片填充容器 */
-            height: 100%;
-            object-fit: contain; /* 保持图片比例 */
-        }
-
-        .step-icon-wrapper {
-            width: 70px;
-            height: 70px;
-            background-color: var(--primary-color);
-            color: #fff;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
-        }
-        /* --- 悬浮联系按钮 --- */
-        /* 容器样式：负责定位在右下角 */
-        .floating-contact-container {
-            position: fixed;
-            bottom: 38px;
-            right: 20px;
-            z-index: 1000;
-            display: flex; /* 使用 flex 布局让按钮并排 */
-            flex-direction: column; /* 让按钮垂直排列 */
-            gap: 10px; /* 按钮之间的间距 */
-        }
-
-        /* 通用按钮样式 */
-        .contact-float-btn {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease-in-out;
-        }
-
-        .contact-float-btn:hover {
-            transform: scale(1.1); /* 悬浮放大效果 */
-            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
-        }
-
-        .contact-float-btn img {
-            width: 80px; /* 稍微调整图标大小以适应背景 */
-            height: 65px;
-        }
-
-
-        /* 隐藏作为开关的复选框 */
-        .modal-toggle {
-            display: none;
-        }
-
-        /* 遮罩层：默认隐藏 */
-        .modal-backdrop {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            z-index: 2000;
-            cursor: pointer;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease;
-        }
-
-        /* 弹窗内容：默认隐藏和缩小 */
-        .modal-content {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.9);
-            background-color: #fff;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            z-index: 2001;
-            text-align: center;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .modal-content img {
-            max-width: 250px; /* 控制二维码图片的最大宽度 */
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        .modal-content p {
-            margin-top: 1rem;
-            color: #333;
-            font-weight: 500;
-        }
-
-        /* 核心逻辑：当复选框被选中时，显示遮罩层和弹窗内容 */
-        .modal-toggle:checked + .modal-backdrop,
-        .modal-toggle:checked + .modal-backdrop + .modal-content {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .modal-toggle:checked + .modal-backdrop + .modal-content {
-            transform: translate(-50%, -50%) scale(1);
-        }
-
-        .modal-image-large {
-            padding: 1rem; /* 减少内边距，让图片更大 */
-            background-color: transparent; /* 背景设为透明，视觉效果更好 */
-            box-shadow: none; /* 去掉白色背景的阴影 */
-        }
-        
-        .modal-image-large img {
-            max-width: 90vw;  /* 图片最大宽度为屏幕宽度的90% */
-            max-height: 90vh; /* 图片最大高度为屏幕高度的90% */
-            width: auto;      /* 宽度自适应 */
-            height: auto;     /* 高度自适应 */
-            border-radius: 8px; /* 为放大的图片也加上圆角 */
-        }
-        /* 移动端响应式调整 */
-        @media screen and (max-width: 600px) {
-            .floating-contact-container {
-                bottom: 15px;
-                right: 15px;
+        /* 定义滚动动画 */
+        @keyframes scroll {
+            from {
+                transform: translateX(0);
             }
-            .contact-float-btn {
-                width: 50px;
-                height: 50px;
-            }
-            .contact-float-btn img {
-                width: 28px;
-                height: 28px;
+            to {
+                /* 移动的距离是一个原始轨道长度 */
+                transform: translateX(-50%); 
             }
         }
-        @media screen and (max-width: 600px) {
-            .whatsapp-float {
-            bottom: 15px;
-            right: 15px;
-            width: 50px;
-            height: 50px;
-            }
-        }
+        .testimonial-author { font-weight: bold; }
         /* --- 响应式调整 --- */
         @media (max-width: 1023px) {
             .hero-grid { grid-template-columns: 1fr; text-align: center; }
             .hero-actions { justify-content: center; }
             .hero-visual { margin-top: 3rem; }
-            .new-features-grid, .testimonials-grid { grid-template-columns: repeat(2, 1fr); }
         }
         @media (max-width: 767px) {
             .hero-new { padding: 4rem 0; }
             .hero-text h1 { font-size: 2.5rem; }
-            .why-us-section, .testimonials-section { padding: 3rem 0; }
-            .new-features-grid, .testimonials-grid { grid-template-columns: 1fr; }
-        }
-        @media (min-width: 768px) {
-            .step-card:not(:last-child)::after {
-                content: '';
-                position: absolute;
-                top: 55px; /* 调整箭头垂直位置 */
-                right: -40px; /* 调整箭头水平位置 */
-                width: 32px;
-                height: 32px;
-                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='%2364748b' class='w-6 h-6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3' /%3E%3C/svg%3E%0A");
-                background-size: contain;
-                background-repeat: no-repeat;
-                opacity: 0.5;
-            }
-             /* 暗黑模式下的箭头颜色 */
-            html[data-theme="dark"] .step-card:not(:last-child)::after {
-                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='%2394a3b8' class='w-6 h-6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3' /%3E%3C/svg%3E%0A");
-            }
+            .why-us-section, .testimonials-section, .faq-section { padding: 3rem 0; }
         }
     </style>
 </head>
@@ -364,7 +243,6 @@
     <header id="main-header" class="main-header"></header>
 
     <main>
-        <!-- Hero -->
         <section class="hero-new">
             <div class="container">
                 <div class="hero-grid">
@@ -393,43 +271,50 @@
             </div>
         </section>
 
-        <!-- Why Us -->
         <section class="why-us-section">
             <div class="container">
                 <div class="section-header">
-                    <h2 data-lang-zh="您的智能增长引擎"
-                        data-lang-en="Your Intelligent Growth Engine"></h2>
+                    <h2 data-lang-zh="释放数据的全部潜力"
+                        data-lang-en="Unleash the Full Potential of Data"></h2>
                     <p class="section-subtitle"
-                       data-lang-zh="我们提供强大、易用且可靠的工具，助您在竞争中脱颖而出。"
-                       data-lang-en="We provide powerful, easy-to-use, and reliable tools to help you stand out from the competition."></p>
+                       data-lang-zh="我们提供的不只是数据抓取，更是一套完整的商业智能解决方案，助您在竞争中遥遥领先。"
+                       data-lang-en="We offer more than just data scraping; it's a complete business intelligence solution to keep you ahead of the competition."></p>
                 </div>
                 <div class="new-features-grid">
                     <div class="new-feature-card card-hover-effect">
-                        <div class="icon-wrapper"><i class='bx bx-target-lock'></i></div>
-                        <h3 data-lang-zh="精准数据抓取"
-                            data-lang-en="Precise Data Scraping"></h3>
-                        <p data-lang-zh="提取商家全方位信息，包括名称、地址、电话、网站和最新评价。"
-                           data-lang-en="Extract comprehensive business info: name, address, phone, website, and recent reviews."></p>
+                        <div class="icon-wrapper"><i class='bx bxs-widget'></i></div>
+                        <h3 data-lang-zh="全维度数据提取" data-lang-en="Comprehensive Data Extraction"></h3>
+                        <p data-lang-zh="精准获取名称、地址、电话、网站、类别、营业时间、评分和评价数等10多项商业信息。" data-lang-en="Accurately get 10+ data points including name, address, phone, website, category, hours, rating, and review count."></p>
                     </div>
                     <div class="new-feature-card card-hover-effect">
-                        <div class="icon-wrapper"><i class='bx bx-infinite'></i></div>
-                        <h3 data-lang-zh="无限关键词"
-                            data-lang-en="Unlimited Keywords"></h3>
-                        <p data-lang-zh="支持任意关键词和地点组合搜索，覆盖全球范围，不受任何限制。"
-                           data-lang-en="Search with any combination of keywords and locations, covering the entire globe without limits."></p>
+                        <div class="icon-wrapper"><i class='bx bx-mail-send'></i></div>
+                        <h3 data-lang-zh="智能邮箱发现" data-lang-en="Intelligent Email Discovery"></h3>
+                        <p data-lang-zh="即使商家未公开官网，也能通过搜索引擎智能查找并深度挖掘最相关的联系邮箱。" data-lang-en="Even if a business has no website, our tool intelligently finds and extracts the most relevant contact emails via search engines."></p>
+                    </div>
+                    <div class="new-feature-card card-hover-effect">
+                        <div class="icon-wrapper"><i class='bx bx-brain'></i></div>
+                        <h3 data-lang-zh="AI 深度分析" data-lang-en="AI-Powered Deep Analysis"></h3>
+                        <p data-lang-zh="（高级功能）利用 AI 对目标公司进行深度分析，自动补充更多维度的商业信息和决策洞察。" data-lang-en="(Premium) Leverage AI for deep analysis of target companies, enriching data with more business insights."></p>
+                    </div>
+                    <div class="new-feature-card card-hover-effect">
+                        <div class="icon-wrapper"><i class='bx bx-bot'></i></div>
+                        <h3 data-lang-zh="批量自动化任务" data-lang-en="Batch Automation"></h3>
+                        <p data-lang-zh="支持导入无限关键词列表，结合多地区筛选，实现全天候自动化、无人值守的拓客。" data-lang-en="Import unlimited keyword lists and combine with multi-region filters for 24/7 automated lead generation."></p>
+                    </div>
+                    <div class="new-feature-card card-hover-effect">
+                        <div class="icon-wrapper"><i class='bx bx-globe'></i></div>
+                        <h3 data-lang-zh="全球覆盖与高可靠性" data-lang-en="Global Coverage & Reliability"></h3>
+                        <p data-lang-zh="覆盖全球所有地区，内置防封锁和验证码处理机制，确保长时间稳定运行。" data-lang-en="Covers all global regions with built-in anti-blocking and captcha handling for stable, long-running tasks."></p>
                     </div>
                     <div class="new-feature-card card-hover-effect">
                         <div class="icon-wrapper"><i class='bx bxs-file-export'></i></div>
-                        <h3 data-lang-zh="一键导出数据"
-                            data-lang-en="One-Click Data Export"></h3>
-                        <p data-lang-zh="轻松将数据导出为 CSV 或 Excel 格式，无缝对接到您的工作流。"
-                           data-lang-en="Easily export scraped data to CSV or Excel, seamlessly integrating with your workflow."></p>
+                        <h3 data-lang-zh="一键导出数据" data-lang-en="One-Click Data Export"></h3>
+                        <p data-lang-zh="轻松将所有数据导出为格式精美的 CSV 或 Excel 文件，无缝对接到您的工作流。" data-lang-en="Easily export all data to well-formatted CSV or Excel files, seamlessly integrating with your workflow."></p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- How it works -->
         <section class="how-it-works">
             <div class="container">
                 <div class="section-header">
@@ -439,69 +324,113 @@
                 <div class="steps-container">
                     <div class="step step-card card-hover-effect">
                         <div class="step-icon-wrapper"><i class='bx bx-search-alt'></i></div>
-                        <h3 data-lang-zh="定义目标"
-                            data-lang-en="Define Target"></h3>
-                        <p data-lang-zh="输入您想搜索的关键词和城市，例如“纽约 律师”。"
-                           data-lang-en="Enter your target keywords and city, like 'Lawyers in New York'."></p>
+                        <h3 data-lang-zh="1. 定义目标" data-lang-en="1. Define Target"></h3>
+                        <p data-lang-zh="输入关键词、选择目标国家和城市，精准锁定您的潜在客户群体。" data-lang-en="Enter keywords, select target countries and cities to precisely lock down your potential customer base."></p>
                     </div>
                     <div class="step step-card card-hover-effect">
-                        <div class="step-icon-wrapper"><i class='bx bx-bot'></i></div>
-                        <h3 data-lang-zh="开始抓取"
-                            data-lang-en="Start Scraping"></h3>
-                        <p data-lang-zh="我们的工具会自动开始工作，为您搜集成百上千条潜在客户信息。"
-                           data-lang-en="Our tool works automatically to gather hundreds or thousands of leads for you."></p>
+                        <div class="step-icon-wrapper"><i class='bx bxs-cctv'></i></div>
+                        <h3 data-lang-zh="2. 启动任务" data-lang-en="2. Launch Task"></h3>
+                        <p data-lang-zh="点击“开始”，我们的工具将全自动工作，为您搜集成百上千条高质量潜在客户信息。" data-lang-en="Click 'Start', and our tool will work automatically to gather hundreds of high-quality leads for you."></p>
                     </div>
                     <div class="step step-card card-hover-effect">
                         <div class="step-icon-wrapper"><i class='bx bxs-download'></i></div>
-                        <h3 data-lang-zh="导出数据"
-                            data-lang-en="Export Data"></h3>
-                        <p data-lang-zh="将所有数据一键导出为表格，用于您的市场营销活动。"
-                           data-lang-en="Export all data with one click for your marketing campaigns."></p>
+                        <h3 data-lang-zh="3. 收获数据" data-lang-en="3. Harvest Data"></h3>
+                        <p data-lang-zh="任务完成后，将所有数据一键导出为表格，立即用于您的市场营销活动。" data-lang-en="Once the task is complete, export all data with one click for your marketing campaigns."></p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Testimonials -->
+        <section class="faq-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 data-lang-zh="常见问题解答" data-lang-en="Frequently Asked Questions"></h2>
+                </div>
+                <div id="faq-accordion" class="faq-accordion">
+                    <div class="faq-item">
+                        <h2 class="faq-question">
+                            <button aria-expanded="false" aria-controls="faq-answer-home-1">
+                                <span data-lang-zh="我能获取到哪些具体的数据字段？" data-lang-en="What specific data fields can I get?"></span>
+                            </button>
+                        </h2>
+                        <div id="faq-answer-home-1" class="faq-answer" hidden>
+                            <p data-lang-zh="您可以获取超过10个维度的详细数据，包括：公司名称、详细地址、电话、官方网站、电子邮箱、业务类别、营业时间、Google评分、总评价数以及原始Google Maps链接。" data-lang-en="You can get over 10 fields of detailed data, including: company name, full address, phone number, official website, email, business category, operating hours, Google rating, total number of reviews, and the original Google Maps link."></p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <h2 class="faq-question">
+                            <button aria-expanded="false" aria-controls="faq-answer-home-2">
+                                <span data-lang-zh="如果一个商家没有提供网站，还能找到邮箱吗？" data-lang-en="If a business doesn't have a website, can you still find an email?"></span>
+                            </button>
+                        </h2>
+                        <div id="faq-answer-home-2" class="faq-answer" hidden>
+                            <p data-lang-zh="是的，这是我们的核心优势之一。如果商家没有官网，我们的系统会自动使用其公司名称和地址在搜索引擎中进行智能查找，定位最有可能的官方或社交页面，并从中深度挖掘联系邮箱。" data-lang-en="Yes, this is one of our key strengths. If a business lacks a website, our system automatically uses its name and address to perform an intelligent search, locating the most likely official or social pages and deeply mining for contact emails."></p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <h2 class="faq-question">
+                            <button aria-expanded="false" aria-controls="faq-answer-home-3">
+                                <span data-lang-zh="AI 深度分析功能具体是做什么的？" data-lang-en="What exactly does the AI Deep Analysis feature do?"></span>
+                            </button>
+                        </h2>
+                        <div id="faq-answer-home-3" class="faq-answer" hidden>
+                            <p data-lang-zh="AI 深度分析是我们的高级功能。它会将已抓取的基础数据发送给大型语言模型（如 Gemini），进行二次分析和信息补全。例如，它可以帮助判断公司规模、主营业务的详细描述、寻找社交媒体链接等，为您提供更丰富的商业洞察。" data-lang-en="AI Deep Analysis is our premium feature. It sends the basic scraped data to a large language model (like Gemini) for secondary analysis and enrichment. For example, it can help determine company size, provide detailed descriptions of a business's main activities, find social media links, and offer richer business insights."></p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <h2 class="faq-question">
+                            <button aria-expanded="false" aria-controls="faq-answer-home-4">
+                                <span data-lang-zh="我需要自己准备代理IP吗？" data-lang-en="Do I need to provide my own proxy IPs?"></span>
+                            </button>
+                        </h2>
+                        <div id="faq-answer-home-4" class="faq-answer" hidden>
+                            <p data-lang-zh="不需要。我们的软件内置了先进的防封锁技术和模拟真人行为的浏览器引擎。在大多数情况下您无需任何额外配置。当遇到罕见的人机验证时，软件会智能暂停并提示您手动通过，之后即可恢复任务。" data-lang-en="No. Our software has built-in advanced anti-blocking technology and a human-like browser engine. In most cases, you don't need any extra configuration. If a rare captcha is encountered, the software will intelligently pause and prompt you to solve it manually before resuming the task."></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
         <section class="testimonials-section">
             <div class="container">
                  <div class="section-header">
                     <h2 data-lang-zh="听听我们的客户怎么说"
                         data-lang-en="What Our Customers Say"></h2>
                 </div>
-                <div class="testimonials-grid">
-                    <div class="testimonial-card card-hover-effect">
-                        <blockquote>
-                            <p data-lang-zh="“这款工具彻底改变了我们的拓客方式。在短短一周内，我们获得的有效潜在客户比之前一个月还多。”"
-                               data-lang-en="This tool completely changed our lead generation process. We got more qualified leads in a week than we did in the previous month."></p>
-                        </blockquote>
-                        <p class="testimonial-author"
-                           data-lang-zh="—— 李明, 市场总监"
-                           data-lang-en="— John Doe, Marketing Director"></p>
-                    </div>
-                    <div class="testimonial-card card-hover-effect">
-                        <blockquote>
-                            <p data-lang-zh="“界面非常直观，几乎没有学习成本。数据的准确性也非常高，为我们节省了大量手动核对的时间。”"
-                               data-lang-en="The interface is incredibly intuitive, with almost no learning curve. The data accuracy is also very high, saving us tons of time."></p>
-                        </blockquote>
-                        <p class="testimonial-author"
-                           data-lang-zh="—— Sarah Lee, 创业公司创始人"
-                           data-lang-en="— Sarah Lee, Startup Founder"></p>
-                    </div>
-                    <div class="testimonial-card card-hover-effect">
-                        <blockquote>
-                            <p data-lang-zh="“性价比极高。相比其他昂贵的解决方案，GoogleMapsScraper 提供了我们需要的一切功能，而且价格更合理。”"
-                               data-lang-en="Excellent value for money. Compared to other expensive solutions, GoogleMapsScraper provides everything we need at a more reasonable price."></p>
-                        </blockquote>
-                        <p class="testimonial-author"
-                           data-lang-zh="—— 王强, 销售经理"
-                           data-lang-en="— Mike Chen, Sales Manager"></p>
+                <div class="testimonials-slider">
+                    <div class="testimonials-track" id="testimonials-track">
+                        <div class="testimonial-card card-hover-effect">
+                            <blockquote>
+                                <p data-lang-zh="“这款工具彻底改变了我们的拓客方式。在短短一周内，我们获得的有效潜在客户比之前一个月还多。”"
+                                   data-lang-en="This tool completely changed our lead generation process. We got more qualified leads in a week than we did in the previous month."></p>
+                            </blockquote>
+                            <p class="testimonial-author"
+                               data-lang-zh="—— 李明, 市场总监"
+                               data-lang-en="— John Doe, Marketing Director"></p>
+                        </div>
+                        <div class="testimonial-card card-hover-effect">
+                            <blockquote>
+                                <p data-lang-zh="“界面非常直观，几乎没有学习成本。数据的准确性也非常高，为我们节省了大量手动核对的时间。”"
+                                   data-lang-en="The interface is incredibly intuitive, with almost no learning curve. The data accuracy is also very high, saving us tons of time."></p>
+                            </blockquote>
+                            <p class="testimonial-author"
+                               data-lang-zh="—— Sarah Lee, 创业公司创始人"
+                               data-lang-en="— Sarah Lee, Startup Founder"></p>
+                        </div>
+                        <div class="testimonial-card card-hover-effect">
+                            <blockquote>
+                                <p data-lang-zh="“性价比极高。相比其他昂贵的解决方案，GoogleMapsScraper 提供了我们需要的一切功能，而且价格更合理。”"
+                                   data-lang-en="Excellent value for money. Compared to other expensive solutions, GoogleMapsScraper provides everything we need at a more reasonable price."></p>
+                            </blockquote>
+                            <p class="testimonial-author"
+                               data-lang-zh="—— 王强, 销售经理"
+                               data-lang-en="— Mike Chen, Sales Manager"></p>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- CTA -->
+
         <section class="cta-section">
             <div class="container">
                 <h2 data-lang-zh="准备好提升您的业务了吗？"
@@ -514,39 +443,13 @@
             </div>
         </section>
 
-        <!-- Floating Contact -->
         <div class="floating-contact-container">
-            <label for="wechat-modal-toggle" class="contact-float-btn wechat-float"
-                   id="wechat-contact-btn"
-                   aria-label="查看微信二维码">
-                <img src="assets/img/wechat.png" alt="WeChat">
-            </label>
-            <a href="https://wa.me/8619189026051" class="contact-float-btn"
-               target="_blank" rel="noopener noreferrer"
-               aria-label="联系WhatsApp">
-                <img src="assets/img/whatsapp.png" alt="WhatsApp">
-            </a>
-        </div>
+            </div>
     </main>
 
     <footer id="main-footer" class="main-footer"></footer>
 
-    <!-- Modal -->
     <div class="modal-container">
-        <input type="checkbox" id="wechat-modal-toggle" class="modal-toggle">
-        <label for="wechat-modal-toggle" class="modal-backdrop"></label>
-        <div class="modal-content">
-            <img src="assets/img/wechat.png" alt="请扫描微信二维码">
-            <p data-lang-zh="扫一扫，添加我的微信"
-               data-lang-en="Scan QR code to add me on WeChat"></p>
         </div>
-    </div>
-    <div class="modal-container">
-        <input type="checkbox" id="hero-modal-toggle" class="modal-toggle">
-        <label for="hero-modal-toggle" class="modal-backdrop"></label>
-        <div class="modal-content modal-image-large">
-            <img src="./assets/img/home-background.webp" alt="GoogleMapsScraper自动化工作流程演示（放大版）">
-        </div>
-    </div>
 </body>
 </html>

@@ -15,7 +15,10 @@ document.addEventListener('DOMContentLoaded', () => {
             this.initTheme();
             this.initLang();
             this.setActiveNavLink();
+            
+            // 初始化 FAQ 和客户评价功能
             this.initFaqAccordion();
+            this.initTestimonialCarousel();
         },
 
         state: {
@@ -261,6 +264,17 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     }
                 });
+            });
+        },
+        initTestimonialCarousel() {
+            const track = document.getElementById('testimonials-track');
+            if (!track) return;
+
+            // 复制所有卡片以实现无缝滚动
+            const originalCards = Array.from(track.children);
+            originalCards.forEach(card => {
+                const clone = card.cloneNode(true);
+                track.appendChild(clone);
             });
         }
     };
