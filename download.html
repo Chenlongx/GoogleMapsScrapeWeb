@@ -93,6 +93,16 @@
         padding-top: 2rem;
         border-top: 1px solid var(--border-color);
     }
+    .product-download-group {
+        margin-bottom: 4rem; /* 每个产品组之间的间距 */
+    }
+    .product-download-title {
+        font-size: 2rem;
+        text-align: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--border-color);
+    }
 </style>
 
 <body>
@@ -109,36 +119,68 @@
 
         <section class="download-section">
             <div class="container">
-                <div class="download-grid">
-                    <div class="download-card" id="windows-card">
-                        <i class='bx bxl-windows download-icon'></i>
-                        <h2 data-lang-zh="Windows 版本" data-lang-en="Windows Version"></h2>
-                        <p class="version-info" data-lang-zh="正在获取最新版本..." data-lang-en="Fetching latest version..."></p>
-                        <a href="#" class="btn btn-primary" download>
-                            <i class='bx bxs-download'></i>
-                            <span data-lang-zh="下载 .zip" data-lang-en="Download .zip"></span>
-                        </a>
-                        <p class="os-info" data-lang-zh="需要 Windows 7/10 或更高版本" data-lang-en="Requires Windows 10 or newer"></p>
-                    </div>
 
-                    <div class="download-card" id="macos-card">
-                        <i class='bx bxl-apple download-icon'></i>
-                        <h2 data-lang-zh="macOS 版本" data-lang-en="macOS Version"></h2>
-                        <p class="version-info" data-lang-zh="正在获取最新版本..." data-lang-en="Fetching latest version..."></p>
-                        <a href="#" class="btn btn-primary" download>
-                            <i class='bx bxs-download'></i>
-                            <span data-lang-zh="下载 .zip" data-lang-en="Download .zip"></span>
-                        </a>
-                        <p class="os-info" data-lang-zh="需要 macOS 11 (Big Sur) 或更高版本" data-lang-en="Requires macOS 11 (Big Sur) or newer"></p>
+                <div class="product-download-group">
+                    <h2 class="product-download-title" data-lang-zh="谷歌地图抓取器" data-lang-en="Google Maps Scraper"></h2>
+                    <div class="download-grid">
+                        <div class="download-card" id="gs-windows-card">
+                            <i class='bx bxl-windows download-icon'></i>
+                            <h2 data-lang-zh="Windows 版本" data-lang-en="Windows Version"></h2>
+                            <p class="version-info" data-lang-zh="正在获取最新版本..." data-lang-en="Fetching latest version..."></p>
+                            <a href="#" class="btn btn-primary" download>
+                                <i class='bx bxs-download'></i>
+                                <span data-lang-zh="下载 .zip" data-lang-en="Download .zip"></span>
+                            </a>
+                            <p class="os-info" data-lang-zh="需要 Windows 10 或更高版本" data-lang-en="Requires Windows 10 or newer"></p>
+                        </div>
+
+                        <div class="download-card" id="gs-macos-card">
+                            <i class='bx bxl-apple download-icon'></i>
+                            <h2 data-lang-zh="macOS 版本" data-lang-en="macOS Version"></h2>
+                            <p class="version-info" data-lang-zh="敬请期待" data-lang-en="Coming Soon"></p>
+                            <a href="#" class="btn btn-primary disabled" download>
+                                <i class='bx bxs-download'></i>
+                                <span data-lang-zh="暂未支持" data-lang-en="Not Supported"></span>
+                            </a>
+                            <p class="os-info" data-lang-zh="需要 macOS 11 (Big Sur) 或更高版本" data-lang-en="Requires macOS 11 (Big Sur) or newer"></p>
+                        </div>
                     </div>
                 </div>
+
+                <div class="product-download-group">
+                    <h2 class="product-download-title" data-lang-zh="邮箱批量验证器" data-lang-en="Email Validator"></h2>
+                    <div class="download-grid">
+                        <div class="download-card" id="ev-windows-card">
+                            <i class='bx bxl-windows download-icon'></i>
+                            <h2 data-lang-zh="Windows 版本" data-lang-en="Windows Version"></h2>
+                            <p class="version-info" data-lang-zh="正在获取最新版本..." data-lang-en="Fetching latest version..."></p>
+                            <a href="#" class="btn btn-primary" download>
+                                <i class='bx bxs-download'></i>
+                                <span data-lang-zh="下载 .zip" data-lang-en="Download .zip"></span>
+                            </a>
+                            <p class="os-info" data-lang-zh="需要 Windows 10 或更高版本" data-lang-en="Requires Windows 10 or newer"></p>
+                        </div>
+                        
+                        <div class="download-card" id="ev-macos-card">
+                            <i class='bx bxl-apple download-icon'></i>
+                            <h2 data-lang-zh="macOS 版本" data-lang-en="macOS Version"></h2>
+                            <p class="version-info" data-lang-zh="敬请期待" data-lang-en="Coming Soon"></p>
+                            <a href="#" class="btn btn-primary disabled" download>
+                                <i class='bx bxs-download'></i>
+                                <span data-lang-zh="暂未支持" data-lang-en="Not Supported"></span>
+                            </a>
+                            <p class="os-info" data-lang-zh="需要 macOS 11 (Big Sur) 或更高版本" data-lang-en="Requires macOS 11 (Big Sur) or newer"></p>
+                        </div>
+                    </div>
+                </div>
+
 
                 <div class="release-notes">
                     <h3 data-lang-zh="发行说明" data-lang-en="Release Notes"></h3>
                     <p>
-                        <span data-lang-zh="查看我们的 " data-lang-en="Check our "></span>
-                        <a href='https://github.com/Chenlongx/gogole_maps/releases' target='_blank' data-lang-zh="更新日志" data-lang-en="changelog"></a>
-                        <span data-lang-zh=" 来了解每个版本的详细改动。" data-lang-en=" for detailed changes in each version."></span>
+                        <span data-lang-zh="查看我们在 " data-lang-en="Check our "></span>
+                        <a href='https://github.com/Chenlongx/' target='_blank'>GitHub</a>
+                        <span data-lang-zh=" 上的更新日志，来了解每个版本的详细改动。" data-lang-en=" page for detailed changes in each version."></span>
                     </p>
                 </div>
             </div>
@@ -147,7 +189,7 @@
 
     <footer id="main-footer" class="main-footer"></footer>
     
-    <script>
+    <!-- <script>
         document.addEventListener('DOMContentLoaded', () => {
             const GITHUB_USERNAME = 'Chenlongx';
             const GITHUB_REPO_NAME = 'gogole_maps';
@@ -228,6 +270,99 @@
                         windowsVersionInfo.setAttribute('data-lang-en', errorTextEn);
                     });
             }
+        });
+    </script> -->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const GITHUB_USERNAME = 'Chenlongx';
+
+            /**
+             * 可复用的函数，用于从 GitHub 获取并更新一个产品的发布信息
+             * @param {object} config - 产品配置对象
+             * @param {string} config.repoName - 产品在 GitHub 上的仓库名称
+             * @param {string} config.windowsCardId - Windows 下载卡的 HTML ID
+             * @param {string} config.macosCardId - macOS 下载卡的 HTML ID
+             */
+            function fetchProductRelease(config) {
+                const apiUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${config.repoName}/releases/latest`;
+                
+                // --- 处理 macOS 卡片 (设为 "敬请期待") ---
+                const macosCard = document.getElementById(config.macosCardId);
+                if (macosCard) {
+                    const macosDownloadBtn = macosCard.querySelector('.btn');
+                    macosDownloadBtn.addEventListener('click', (event) => {
+                        event.preventDefault();
+                        const message = macosDownloadBtn.querySelector('span[data-lang-zh]').getAttribute('data-lang-zh') === '暂未支持' 
+                            ? 'macOS 版本即将推出，敬请期待！'
+                            : 'This version is coming soon!';
+                        alert(message);
+                    });
+                }
+
+                // --- 处理 Windows 卡片 (动态获取) ---
+                const windowsCard = document.getElementById(config.windowsCardId);
+                if (!windowsCard) return; // 如果找不到卡片，则退出
+
+                const windowsVersionInfo = windowsCard.querySelector('.version-info');
+                const windowsDownloadBtn = windowsCard.querySelector('.btn');
+                
+                fetch(apiUrl)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`GitHub API error: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (!data.tag_name) throw new Error('No release found');
+
+                        const version = data.tag_name;
+                        const publishedDate = new Date(data.published_at).toLocaleDateString();
+                        const versionText = `版本 ${version.replace('v', '')} | ${publishedDate}`;
+                        
+                        const asset = data.assets.find(asset => asset.name.toLowerCase().includes('win') || asset.name.endsWith('.exe') || asset.name.endsWith('.zip'));
+
+                        if (asset) {
+                            windowsVersionInfo.textContent = versionText;
+                            windowsVersionInfo.setAttribute('data-lang-zh', versionText);
+                            windowsVersionInfo.setAttribute('data-lang-en', `Version ${version.replace('v', '')} | ${publishedDate}`);
+                            windowsDownloadBtn.href = asset.browser_download_url;
+                        } else {
+                            throw new Error('No suitable download asset found for Windows.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error(`Error fetching release for ${config.repoName}:`, error);
+                        const errorText = '获取失败, 请前往GitHub查看';
+                        windowsVersionInfo.textContent = errorText;
+                        windowsVersionInfo.setAttribute('data-lang-zh', errorText);
+                        windowsVersionInfo.setAttribute('data-lang-en', 'Failed to fetch, please check GitHub');
+                    })
+                    .finally(() => {
+                        // 确保在数据加载完成后再应用一次语言切换
+                        if (window.App && typeof window.App.applyLang === 'function') {
+                            setTimeout(() => window.App.applyLang(), 0);
+                        }
+                    });
+            }
+
+            // --- 🚀 为您的每一个产品调用 fetchProductRelease 函数 ---
+
+            // 1. 调用函数来获取“谷歌地图抓取器”的信息
+            fetchProductRelease({
+                repoName: 'gogole_maps', // 这是地图抓取器的仓库名
+                windowsCardId: 'gs-windows-card',
+                macosCardId: 'gs-macos-card'
+            });
+
+            // 2. 调用函数来获取“邮箱批量验证器”的信息
+            fetchProductRelease({
+                // 仓库名称已更新为您的真实仓库名
+                repoName: 'email_validator_repo', 
+                windowsCardId: 'ev-windows-card',
+                macosCardId: 'ev-macos-card'
+            });
         });
     </script>
     </body>
