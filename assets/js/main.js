@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     modalContainer.classList.add('active');
                 });
             }
-            if (modalCloseBtn && modalContainer) {
+            if (modalCloseBtn && modalContainer) { // <-- 将这一整块
                 modalCloseBtn.addEventListener('click', () => {
                     modalContainer.classList.remove('active');
                 });
