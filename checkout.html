@@ -441,12 +441,12 @@
 
                     try {
                         // 注意：我看到您之前的代码中，后端函数名是 payment, 不是 create-payment
-                        // 请确保这里的路径和您的 `netlify/functions` 文件夹中的文件名一致
-                            const response = await fetch(`https://google-maps-backend-master.netlify.app/.netlify/functions/payment/create-payment`, {
+                        // 路径现在是：函数名 + Express基础路径 + 接口路径
+                        const response = await fetch(`https://google-maps-backend-master.netlify.app/.netlify/functions/payment/api/create-payment`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ productId, price, email })
-                        })
+                        });
                         const data = await response.json();
                         if (data.success) {
                             qrcodeContainer.innerHTML = '';
