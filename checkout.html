@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lang-zh="安全支付 | LeadScout" data-lang-en="Secure Checkout | LeadScout"></title>
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="./assets/js/main.js" defer></script>
+<style>
+    /* ===== 页面整体与卡片基础样式 ===== */
+    .checkout-section {
+        padding: 5rem 0; /* 增加上下间距 */
+        background-color: var(--background-color);
+    }
+    .checkout-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 3rem; /* 增加卡片间距 */
+        max-width: 960px; /* 拓宽最大宽度 */
+        margin: 0 auto;
+    }
+    @media (min-width: 768px) {
+        .checkout-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    .product-card {
+        background-color: var(--surface-color);
+        border: 1px solid var(--border-color);
+        border-radius: 16px; /* 更圆润的边角 */
+        padding: 2.5rem; /* 增加内边距 */
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.07); /* 更柔和、更深的阴影 */
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    html[data-theme="dark"] .product-card {
+        box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    }
+    .product-card:hover {
+        transform: translateY(-8px); /* 鼠标悬停时轻微上浮 */
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    }
+
+    .product-card h2 {
+        margin-bottom: 0.75rem;
+        font-size: 2rem; /* 标题大小调整 */
+        color: var(--text-primary-color);
+    }
+    .product-card .plan-description {
+        color: var(--text-secondary-color);
+        margin-bottom: 2rem;
+        min-height: 40px;
+        font-size: 1rem;
+    }
+
+    /* ===== 套餐选择器样式 ===== */
+    .plan-selector {
+        display: flex;
+        background-color: var(--background-color);
+        border-radius: 10px;
+        padding: 0.4rem;
+        border: 1px solid var(--border-color);
+        margin-bottom: 2rem;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.04); /* 内部阴影效果 */
+    }
+    .plan-btn {
+        flex: 1;
+        background: transparent;
+        border: none;
+        padding: 0.7rem 1rem; /* 按钮大小 */
+        border-radius: 8px; /* 更圆润 */
+        font-weight: 600; /* 字体加粗 */
+        font-size: 1rem;
+        cursor: pointer;
+        color: var(--text-secondary-color);
+        transition: all 0.2s ease;
+    }
+    .plan-btn.active {
+        background: var(--primary-color);
+        color: #fff;
+        box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3); /* 突出阴影 */
+    }
+
+    /* ===== 价格与功能列表样式 ===== */
+    .product-price {
+        font-size: 3rem; /* 价格字体加大 */
+        font-weight: 700;
+        color: var(--text-primary-color);
+        margin-bottom: 2rem;
+    }
+    .product-price .price-period {
+        font-size: 1.1rem; /* 周期字体 */
+        font-weight: 500;
+        color: var(--text-secondary-color);
+        margin-left: 0.25rem;
+    }
+    .product-features {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 2rem;
+        text-align: left;
+        color: var(--text-secondary-color);
+        flex-grow: 1;
+        border-top: 1px solid var(--border-color);
+        padding-top: 2rem;
+    }
+    .product-features li {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem; /* 图标与文字间距 */
+        margin-bottom: 1rem; /* 列表项间距 */
+    }
+    .product-features .bx {
+        color: var(--secondary-color); /* 勾选图标颜色 */
+        font-size: 1.25rem;
+    }
+
+    /* ===== 输入框与支付按钮样式 ===== */
+    .product-card label {
+        display: block;
+        text-align: left;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--text-primary-color);
+    }
+    .product-card input {
+        width: 100%;
+        padding: 0.8rem 1rem;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        margin-bottom: 1.5rem;
+        background-color: var(--background-color);
+        color: var(--text-primary-color);
+        box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .product-card input:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2); /* 聚焦光晕 */
+        outline: none;
+    }
+
+    /* 购买按钮将复用 style.css 中的 .btn-primary 样式，无需额外添加 */
+    
+    .secure-payment-badge {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        color: var(--text-secondary-color);
+        font-size: 0.9rem;
+        margin-top: 1.5rem;
+    }
+    .secure-payment-badge .bx {
+        color: var(--secondary-color);
+    }
+
+    /* ===== 信任保障区样式 ===== */
+    .trust-section {
+        padding: 5rem 0;
+        background-color: var(--background-color);
+    }
+    .trust-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 2.5rem;
+    }
+    .trust-card {
+        text-align: center;
+    }
+    .trust-card .bx {
+        font-size: 3.5rem; /* 图标更大 */
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+    }
+     .trust-card h3 {
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+        color: var(--text-primary-color);
+     }
+     .trust-card p {
+        color: var(--text-secondary-color);
+        line-height: 1.6;
+     }
+
+    /* ===== 支付弹窗样式 (微调) ===== */
+    #payment-modal { 
+        backdrop-filter: blur(8px); /* 模糊背景，增加高级感 */
+        -webkit-backdrop-filter: blur(8px);
+    }
+    #payment-box { 
+        background-color: var(--surface-color);
+        padding: 2.5rem;
+        border-radius: 12px; 
+        box-shadow: 0 20px 40px rgba(0,0,0,0.2); 
+    }
+    #payment-box p { 
+        color: var(--text-primary-color); 
+        font-size: 1.1rem;
+    }
+    #payment-status { 
+        color: #f59e0b; /* 使用更温和的黄色作为等待提示 */
+        font-size: 1rem; 
+    }
+</style>
+</head>
+
+<body>
+    <header id="main-header" class="main-header"></header>
+
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1 data-lang-zh="安全支付中心" data-lang-en="Secure Checkout Center"></h1>
+                <p data-lang-zh="我们采用行业领先的加密技术，保障您的每一次支付安全。" data-lang-en="We use industry-leading encryption to secure every payment."></p>
+            </div>
+        </section>
+
+        <section class="checkout-section">
+            <div class="container">
+                <div class="checkout-grid">
+                    <div class="product-card" id="gmaps-card">
+                        <h2 data-lang-zh="谷歌地图抓取器" data-lang-en="Google Maps Scraper"></h2>
+                        <p class="plan-description" data-lang-zh="按月订阅，随时取消" data-lang-en="Monthly subscription, cancel anytime"></p>
+                        
+                        <div class="plan-selector">
+                            <button class="plan-btn" data-price="4.90" data-plan="standard" data-lang-zh="标准版" data-lang-en="Standard"></button>
+                            <button class="plan-btn active" data-price="9.00" data-plan="premium" data-lang-zh="高级版" data-lang-en="Premium"></button>
+                        </div>
+
+                        <div class="product-price">$9<span class="price-period" data-lang-zh="/月" data-lang-en="/mo"></span></div>
+
+                        <ul class="product-features">
+                            </ul>
+
+                        <label for="gmaps_email" data-lang-zh="输入您要开通的账户邮箱" data-lang-en="Enter account email to activate"></label>
+                        <input type="email" id="gmaps_email" placeholder="your-account@example.com" required>
+                        <button class="btn btn-primary" data-product-id="gmaps">立即开通高级版</button>
+                        <div class="secure-payment-badge">
+                            <i class='bx bxs-lock-alt'></i> <span data-lang-zh="支付宝安全支付" data-lang-en="Secure Payment by Alipay"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="product-card" id="validator-card">
+                        <h2 data-lang-zh="邮箱批量验证器" data-lang-en="Email Validator"></h2>
+                        <p class="plan-description" data-lang-zh="一次性付费，永久使用" data-lang-en="One-time payment, lifetime use"></p>
+
+                        <div class="plan-selector">
+                            <button class="plan-btn" data-price="29.00" data-plan="standard" data-lang-zh="标准版" data-lang-en="Standard"></button>
+                            <button class="plan-btn active" data-price="79.00" data-plan="premium" data-lang-zh="高级版" data-lang-en="Premium"></button>
+                        </div>
+
+                        <div class="product-price">$79<span class="price-period" data-lang-zh="/终身版" data-lang-en="/lifetime"></span></div>
+                        
+                        <ul class="product-features">
+                            </ul>
+                        
+                        <label for="validator_email" data-lang-zh="输入接收激活码的邮箱" data-lang-en="Enter email to receive license key"></label>
+                        <input type="email" id="validator_email" placeholder="your-email@example.com" required>
+                        <button class="btn btn-primary" data-product-id="validator">购买高级版激活码</button>
+                        <div class="secure-payment-badge">
+                            <i class='bx bxs-lock-alt'></i> <span data-lang-zh="支付宝安全支付" data-lang-en="Secure Payment by Alipay"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="trust-section">
+            <div class="container">
+                <div class="trust-grid">
+                    <div class="trust-card">
+                        <i class='bx bxs-shield-check'></i>
+                        <h3 data-lang-zh="SSL 安全加密" data-lang-en="SSL Secure Encryption"></h3>
+                        <p data-lang-zh="您的所有信息都经过256位SSL加密传输，确保数据安全。" data-lang-en="All your information is transmitted over 256-bit SSL encryption."></p>
+                    </div>
+                    <div class="trust-card">
+                        <i class='bx bxl-alipay'></i>
+                        <h3 data-lang-zh="支付宝官方认证" data-lang-en="Official Alipay Partner"></h3>
+                        <p data-lang-zh="我们是支付宝官方签约商户，所有交易均在支付宝安全体系下进行。" data-lang-en="We are an officially signed merchant with Alipay. All transactions are secure."></p>
+                    </div>
+                    <div class="trust-card">
+                        <i class='bx bx-revision'></i>
+                        <h3 data-lang-zh="无忧退款保障" data-lang-en="Refund Guarantee"></h3>
+                        <p data-lang-zh="如果您对我们的产品不满意，我们在7天内提供无条件退款保障。" data-lang-en="We offer a 7-day no-questions-asked money-back guarantee if you're not satisfied."></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div id="payment-modal">...</div>
+    </main>
+
+    <footer id="main-footer" class="main-footer"></footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator/qrcode.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const backendUrl = 'http://localhost:8888/.netlify/functions/'; 
+
+            // --- 套餐数据定义 ---
+            const plans = {
+                gmaps: {
+                    standard: { price: '4.90', features_zh: ['每月 10,000 条数据', '基础技术支持'], features_en: ['10,000 records/mo', 'Basic Support'], period_zh: '/月', period_en: '/mo' },
+                    premium: { price: '9.00', features_zh: ['无限数据', '<strong>优先</strong>技术支持', 'API 访问'], features_en: ['Unlimited Records', '<strong>Priority</strong> Support', 'API Access'], period_zh: '/月', period_en: '/mo' }
+                },
+                validator: {
+                    standard: { price: '29.00', features_zh: ['全功能验证', '授权 <strong>1</strong> 台设备'], features_en: ['All Features', 'License for <strong>1</strong> Device'], period_zh: '/终身版', period_en: '/lifetime' },
+                    premium: { price: '79.00', features_zh: ['全功能验证', '<strong>优先</strong>技术支持', '授权 <strong>3</strong> 台设备'], features_en: ['All Features', '<strong>Priority</strong> Support', 'License for <strong>3</strong> Devices'], period_zh: '/终身版', period_en: '/lifetime' }
+                }
+            };
+
+            // --- 功能函数：更新卡片UI ---
+            function updateCardUI(cardElement) {
+                const productId = cardElement.id.replace('-card', '');
+                const activePlanBtn = cardElement.querySelector('.plan-btn.active');
+                if (!activePlanBtn) return;
+                
+                const selectedPlan = activePlanBtn.dataset.plan;
+                const planData = plans[productId][selectedPlan];
+                
+                const lang = document.documentElement.lang.startsWith('zh') ? 'zh' : 'en';
+
+                // 更新价格
+                const priceEl = cardElement.querySelector('.product-price');
+                priceEl.innerHTML = `$${planData.price}<span class="price-period">${planData['period_' + lang]}</span>`;
+
+                // 更新功能列表
+                const featuresEl = cardElement.querySelector('.product-features');
+                const features = planData['features_' + lang];
+                featuresEl.innerHTML = features.map(f => `<li><i class='bx bx-check'></i>${f}</li>`).join('');
+                
+                // 更新购买按钮
+                const purchaseBtn = cardElement.querySelector('.btn[data-product-id]');
+                purchaseBtn.dataset.price = planData.price;
+                const btnTextKey = `btn_text_${selectedPlan}_${lang}`;
+                const btnTexts = {
+                    btn_text_standard_zh: productId === 'gmaps' ? '开通标准版' : '购买标准版',
+                    btn_text_standard_en: productId === 'gmaps' ? 'Activate Standard' : 'Buy Standard',
+                    btn_text_premium_zh: productId === 'gmaps' ? '开通高级版' : '购买高级版',
+                    btn_text_premium_en: productId === 'gmaps' ? 'Activate Premium' : 'Buy Premium',
+                };
+                purchaseBtn.textContent = btnTexts[btnTextKey];
+            }
+
+            // --- 初始化和事件绑定 ---
+            const productCards = document.querySelectorAll('.product-card');
+
+            productCards.forEach(card => {
+                // 初始化UI
+                updateCardUI(card);
+
+                // 绑定套餐选择事件
+                card.querySelectorAll('.plan-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        card.querySelector('.plan-btn.active').classList.remove('active');
+                        btn.classList.add('active');
+                        updateCardUI(card);
+                    });
+                });
+            });
+
+            // --- 支付逻辑 (与之前类似，但现在更动态) ---
+            const paymentModal = document.getElementById('payment-modal');
+            const qrcodeContainer = document.getElementById('qrcode');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+            const paymentButtons = document.querySelectorAll('.btn[data-product-id]');
+
+            closeModalBtn.addEventListener('click', () => { paymentModal.style.display = 'none'; });
+
+            paymentButtons.forEach(button => {
+                button.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    
+                    const productIdBase = button.dataset.productId;
+                    const cardElement = document.getElementById(`${productIdBase}-card`);
+                    const activePlan = cardElement.querySelector('.plan-btn.active').dataset.plan;
+                    
+                    const productId = `${productIdBase}_${activePlan}`; // 完整的产品ID，如 gmaps_premium
+                    const price = button.dataset.price;
+                    const emailInput = cardElement.querySelector('input[type="email"]');
+                    const email = emailInput.value;
+
+                    if (!email || !email.includes('@')) {
+                        alert('请输入有效的邮箱地址！'); return;
+                    }
+
+                    qrcodeContainer.innerHTML = '正在生成二维码...';
+                    paymentModal.style.display = 'flex';
+
+                    try {
+                        const response = await fetch(`${backendUrl}/api/create-payment`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ productId, price, email }) // 发送更详细的ID
+                        });
+                        const data = await response.json();
+                        if (data.success) {
+                            qrcodeContainer.innerHTML = '';
+                            const qr = qrcode(0, 'L');
+                            qr.addData(data.qrCodeUrl);
+                            qr.make();
+                            qrcodeContainer.innerHTML = qr.createImgTag(8);
+                        } else { throw new Error(data.message || 'Failed to get QR code'); }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        qrcodeContainer.innerHTML = `生成失败: ${error.message}`;
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
