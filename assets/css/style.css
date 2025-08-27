@@ -168,6 +168,74 @@ body {
 
 .mobile-nav-toggle { display: none; }
 
+
+
+/* --- 新增：导航栏下拉菜单样式 --- */
+.nav-item-dropdown {
+    position: relative;
+}
+
+.dropdown-toggle .bx {
+    font-size: 1rem;
+    vertical-align: middle;
+    transition: transform 0.2s ease;
+}
+
+.nav-item-dropdown:hover .dropdown-toggle .bx {
+    transform: rotate(180deg);
+}
+
+.dropdown-menu {
+    /* 默认状态下完全隐藏 */
+    display: none;
+    opacity: 0;
+    visibility: hidden;
+    
+    position: absolute;
+    top: calc(100% + 10px); /* 定位在父元素的下方，并留出10px间隙 */
+    left: 50%;
+    transform: translateX(-50%); /* 水平居中对齐 */
+    
+    background-color: var(--surface-color); /* 使用表面颜色，深色模式下效果更好 */
+    border: 1px solid var(--border-color);
+    border-radius: 8px; /* 圆角稍大一些 */
+    padding: 0.5rem 0;
+    list-style: none;
+    min-width: 220px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1); /* 阴影效果更柔和 */
+    z-index: 101;
+
+    /* 添加平滑的过渡动画效果 */
+    transition: opacity 0.2s ease, top 0.2s ease, visibility 0.2s;
+}
+
+.nav-item-dropdown:hover > .dropdown-menu {
+    display: block; /* 让菜单占据空间 */
+    visibility: visible; /* 让菜单可见 */
+    opacity: 1; /* 渐显 */
+    top: 100%; /* 向上移动到最终位置 */
+}
+
+
+.dropdown-menu li {
+    width: 100%;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 0.75rem 1.5rem;
+    white-space: nowrap;
+    color: var(--text-secondary-color); /* 修正文字颜色继承 */
+    border-bottom: none !important; /* 确保没有下划线 */
+}
+
+.dropdown-menu a:hover {
+    background-color: var(--background-color); /* 修正悬浮背景色 */
+    color: var(--primary-color);
+}
+
+
+
 /* --- 4. 尾部 --- */
 .main-footer {
     background-color: var(--surface-color);
@@ -302,10 +370,21 @@ body {
     flex-direction: column;
 }
 .pricing-card.popular {
+    position: relative;
     border-color: var(--primary-color);
     border-width: 2px;
-    position: relative;
-    transform: scale(1.05);
+    
+    /* 为“推荐”卡片设置一个独特的背景色 */
+    background-color: var(--surface-color); 
+    
+    /* 添加柔和的、有色调的阴影，使其“浮”起来 */
+    box-shadow: 0 10px 30px -5px rgba(37, 99, 235, 0.2);
+
+    /* 使用负外边距和内边距来让卡片在垂直方向上“凸出”，这种方法比 transform 更稳定 */
+    margin-top: -1.5rem; 
+    margin-bottom: -1.5rem;
+    padding-top: 3.5rem; /* 增加的上内边距，也是为顶部的徽章留出空间 */
+    padding-bottom: 3.5rem; /* 增加下内边距，让卡片整体更高 */
 }
 .popular-badge {
     position: absolute;

@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
             this.initTheme();
             this.initLang();
             this.setActiveNavLink();
-            
+
             // 初始化 FAQ 和客户评价功能
             this.initFaqAccordion();
             this.initTestimonialCarousel();
@@ -39,7 +39,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     <nav class="main-nav" id="main-nav">
                         <ul>
                             <li><a href="./index.html" data-lang-zh="首页" data-lang-en="Home">首页</a></li>
-                            <li><a href="./product.html" data-lang-zh="产品" data-lang-en="Product">产品</a></li>
+                            <li class="nav-item-dropdown">
+                                <a href="javascript:void(0);" class="dropdown-toggle" data-lang-zh="产品" data-lang-en="Product">产品 <i class='bx bx-chevron-down'></i></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="./product.html?id=maps-scraper" data-lang-zh="谷歌地图抓取器" data-lang-en="Google Maps Scraper">谷歌地图抓取器</a></li>
+                                    <li><a href="./product.html?id=email-validator" data-lang-zh="邮箱批量验证器" data-lang-en="Email Validator">邮箱批量验证器</a></li>
+                                </ul>
+                            </li>
                             <li><a href="./pricing.html" data-lang-zh="定价" data-lang-en="Pricing">定价</a></li>
                             <li><a href="./docs.html" data-lang-zh="文档" data-lang-en="Docs">文档</a></li>
                             <li><a href="./faq.html" data-lang-zh="FAQ" data-lang-en="FAQ">FAQ</a></li>
@@ -183,37 +189,39 @@ document.addEventListener('DOMContentLoaded', () => {
         },
 
         applyLang() {
-        const langElements = document.querySelectorAll('[data-lang-zh], [data-lang-en]');
-        const langToggleButton = document.getElementById('lang-toggle');
+            const langElements = document.querySelectorAll('[data-lang-zh], [data-lang-en]');
+            const langToggleButton = document.getElementById('lang-toggle');
 
-        langElements.forEach(el => {
-            const val = el.getAttribute(`data-lang-${this.state.currentLang}`);
-            if (val != null) {
-            const tag = el.tagName.toLowerCase();
+            langElements.forEach(el => {
+                const val = el.getAttribute(`data-lang-${this.state.currentLang}`);
+                if (val != null) {
+                    const tag = el.tagName.toLowerCase();
 
-            // <meta name="description"> 这类需要写到 content 属性
-            if (tag === 'meta' && el.getAttribute('name') === 'description') {
-                el.setAttribute('content', val);
-            }
-            // 表单类：优先改 placeholder，没有就直接改 value
-            else if ((tag === 'input' || tag === 'textarea')) {
-                if (el.hasAttribute('placeholder')) {
-                el.setAttribute('placeholder', val);
-                } else {
-                el.value = val;
+                    // <meta name="description"> 这类需要写到 content 属性
+                    if (tag === 'meta' && el.getAttribute('name') === 'description') {
+                        el.setAttribute('content', val);
+                    }
+                    // 表单类：优先改 placeholder，没有就直接改 value
+                    else if ((tag === 'input' || tag === 'textarea')) {
+                        if (el.hasAttribute('placeholder')) {
+                            el.setAttribute('placeholder', val);
+                        } else {
+                            el.value = val;
+                        }
+                    }
+                    // 其它元素：直接改文本
+                    else {
+                        // ▼▼▼ 核心修改点在这里 ▼▼▼
+                        el.innerHTML = val; // 将 textContent 修改为 innerHTML
+                        // ▲▲▲ 修改结束 ▲▲▲
+                    }
                 }
-            }
-            // 其它元素：直接改文本
-            else {
-                el.textContent = val;
-            }
-            }
-        });
+            });
 
-        document.documentElement.lang = this.state.currentLang === 'zh' ? 'zh-CN' : 'en';
-        if (langToggleButton) {
-            langToggleButton.textContent = this.state.currentLang === 'zh' ? 'EN' : '中';
-        }
+            document.documentElement.lang = this.state.currentLang === 'zh' ? 'zh-CN' : 'en';
+            if (langToggleButton) {
+                langToggleButton.textContent = this.state.currentLang === 'zh' ? 'EN' : '中';
+            }
         },
 
         // --- 其它 ---

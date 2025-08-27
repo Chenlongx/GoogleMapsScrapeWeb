@@ -1,17 +1,16 @@
 <!DOCTYPE html>
 <html lang="zh-CN" data-theme="light">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-lang-zh="定价 | GoogleMapsScraper"
-          data-lang-en="Pricing | GoogleMapsScraper"></title>
-    <meta name="description"
-          data-lang-zh="查看 GoogleMapsScraper 的灵活定价计划。选择最适合您业务需求的方案，立即开始自动化拓客之旅。"
-          data-lang-en="Check out GoogleMapsScraper's flexible pricing plans. Choose the one that best fits your business needs and start your automated lead generation journey today.">
+    <title data-lang-zh="定价 | GoogleMapsScraper" data-lang-en="Pricing | GoogleMapsScraper"></title>
+    <meta name="description" data-lang-zh="查看 GoogleMapsScraper 的灵活定价计划。选择最适合您业务需求的方案，立即开始自动化拓客之旅。"
+        data-lang-en="Check out GoogleMapsScraper's flexible pricing plans. Choose the one that best fits your business needs and start your automated lead generation journey today.">
 
     <link rel="stylesheet" href="./assets/css/style.css">
     <script src="./assets/js/main.js" defer></script>
-    
+
     <!-- JSON-LD 保持原样，无需多语言 -->
     <script type="application/ld+json">
     {
@@ -50,12 +49,17 @@
             gap: 0.75rem;
             margin: 1rem 0;
         }
-        .price { margin: 0; }
+
+        .price {
+            margin: 0;
+        }
+
         .original-price {
             font-size: 1.25rem;
             color: var(--text-secondary-color);
             text-decoration: line-through;
         }
+
         .discount-badge {
             background-color: var(--secondary-color);
             color: #fff;
@@ -66,9 +70,42 @@
             display: inline-block;
             margin-bottom: 1rem;
         }
-        .main-footer { margin-top: 10%; }
+
+        .main-footer {
+            margin-top: 10%;
+        }
+                .product-selector-section {
+            padding: 2rem 0 0;
+            display: flex;
+            justify-content: center;
+        }
+        .product-selector {
+            display: inline-flex;
+            background-color: var(--surface-color);
+            border-radius: 8px;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+        }
+        .selector-btn {
+            background-color: transparent;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--text-secondary-color);
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        .selector-btn.active {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+        .selector-btn:not(.active):hover {
+            color: var(--text-primary-color);
+        }
     </style>
 </head>
+
 <body>
     <div id="notification-banner" class="notification-banner" role="alert" aria-live="assertive"></div>
     <header id="main-header" class="main-header"></header>
@@ -77,65 +114,177 @@
         <section class="page-header">
             <div class="container">
                 <h1 data-lang-zh="选择适合您的计划" data-lang-en="Choose the Right Plan for You"></h1>
-                <p data-lang-zh="透明、简单的定价，无任何隐藏费用。"
-                   data-lang-en="Transparent, simple pricing with no hidden fees."></p>
+                <p data-lang-zh="透明、简单的定价，无任何隐藏费用。" data-lang-en="Transparent, simple pricing with no hidden fees."></p>
             </div>
         </section>
-
-        <section class="pricing-section">
+        <section class="product-selector-section">
             <div class="container">
-                <div class="pricing-grid">
-                    <!-- Starter Plan -->
-                    <div class="pricing-card">
-                        <span class="discount-badge" data-lang-zh="限时折扣" data-lang-en="Limited Offer"></span>
-                        <h2 data-lang-zh="基础版" data-lang-en="Starter"></h2>
-                        <div class="price-wrapper">
-                            <div class="price">$4<span class="price-period" data-lang-zh="/月" data-lang-en="/mo"></span></div>
-                            <del class="original-price" data-lang-zh="$8/月" data-lang-en="$8/mo"></del>
-                        </div>
-                        <ul class="pricing-features">
-                            <li data-lang-zh="每天限制50次爬取数据" data-lang-en="10,000 records per month"></li>
-                            <li data-lang-zh="基础技术支持" data-lang-en="Basic Support"></li>
-                            <li data-lang-zh="CSV 导出" data-lang-en="CSV Export"></li>
-                        </ul>
-                        <a href="#" class="btn btn-secondary" data-lang-zh="开始使用" data-lang-en="Get Started"></a>
-                    </div>
-
-                    <!-- Business Plan -->
-                    <div class="pricing-card popular">
-                        <span class="popular-badge" data-lang-zh="推荐" data-lang-en="Popular"></span>
-                        <span class="discount-badge" data-lang-zh="限时折扣" data-lang-en="Limited Offer"></span>
-                        <h2 data-lang-zh="商业版" data-lang-en="Business"></h2>
-                        <div class="price-wrapper">
-                            <div class="price">$9<span class="price-period" data-lang-zh="/月" data-lang-en="/mo"></span></div>
-                            <del class="original-price" data-lang-zh="$18/月" data-lang-en="$18/mo"></del>
-                        </div>
-                        <ul class="pricing-features">
-                            <li data-lang-zh="无限数据" data-lang-en="Unlimited Records"></li>
-                            <li data-lang-zh="优先技术支持" data-lang-en="Priority Support"></li>
-                            <li data-lang-zh="CSV & Excel 导出" data-lang-en="CSV & Excel Export"></li>
-                            <li data-lang-zh="API 访问" data-lang-en="API Access"></li>
-                        </ul>
-                        <a href="#" class="btn btn-primary" data-lang-zh="立即选择" data-lang-en="Choose Plan"></a>
-                    </div>
-
-                    <!-- Enterprise Plan -->
-                    <div class="pricing-card">
-                        <h2 data-lang-zh="企业版" data-lang-en="Enterprise"></h2>
-                        <div class="price" data-lang-zh="定制" data-lang-en="Custom"></div>
-                        <ul class="pricing-features">
-                            <li data-lang-zh="所有商业版功能" data-lang-en="All Business features"></li>
-                            <li data-lang-zh="专属客户经理" data-lang-en="Dedicated Account Manager"></li>
-                            <li data-lang-zh="定制化集成" data-lang-en="Custom Integrations"></li>
-                        </ul>
-                        <a href="./contact.html" class="btn btn-secondary"
-                           data-lang-zh="联系我们" data-lang-en="Contact Us"></a>
-                    </div>
+                <div class="product-selector">
+                    <button class="selector-btn active" data-target="maps-scraper-pricing" data-lang-zh="谷歌地图抓取器"
+                        data-lang-en="Google Maps Scraper"></button>
+                    <button class="selector-btn" data-target="email-validator-pricing" data-lang-zh="邮箱批量验证器"
+                        data-lang-en="Email Validator"></button>
                 </div>
             </div>
         </section>
+        <section class="pricing-section">
+
+            <section class="pricing-section">
+                <div class="container">
+
+                    <div id="maps-scraper-pricing" class="pricing-content-wrapper">
+                        <div class="pricing-grid">
+                            <div class="pricing-card">
+                                <span class="discount-badge" data-lang-zh="限时折扣" data-lang-en="Limited Offer"></span>
+                                <h2 data-lang-zh="基础版" data-lang-en="Starter"></h2>
+                                <div class="price-wrapper">
+                                    <div class="price">$4<span class="price-period" data-lang-zh="/月"
+                                            data-lang-en="/mo"></span></div>
+                                    <del class="original-price" data-lang-zh="$8/月" data-lang-en="$8/mo"></del>
+                                </div>
+                                <ul class="pricing-features">
+                                    <li data-lang-zh="每天限制50次爬取数据" data-lang-en="10,000 records per month"></li>
+                                    <li data-lang-zh="基础技术支持" data-lang-en="Basic Support"></li>
+                                    <li data-lang-zh="CSV 导出" data-lang-en="CSV Export"></li>
+                                </ul>
+                                <a href="#" class="btn btn-secondary" data-lang-zh="开始使用"
+                                    data-lang-en="Get Started"></a>
+                            </div>
+
+                            <div class="pricing-card popular">
+                                <span class="popular-badge" data-lang-zh="推荐" data-lang-en="Popular"></span>
+                                <span class="discount-badge" data-lang-zh="限时折扣" data-lang-en="Limited Offer"></span>
+                                <h2 data-lang-zh="商业版" data-lang-en="Business"></h2>
+                                <div class="price-wrapper">
+                                    <div class="price">$9<span class="price-period" data-lang-zh="/月"
+                                            data-lang-en="/mo"></span></div>
+                                    <del class="original-price" data-lang-zh="$18/月" data-lang-en="$18/mo"></del>
+                                </div>
+                                <ul class="pricing-features">
+                                    <li data-lang-zh="无限数据" data-lang-en="Unlimited Records"></li>
+                                    <li data-lang-zh="优先技术支持" data-lang-en="Priority Support"></li>
+                                    <li data-lang-zh="CSV & Excel 导出" data-lang-en="CSV & Excel Export"></li>
+                                    <li data-lang-zh="API 访问" data-lang-en="API Access"></li>
+                                </ul>
+                                <a href="#" class="btn btn-primary" data-lang-zh="立即选择" data-lang-en="Choose Plan"></a>
+                            </div>
+
+                            <div class="pricing-card">
+                                <h2 data-lang-zh="企业版" data-lang-en="Enterprise"></h2>
+                                <div class="price" data-lang-zh="定制" data-lang-en="Custom"></div>
+                                <ul class="pricing-features">
+                                    <li data-lang-zh="所有商业版功能" data-lang-en="All Business features"></li>
+                                    <li data-lang-zh="专属客户经理" data-lang-en="Dedicated Account Manager"></li>
+                                    <li data-lang-zh="定制化集成" data-lang-en="Custom Integrations"></li>
+                                </ul>
+                                <a href="./contact.html" class="btn btn-secondary" data-lang-zh="联系我们"
+                                    data-lang-en="Contact Us"></a>
+                            </div>
+                        </div>
+                    </div>
+
+                <div id="email-validator-pricing" class="pricing-content-wrapper" style="display: none;">
+                    <div class="pricing-grid">
+                        <div class="pricing-card">
+                            <h2 data-lang-zh="个人版" data-lang-en="Personal"></h2>
+                            <div class="price">$29<span class="price-period" data-lang-zh="/终身版" data-lang-en="/lifetime"></span></div>
+                            <ul class="pricing-features">
+                                <li data-lang-zh="全功能邮件验证" data-lang-en="All Validation Features"></li>
+                                <li data-lang-zh="批量导入与导出" data-lang-en="Batch Import & Export"></li>
+                                <li data-lang-zh="终身免费更新" data-lang-en="Lifetime Free Updates"></li>
+                                <li data-lang-zh="标准技术支持" data-lang-en="Standard Support"></li>
+                                <li data-lang-zh="授权 1 台设备" data-lang-en="License for 1 Device"></li>
+                            </ul>
+                            <a href="#" class="btn btn-secondary" data-lang-zh="立即购买" data-lang-en="Buy Now"></a>
+                        </div>
+
+                        <div class="pricing-card popular">
+                            <span class="popular-badge" data-lang-zh="推荐" data-lang-en="Popular"></span>
+                            <h2 data-lang-zh="商业版" data-lang-en="Business"></h2>
+                            <div class="price">$79<span class="price-period" data-lang-zh="/终身版" data-lang-en="/lifetime"></span></div>
+                            <ul class="pricing-features">
+                                <li data-lang-zh="所有个人版功能" data-lang-en="All Personal features"></li>
+                                <li data-lang-zh="<strong>优先</strong> 技术支持" data-lang-en="<strong>Priority</strong> Support"></li>
+                                <li data-lang-zh="授权 <strong>3</strong> 台设备" data-lang-en="License for <strong>3</strong> Devices"></li>
+                            </ul>
+                            <a href="#" class="btn btn-primary" data-lang-zh="选择商业版" data-lang-en="Choose Business"></a>
+                        </div>
+
+                        <div class="pricing-card">
+                            <h2 data-lang-zh="企业版" data-lang-en="Enterprise"></h2>
+                            <div class="price" data-lang-zh="定制" data-lang-en="Custom"></div>
+                            <ul class="pricing-features">
+                                <li data-lang-zh="所有商业版功能" data-lang-en="All Business features"></li>
+                                <li data-lang-zh="批量授权与部署" data-lang-en="Volume Licensing & Deployment"></li>
+                                <li data-lang-zh="专属客户经理" data-lang-en="Dedicated Account Manager"></li>
+                            </ul>
+                            <a href="./contact.html" class="btn btn-secondary" data-lang-zh="联系我们" data-lang-en="Contact Us"></a>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </section>
     </main>
-    
+
     <footer id="main-footer" class="main-footer"></footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const selectorBtns = document.querySelectorAll('.selector-btn');
+            const pricingContents = document.querySelectorAll('.pricing-content-wrapper');
+            const urlParams = new URLSearchParams(window.location.search);
+            const defaultProductId = 'maps-scraper-pricing';
+
+            function switchPriceView(targetId) {
+                // 1. 隐藏所有价格内容
+                pricingContents.forEach(content => {
+                    content.style.display = 'none';
+                });
+
+                // 2. 移除所有按钮的 active 状态
+                selectorBtns.forEach(btn => {
+                    btn.classList.remove('active');
+                });
+
+                // 3. 显示目标价格内容
+                const targetContent = document.getElementById(targetId);
+                if (targetContent) {
+                    targetContent.style.display = 'block';
+                }
+
+                // 4. 为对应的按钮添加 active 状态
+                const activeButton = document.querySelector(`.selector-btn[data-target="${targetId}"]`);
+                if (activeButton) {
+                    activeButton.classList.add('active');
+                }
+            }
+
+            // 页面加载时，根据 URL 参数决定显示哪个
+            let initialProductId = urlParams.get('id'); // e.g., 'maps-scraper'
+            let initialTargetId = initialProductId ? initialProductId + '-pricing' : defaultProductId;
+
+            // 确保URL中的id有效，否则使用默认值
+            if (!document.getElementById(initialTargetId)) {
+                initialTargetId = defaultProductId;
+            }
+            switchPriceView(initialTargetId);
+
+            // 为每个选择器按钮绑定点击事件
+            selectorBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = btn.getAttribute('data-target');
+                    switchPriceView(targetId);
+
+                    // (可选) 更新URL，不刷新页面，方便用户分享
+                    const newProductId = targetId.replace('-pricing', '');
+                    const newUrl = `${window.location.pathname}?id=${newProductId}`;
+                    history.pushState({ path: newUrl }, '', newUrl);
+                });
+            });
+        });
+    </script>
 </body>
+
+
 </html>
