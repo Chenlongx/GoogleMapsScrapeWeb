@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // 初始化 FAQ 和客户评价功能
             this.initFaqAccordion();
             this.initTestimonialCarousel();
+            this.initContactModal();
         },
 
         state: {
@@ -117,6 +118,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const mobileToggle = document.getElementById('mobile-nav-toggle');
             const themeToggle = document.getElementById('theme-toggle');
             const langToggle = document.getElementById('lang-toggle');
+            // ▼▼▼ 新增联系按钮的事件绑定 ▼▼▼
+            const contactFab = document.getElementById('contact-fab');
+            const modalContainer = document.getElementById('contact-modal-container');
+            const modalCloseBtn = document.getElementById('modal-close-btn');
 
             if (mobileToggle) {
                 mobileToggle.addEventListener('click', this.toggleMobileNav);
@@ -127,6 +132,25 @@ document.addEventListener('DOMContentLoaded', () => {
             if (langToggle) {
                 langToggle.addEventListener('click', () => this.toggleLang());
             }
+            // ▼▼▼ 联系按钮点击事件 ▼▼▼
+            if (contactFab && modalContainer) {
+                contactFab.addEventListener('click', () => {
+                    modalContainer.classList.add('active');
+                });
+            }
+            if (modalCloseBtn && modalContainer) {
+                modalCloseBtn.addEventListener('click', () => {
+                    modalContainer.classList.remove('active');
+                });
+            }
+            // 点击遮罩层关闭弹窗
+            if (modalContainer) {
+                modalContainer.addEventListener('click', (e) => {
+                    if (e.target === modalContainer) {
+                        modalContainer.classList.remove('active');
+                    }
+                });
+            }
         },
 
         // --- 移动端导航 ---
@@ -136,6 +160,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const isExpanded = toggleButton.getAttribute('aria-expanded') === 'true';
             nav.classList.toggle('active');
             toggleButton.setAttribute('aria-expanded', !isExpanded);
+        },
+        initContactModal() {
+            // 这个函数目前是空的，因为所有逻辑都已移至 bindEvents 中
+            // 这样做是为了保持结构清晰，未来可以把弹窗逻辑移到这里
+            console.log('Contact modal events bound.');
         },
 
         // --- 主题相关 ---

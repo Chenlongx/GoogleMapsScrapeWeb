@@ -11,18 +11,66 @@
 </head>
 <style>
     .docs-image-container {
-        margin-top: 1.5rem; /* 图片与上方文字的间距 */
+        margin-top: 1.5rem;
+        /* 图片与上方文字的间距 */
     }
+
     .docs-image {
-        max-width: 100%; /* 确保图片响应式，不超过容器宽度 */
+        max-width: 100%;
+        /* 确保图片响应式，不超过容器宽度 */
         height: auto;
-        border-radius: 8px; /* 为图片添加圆角 */
-        border: 1px solid var(--border-color); /* 添加细边框 */
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08); /* 添加柔和的阴影 */
+        border-radius: 8px;
+        /* 为图片添加圆角 */
+        border: 1px solid var(--border-color);
+        /* 添加细边框 */
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        /* 添加柔和的阴影 */
     }
+
     html[data-theme="dark"] .docs-image {
-        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
+
+    /* ▼▼▼ 在这里追加新的 CSS ▼▼▼ */
+    .product-selector-section {
+        padding: 2rem 0 0;
+        display: flex;
+        justify-content: center;
+        margin-bottom: 2rem;
+        /* 增加和下方内容的间距 */
+    }
+
+    .product-selector {
+        display: inline-flex;
+        background-color: var(--surface-color);
+        border-radius: 8px;
+        padding: 0.5rem;
+        border: 1px solid var(--border-color);
+    }
+
+    .selector-btn {
+        background-color: transparent;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        color: var(--text-secondary-color);
+        transition: background-color 0.2s ease, color 0.2s ease;
+        white-space: nowrap;
+        /* 防止按钮文字换行 */
+    }
+
+    .selector-btn.active {
+        background-color: var(--primary-color);
+        color: #fff;
+    }
+
+    .selector-btn:not(.active):hover {
+        color: var(--text-primary-color);
+    }
+
+    /* ▲▲▲ CSS 追加结束 ▲▲▲ */
 </style>
 
 <body>
@@ -31,86 +79,263 @@
 
     <main>
         <section class="page-header">
-            <div class="container">
-                <h1 data-lang-zh="文档中心" data-lang-en="Documentation Center"></h1>
-                <p data-lang-zh="在这里找到您需要的所有信息。" data-lang-en="Find all the information you need right here."></p>
-            </div>
+                        <div class="container">
+                                <h1 data-lang-zh="文档中心" data-lang-en="Documentation Center"></h1>
+                                <p data-lang-zh="在这里找到您需要的所有信息。"
+                    data-lang-en="Find all the information you need right here."></p>
+                            </div>
+        </section>
+        <section class="product-selector-section">
+            <div class="container">
+                <div class="product-selector">
+                    <button class="selector-btn active" data-target="maps-scraper-docs" data-lang-zh="谷歌地图抓取器"
+                        data-lang-en="Google Maps Scraper"></button>
+                    <button class="selector-btn" data-target="email-validator-docs" data-lang-zh="邮箱批量验证器"
+                        data-lang-en="Email Validator"></button>
+                </div>
+            </div>
         </section>
 
         <div class="container">
-            <div class="docs-layout">
-            <aside class="docs-sidebar">
-                <nav>
-                    <ul>
-                        <li><a href="#getting-started" class="active" data-lang-zh="入门指南" data-lang-en="Getting Started"></a></li>
-                        <li><a href="#installation" data-lang-zh="安装教程" data-lang-en="Installation Tutorial"></a></li>
-                        <li><a href="#interface" data-lang-zh="界面概览" data-lang-en="Interface Overview"></a></li>
-                        <li><a href="#scraping" data-lang-zh="执行抓取" data-lang-en="Performing a Scraping"></a></li>
-                        <li><a href="#exportingData" data-lang-zh="导出数据" data-lang-en="Exporting Data"></a></li>
-                    </ul>
-                </nav>
-            </aside>
-                <article class="docs-content">
-                    <section id="getting-started">
-                        <h2 data-lang-zh="入门指南" data-lang-en="Getting Started"></h2>
-                        <p data-lang-zh="欢迎使用 GoogleMapsScraper！首次使用，请确保您已经拥有一个有效的账户和订阅。登录后，您将看到我们的主控制面板。"
-                            data-lang-en="Welcome to GoogleMapsScraper! To get started, ensure you have a valid account and subscription. After logging in, you will see our main dashboard."></p>
-                    </section>
-                    <section id="installation">
-                        <h2 data-lang-zh="安装教程" data-lang-en="Installation Tutorial"></h2>
-                        <p data-lang-zh="我们的应用是一款本地软件，需要在您的电脑上进行安装。您只需要下载安装包解压到一个文件夹中，向客服添加一个有效的账户即可开始使用。请联系我们的客服开通账号。"
-                            data-lang-en="Our application is an online service and requires no installation on your computer. You just need a modern web browser (like Chrome, Firefox, or Edge) and a valid account to get started. Please visit our sign-up page to create your account."></p>
-                        <div class="docs-image-container">
-                            <img src="./assets/img/安装包.png" alt="安装示意图" class="docs-image">
-                        </div>
-                    </section>
-                    <section id="unzip">
-                        <h2 data-lang-zh="解压教程" data-lang-en="Unzip Tutorial"></h2>
-                        <p data-lang-zh="下载完成后，请使用常见的解压软件（如 WinRAR、7-Zip 或系统自带的解压功能）将安装包解压到您选择的文件夹，例如 D:\GoogleMapsScraper。解压完成后，进入该文件夹即可看到可执行文件和相关资源。"
-                        data-lang-en="After downloading, please use common extraction tools (such as WinRAR, 7-Zip, or the built-in system unzip function) to extract the package to a folder of your choice, for example D:\GoogleMapsScraper. Once extracted, open the folder to find the executable file and resources."></p>
-                        <div class="docs-image-container">
-                            <img src="./assets/img/解压文件示意图.webp" alt="解压示意图" class="docs-image">
-                        </div>
-                    </section>
-                    <section id="login">
-                        <h2 data-lang-zh="登录教程" data-lang-en="Login Tutorial"></h2>
-                        <p data-lang-zh="解压完成后，双击运行软件，进入登录界面。请输入客服为您提供的账号和密码即可登录系统。如果您还没有账号，请联系客户支持获取。"
-                        data-lang-en="After extraction, double-click the application to open the login screen. Enter the account and password provided by our support team to log in. If you don’t have an account yet, please contact support."></p>
-                        <div class="docs-image-container">
-                            <img src="./assets/img/登录界面.webp" alt="登录界面示意图" class="docs-image">
-                        </div>
-                    </section>
+<div id="maps-scraper-docs" class="docs-wrapper">
+                <div class="docs-layout">
+                    <aside class="docs-sidebar">
+                        <nav>
+                            <ul>
+                                <li><a href="#gs-scraper-getting-started" class="active" data-lang-zh="入门指南"
+                                        data-lang-en="Getting Started"></a></li>
+                                <li><a href="#gs-scraper-installation" data-lang-zh="安装教程"
+                                        data-lang-en="Installation Tutorial"></a></li>
+                                <li><a href="#gs-scraper-interface" data-lang-zh="界面概览"
+                                        data-lang-en="Interface Overview"></a></li>
+                                <li><a href="#gs-scraper-scraping" data-lang-zh="执行抓取"
+                                        data-lang-en="Performing a Scraping"></a></li>
+                                <li><a href="#gs-scraper-exporting" data-lang-zh="导出数据"
+                                        data-lang-en="Exporting Data"></a></li>
+                            </ul>
+                        </nav>
+                    </aside>
+                    <article class="docs-content">
+                        <section id="gs-scraper-getting-started">
+                            <h2 data-lang-zh="入门指南" data-lang-en="Getting Started"></h2>
+                            <p data-lang-zh="欢迎使用 GoogleMapsScraper！首次使用，请确保您已经拥有一个有效的账户和订阅。登录后，您将看到我们的主控制面板。"
+                                data-lang-en="Welcome to GoogleMapsScraper! To get started, ensure you have a valid account and subscription. After logging in, you will see our main dashboard.">
+                            </p>
+                        </section>
+                        <section id="gs-scraper-installation">
+                            <h2 data-lang-zh="安装教程" data-lang-en="Installation Tutorial"></h2>
+                            <p data-lang-zh="我们的应用是一款本地软件，需要在您的电脑上进行安装。您只需要下载安装包解压到一个文件夹中，向客服添加一个有效的账户即可开始使用。请联系我们的客服开通账号。"
+                                data-lang-en="Our application is a local software that needs to be installed on your computer. You just need to download the installation package, unzip it to a folder, and add a valid account through customer service to start using it. Please contact our customer service to open an account.">
+                            </p>
+                            <div class="docs-image-container">
+                                <img src="assets/img/解压文件示意图.webp" alt="解压文件示意图" class="docs-image">
+                            </div>
+                        </section>
+                        <section id="gs-scraper-interface">
+                            <h2 data-lang-zh="界面概览" data-lang-en="Interface Overview"></h2>
+                            <p data-lang-zh="我们的界面主要分为三个部分：任务创建区、任务列表区和账户设置。您可以在任务创建区输入关键词和地点来开始一个新的抓取任务。"
+                                data-lang-en="Our interface is divided into three main parts: the Task Creation area, the Task List area, and Account Settings. You can start a new scraping task by entering keywords and locations in the Task Creation area.">
+                            </p>
+                            <div class="docs-image-container">
+                                <img src="assets/img/docs-start.webp" alt="谷歌地图抓取器界面" class="docs-image">
+                            </div>
+                        </section>
+                        <section id="gs-scraper-scraping">
+                            <h2 data-lang-zh="执行抓取" data-lang-en="Performing a Scraping"></h2>
+                            <p data-lang-zh="输入至少一个关键词和一个地点，然后点击“开始抓取”按钮。任务将进入队列并开始执行。任务状态会实时更新，完成后您可以下载结果。"
+                                data-lang-en="Enter at least one keyword and one location, then click the 'Start Scraping' button. The task will be queued and begin execution. The task status will update in real-time, and you can download the results upon completion.">
+                            </p>
+                             <div class="docs-image-container">
+                                <img src="assets/img/home-background.webp" alt="执行抓取示意图" class="docs-image">
+                            </div>
+                        </section>
+                        <section id="gs-scraper-exporting">
+                            <h2 data-lang-zh="导出数据" data-lang-en="Exporting Data"></h2>
+                            <p data-lang-zh="目前，我们仅支持将结果导出为 CSV 格式。"
+                                data-lang-en="Currently, we only support exporting results in CSV format."></p>
+                             <div class="docs-image-container">
+                                <img src="assets/img/docs-export.png" alt="导出数据示意图" class="docs-image">
+                            </div>
+                        </section>
+                    </article>
+                </div>
+            </div>
 
-                    <section id="interface">
-                        <h2 data-lang-zh="界面概览" data-lang-en="Interface Overview"></h2>
-                        <p data-lang-zh="我们的界面主要分为三个部分：任务创建区、任务列表区和账户设置。您可以在任务创建区输入关键词和地点来开始一个新的抓取任务。"
-                            data-lang-en="Our interface is divided into three main parts: the Task Creation area, the Task List area, and Account Settings. You can start a new scraping task by entering keywords and locations in the Task Creation area."></p>
-                        <div class="docs-image-container">
-                            <img src="./assets/img/docs-interface.webp" alt="界面概览示意图" class="docs-image">
-                        </div>
-                    </section>
-                    <section id="scraping">
-                        <h2 data-lang-zh="开始搜索" data-lang-en="Performing a Scraping"></h2>
-                        <p data-lang-zh="输入至少一个关键词和一个地点，然后点击“开始抓取”按钮。任务将进入队列并开始执行。任务状态会实时更新，完成后您可以下载结果。"
-                            data-lang-en="Enter at least one keyword and one location, then click the 'Start Scraping' button. The task will be queued and begin execution. The task status will update in real-time, and you can download the results upon completion."></p>
-                        <div class="docs-image-container">
-                            <img src="./assets/img/docs-scraping.webp" alt="开始搜索示意图" class="docs-image">
-                        </div>
-                    </section>
-                    <section id="exportresults">
-                        <h2 data-lang-zh="导出结果" data-lang-en="Export Results"></h2>
-            _            <p data-lang-zh="目前，我们仅支持将结果导出为 CSV 格式。" 
-                        data-lang-en="Currently, we only support exporting results in CSV format."></p>
-                        <div class="docs-image-container">
-                            <img src="./assets/img/docs-export.png" alt="导出结果示意图" class="docs-image">
-                        </div>
-                    </section>
-                </article>
+            <div id="email-validator-docs" class="docs-wrapper" style="display: none;">
+                <div class="docs-layout">
+                    <aside class="docs-sidebar">
+                        <nav>
+                            <ul>
+                                <li><a href="#ev-getting-started" class="active" data-lang-zh="入门指南"
+                                        data-lang-en="Getting Started"></a></li>
+                                <li><a href="#ev-interface" data-lang-zh="界面概览" data-lang-en="Interface Overview"></a>
+                                </li>
+                                <li><a href="#ev-import" data-lang-zh="批量导入" data-lang-en="Batch Import"></a></li>
+                                <li><a href="#ev-validation" data-lang-zh="执行验证"
+                                        data-lang-en="Performing Validation"></a></li>
+                                <li><a href="#ev-results" data-lang-zh="理解结果" data-lang-en="Understanding Results"></a>
+                                </li>
+                                <li><a href="#ev-exporting" data-lang-zh="导出数据" data-lang-en="Exporting Data"></a></li>
+                            </ul>
+                        </nav>
+                    </aside>
+                    <article class="docs-content">
+                        <section id="ev-getting-started">
+                            <h2 data-lang-zh="入门指南" data-lang-en="Getting Started"></h2>
+                            <p data-lang-zh="欢迎使用邮箱批量验证器！本工具是买断制软件，使用激活码激活。首次使用前，请确保您已从客服处获取了激活码，并成功激活软件。"
+                                data-lang-en="Welcome to the Email Validator! This is a one-time purchase software activated with a license key. Before first use, please ensure you have obtained and successfully activated your software with the key from our support team.">
+                            </p>
+                        </section>
+                        <section id="ev-interface">
+                            <h2 data-lang-zh="界面概览" data-lang-en="Interface Overview"></h2>
+                            <p data-lang-zh="软件界面非常简洁。顶部是操作区，您可以导入文件、开始/停止任务。中间是统计仪表盘，实时显示验证进度和结果分类。下方是详细的结果列表。"
+                                data-lang-en="The interface is clean and simple. The top area is for actions like importing files and starting/stopping tasks. The middle dashboard shows real-time progress and result categorization. The bottom section displays the detailed results list.">
+                            </p>
+                            <div class="docs-image-container">
+                                <img src="assets/img/MailProEmail/MailProEmail.webp" alt="邮箱验证器界面" class="docs-image">
+                            </div>
+                        </section>
+                        <section id="ev-import">
+                            <h2 data-lang-zh="批量导入" data-lang-en="Batch Import"></h2>
+                            <p data-lang-zh="点击“批量导入”按钮，您可以选择包含邮箱地址的 .xlsx, .csv, 或 .txt 文件。软件会自动读取文件中的所有邮箱，并去除重复项，准备进行验证。"
+                                data-lang-en="Click the 'Batch Import' button to select an .xlsx, .csv, or .txt file containing email addresses. The software will automatically read all emails, deduplicate them, and prepare for validation.">
+                            </p>
+                            <div class="docs-image-container">
+                                <img src="assets/img/MailProEmail/docs-ev-import.webp" alt="导入文件示意图" class="docs-image">
+                            </div>
+                        </section>
+                        <section id="ev-validation">
+                            <h2 data-lang-zh="执行验证" data-lang-en="Performing Validation"></h2>
+                            <p data-lang-zh="导入成功后，点击“开始”按钮。软件将启动多线程任务，对列表中的每一个邮箱进行多维度深度验证，包括语法、域名有效性、MX记录、是否为临时邮箱等。"
+                                data-lang-en="After a successful import, click the 'Start' button. The software will initiate multi-threaded tasks to perform deep, multi-dimensional validation on each email, including syntax, domain validity, MX records, disposable address checks, and more.">
+                            </p>
+                            <div class="docs-image-container">
+                                <img src="assets/img/MailProEmail/step-import-email.webp" alt="验证成功示意图" class="docs-image">
+                            </div>
+                        </section>
+                        <section id="ev-results">
+                            <h2 data-lang-zh="理解结果" data-lang-en="Understanding Results"></h2>
+                            <p data-lang-zh="验证结果会实时显示在列表中，包含“状态”（有效/无效/风险）、“分类”（企业型/个人型等）、“质量分数”和“备注”等列，帮助您全面评估邮箱质量。"
+                                data-lang-en="Results are displayed in real-time in the list, including columns like 'Status' (Valid/Invalid/Risky), 'Category' (Corporate/Personal, etc.), 'Quality Score', and 'Notes' to help you fully assess email quality.">
+                            </p>
+                        </section>
+                        <section id="ev-exporting">
+                            <h2 data-lang-zh="导出数据" data-lang-en="Exporting Data"></h2>
+                            <p data-lang-zh="任务完成后，点击“导出有效邮箱”按钮，软件会将所有状态为“有效”的邮箱及其相关信息保存为一个 .xlsx 文件，方便您用于后续的营销活动。"
+                                data-lang-en="Once the task is complete, click the 'Export Valid Emails' button. The software will save all emails with a 'Valid' status and their related information into an .xlsx file, ready for your marketing campaigns.">
+                            </p>
+                            <div class="docs-image-container">
+                                <img src="assets/img/MailProEmail/export results.webp" alt="导出结果示意图" class="docs-image">
+                            </div>
+                        </section>
+                    </article>
+                </div>
             </div>
         </div>
     </main>
 
     <footer id="main-footer" class="main-footer"></footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const selectorBtns = document.querySelectorAll('.selector-btn');
+            const docsWrappers = document.querySelectorAll('.docs-wrapper');
+            const urlParams = new URLSearchParams(window.location.search);
+            const defaultProductId = 'maps-scraper-docs';
+
+            let observer; // 创建一个观察器变量，用于后续的滚动监听
+
+            // 函数：切换文档视图
+            function switchDocsView(targetId) {
+                docsWrappers.forEach(wrapper => {
+                    wrapper.style.display = 'none';
+                });
+                selectorBtns.forEach(btn => {
+                    btn.classList.remove('active');
+                });
+
+                const targetWrapper = document.getElementById(targetId);
+                if (targetWrapper) {
+                    targetWrapper.style.display = 'block';
+                }
+
+                const activeButton = document.querySelector(`.selector-btn[data-target="${targetId}"]`);
+                if (activeButton) {
+                    activeButton.classList.add('active');
+                }
+
+                // 切换视图后，重新初始化当前视图的侧边栏滚动监听
+                initSidebarScrollSpy();
+            }
+
+            // 函数：初始化侧边栏滚动监听 (关键)
+            function initSidebarScrollSpy() {
+                // 如果已存在观察器，先断开连接，防止重复监听
+                if (observer) {
+                    observer.disconnect();
+                }
+
+                // 只在当前可见的文档容器内查找目标
+                const activeWrapper = document.querySelector('.docs-wrapper[style*="display: block"]');
+                if (!activeWrapper) return;
+
+                const sections = activeWrapper.querySelectorAll('.docs-content section[id]');
+                const navLinks = activeWrapper.querySelectorAll('.docs-sidebar nav a');
+
+                const observerOptions = {
+                    rootMargin: '-50px 0px -50% 0px', // 触发区域在视口中间
+                    threshold: 0
+                };
+
+                observer = new IntersectionObserver((entries) => {
+                    let visibleSectionId = null;
+
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            if (!visibleSectionId) { // 只取第一个进入视口的
+                                visibleSectionId = entry.target.id;
+                            }
+                        }
+                    });
+
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        // 确保href中包含ID才进行比较
+                        if (visibleSectionId && link.getAttribute('href').includes(visibleSectionId)) {
+                            link.classList.add('active');
+                        }
+                    });
+
+                }, observerOptions);
+
+                sections.forEach(section => {
+                    observer.observe(section);
+                });
+            }
+
+
+            // 页面加载时的初始化逻辑
+            let initialProductId = urlParams.get('id');
+            let initialTargetId = initialProductId ? initialProductId + '-docs' : defaultProductId;
+            if (!document.getElementById(initialTargetId)) {
+                initialTargetId = defaultProductId;
+            }
+            switchDocsView(initialTargetId);
+
+            // 为每个选择器按钮绑定点击事件
+            selectorBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = btn.getAttribute('data-target');
+                    switchDocsView(targetId);
+
+                    const newProductId = targetId.replace('-docs', '');
+                    const newUrl = `${window.location.pathname}?id=${newProductId}`;
+                    history.pushState({ path: newUrl }, '', newUrl);
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

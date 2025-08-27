@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="zh-CN" data-theme="light">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <title data-lang-zh="首页 | GoogleMapsScraper - 领先的自动化拓客工具"
-          data-lang-en="Home | GoogleMapsScraper - Advanced Lead Generation Tool"></title>
+        data-lang-en="Home | GoogleMapsScraper - Advanced Lead Generation Tool"></title>
     <meta name="description"
-          data-lang-zh="GoogleMapsScraper 提供强大的 Google Maps Scraper 工具，集成智能邮箱发现与AI深度分析，帮助您自动化地发现潜在客户，高效拓展业务。"
-          data-lang-en="GoogleMapsScraper offers a powerful Google Maps Scraper tool with intelligent email discovery and AI analysis to help you automate lead discovery and efficiently grow your business.">
+        data-lang-zh="GoogleMapsScraper 提供强大的 Google Maps Scraper 工具，集成智能邮箱发现与AI深度分析，帮助您自动化地发现潜在客户，高效拓展业务。"
+        data-lang-en="GoogleMapsScraper offers a powerful Google Maps Scraper tool with intelligent email discovery and AI analysis to help you automate lead discovery and efficiently grow your business.">
     <link rel="canonical" href="https://example.com/index.html">
 
     <link rel="stylesheet" href="./assets/css/style.css">
@@ -20,12 +21,14 @@
         .card-hover-effect {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
+
         .card-hover-effect:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
         }
+
         html[data-theme="dark"] .card-hover-effect:hover {
-            box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
         }
 
         /* --- 新 Hero 区域 --- */
@@ -38,6 +41,7 @@
             background-position: center;
             background-attachment: fixed;
         }
+
         .hero-new::before {
             content: '';
             position: absolute;
@@ -48,6 +52,7 @@
             background-color: rgba(15, 23, 42, 0.7);
             z-index: 1;
         }
+
         .hero-new .container {
             position: relative;
             z-index: 2;
@@ -59,27 +64,34 @@
             align-items: center;
             gap: 3rem;
         }
+
         .hero-text h1 {
             font-size: 3.5rem;
             line-height: 1.2;
         }
+
         .hero-text .subtitle {
             font-size: 1.25rem;
             color: #e2e8f0;
             margin: 1.5rem 0;
         }
-        .hero-actions { display: flex; gap: 1rem; }
-        
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
         .hero-visual {
             background-color: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             padding: 0;
             overflow: hidden;
             border-radius: 8px;
         }
+
         .hero-gif {
             width: 100%;
             height: auto;
@@ -91,22 +103,29 @@
             padding: 5rem 0;
             background-color: var(--surface-color);
         }
+
         .section-header {
             text-align: center;
             margin-bottom: 3rem;
         }
-        .section-header h2 { font-size: 2.25rem; }
+
+        .section-header h2 {
+            font-size: 2.25rem;
+        }
+
         .section-header .section-subtitle {
             max-width: 600px;
             margin: 0.5rem auto 0;
             color: var(--text-secondary-color);
             font-size: 1.1rem;
         }
+
         .new-features-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
         }
+
         .new-feature-card {
             background-color: var(--background-color);
             padding: 2.5rem 2rem;
@@ -114,29 +133,41 @@
             border: 1px solid var(--border-color);
             text-align: center;
         }
+
         .icon-wrapper {
             font-size: 3rem;
             color: var(--primary-color);
             margin-bottom: 1.5rem;
         }
-        .new-feature-card h3 { font-size: 1.25rem; margin-bottom: 0.5rem; }
-        .new-feature-card p { color: var(--text-secondary-color); }
-        
+
+        .new-feature-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .new-feature-card p {
+            color: var(--text-secondary-color);
+        }
+
         /* --- FAQ 区域内部样式 --- */
         .faq-section {
             padding: 5rem 0;
             background-color: var(--background-color);
         }
+
         #faq-accordion {
             max-width: 800px;
             margin: 0 auto;
             border-top: 1px solid var(--border-color);
         }
+
         .faq-item {
             border-bottom: 1px solid var(--border-color);
         }
+
         .faq-question button {
-            all: unset; /* 重置所有按钮默认样式 */
+            all: unset;
+            /* 重置所有按钮默认样式 */
             box-sizing: border-box;
             width: 100%;
             display: flex;
@@ -149,9 +180,11 @@
             color: var(--text-primary-color);
             transition: color 0.2s ease;
         }
+
         .faq-question button:hover {
             color: var(--primary-color);
         }
+
         .faq-question button::after {
             content: '+';
             font-size: 1.8rem;
@@ -159,19 +192,24 @@
             color: var(--text-secondary-color);
             transition: transform 0.3s ease;
         }
+
         .faq-question button[aria-expanded="true"]::after {
             content: '−';
             transform: rotate(180deg);
         }
+
         .faq-answer {
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.3s ease-out, padding 0.3s ease-out;
         }
+
         .faq-answer.open {
-            max-height: 500px; /* 给个足够大的值，保证能展开 */
+            max-height: 500px;
+            /* 给个足够大的值，保证能展开 */
             padding: 0 0.5rem 1.5rem;
         }
+
         .faq-answer p {
             padding: 0 0.5rem 1.5rem;
             color: var(--text-secondary-color);
@@ -179,10 +217,11 @@
         }
 
         /* --- 客户评价 --- */
-        .testimonials-section { 
-            padding: 5rem 0; 
+        .testimonials-section {
+            padding: 5rem 0;
             background-color: var(--surface-color);
         }
+
         .testimonials-slider {
             width: 100%;
             overflow: hidden;
@@ -191,55 +230,94 @@
             -webkit-mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
             mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
         }
+
         .testimonials-track {
             display: flex;
-            width: fit-content; /* 宽度由JS动态计算后的内容撑开 */
-            animation: scroll 40s linear infinite; /* 动画效果 */
+            width: fit-content;
+            /* 宽度由JS动态计算后的内容撑开 */
+            animation: scroll 40s linear infinite;
+            /* 动画效果 */
         }
+
         .testimonials-slider:hover .testimonials-track {
-            animation-play-state: paused; /* 鼠标悬浮时暂停 */
+            animation-play-state: paused;
+            /* 鼠标悬浮时暂停 */
         }
 
         .testimonial-card {
-            width: 350px; /* 固定每个卡片的宽度 */
-            flex-shrink: 0; /* 防止卡片被压缩 */
-            margin: 0 1rem; /* 卡片之间的间距 */
+            width: 350px;
+            /* 固定每个卡片的宽度 */
+            flex-shrink: 0;
+            /* 防止卡片被压缩 */
+            margin: 0 1rem;
+            /* 卡片之间的间距 */
             background-color: var(--background-color);
             padding: 2rem;
             border-radius: 8px;
             border: 1px solid var(--border-color);
         }
-        .testimonial-card blockquote { 
-            margin: 0 0 1rem; font-style: italic; color: var(--text-secondary-color); 
-            border-left: 3px solid var(--primary-color); padding-left: 1rem; 
+
+        .testimonial-card blockquote {
+            margin: 0 0 1rem;
+            font-style: italic;
+            color: var(--text-secondary-color);
+            border-left: 3px solid var(--primary-color);
+            padding-left: 1rem;
         }
+
         /* 定义滚动动画 */
         @keyframes scroll {
             from {
                 transform: translateX(0);
             }
+
             to {
                 /* 移动的距离是一个原始轨道长度 */
-                transform: translateX(-50%); 
+                transform: translateX(-50%);
             }
         }
-        .testimonial-author { font-weight: bold; }
+
+        .testimonial-author {
+            font-weight: bold;
+        }
+
         /* --- 响应式调整 --- */
         @media (max-width: 1023px) {
-            .hero-grid { grid-template-columns: 1fr; text-align: center; }
-            .hero-actions { justify-content: center; }
-            .hero-visual { margin-top: 3rem; }
+            .hero-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-actions {
+                justify-content: center;
+            }
+
+            .hero-visual {
+                margin-top: 3rem;
+            }
         }
+
         @media (max-width: 767px) {
-            .hero-new { padding: 4rem 0; }
-            .hero-text h1 { font-size: 2.5rem; }
-            .why-us-section, .testimonials-section, .faq-section { padding: 3rem 0; }
+            .hero-new {
+                padding: 4rem 0;
+            }
+
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+
+            .why-us-section,
+            .testimonials-section,
+            .faq-section {
+                padding: 3rem 0;
+            }
         }
     </style>
 </head>
+
 <body>
     <div id="notification-banner" class="notification-banner" role="alert" aria-live="assertive"></div>
-    
+
     <header id="main-header" class="main-header"></header>
 
     <main>
@@ -247,69 +325,82 @@
             <div class="container">
                 <div class="hero-grid">
                     <div class="hero-text">
-                        <h1 data-lang-zh="洞察商机，增长无限"
-                            data-lang-en="Unlock Insights, Ignite Growth"></h1>
-                        <p class="subtitle"
-                           data-lang-zh="利用我们的自动化数据工具，将全球公开商业信息转化为您触手可及的增长机会。"
-                           data-lang-en="Turn public business data from around the globe into actionable growth opportunities at your fingertips."></p>
+                        <h1 data-lang-zh="全渠道智能获客，一站式解决" data-lang-en="Omnichannel Lead Generation, Solved"></h1>
+                        <p class="subtitle" data-lang-zh="我们为您整合了地图、网站、社媒等多个渠道的数据能力，打造了一套自动化增长工具，助您轻松链接全球商机。"
+                            data-lang-en="We integrate data capabilities from maps, websites, and social media into a suite of automated growth tools, helping you connect with global opportunities effortlessly.">
+                        </p>
                         <div class="hero-actions">
-                            <a href="./pricing.html" class="btn btn-primary"
-                               data-lang-zh="立即开始"
-                               data-lang-en="Get Started"></a>
-                            <a href="./docs.html" class="btn btn-secondary"
-                               data-lang-zh="查看文档"
-                               data-lang-en="View Docs"></a>
+                            <a href="#tools" class="btn btn-primary" data-lang-zh="探索我们的工具"
+                                data-lang-en="Explore Our Tools"></a>
+                            <a href="./pricing.html" class="btn btn-secondary" data-lang-zh="查看定价"
+                                data-lang-en="View Pricing"></a>
                         </div>
                     </div>
                     <div class="hero-visual">
-                        <label for="hero-modal-toggle" style="cursor: pointer; display: block;">
-                            <img src="./assets/img/home-background.webp"
-                                 alt="GoogleMapsScraper自动化工作流程演示" class="hero-gif">
-                        </label>
+                        <img src="./assets/img/hero-omnichannel.jpg" alt="全渠道获客概念图" class="hero-gif">
                     </div>
                 </div>
             </div>
         </section>
 
+
         <section class="why-us-section">
             <div class="container">
                 <div class="section-header">
-                    <h2 data-lang-zh="释放数据的全部潜力"
-                        data-lang-en="Unleash the Full Potential of Data"></h2>
-                    <p class="section-subtitle"
-                       data-lang-zh="我们提供的不只是数据抓取，更是一套完整的商业智能解决方案，助您在竞争中遥遥领先。"
-                       data-lang-en="We offer more than just data scraping; it's a complete business intelligence solution to keep you ahead of the competition."></p>
+                    <h2 data-lang-zh="为您打造的全渠道增长引擎" data-lang-en="An Omnichannel Growth Engine Built For You"></h2>
+                    <p class="section-subtitle" data-lang-zh="我们提供的不只是工具，更是一套完整的商业智能解决方案，助您在竞争中遥遥领先。"
+                        data-lang-en="We offer more than just tools; it's a complete business intelligence solution to keep you ahead of the competition.">
+                    </p>
                 </div>
                 <div class="new-features-grid">
                     <div class="new-feature-card card-hover-effect">
-                        <div class="icon-wrapper"><i class='bx bxs-widget'></i></div>
-                        <h3 data-lang-zh="全维度数据提取" data-lang-en="Comprehensive Data Extraction"></h3>
-                        <p data-lang-zh="精准获取名称、地址、电话、网站、类别、营业时间、评分和评价数等10多项商业信息。" data-lang-en="Accurately get 10+ data points including name, address, phone, website, category, hours, rating, and review count."></p>
+                        <div class="icon-wrapper"><i class='bx bx-sitemap'></i></div>
+                        <h3 data-lang-zh="多渠道线索覆盖" data-lang-en="Multi-Channel Lead Coverage"></h3>
+                        <p data-lang-zh="从地图商家、企业网站到社交媒体，在最广泛的渠道中发现您的潜在客户。"
+                            data-lang-en="Discover your potential customers across the broadest channels, from map listings and company websites to social media.">
+                        </p>
                     </div>
                     <div class="new-feature-card card-hover-effect">
                         <div class="icon-wrapper"><i class='bx bx-mail-send'></i></div>
-                        <h3 data-lang-zh="智能邮箱发现" data-lang-en="Intelligent Email Discovery"></h3>
-                        <p data-lang-zh="即使商家未公开官网，也能通过搜索引擎智能查找并深度挖掘最相关的联系邮箱。" data-lang-en="Even if a business has no website, our tool intelligently finds and extracts the most relevant contact emails via search engines."></p>
-                    </div>
-                    <div class="new-feature-card card-hover-effect">
-                        <div class="icon-wrapper"><i class='bx bx-brain'></i></div>
-                        <h3 data-lang-zh="AI 深度分析" data-lang-en="AI-Powered Deep Analysis"></h3>
-                        <p data-lang-zh="（高级功能）利用 AI 对目标公司进行深度分析，自动补充更多维度的商业信息和决策洞察。" data-lang-en="(Premium) Leverage AI for deep analysis of target companies, enriching data with more business insights."></p>
+                        <h3 data-lang-zh="精准联系人触达" data-lang-en="Precise Contact Reach"></h3>
+                        <p data-lang-zh="结合智能发现与深度验证技术，确保您获取的每一个联系方式都真实有效，提升触达率。"
+                            data-lang-en="Combine intelligent discovery with deep validation to ensure every contact detail you acquire is authentic and valid, boosting your outreach success.">
+                        </p>
                     </div>
                     <div class="new-feature-card card-hover-effect">
                         <div class="icon-wrapper"><i class='bx bx-bot'></i></div>
-                        <h3 data-lang-zh="批量自动化任务" data-lang-en="Batch Automation"></h3>
-                        <p data-lang-zh="支持导入无限关键词列表，结合多地区筛选，实现全天候自动化、无人值守的拓客。" data-lang-en="Import unlimited keyword lists and combine with multi-region filters for 24/7 automated lead generation."></p>
+                        <h3 data-lang-zh="强大的自动化能力" data-lang-en="Powerful Automation"></h3>
+                        <p data-lang-zh="设置好您的目标，我们的工具即可7x24小时无人值守地工作，持续不断地为您输送高质量线索。"
+                            data-lang-en="Set your targets, and our tools will work 24/7, unattended, continuously delivering high-quality leads to your pipeline.">
+                        </p>
                     </div>
-                    <div class="new-feature-card card-hover-effect">
-                        <div class="icon-wrapper"><i class='bx bx-globe'></i></div>
-                        <h3 data-lang-zh="全球覆盖与高可靠性" data-lang-en="Global Coverage & Reliability"></h3>
-                        <p data-lang-zh="覆盖全球所有地区，内置防封锁和验证码处理机制，确保长时间稳定运行。" data-lang-en="Covers all global regions with built-in anti-blocking and captcha handling for stable, long-running tasks."></p>
+                </div>
+            </div>
+        </section>
+
+        <section id="tools" class="how-it-works" style="scroll-margin-top: 80px;">
+            <div class="container">
+                <div class="section-header">
+                    <h2 data-lang-zh="我们的核心工具" data-lang-en="Our Core Tools"></h2>
+                </div>
+                <div class="new-features-grid">
+                    <div class="new-feature-card card-hover-effect" style="text-align: left;">
+                        <div class="icon-wrapper" style="text-align: center;"><i class='bx bxs-map-alt'></i></div>
+                        <h3 data-lang-zh="谷歌地图抓取器" data-lang-en="Google Maps Scraper"></h3>
+                        <p data-lang-zh="从Google Maps中精准提取海量B2B商家信息，自动发现并补充联系邮箱、社交链接等关键数据。"
+                            data-lang-en="Extract vast B2B business data from Google Maps, automatically discovering and enriching it with contact emails, social links, and more.">
+                        </p>
+                        <a href="./product.html?id=maps-scraper" class="btn btn-secondary" style="margin-top: 1.5rem;"
+                            data-lang-zh="了解更多" data-lang-en="Learn More"></a>
                     </div>
-                    <div class="new-feature-card card-hover-effect">
-                        <div class="icon-wrapper"><i class='bx bxs-file-export'></i></div>
-                        <h3 data-lang-zh="一键导出数据" data-lang-en="One-Click Data Export"></h3>
-                        <p data-lang-zh="轻松将所有数据导出为格式精美的 CSV 或 Excel 文件，无缝对接到您的工作流。" data-lang-en="Easily export all data to well-formatted CSV or Excel files, seamlessly integrating with your workflow."></p>
+                    <div class="new-feature-card card-hover-effect" style="text-align: left;">
+                        <div class="icon-wrapper" style="text-align: center;"><i class='bx bxs-check-shield'></i></div>
+                        <h3 data-lang-zh="邮箱批量验证器" data-lang-en="Email Validator"></h3>
+                        <p data-lang-zh="通过多维度深度检测，快速清洗您的邮件列表，剔除无效、临时或有风险的邮箱，大幅提升送达率。"
+                            data-lang-en="Quickly clean your email lists with multi-dimensional deep checks, removing invalid, temporary, or risky addresses to significantly boost deliverability.">
+                        </p>
+                        <a href="./product.html?id=email-validator" class="btn btn-secondary"
+                            style="margin-top: 1.5rem;" data-lang-zh="了解更多" data-lang-en="Learn More"></a>
                     </div>
                 </div>
             </div>
@@ -318,24 +409,29 @@
         <section class="how-it-works">
             <div class="container">
                 <div class="section-header">
-                    <h2 data-lang-zh="三步即可上手"
-                        data-lang-en="Get Started in Three Steps"></h2>
+                    <h2 data-lang-zh="三步即可上手" data-lang-en="Get Started in Three Steps"></h2>
                 </div>
                 <div class="steps-container">
                     <div class="step step-card card-hover-effect">
                         <div class="step-icon-wrapper"><i class='bx bx-search-alt'></i></div>
                         <h3 data-lang-zh="1. 定义目标" data-lang-en="1. Define Target"></h3>
-                        <p data-lang-zh="输入关键词、选择目标国家和城市，精准锁定您的潜在客户群体。" data-lang-en="Enter keywords, select target countries and cities to precisely lock down your potential customer base."></p>
+                        <p data-lang-zh="输入关键词、选择目标国家和城市，精准锁定您的潜在客户群体。"
+                            data-lang-en="Enter keywords, select target countries and cities to precisely lock down your potential customer base.">
+                        </p>
                     </div>
                     <div class="step step-card card-hover-effect">
                         <div class="step-icon-wrapper"><i class='bx bxs-cctv'></i></div>
                         <h3 data-lang-zh="2. 启动任务" data-lang-en="2. Launch Task"></h3>
-                        <p data-lang-zh="点击“开始”，我们的工具将全自动工作，为您搜集成百上千条高质量潜在客户信息。" data-lang-en="Click 'Start', and our tool will work automatically to gather hundreds of high-quality leads for you."></p>
+                        <p data-lang-zh="点击“开始”，我们的工具将全自动工作，为您搜集成百上千条高质量潜在客户信息。"
+                            data-lang-en="Click 'Start', and our tool will work automatically to gather hundreds of high-quality leads for you.">
+                        </p>
                     </div>
                     <div class="step step-card card-hover-effect">
                         <div class="step-icon-wrapper"><i class='bx bxs-download'></i></div>
                         <h3 data-lang-zh="3. 收获数据" data-lang-en="3. Harvest Data"></h3>
-                        <p data-lang-zh="任务完成后，将所有数据一键导出为表格，立即用于您的市场营销活动。" data-lang-en="Once the task is complete, export all data with one click for your marketing campaigns."></p>
+                        <p data-lang-zh="任务完成后，将所有数据一键导出为表格，立即用于您的市场营销活动。"
+                            data-lang-en="Once the task is complete, export all data with one click for your marketing campaigns.">
+                        </p>
                     </div>
                 </div>
             </div>
@@ -350,41 +446,40 @@
                     <div class="faq-item">
                         <h2 class="faq-question">
                             <button aria-expanded="false" aria-controls="faq-answer-home-1">
-                                <span data-lang-zh="我能获取到哪些具体的数据字段？" data-lang-en="What specific data fields can I get?"></span>
+                                <span data-lang-zh="你们的工具有什么不同？我应该选哪个？"
+                                    data-lang-en="What's the difference between your tools? Which one should I choose?"></span>
                             </button>
                         </h2>
                         <div id="faq-answer-home-1" class="faq-answer" hidden>
-                            <p data-lang-zh="您可以获取超过10个维度的详细数据，包括：公司名称、详细地址、电话、官方网站、电子邮箱、业务类别、营业时间、Google评分、总评价数以及原始Google Maps链接。" data-lang-en="You can get over 10 fields of detailed data, including: company name, full address, phone number, official website, email, business category, operating hours, Google rating, total number of reviews, and the original Google Maps link."></p>
+                            <p data-lang-zh="“谷歌地图抓取器”专注于从地图中发现新的商业线索，适合需要开拓新市场的用户。“邮箱批量验证器”则专注于清洗和验证您已有的邮件列表，适合需要提升营销邮件送达率的用户。两者可以结合使用，效果更佳。"
+                                data-lang-en="'Google Maps Scraper' focuses on discovering new business leads from maps, ideal for users needing to enter new markets. 'Email Validator' focuses on cleaning and verifying your existing email lists, perfect for users who need to improve their marketing email deliverability. They work great together.">
+                            </p>
                         </div>
                     </div>
                     <div class="faq-item">
                         <h2 class="faq-question">
                             <button aria-expanded="false" aria-controls="faq-answer-home-2">
-                                <span data-lang-zh="如果一个商家没有提供网站，还能找到邮箱吗？" data-lang-en="If a business doesn't have a website, can you still find an email?"></span>
+                                <span data-lang-zh="数据来源是哪里？使用这些数据合法吗？"
+                                    data-lang-en="What are the data sources? Is using this data legal?"></span>
                             </button>
                         </h2>
                         <div id="faq-answer-home-2" class="faq-answer" hidden>
-                            <p data-lang-zh="是的，这是我们的核心优势之一。如果商家没有官网，我们的系统会自动使用其公司名称和地址在搜索引擎中进行智能查找，定位最有可能的官方或社交页面，并从中深度挖掘联系邮箱。" data-lang-en="Yes, this is one of our key strengths. If a business lacks a website, our system automatically uses its name and address to perform an intelligent search, locating the most likely official or social pages and deeply mining for contact emails."></p>
+                            <p data-lang-zh="我们所有的数据均来源于公开渠道，如商家在地图、网站和社交媒体上自行发布的信息。我们聚合和整理这些公开数据，不涉及任何私人或非公开信息。我们建议您在使用数据时，遵守您所在国家和地区的相关法律法规，如 CAN-SPAM 或 GDPR。"
+                                data-lang-en="All our data comes from public sources, such as information businesses publish on maps, websites, and social media. We aggregate and organize this public data and do not handle any private or non-public information. We advise you to comply with local laws and regulations like CAN-SPAM or GDPR when using the data.">
+                            </p>
                         </div>
                     </div>
                     <div class="faq-item">
                         <h2 class="faq-question">
                             <button aria-expanded="false" aria-controls="faq-answer-home-3">
-                                <span data-lang-zh="AI 深度分析功能具体是做什么的？" data-lang-en="What exactly does the AI Deep Analysis feature do?"></span>
+                                <span data-lang-zh="我需要自己准备代理IP吗？"
+                                    data-lang-en="Do I need to provide my own proxy IPs?"></span>
                             </button>
                         </h2>
                         <div id="faq-answer-home-3" class="faq-answer" hidden>
-                            <p data-lang-zh="AI 深度分析是我们的高级功能。它会将已抓取的基础数据发送给大型语言模型（如 Gemini），进行二次分析和信息补全。例如，它可以帮助判断公司规模、主营业务的详细描述、寻找社交媒体链接等，为您提供更丰富的商业洞察。" data-lang-en="AI Deep Analysis is our premium feature. It sends the basic scraped data to a large language model (like Gemini) for secondary analysis and enrichment. For example, it can help determine company size, provide detailed descriptions of a business's main activities, find social media links, and offer richer business insights."></p>
-                        </div>
-                    </div>
-                    <div class="faq-item">
-                        <h2 class="faq-question">
-                            <button aria-expanded="false" aria-controls="faq-answer-home-4">
-                                <span data-lang-zh="我需要自己准备代理IP吗？" data-lang-en="Do I need to provide my own proxy IPs?"></span>
-                            </button>
-                        </h2>
-                        <div id="faq-answer-home-4" class="faq-answer" hidden>
-                            <p data-lang-zh="不需要。我们的软件内置了先进的防封锁技术和模拟真人行为的浏览器引擎。在大多数情况下您无需任何额外配置。当遇到罕见的人机验证时，软件会智能暂停并提示您手动通过，之后即可恢复任务。" data-lang-en="No. Our software has built-in advanced anti-blocking technology and a human-like browser engine. In most cases, you don't need any extra configuration. If a rare captcha is encountered, the software will intelligently pause and prompt you to solve it manually before resuming the task."></p>
+                            <p data-lang-zh="不需要。我们的软件内置了先进的防封锁技术和模拟真人行为的浏览器引擎。在大多数情况下您无需任何额外配置。当遇到罕见的人机验证时，软件会智能暂停并提示您手动通过，之后即可恢复任务。"
+                                data-lang-en="No. Our software has built-in advanced anti-blocking technology and a human-like browser engine. In most cases, you don't need any extra configuration. If a rare captcha is encountered, the software will intelligently pause and prompt you to solve it manually before resuming the task.">
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -392,38 +487,37 @@
         </section>
         <section class="testimonials-section">
             <div class="container">
-                 <div class="section-header">
-                    <h2 data-lang-zh="听听我们的客户怎么说"
-                        data-lang-en="What Our Customers Say"></h2>
+                <div class="section-header">
+                    <h2 data-lang-zh="听听我们的客户怎么说" data-lang-en="What Our Customers Say"></h2>
                 </div>
                 <div class="testimonials-slider">
                     <div class="testimonials-track" id="testimonials-track">
                         <div class="testimonial-card card-hover-effect">
                             <blockquote>
                                 <p data-lang-zh="“这款工具彻底改变了我们的拓客方式。在短短一周内，我们获得的有效潜在客户比之前一个月还多。”"
-                                   data-lang-en="This tool completely changed our lead generation process. We got more qualified leads in a week than we did in the previous month."></p>
+                                    data-lang-en="This tool completely changed our lead generation process. We got more qualified leads in a week than we did in the previous month.">
+                                </p>
                             </blockquote>
-                            <p class="testimonial-author"
-                               data-lang-zh="—— 李明, 市场总监"
-                               data-lang-en="— John Doe, Marketing Director"></p>
+                            <p class="testimonial-author" data-lang-zh="—— 李明, 市场总监"
+                                data-lang-en="— John Doe, Marketing Director"></p>
                         </div>
                         <div class="testimonial-card card-hover-effect">
                             <blockquote>
                                 <p data-lang-zh="“界面非常直观，几乎没有学习成本。数据的准确性也非常高，为我们节省了大量手动核对的时间。”"
-                                   data-lang-en="The interface is incredibly intuitive, with almost no learning curve. The data accuracy is also very high, saving us tons of time."></p>
+                                    data-lang-en="The interface is incredibly intuitive, with almost no learning curve. The data accuracy is also very high, saving us tons of time.">
+                                </p>
                             </blockquote>
-                            <p class="testimonial-author"
-                               data-lang-zh="—— Sarah Lee, 创业公司创始人"
-                               data-lang-en="— Sarah Lee, Startup Founder"></p>
+                            <p class="testimonial-author" data-lang-zh="—— Sarah Lee, 创业公司创始人"
+                                data-lang-en="— Sarah Lee, Startup Founder"></p>
                         </div>
                         <div class="testimonial-card card-hover-effect">
                             <blockquote>
                                 <p data-lang-zh="“性价比极高。相比其他昂贵的解决方案，GoogleMapsScraper 提供了我们需要的一切功能，而且价格更合理。”"
-                                   data-lang-en="Excellent value for money. Compared to other expensive solutions, GoogleMapsScraper provides everything we need at a more reasonable price."></p>
+                                    data-lang-en="Excellent value for money. Compared to other expensive solutions, GoogleMapsScraper provides everything we need at a more reasonable price.">
+                                </p>
                             </blockquote>
-                            <p class="testimonial-author"
-                               data-lang-zh="—— 王强, 销售经理"
-                               data-lang-en="— Mike Chen, Sales Manager"></p>
+                            <p class="testimonial-author" data-lang-zh="—— 王强, 销售经理"
+                                data-lang-en="— Mike Chen, Sales Manager"></p>
                         </div>
                     </div>
                 </div>
@@ -433,23 +527,53 @@
 
         <section class="cta-section">
             <div class="container">
-                <h2 data-lang-zh="准备好提升您的业务了吗？"
-                    data-lang-en="Ready to Elevate Your Business?"></h2>
+                <h2 data-lang-zh="准备好提升您的业务了吗？" data-lang-en="Ready to Elevate Your Business?"></h2>
                 <p data-lang-zh="立即开始使用 GoogleMapsScraper，将繁琐的拓客工作自动化。"
-                   data-lang-en="Start using GoogleMapsScraper today and automate the tedious work of lead generation."></p>
-                <a href="./pricing.html" class="btn btn-primary"
-                   data-lang-zh="选择您的计划"
-                   data-lang-en="Choose Your Plan"></a>
+                    data-lang-en="Start using GoogleMapsScraper today and automate the tedious work of lead generation.">
+                </p>
+                <a href="./pricing.html" class="btn btn-primary" data-lang-zh="选择您的计划"
+                    data-lang-en="Choose Your Plan"></a>
             </div>
         </section>
 
         <div class="floating-contact-container">
-            </div>
+        </div>
     </main>
 
     <footer id="main-footer" class="main-footer"></footer>
 
     <div class="modal-container">
+    </div>
+
+    <div class="floating-contact-container">
+        <button id="contact-fab" class="contact-fab" aria-label="Contact Us">
+            <i class='bx bxs-message-dots'></i>
+        </button>
+    </div>
+
+    <div id="contact-modal-container" class="modal-container">
+        <div class="modal-content">
+            <button id="modal-close-btn" class="modal-close-btn" aria-label="Close">&times;</button>
+            <h2 data-lang-zh="联系我们" data-lang-en="Contact Us">联系我们</h2>
+            <div class="contact-channels">
+                <div class="contact-channel">
+                    <i class='bx bxl-whatsapp'></i>
+                    <h3 data-lang-zh="WhatsApp" data-lang-en="WhatsApp">WhatsApp</h3>
+                    <a href="https://wa.me/8619189026051" target="_blank" class="btn btn-secondary">+8619189026051</a>
+                </div>
+                <div class="contact-channel">
+                    <i class='bx bxl-weixin'></i>
+                    <h3 data-lang-zh="微信客服" data-lang-en="WeChat Support">微信客服</h3>
+                    <img src="assets/img/wechat.png" alt="微信二维码" class="qr-code">
+                    <p data-lang-zh="扫码添加好友" data-lang-en="Scan QR to Add">扫码添加好友</p>
+                </div>
+            </div>
         </div>
+    </div>
+
 </body>
+
+</html>
+</body>
+
 </html>

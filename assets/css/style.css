@@ -590,6 +590,136 @@ h2.faq-question:has(button[aria-expanded="true"]) + .faq-answer {
 }
 
 
+/* --- 9. 悬浮联系按钮与弹窗 --- */
+
+/* 悬浮按钮容器 */
+.floating-contact-container {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 99;
+}
+
+/* 悬浮按钮本身 */
+.contact-fab {
+    width: 60px;
+    height: 60px;
+    background-color: var(--primary-color);
+    color: #fff;
+    border-radius: 50%;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.contact-fab:hover {
+    transform: scale(1.1);
+    background-color: #1d4ed8; /* 悬浮时颜色加深 */
+}
+
+.contact-fab .bx {
+    font-size: 2rem;
+}
+
+/* 弹窗容器 (遮罩层) */
+.modal-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* 默认隐藏 */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* 当弹窗激活时 */
+.modal-container.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* 弹窗内容区域 */
+.modal-content {
+    background-color: var(--background-color);
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    text-align: center;
+    transform: scale(0.95);
+    transition: transform 0.3s ease;
+}
+
+.modal-container.active .modal-content {
+    transform: scale(1);
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    line-height: 1;
+    color: var(--text-secondary-color);
+    cursor: pointer;
+}
+
+.modal-content h2 {
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+}
+
+.contact-channels {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.contact-channel .bx {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+}
+.contact-channel h3 {
+    margin: 0.5rem 0;
+}
+.qr-code {
+    max-width: 180px;
+    margin: 1rem auto;
+    border: 1px solid var(--border-color);
+    padding: 5px;
+    border-radius: 8px;
+}
+
+/* 响应式调整 */
+@media (min-width: 768px) {
+    .contact-channels {
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: flex-start;
+    }
+    .contact-channel {
+        flex: 1;
+    }
+}
+
 /* --- 8. 响应式设计 (移动优先) --- */
 
 /* 移动端样式 (360px+) - 这是基础 */
