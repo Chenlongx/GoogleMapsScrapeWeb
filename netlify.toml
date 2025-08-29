@@ -1,0 +1,10 @@
+[build.environment]
+  NODE_VERSION = "16"
+
+[functions]
+  # 这个路径必须和你创建的文件夹路径一致
+  directory = "netlify/functions/"
+
+[dev]
+  port = 5001
+  functionsPort = 4998
