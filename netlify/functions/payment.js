@@ -76,10 +76,10 @@ exports.handler = async (event) => {
         const { error: insertError } = await supabase.from('orders').insert([
             {
                 out_trade_no: outTradeNo,
-                status: 'PENDING', // 初始状态为待支付
-                plan: subject, // 使用 subject 作为 plan 描述
-                user_email: email,
-                price: parseFloat(price) // 存储价格
+                product_id: productId,    // 使用 productId 对应你的 product_id 字段
+                customer_email: email,    // 使用 email 对应你的 customer_email 字段
+                status: 'PENDING'         // 初始状态为待支付
+                // 移除了不存在的 price 和 plan 字段
             }
         ]);
 
