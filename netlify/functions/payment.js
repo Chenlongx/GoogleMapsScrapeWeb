@@ -1,6 +1,7 @@
 // ▼▼▼【关键修改】▼▼▼
 // 这是根据调试结果确定的唯一正确的导入方式
 const { AlipaySdk } = require('alipay-sdk');
+const { createClient } = require('@supabase/supabase-js');
 
 // 允许的来源白名单
 const allowedOrigins = [
@@ -65,6 +66,29 @@ exports.handler = async (event) => {
         } else if (productId.startsWith('validator')) {
             subject = productId.includes('premium') ? 'Email Validator 高级版激活码' : 'Email Validator 标准版激活码';
         }
+
+        const supabase = createClient(
+            "https://hyxryxarutbesoqxcprk.supabase.co",
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh5eHJ5eGFydXRiZXNvcXhjcHJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ3MjQ5MjUsImV4cCI6MjA3MDMwMDkyNX0.kK3TmssDX7WhCuslv4MOYOR9ntXgtJLWbE5ArRMRzaQ"
+        );
+
+
+        const { error: insertError } = await supabase.from('orders').insert([
+            {
+                out_trade_no: outTradeNo,
+                status: 'PENDING', // 初始状态为待支付
+                plan: subject, // 使用 subject 作为 plan 描述
+                user_email: email,
+                price: parseFloat(price) // 存储价格
+            }
+        ]);
+
+        if (insertError) {
+            // 如果插入数据库失败，就直接报错，不继续生成二维码
+            console.error('Supabase insert error:', insertError);
+            throw new Error(`Failed to create order in database: ${insertError.message}`);
+        }
+
 
         const result = await alipaySdk.exec('alipay.trade.precreate', {
             bizContent: {
