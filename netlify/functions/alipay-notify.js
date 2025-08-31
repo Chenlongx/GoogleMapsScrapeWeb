@@ -97,12 +97,19 @@ async function processBusinessLogic(orderParams) {
 }
 
 exports.handler = async (event) => {
+    // --- 调试点 1: 函数是否被触发 ---
+    console.log('--- [alipay-notify.js] Function Invoked ---');
+    console.log(`Timestamp: ${new Date().toISOString()}`);
+    console.log(`Request Method: ${event.httpMethod}`);
+
     if (event.httpMethod !== 'POST') {
+        console.log('Request is not POST. Exiting.');
         return { statusCode: 405, body: 'Method Not Allowed' };
     }
 
     try {
         // 检查环境变量
+         console.log('Raw body from Alipay:', event.body);
 
         // 初始化 Alipay SDK（公钥模式）
         const alipaySdk = new AlipaySdk({
@@ -114,14 +121,18 @@ exports.handler = async (event) => {
 
         const params = new URLSearchParams(event.body);
         const paramsJSON = Object.fromEntries(params.entries());
+        console.log('Parsed parameters (JSON):', JSON.stringify(paramsJSON, null, 2));
 
         const isSignVerified = alipaySdk.checkNotifySign(paramsJSON); // 使用公钥验证签名
+        console.log('Alipay sign verification result:', isSignVerified);
+
         if (!isSignVerified) {
             console.error('Alipay sign verification failed.');
             return { statusCode: 200, body: 'failure' };
         }
 
         const tradeStatus = params.get('trade_status');
+        console.log('Received trade_status:', tradeStatus);
         if (tradeStatus === 'TRADE_SUCCESS') {
             console.log('Payment successful. Processing business logic...');
 
@@ -135,9 +146,11 @@ exports.handler = async (event) => {
 
             if (error) {
                 console.error(`Failed to update order status for ${outTradeNo}:`, error.message);
+            }else {
+                console.log(`Supabase update successful for ${outTradeNo}.`);
             }
 
-            await processBusinessLogic(params);
+            await processBusinessLogic(params, supabase, resend);
         }
 
         return { statusCode: 200, body: 'success' };
