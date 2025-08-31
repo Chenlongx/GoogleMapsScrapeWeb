@@ -68,7 +68,7 @@ exports.handler = async (event) => {
                 out_trade_no: outTradeNo,
                 total_amount: price,
                 subject: subject,
-                notify_url: '/.netlify/functions/alipay-notify'
+                notify_url: 'https://fancy-peas-roll.loca.lt/.netlify/functions/alipay-notify'
             },
         });
 
