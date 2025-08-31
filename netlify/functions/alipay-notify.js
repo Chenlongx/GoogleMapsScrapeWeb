@@ -315,6 +315,7 @@ async function processBusinessLogic(orderParams) {
 }
 
 // --- Netlify 主函数 ---
+// --- Netlify 主函数 ---
 exports.handler = async (event) => {
     console.log('--- [alipay-notify.js] Function Invoked ---');
 
@@ -325,6 +326,13 @@ exports.handler = async (event) => {
 
     try {
         console.log('Raw body from Alipay:', event.body);
+
+        // ▼▼▼ 新增的调试代码 ▼▼▼
+        console.log('--- Verifying Environment Variables ---');
+        console.log('ALIPAY_PRIVATE_KEY:', process.env.ALIPAY_PRIVATE_KEY);
+        console.log('ALIPAY_PUBLIC_KEY:', process.env.ALIPAY_PUBLIC_KEY);
+        console.log('--- End of Environment Variable Verification ---');
+        // ▲▲▲ 调试代码结束 ▲▲▲
 
         // 1️⃣ 解析 body，兼容字符串或对象
         let params;
@@ -354,6 +362,7 @@ exports.handler = async (event) => {
             gateway: process.env.ALIPAY_GATEWAY,
         });
 
+        // ... 后续代码保持不变 ...
         let isSignVerified = false;
         if (process.env.NODE_ENV === 'development') {
             console.log('⚠️ Skipping Alipay signature verification in development mode.');
