@@ -179,6 +179,7 @@
 
 
 // netlify/functions/alipay-notify.js
+// netlify/functions/alipay-notify.js
 
 const { AlipaySdk } = require('alipay-sdk');
 const { createClient } = require('@supabase/supabase-js');
@@ -198,21 +199,22 @@ async function processBusinessLogic(orderParams) {
         return;
     }
 
-    const rawSubject = orderParams.get('subject') || '';
-    const productId = decodeURIComponent(rawSubject);
+    const rawSubject = orderParams.get('subject');
+    if (!rawSubject) {
+        console.error('[Critical] subject is missing. Full params:', JSON.stringify(Object.fromEntries(orderParams.entries())));
+        return;
+    }
+
+    // 解码中文和空格
+    const productId = decodeURIComponent(rawSubject.replace(/\+/g, ' '));
     const outTradeNo = orderParams.get('out_trade_no') || '';
 
     console.log('[Debug] Raw subject:', rawSubject);
     console.log('[Debug] Decoded productId:', productId);
     console.log('[Debug] outTradeNo:', outTradeNo);
 
-    if (!productId) {
-        console.error('[Critical] productId is missing. Aborting business logic.');
-        return;
-    }
-
-    if (!outTradeNo) {
-        console.error('[Critical] outTradeNo is missing. Aborting business logic.');
+    if (!productId || !outTradeNo) {
+        console.error('[Critical] productId or outTradeNo is missing. Aborting.');
         return;
     }
 
@@ -308,13 +310,17 @@ exports.handler = async (event) => {
         let params;
         if (typeof event.body === 'string') {
             params = new URLSearchParams(event.body);
-        } else if (typeof event.body === 'object') {
-            params = new URLSearchParams();
+        } else if (typeof event.body === 'object' && event.body !== null) {
+            // 如果 event.body 已经是对象，自己拼成 URLSearchParams
+            const searchParams = [];
             for (const key in event.body) {
-                params.append(key, event.body[key]);
+                if (Object.hasOwn(event.body, key)) {
+                    searchParams.push(`${encodeURIComponent(key)}=${encodeURIComponent(event.body[key])}`);
+                }
             }
+            params = new URLSearchParams(searchParams.join('&'));
         } else {
-            console.error('[Critical] event.body type unknown:', typeof event.body);
+            console.error('[Critical] Unknown event.body type:', typeof event.body);
             return { statusCode: 200, body: 'failure' };
         }
 
