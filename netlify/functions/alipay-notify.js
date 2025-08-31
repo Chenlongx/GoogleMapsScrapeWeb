@@ -2,7 +2,7 @@
 
 // ▼▼▼【核心修改】▼▼▼
 // 这是正确的模块导入方式
-const AlipaySdk = require('alipay-sdk');
+const { AlipaySdk } = require('alipay-sdk');
 const { createClient } = require('@supabase/supabase-js');
 const { Resend } = require('resend');
 
