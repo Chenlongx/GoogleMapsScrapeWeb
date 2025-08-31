@@ -10,93 +10,229 @@ function generatePassword() {
 }
 
 // --- 辅助函数：核心业务逻辑处理 ---
+// async function processBusinessLogic(orderParams) {
+//     // ▼▼▼【新增的深度调试日志】▼▼▼
+//     console.log('[Debug] Entered processBusinessLogic function.');
+//     console.log('[Debug] Type of orderParams:', typeof orderParams);
+//     console.log('[Debug] Raw orderParams object:', JSON.stringify(Object.fromEntries(orderParams.entries()), null, 2));
+//     console.log('[Debug] Value of orderParams.get("subject"):', orderParams.get('subject'));
+//     // ▲▲▲【调试日志结束】▲▲▲
+
+//     const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
+//     const resend = new Resend(process.env.RESEND_API_KEY);
+
+//     const outTradeNo = orderParams.get('out_trade_no');
+//     const customerEmail = Buffer.from(outTradeNo.split('-')[2], 'base64').toString('ascii');
+//     const productId = orderParams.get('subject') || '';
+//     console.log('[Debug] productId:', productId);
+
+//     let emailSubject = '';
+//     let emailHtml = '';
+
+//     console.log(`[processBusinessLogic] Starting for order: ${outTradeNo}`);
+
+//     // 为了防止错误，我们在这里加一个检查
+//     if (typeof productId !== 'string') {
+//         console.error(`[Critical Logic Error] productId is not a string, it is: ${typeof productId}. Aborting business logic.`);
+//         // 即使出错，也应该让主函数继续返回 success，避免支付宝重试
+//         return; 
+//     }
+
+//     // 确保 orderParams 是 URLSearchParams 或兼容对象
+//     if (!orderParams || typeof orderParams.get !== 'function') {
+//         console.error('[Critical] orderParams is invalid.');
+//         return;
+//     }
+
+    
+    
+
+//     if (!productId) {
+//         console.error('productId is missing, aborting business logic.');
+//         return;
+//     }
+
+//     if (productId.includes('Google Maps Scraper')) {
+//         const password = generatePassword();
+//         const userType = productId.includes('高级版') ? 'premium' : 'standard';
+//         const expiryDate = new Date();
+//         expiryDate.setDate(expiryDate.getDate() + 30);
+
+//         const { error } = await supabase.from('user_accounts').insert({
+//             account: customerEmail,
+//             password: password,
+//             user_type: userType,
+//             status: 'active',
+//             expiry_at: expiryDate.toISOString()
+//         });
+
+//         if (error) {
+//             throw new Error(`Failed to create user account for ${customerEmail}: ${error.message}`);
+//         }
+
+//         emailSubject = '您的 Google Maps Scraper 账户已成功开通！';
+//         emailHtml = `<h1>欢迎！</h1><p>您的账户 (${customerEmail}) 已成功开通。</p><p><strong>登录密码:</strong> ${password}</p><p>请登录网站开始使用，并及时修改您的密码。</p><p>感谢您的支持！</p>`;
+    
+//     } else if (productId.includes('Email Validator')) {
+//         const { data: license, error: findError } = await supabase
+//             .from('licenses')
+//             .select('key')
+//             .eq('status', 'available')
+//             .limit(1)
+//             .single();
+
+//         if (findError || !license) {
+//             throw new Error('No available license keys.');
+//         }
+
+//         const activationCode = license.key;
+//         const { error: updateError } = await supabase
+//             .from('licenses')
+//             .update({ status: 'activated', activation_date: new Date().toISOString(), customer_email: customerEmail })
+//             .eq('key', activationCode);
+        
+//         if (updateError) {
+//             throw new Error(`Failed to update license key status for ${activationCode}: ${updateError.message}`);
+//         }
+
+//         emailSubject = '您的 Email Validator 激活码';
+//         emailHtml = `<h1>感谢您的购买！</h1><p>您的激活码是：<strong>${activationCode}</strong></p><p>请在软件中使用此激活码激活。</p>`;
+//     }
+
+//     if (!emailSubject || !customerEmail) {
+//         console.error('Email subject or recipient is missing.');
+//         return;
+//     }
+
+//     await resend.emails.send({
+//         from: 'LeadScout <noreply@mediamingle.cn>',
+//         to: customerEmail,
+//         subject: emailSubject,
+//         html: emailHtml,
+//     });
+//     console.log(`[processBusinessLogic] Email sent to ${customerEmail}`);
+// }
+
+
+
+
+
+// --- 辅助函数：核心业务逻辑处理 ---
 async function processBusinessLogic(orderParams) {
-    // ▼▼▼【新增的深度调试日志】▼▼▼
     console.log('[Debug] Entered processBusinessLogic function.');
     console.log('[Debug] Type of orderParams:', typeof orderParams);
-    console.log('[Debug] Raw orderParams object:', JSON.stringify(Object.fromEntries(orderParams.entries()), null, 2));
-    console.log('[Debug] Value of orderParams.get("subject"):', orderParams.get('subject'));
-    // ▲▲▲【调试日志结束】▲▲▲
+
+    // 确保 orderParams 是 URLSearchParams 或兼容对象
+    if (!orderParams || typeof orderParams.get !== 'function') {
+        console.error('[Critical] orderParams is invalid. Aborting business logic.');
+        return;
+    }
+
+    // 解析参数
+    const rawSubject = orderParams.get('subject') || '';
+    const productId = decodeURIComponent(rawSubject); // 中文解码
+    const outTradeNo = orderParams.get('out_trade_no') || '';
+
+    console.log('[Debug] Raw subject:', rawSubject);
+    console.log('[Debug] Decoded productId:', productId);
+    console.log('[Debug] outTradeNo:', outTradeNo);
+
+    if (!productId) {
+        console.error('[Critical] productId is missing. Aborting business logic.');
+        return;
+    }
+
+    if (!outTradeNo) {
+        console.error('[Critical] outTradeNo is missing. Aborting business logic.');
+        return;
+    }
+
+    const customerEmail = Buffer.from(outTradeNo.split('-')[2] || '', 'base64').toString('ascii');
+    if (!customerEmail) {
+        console.error('[Critical] Failed to decode customerEmail from outTradeNo.');
+        return;
+    }
 
     const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
     const resend = new Resend(process.env.RESEND_API_KEY);
 
-    const outTradeNo = orderParams.get('out_trade_no');
-    const customerEmail = Buffer.from(outTradeNo.split('-')[2], 'base64').toString('ascii');
-    const productId = orderParams.get('subject'); // 问题根源很可能与这行有关
-
     let emailSubject = '';
     let emailHtml = '';
 
-    console.log(`[processBusinessLogic] Starting for order: ${outTradeNo}`);
+    try {
+        if (productId.includes('Google Maps Scraper')) {
+            const password = Math.random().toString(36).slice(-8);
+            const userType = productId.includes('高级版') ? 'premium' : 'standard';
+            const expiryDate = new Date();
+            expiryDate.setDate(expiryDate.getDate() + 30);
 
-    // 为了防止错误，我们在这里加一个检查
-    if (typeof productId !== 'string') {
-        console.error(`[Critical Logic Error] productId is not a string, it is: ${typeof productId}. Aborting business logic.`);
-        // 即使出错，也应该让主函数继续返回 success，避免支付宝重试
-        return; 
-    }
+            const { error } = await supabase.from('user_accounts').insert({
+                account: customerEmail,
+                password: password,
+                user_type: userType,
+                status: 'active',
+                expiry_at: expiryDate.toISOString()
+            });
 
-    if (productId.includes('Google Maps Scraper')) {
-        const password = generatePassword();
-        const userType = productId.includes('高级版') ? 'premium' : 'standard';
-        const expiryDate = new Date();
-        expiryDate.setDate(expiryDate.getDate() + 30);
+            if (error) {
+                throw new Error(`Failed to create user account for ${customerEmail}: ${error.message}`);
+            }
 
-        const { error } = await supabase.from('user_accounts').insert({
-            account: customerEmail,
-            password: password,
-            user_type: userType,
-            status: 'active',
-            expiry_at: expiryDate.toISOString()
+            emailSubject = '您的 Google Maps Scraper 账户已成功开通！';
+            emailHtml = `<h1>欢迎！</h1>
+                <p>您的账户 (${customerEmail}) 已成功开通。</p>
+                <p><strong>登录密码:</strong> ${password}</p>
+                <p>请登录网站开始使用，并及时修改您的密码。</p>
+                <p>感谢您的支持！</p>`;
+
+        } else if (productId.includes('Email Validator')) {
+            const { data: license, error: findError } = await supabase
+                .from('licenses')
+                .select('key')
+                .eq('status', 'available')
+                .limit(1)
+                .single();
+
+            if (findError || !license) {
+                throw new Error('No available license keys.');
+            }
+
+            const activationCode = license.key;
+            const { error: updateError } = await supabase
+                .from('licenses')
+                .update({ status: 'activated', activation_date: new Date().toISOString(), customer_email: customerEmail })
+                .eq('key', activationCode);
+
+            if (updateError) {
+                throw new Error(`Failed to update license key status for ${activationCode}: ${updateError.message}`);
+            }
+
+            emailSubject = '您的 Email Validator 激活码';
+            emailHtml = `<h1>感谢您的购买！</h1>
+                <p>您的激活码是：<strong>${activationCode}</strong></p>
+                <p>请在软件中使用此激活码激活。</p>`;
+        } else {
+            console.warn('[Info] productId does not match any known products:', productId);
+            return;
+        }
+
+        // 发送邮件
+        await resend.emails.send({
+            from: 'LeadScout <noreply@mediamingle.cn>',
+            to: customerEmail,
+            subject: emailSubject,
+            html: emailHtml,
         });
 
-        if (error) {
-            throw new Error(`Failed to create user account for ${customerEmail}: ${error.message}`);
-        }
+        console.log(`[processBusinessLogic] Email sent to ${customerEmail}`);
 
-        emailSubject = '您的 Google Maps Scraper 账户已成功开通！';
-        emailHtml = `<h1>欢迎！</h1><p>您的账户 (${customerEmail}) 已成功开通。</p><p><strong>登录密码:</strong> ${password}</p><p>请登录网站开始使用，并及时修改您的密码。</p><p>感谢您的支持！</p>`;
-    
-    } else if (productId.includes('Email Validator')) {
-        const { data: license, error: findError } = await supabase
-            .from('licenses')
-            .select('key')
-            .eq('status', 'available')
-            .limit(1)
-            .single();
-
-        if (findError || !license) {
-            throw new Error('No available license keys.');
-        }
-
-        const activationCode = license.key;
-        const { error: updateError } = await supabase
-            .from('licenses')
-            .update({ status: 'activated', activation_date: new Date().toISOString(), customer_email: customerEmail })
-            .eq('key', activationCode);
-        
-        if (updateError) {
-            throw new Error(`Failed to update license key status for ${activationCode}: ${updateError.message}`);
-        }
-
-        emailSubject = '您的 Email Validator 激活码';
-        emailHtml = `<h1>感谢您的购买！</h1><p>您的激活码是：<strong>${activationCode}</strong></p><p>请在软件中使用此激活码激活。</p>`;
+    } catch (err) {
+        console.error('[Critical Error] in processBusinessLogic:', err.message);
     }
-
-    if (!emailSubject || !customerEmail) {
-        console.error('Email subject or recipient is missing.');
-        return;
-    }
-
-    await resend.emails.send({
-        from: 'LeadScout <noreply@mediamingle.cn>',
-        to: customerEmail,
-        subject: emailSubject,
-        html: emailHtml,
-    });
-    console.log(`[processBusinessLogic] Email sent to ${customerEmail}`);
 }
+
+
+
 
 // --- Netlify 主处理函数 ---
 exports.handler = async (event) => {
