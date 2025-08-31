@@ -68,8 +68,8 @@ exports.handler = async (event) => {
         }
 
         const supabase = createClient(
-            "https://hyxryxarutbesoqxcprk.supabase.co",
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh5eHJ5eGFydXRiZXNvcXhjcHJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ3MjQ5MjUsImV4cCI6MjA3MDMwMDkyNX0.kK3TmssDX7WhCuslv4MOYOR9ntXgtJLWbE5ArRMRzaQ"
+            process.env.SUPABASE_URL,
+            process.env.SUPABASE_ANON_KEY
         );
 
 
