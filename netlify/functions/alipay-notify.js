@@ -178,8 +178,6 @@
 
 
 
-// netlify/functions/alipay-notify.js
-// netlify/functions/alipay-notify.js
 const { AlipaySdk } = require('alipay-sdk');
 const { createClient } = require('@supabase/supabase-js');
 const { Resend } = require('resend');
@@ -191,45 +189,51 @@ function generatePassword() {
 
 // --- 核心业务逻辑 ---
 async function processBusinessLogic(orderParams) {
-    console.log('[Debug] Entered processBusinessLogic function.');
+    console.log('[Debug] Entered processBusinessLogic function with params:', orderParams);
 
     // 验证 orderParams 是否有效
     if (!orderParams || typeof orderParams.get !== 'function') {
-        console.error('[Critical] orderParams is invalid or missing get method. Aborting.');
+        console.error('[Critical] orderParams is invalid or missing get method. Full params:', orderParams);
         return { success: false, error: 'Invalid orderParams' };
     }
 
     const rawSubject = orderParams.get('subject');
-    if (!rawSubject) {
-        console.error('[Critical] subject is missing. Full params:', JSON.stringify(Object.fromEntries(orderParams.entries())));
-        return { success: false, error: 'Missing subject' };
+    console.log('[Debug] Raw subject:', rawSubject);
+    if (!rawSubject || typeof rawSubject !== 'string') {
+        console.error('[Critical] subject is missing or invalid. Full params:', JSON.stringify(Object.fromEntries(orderParams.entries())));
+        return { success: false, error: 'Missing or invalid subject' };
     }
 
     // 解码中文和空格
     let productId;
     try {
         productId = decodeURIComponent(rawSubject.replace(/\+/g, ' '));
+        console.log('[Debug] Decoded productId:', productId);
     } catch (err) {
         console.error('[Critical] Failed to decode subject:', err.message);
-        return { success: false, error: 'Failed to decode subject' };
+        return { success: false, error: `Failed to decode subject: ${err.message}` };
+    }
+
+    if (!productId || typeof productId !== 'string') {
+        console.error('[Critical] productId is empty or invalid after decoding.');
+        return { success: false, error: 'Invalid productId' };
     }
 
     const outTradeNo = orderParams.get('out_trade_no') || '';
-    console.log('[Debug] Raw subject:', rawSubject);
-    console.log('[Debug] Decoded productId:', productId);
     console.log('[Debug] outTradeNo:', outTradeNo);
 
-    if (!productId || !outTradeNo) {
-        console.error('[Critical] productId or outTradeNo is missing. Aborting.');
-        return { success: false, error: 'Missing productId or outTradeNo' };
+    if (!outTradeNo) {
+        console.error('[Critical] outTradeNo is missing. Aborting.');
+        return { success: false, error: 'Missing outTradeNo' };
     }
 
     let customerEmail;
     try {
         customerEmail = Buffer.from(outTradeNo.split('-')[2] || '', 'base64').toString('ascii');
+        console.log('[Debug] Decoded customerEmail:', customerEmail);
     } catch (err) {
         console.error('[Critical] Failed to decode customerEmail from outTradeNo:', err.message);
-        return { success: false, error: 'Failed to decode customerEmail' };
+        return { success: false, error: `Failed to decode customerEmail: ${err.message}` };
     }
 
     if (!customerEmail) {
@@ -327,7 +331,6 @@ exports.handler = async (event) => {
         if (typeof event.body === 'string') {
             params = new URLSearchParams(event.body);
         } else if (typeof event.body === 'object' && event.body !== null) {
-            // 如果 event.body 已经是对象，自己拼成 URLSearchParams
             const searchParams = [];
             for (const key in event.body) {
                 if (Object.hasOwn(event.body, key)) {
@@ -382,6 +385,7 @@ exports.handler = async (event) => {
                 console.log(`Order status updated successfully for ${outTradeNo}.`);
             }
 
+            console.log('[Debug] Calling processBusinessLogic with params:', params);
             const result = await processBusinessLogic(params);
             if (!result.success) {
                 console.error('[Error] processBusinessLogic failed:', result.error);
@@ -392,7 +396,7 @@ exports.handler = async (event) => {
         return { statusCode: 200, body: 'success' };
 
     } catch (error) {
-        console.error('--- CRITICAL ERROR in handler ---', error.message);
+        console.error('--- CRITICAL ERROR in handler ---', error.message, error.stack);
         return { statusCode: 200, body: 'failure' };
     }
 };
