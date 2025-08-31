@@ -1,15 +1,15 @@
-// netlify/functions/alipay-notify.js
+// // netlify/functions/alipay-notify.js
 
-const { AlipaySdk } = require('alipay-sdk');
-const { createClient } = require('@supabase/supabase-js');
-const { Resend } = require('resend');
+// const { AlipaySdk } = require('alipay-sdk');
+// const { createClient } = require('@supabase/supabase-js');
+// const { Resend } = require('resend');
 
-// --- 辅助函数：生成一个简单的随机密码 ---
-function generatePassword() {
-    return Math.random().toString(36).slice(-8);
-}
+// // --- 辅助函数：生成一个简单的随机密码 ---
+// function generatePassword() {
+//     return Math.random().toString(36).slice(-8);
+// }
 
-// --- 辅助函数：核心业务逻辑处理 ---
+// // --- 辅助函数：核心业务逻辑处理 ---
 // async function processBusinessLogic(orderParams) {
 //     // ▼▼▼【新增的深度调试日志】▼▼▼
 //     console.log('[Debug] Entered processBusinessLogic function.');
@@ -113,24 +113,93 @@ function generatePassword() {
 //     console.log(`[processBusinessLogic] Email sent to ${customerEmail}`);
 // }
 
+// // --- Netlify 主处理函数 ---
+// exports.handler = async (event) => {
+//     console.log('--- [alipay-notify.js] Function Invoked ---');
+
+//     if (event.httpMethod !== 'POST') {
+//         return { statusCode: 405, body: 'Method Not Allowed' };
+//     }
+
+//     try {
+//         console.log('Raw body from Alipay:', event.body);
+
+//         const alipaySdk = new AlipaySdk({
+//             appId: process.env.ALIPAY_APP_ID,
+//             privateKey: process.env.ALIPAY_PRIVATE_KEY,
+//             alipayPublicKey: process.env.ALIPAY_PUBLIC_KEY,
+//             gateway: process.env.ALIPAY_GATEWAY,
+//         });
+
+//         const params = new URLSearchParams(event.body);
+//         const paramsJSON = Object.fromEntries(params.entries());
+        
+//         let isSignVerified = false;
+//         if (process.env.NODE_ENV === "development") {
+//             console.log("⚠️ Skipping Alipay signature verification in development mode.");
+//             isSignVerified = true;
+//         } else {
+//             isSignVerified = alipaySdk.checkNotifySign(paramsJSON);
+//         }
+
+//         if (!isSignVerified) {
+//             console.error('Alipay sign verification failed.');
+//             return { statusCode: 200, body: 'failure' };
+//         }
+
+//         const tradeStatus = params.get('trade_status');
+//         console.log('Received trade_status:', tradeStatus);
+
+//         if (tradeStatus === 'TRADE_SUCCESS') {
+//             const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
+//             const outTradeNo = params.get('out_trade_no');
+            
+//             console.log(`Updating order status for ${outTradeNo}...`);
+//             const { error: updateOrderStatusError } = await supabase.from('orders')
+//                 .update({ status: 'completed' })
+//                 .eq('out_trade_no', outTradeNo);
+
+//             if (updateOrderStatusError) {
+//                 console.error(`Failed to update order status for ${outTradeNo}:`, updateOrderStatusError.message);
+//             } else {
+//                  console.log(`Order status updated successfully for ${outTradeNo}.`);
+//             }
+
+//             await processBusinessLogic(params);
+//         }
+
+//         return { statusCode: 200, body: 'success' };
+
+//     } catch (error) {
+//         console.error('--- CRITICAL ERROR in handler ---:', error.message);
+//         return { statusCode: 200, body: 'failure' };
+//     }
+// };
 
 
 
+// netlify/functions/alipay-notify.js
 
-// --- 辅助函数：核心业务逻辑处理 ---
+const { AlipaySdk } = require('alipay-sdk');
+const { createClient } = require('@supabase/supabase-js');
+const { Resend } = require('resend');
+
+// --- 辅助函数：生成随机密码 ---
+function generatePassword() {
+    return Math.random().toString(36).slice(-8);
+}
+
+// --- 核心业务逻辑 ---
 async function processBusinessLogic(orderParams) {
     console.log('[Debug] Entered processBusinessLogic function.');
-    console.log('[Debug] Type of orderParams:', typeof orderParams);
 
-    // 确保 orderParams 是 URLSearchParams 或兼容对象
     if (!orderParams || typeof orderParams.get !== 'function') {
-        console.error('[Critical] orderParams is invalid. Aborting business logic.');
+        console.error('[Critical] orderParams is invalid. Aborting.');
         return;
     }
 
-    // 解析参数
     const rawSubject = orderParams.get('subject') || '';
-    const productId = decodeURIComponent(rawSubject); // 中文解码
+    const productId = decodeURIComponent(rawSubject);
     const outTradeNo = orderParams.get('out_trade_no') || '';
 
     console.log('[Debug] Raw subject:', rawSubject);
@@ -161,7 +230,7 @@ async function processBusinessLogic(orderParams) {
 
     try {
         if (productId.includes('Google Maps Scraper')) {
-            const password = Math.random().toString(36).slice(-8);
+            const password = generatePassword();
             const userType = productId.includes('高级版') ? 'premium' : 'standard';
             const expiryDate = new Date();
             expiryDate.setDate(expiryDate.getDate() + 30);
@@ -174,9 +243,7 @@ async function processBusinessLogic(orderParams) {
                 expiry_at: expiryDate.toISOString()
             });
 
-            if (error) {
-                throw new Error(`Failed to create user account for ${customerEmail}: ${error.message}`);
-            }
+            if (error) throw new Error(`Failed to create user account: ${error.message}`);
 
             emailSubject = '您的 Google Maps Scraper 账户已成功开通！';
             emailHtml = `<h1>欢迎！</h1>
@@ -193,9 +260,7 @@ async function processBusinessLogic(orderParams) {
                 .limit(1)
                 .single();
 
-            if (findError || !license) {
-                throw new Error('No available license keys.');
-            }
+            if (findError || !license) throw new Error('No available license keys.');
 
             const activationCode = license.key;
             const { error: updateError } = await supabase
@@ -203,9 +268,7 @@ async function processBusinessLogic(orderParams) {
                 .update({ status: 'activated', activation_date: new Date().toISOString(), customer_email: customerEmail })
                 .eq('key', activationCode);
 
-            if (updateError) {
-                throw new Error(`Failed to update license key status for ${activationCode}: ${updateError.message}`);
-            }
+            if (updateError) throw new Error(`Failed to update license key status: ${updateError.message}`);
 
             emailSubject = '您的 Email Validator 激活码';
             emailHtml = `<h1>感谢您的购买！</h1>
@@ -216,7 +279,6 @@ async function processBusinessLogic(orderParams) {
             return;
         }
 
-        // 发送邮件
         await resend.emails.send({
             from: 'LeadScout <noreply@mediamingle.cn>',
             to: customerEmail,
@@ -231,10 +293,7 @@ async function processBusinessLogic(orderParams) {
     }
 }
 
-
-
-
-// --- Netlify 主处理函数 ---
+// --- Netlify 主函数 ---
 exports.handler = async (event) => {
     console.log('--- [alipay-notify.js] Function Invoked ---');
 
@@ -245,6 +304,23 @@ exports.handler = async (event) => {
     try {
         console.log('Raw body from Alipay:', event.body);
 
+        // 1️⃣ 解析 body，兼容字符串或对象
+        let params;
+        if (typeof event.body === 'string') {
+            params = new URLSearchParams(event.body);
+        } else if (typeof event.body === 'object') {
+            params = new URLSearchParams();
+            for (const key in event.body) {
+                params.append(key, event.body[key]);
+            }
+        } else {
+            console.error('[Critical] event.body type unknown:', typeof event.body);
+            return { statusCode: 200, body: 'failure' };
+        }
+
+        const paramsJSON = Object.fromEntries(params.entries());
+
+        // 2️⃣ Alipay 签名验证
         const alipaySdk = new AlipaySdk({
             appId: process.env.ALIPAY_APP_ID,
             privateKey: process.env.ALIPAY_PRIVATE_KEY,
@@ -252,12 +328,9 @@ exports.handler = async (event) => {
             gateway: process.env.ALIPAY_GATEWAY,
         });
 
-        const params = new URLSearchParams(event.body);
-        const paramsJSON = Object.fromEntries(params.entries());
-        
         let isSignVerified = false;
-        if (process.env.NODE_ENV === "development") {
-            console.log("⚠️ Skipping Alipay signature verification in development mode.");
+        if (process.env.NODE_ENV === 'development') {
+            console.log('⚠️ Skipping Alipay signature verification in development mode.');
             isSignVerified = true;
         } else {
             isSignVerified = alipaySdk.checkNotifySign(paramsJSON);
@@ -274,7 +347,7 @@ exports.handler = async (event) => {
         if (tradeStatus === 'TRADE_SUCCESS') {
             const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
             const outTradeNo = params.get('out_trade_no');
-            
+
             console.log(`Updating order status for ${outTradeNo}...`);
             const { error: updateOrderStatusError } = await supabase.from('orders')
                 .update({ status: 'completed' })
@@ -283,7 +356,7 @@ exports.handler = async (event) => {
             if (updateOrderStatusError) {
                 console.error(`Failed to update order status for ${outTradeNo}:`, updateOrderStatusError.message);
             } else {
-                 console.log(`Order status updated successfully for ${outTradeNo}.`);
+                console.log(`Order status updated successfully for ${outTradeNo}.`);
             }
 
             await processBusinessLogic(params);
