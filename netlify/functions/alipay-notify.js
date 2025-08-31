@@ -180,7 +180,6 @@
 
 // netlify/functions/alipay-notify.js
 // netlify/functions/alipay-notify.js
-
 const { AlipaySdk } = require('alipay-sdk');
 const { createClient } = require('@supabase/supabase-js');
 const { Resend } = require('resend');
@@ -194,34 +193,48 @@ function generatePassword() {
 async function processBusinessLogic(orderParams) {
     console.log('[Debug] Entered processBusinessLogic function.');
 
+    // 验证 orderParams 是否有效
     if (!orderParams || typeof orderParams.get !== 'function') {
-        console.error('[Critical] orderParams is invalid. Aborting.');
-        return;
+        console.error('[Critical] orderParams is invalid or missing get method. Aborting.');
+        return { success: false, error: 'Invalid orderParams' };
     }
 
     const rawSubject = orderParams.get('subject');
     if (!rawSubject) {
         console.error('[Critical] subject is missing. Full params:', JSON.stringify(Object.fromEntries(orderParams.entries())));
-        return;
+        return { success: false, error: 'Missing subject' };
     }
 
     // 解码中文和空格
-    const productId = decodeURIComponent(rawSubject.replace(/\+/g, ' '));
-    const outTradeNo = orderParams.get('out_trade_no') || '';
+    let productId;
+    try {
+        productId = decodeURIComponent(rawSubject.replace(/\+/g, ' '));
+    } catch (err) {
+        console.error('[Critical] Failed to decode subject:', err.message);
+        return { success: false, error: 'Failed to decode subject' };
+    }
 
+    const outTradeNo = orderParams.get('out_trade_no') || '';
     console.log('[Debug] Raw subject:', rawSubject);
     console.log('[Debug] Decoded productId:', productId);
     console.log('[Debug] outTradeNo:', outTradeNo);
 
     if (!productId || !outTradeNo) {
         console.error('[Critical] productId or outTradeNo is missing. Aborting.');
-        return;
+        return { success: false, error: 'Missing productId or outTradeNo' };
     }
 
-    const customerEmail = Buffer.from(outTradeNo.split('-')[2] || '', 'base64').toString('ascii');
+    let customerEmail;
+    try {
+        customerEmail = Buffer.from(outTradeNo.split('-')[2] || '', 'base64').toString('ascii');
+    } catch (err) {
+        console.error('[Critical] Failed to decode customerEmail from outTradeNo:', err.message);
+        return { success: false, error: 'Failed to decode customerEmail' };
+    }
+
     if (!customerEmail) {
-        console.error('[Critical] Failed to decode customerEmail from outTradeNo.');
-        return;
+        console.error('[Critical] customerEmail is empty or invalid.');
+        return { success: false, error: 'Invalid customerEmail' };
     }
 
     const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
@@ -278,7 +291,7 @@ async function processBusinessLogic(orderParams) {
                 <p>请在软件中使用此激活码激活。</p>`;
         } else {
             console.warn('[Info] productId does not match any known products:', productId);
-            return;
+            return { success: false, error: `Unknown productId: ${productId}` };
         }
 
         await resend.emails.send({
@@ -289,9 +302,11 @@ async function processBusinessLogic(orderParams) {
         });
 
         console.log(`[processBusinessLogic] Email sent to ${customerEmail}`);
+        return { success: true };
 
     } catch (err) {
         console.error('[Critical Error] in processBusinessLogic:', err.message);
+        return { success: false, error: err.message };
     }
 }
 
@@ -300,6 +315,7 @@ exports.handler = async (event) => {
     console.log('--- [alipay-notify.js] Function Invoked ---');
 
     if (event.httpMethod !== 'POST') {
+        console.error('[Error] Invalid HTTP method:', event.httpMethod);
         return { statusCode: 405, body: 'Method Not Allowed' };
     }
 
@@ -325,6 +341,7 @@ exports.handler = async (event) => {
         }
 
         const paramsJSON = Object.fromEntries(params.entries());
+        console.log('[Debug] Parsed params:', paramsJSON);
 
         // 2️⃣ Alipay 签名验证
         const alipaySdk = new AlipaySdk({
@@ -365,13 +382,17 @@ exports.handler = async (event) => {
                 console.log(`Order status updated successfully for ${outTradeNo}.`);
             }
 
-            await processBusinessLogic(params);
+            const result = await processBusinessLogic(params);
+            if (!result.success) {
+                console.error('[Error] processBusinessLogic failed:', result.error);
+                return { statusCode: 200, body: 'failure' };
+            }
         }
 
         return { statusCode: 200, body: 'success' };
 
     } catch (error) {
-        console.error('--- CRITICAL ERROR in handler ---:', error.message);
+        console.error('--- CRITICAL ERROR in handler ---', error.message);
         return { statusCode: 200, body: 'failure' };
     }
 };
