@@ -9,11 +9,7 @@ function generatePassword() {
 
 // 核心业务逻辑处理函数
 async function processBusinessLogic(orderParams) {
-    // const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
-    const supabase = createClient(
-        "https://hyxryxarutbesoqxcprk.supabase.co",
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh5eHJ5eGFydXRiZXNvcXhjcHJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ3MjQ5MjUsImV4cCI6MjA3MDMwMDkyNX0.kK3TmssDX7WhCuslv4MOYOR9ntXgtJLWbE5ArRMRzaQ"
-    );
+    const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
     const resend = new Resend(process.env.RESEND_API_KEY);
 
     const outTradeNo = orderParams.get('out_trade_no');
