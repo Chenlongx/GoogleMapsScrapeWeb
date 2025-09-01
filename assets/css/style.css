@@ -713,7 +713,7 @@ h2.faq-question:has(button[aria-expanded="true"]) + .faq-answer {
     .contact-channels {
         flex-direction: row;
         justify-content: space-around;
-        align-items: flex-start;
+        align-items: center; /* 修改为 center */
     }
     .contact-channel {
         flex: 1;
