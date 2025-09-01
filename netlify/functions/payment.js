@@ -26,6 +26,14 @@ function formatKey(key, type) {
     return key.replace(header, `${header}\n`).replace(footer, `\n${footer}`);
 }
 
+// 后端固定价格表（单位: 人民币）
+const productPriceMap = {
+    'gmaps_standard': 34.30,
+    'gmaps_premium': 63.00,
+    'validator_standard': 203.00,
+    'validator_premium': 553.00
+};
+
 exports.handler = async (event) => {
     const origin = event.headers.origin;
 
@@ -60,10 +68,18 @@ exports.handler = async (event) => {
         });
 
         const { productId, price, email } = JSON.parse(event.body);
-
+        // 验证必填参数
         if (!productId || !price || !email) {
             return { statusCode: 400, headers, body: JSON.stringify({ success: false, message: 'Missing parameters' }) };
         }
+
+        // 验证前端传入的金额是否与后端价格表一致 
+        const expectedPrice = productPriceMap[productId];
+        if (!expectedPrice || parseFloat(price) !== expectedPrice) {
+            console.error(`[Security Error] Invalid price for ${productId}. Expected: ${expectedPrice}, Received: ${price}`);
+            return { statusCode: 400, headers, body: JSON.stringify({ success: false, message: 'Invalid price' }) };
+        }
+
 
         const encodedEmail = Buffer.from(email).toString('base64');
         const outTradeNo = `${productId}-${Date.now()}-${encodedEmail}`;
