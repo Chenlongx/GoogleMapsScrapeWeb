@@ -37,7 +37,7 @@ async function processBusinessLogic(orderParams) {
     try {
         if (productId.includes('Google Maps Scraper')) {
             const password = generatePassword();
-            const userType = productId.includes('高级版') ? 'premium' : 'standard';
+            const userType = productId.includes('高级版') ? 'premium' : 'regular'; // 【修正】将 'standard' 修改为 'regular'
             const expiryDate = new Date();
             expiryDate.setDate(expiryDate.getDate() + 30);
 
