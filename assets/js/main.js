@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <li><a href="./product.html?id=email-validator" data-lang-zh="邮箱批量验证器" data-lang-en="Email Validator">邮箱批量验证器</a></li>
                                 </ul>
                             </li>
-                            <li><a href="./pricing.html" data-lang-zh="定价" data-lang-en="Pricing">定价</a></li>
+                            <li><a href="./checkout.html" data-lang-zh="定价" data-lang-en="checkout">定价</a></li>
                             <li><a href="./docs.html" data-lang-zh="文档" data-lang-en="Docs">文档</a></li>
                             <li><a href="./faq.html" data-lang-zh="FAQ" data-lang-en="FAQ">FAQ</a></li>
                             <li><a href="./download.html" data-lang-zh="下载" data-lang-en="Download">下载</a></li>
@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="footer-links">
                             <h3 data-lang-zh="产品" data-lang-en="Product">产品</h3>
                             <ul>
-                                <li><a href="./pricing.html" data-lang-zh="定价" data-lang-en="Pricing">定价</a></li>
+                                <li><a href="./checkout.html" data-lang-zh="定价" data-lang-en="checkout">定价</a></li>
                                 <li><a href="./docs.html" data-lang-zh="文档" data-lang-en="Docs">文档</a></li>
                             </ul>
                         </div>
