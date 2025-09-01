@@ -27,18 +27,11 @@ function formatKey(key, type) {
 }
 
 // 后端固定价格表（单位: 人民币）
-// const productPriceMap = {
-//     'gmaps_standard': 34.30,
-//     'gmaps_premium': 63.00,
-//     'validator_standard': 203.00,
-//     'validator_premium': 553.00
-// };
-
 const productPriceMap = {
-    'gmaps_standard': 0.01,
-    'gmaps_premium': 0.02,
-    'validator_standard': 0.02,
-    'validator_premium': 0.03
+    'gmaps_standard': 34.30,
+    'gmaps_premium': 63.00,
+    'validator_standard': 203.00,
+    'validator_premium': 553.00
 };
 
 exports.handler = async (event) => {
