@@ -568,7 +568,7 @@
                         });
                         const data = await response.json();
 
-                        if (data.success) {
+                        if (data.success && data.qrCodeUrl) { 
                             qrcodeContainer.innerHTML = '';
                             const qr = qrcode(0, 'L');
                             qr.addData(data.qrCodeUrl);
