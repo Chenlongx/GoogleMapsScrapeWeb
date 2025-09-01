@@ -407,13 +407,21 @@
             const USD_TO_CNY_RATE = 7.0;
 
             const plans = {
+                // gmaps: {
+                //     standard: { price: '4.90', features_zh: ['每月 10,000 条数据', '基础技术支持'], features_en: ['10,000 records/mo', 'Basic Support'], period_zh: '/月', period_en: '/mo' },
+                //     premium: { price: '9.00', features_zh: ['无限数据', '<strong>优先</strong>技术支持', 'API 访问'], features_en: ['Unlimited Records', '<strong>Priority</strong> Support', 'API Access'], period_zh: '/月', period_en: '/mo' }
+                // },
+                // validator: {
+                //     standard: { price: '29.00', features_zh: ['全功能验证', '授权 <strong>1</strong> 台设备'], features_en: ['All Features', 'License for <strong>1</strong> Device'], period_zh: '/终身版', period_en: '/lifetime' },
+                //     premium: { price: '79.00', features_zh: ['全功能验证', '<strong>优先</strong>技术支持', '授权 <strong>3</strong> 台设备'], features_en: ['All Features', '<strong>Priority</strong> Support', 'License for <strong>3</strong> Devices'], period_zh: '/终身版', period_en: '/lifetime' }
+                // }
                 gmaps: {
-                    standard: { price: '4.90', features_zh: ['每月 10,000 条数据', '基础技术支持'], features_en: ['10,000 records/mo', 'Basic Support'], period_zh: '/月', period_en: '/mo' },
-                    premium: { price: '9.00', features_zh: ['无限数据', '<strong>优先</strong>技术支持', 'API 访问'], features_en: ['Unlimited Records', '<strong>Priority</strong> Support', 'API Access'], period_zh: '/月', period_en: '/mo' }
+                    standard: { price: '0.01', features_zh: ['每月 10,000 条数据', '基础技术支持'], features_en: ['10,000 records/mo', 'Basic Support'], period_zh: '/月', period_en: '/mo' },
+                    premium: { price: '0.02', features_zh: ['无限数据', '<strong>优先</strong>技术支持', 'API 访问'], features_en: ['Unlimited Records', '<strong>Priority</strong> Support', 'API Access'], period_zh: '/月', period_en: '/mo' }
                 },
                 validator: {
-                    standard: { price: '29.00', features_zh: ['全功能验证', '授权 <strong>1</strong> 台设备'], features_en: ['All Features', 'License for <strong>1</strong> Device'], period_zh: '/终身版', period_en: '/lifetime' },
-                    premium: { price: '79.00', features_zh: ['全功能验证', '<strong>优先</strong>技术支持', '授权 <strong>3</strong> 台设备'], features_en: ['All Features', '<strong>Priority</strong> Support', 'License for <strong>3</strong> Devices'], period_zh: '/终身版', period_en: '/lifetime' }
+                    standard: { price: '0.02', features_zh: ['全功能验证', '授权 <strong>1</strong> 台设备'], features_en: ['All Features', 'License for <strong>1</strong> Device'], period_zh: '/终身版', period_en: '/lifetime' },
+                    premium: { price: '0.03', features_zh: ['全功能验证', '<strong>优先</strong>技术支持', '授权 <strong>3</strong> 台设备'], features_en: ['All Features', '<strong>Priority</strong> Support', 'License for <strong>3</strong> Devices'], period_zh: '/终身版', period_en: '/lifetime' }
                 }
             };
 
@@ -547,8 +555,9 @@
                     const cardElement = document.getElementById(`${productIdBase}-card`);
                     const activePlan = cardElement.querySelector('.plan-btn.active').dataset.plan;
                     const productId = `${productIdBase}_${activePlan}`;
-                    const usdPrice = parseFloat(button.dataset.price);
-                    const priceToSend = (usdPrice * 7.0).toFixed(2);
+                    // const usdPrice = parseFloat(button.dataset.price);
+                    // const priceToSend = (usdPrice * 7.0).toFixed(2);
+                    const priceToSend = parseFloat(button.dataset.price).toFixed(2); // 不再乘以汇率
                     const emailInput = cardElement.querySelector('input[type="email"]');
                     const email = emailInput.value;
 
