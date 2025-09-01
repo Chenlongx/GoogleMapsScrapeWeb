@@ -56,7 +56,7 @@ exports.handler = async (event) => {
             appId: process.env.ALIPAY_APP_ID,
             privateKey: formatKey(process.env.ALIPAY_PRIVATE_KEY, 'private'),
             alipayPublicKey: formatKey(process.env.ALIPAY_PUBLIC_KEY, 'public'),
-            gateway: "https://openapi-sandbox.dl.alipaydev.com/gateway.do",
+            gateway: "https://openapi.alipay.com/gateway.do",
             timeout: 10000
         });
 
