@@ -438,11 +438,17 @@
                 const usdPrice = parseFloat(planData.price);
                 
                 let displayPriceHTML;
+                // if (lang === 'zh') {
+                //     const cnyPrice = (usdPrice * USD_TO_CNY_RATE).toFixed(2);
+                //     displayPriceHTML = `¥${cnyPrice}<span class="price-period">${planData['period_' + lang]}</span>`;
+                // } else {
+                //     displayPriceHTML = `$${usdPrice.toFixed(2)}<span class="price-period">${planData['period_' + lang]}</span>`;
+                // }
                 if (lang === 'zh') {
-                    const cnyPrice = (usdPrice * USD_TO_CNY_RATE).toFixed(2);
-                    displayPriceHTML = `¥${cnyPrice}<span class="price-period">${planData['period_' + lang]}</span>`;
+                    // 直接用 planData.price，不乘以 USD_TO_CNY_RATE
+                    displayPriceHTML = `¥${usdPrice}<span class="price-period">${planData['period_' + lang]}</span>`;
                 } else {
-                    displayPriceHTML = `$${usdPrice.toFixed(2)}<span class="price-period">${planData['period_' + lang]}</span>`;
+                    displayPriceHTML = `$${usdPrice}<span class="price-period">${planData['period_' + lang]}</span>`;
                 }
                 priceEl.innerHTML = displayPriceHTML;
 
