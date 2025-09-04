@@ -92,12 +92,14 @@
                         data-lang-en="Google Maps Scraper"></button>
                     <button class="selector-btn" data-target="email-validator-docs" data-lang-zh="邮箱批量验证器"
                         data-lang-en="Email Validator"></button>
+                    <button class="selector-btn" data-target="whatsapp-validator-docs" data-lang-zh="WhatsApp 验证器"
+                        data-lang-en="WhatsApp Validator"></button>
                 </div>
             </div>
         </section>
 
         <div class="container">
-<div id="maps-scraper-docs" class="docs-wrapper">
+            <div id="maps-scraper-docs" class="docs-wrapper">
                 <div class="docs-layout">
                     <aside class="docs-sidebar">
                         <nav>
@@ -145,7 +147,7 @@
                             <p data-lang-zh="输入至少一个关键词和一个地点，然后点击“开始抓取”按钮。任务将进入队列并开始执行。任务状态会实时更新，完成后您可以下载结果。"
                                 data-lang-en="Enter at least one keyword and one location, then click the 'Start Scraping' button. The task will be queued and begin execution. The task status will update in real-time, and you can download the results upon completion.">
                             </p>
-                             <div class="docs-image-container">
+                            <div class="docs-image-container">
                                 <img src="assets/img/home-background.webp" alt="执行抓取示意图" class="docs-image">
                             </div>
                         </section>
@@ -153,7 +155,7 @@
                             <h2 data-lang-zh="导出数据" data-lang-en="Exporting Data"></h2>
                             <p data-lang-zh="目前，我们仅支持将结果导出为 CSV 格式。"
                                 data-lang-en="Currently, we only support exporting results in CSV format."></p>
-                             <div class="docs-image-container">
+                            <div class="docs-image-container">
                                 <img src="assets/img/docs-export.png" alt="导出数据示意图" class="docs-image">
                             </div>
                         </section>
@@ -210,7 +212,8 @@
                                 data-lang-en="After a successful import, click the 'Start' button. The software will initiate multi-threaded tasks to perform deep, multi-dimensional validation on each email, including syntax, domain validity, MX records, disposable address checks, and more.">
                             </p>
                             <div class="docs-image-container">
-                                <img src="assets/img/MailProEmail/step-import-email.webp" alt="验证成功示意图" class="docs-image">
+                                <img src="assets/img/MailProEmail/step-import-email.webp" alt="验证成功示意图"
+                                    class="docs-image">
                             </div>
                         </section>
                         <section id="ev-results">
@@ -226,6 +229,79 @@
                             </p>
                             <div class="docs-image-container">
                                 <img src="assets/img/MailProEmail/export results.webp" alt="导出结果示意图" class="docs-image">
+                            </div>
+                        </section>
+                    </article>
+                </div>
+            </div>
+
+            <div id="whatsapp-validator-docs" class="docs-wrapper" style="display: none;">
+                <div class="docs-layout">
+                    <aside class="docs-sidebar">
+                        <nav>
+                            <ul>
+                                <li><a href="#wv-getting-started" class="active" data-lang-zh="入门指南"
+                                        data-lang-en="Getting Started"></a></li>
+                                <li><a href="#wv-interface" data-lang-zh="界面概览" data-lang-en="Interface Overview"></a>
+                                </li>
+                                <li><a href="#wv-import" data-lang-zh="导入号码" data-lang-en="Importing Numbers"></a></li>
+                                <li><a href="#wv-generation" data-lang-zh="高级功能：号码生成"
+                                        data-lang-en="Advanced: Number Generation"></a></li>
+                                <li><a href="#wv-filtering" data-lang-zh="执行筛选" data-lang-en="Performing Filtering"></a>
+                                </li>
+                                <li><a href="#wv-exporting" data-lang-zh="导出结果" data-lang-en="Exporting Results"></a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </aside>
+                    <article class="docs-content">
+                        <section id="wv-getting-started">
+                            <h2 data-lang-zh="入门指南" data-lang-en="Getting Started"></h2>
+                            <p data-lang-zh="欢迎使用 WhatsApp 高级验证器！本工具为本地软件，需要通过客服获取授权账户后登录使用。请确保您的网络环境可以正常访问 WhatsApp 服务。"
+                                data-lang-en="Welcome to the Advanced WhatsApp Validator! This is a local software tool that requires an authorized account from customer service to log in and use. Please ensure your network environment allows access to WhatsApp services.">
+                            </p>
+                        </section>
+                        <section id="wv-interface">
+                            <h2 data-lang-zh="界面概览" data-lang-en="Interface Overview"></h2>
+                            <p data-lang-zh="软件主界面分为四大区域：顶部为功能操作区（导入、生成、开始/停止），左侧为号码列表与状态区，右侧为筛选进度与统计信息，底部为日志输出区。"
+                                data-lang-en="The main interface is divided into four areas: the top is the function operation area (Import, Generate, Start/Stop), the left is the number list and status area, the right shows filtering progress and statistics, and the bottom is the log output area.">
+                            </p>
+                            <div class="docs-image-container">
+                                <img src="assets/img/WhatsAppValidator/whatsapp-hero.webp" alt="WhatsApp 验证器界面"
+                                    class="docs-image">
+                            </div>
+                        </section>
+                        <section id="wv-import">
+                            <h2 data-lang-zh="导入号码" data-lang-en="Importing Numbers"></h2>
+                            <p data-lang-zh="点击“导入号码”按钮，您可以从 .txt, .csv, 或 .xlsx 文件中批量导入手机号码。请确保文件中的号码每行一个，并包含国家代码（例如：1XXXXXXXXXX）。"
+                                data-lang-en="Click the 'Import Numbers' button to batch import phone numbers from .txt, .csv, or .xlsx files. Please ensure each number is on a new line and includes the country code (e.g., 1XXXXXXXXXX).">
+                            </p>
+                        </section>
+                        <section id="wv-generation">
+                            <h2 data-lang-zh="高级功能：号码生成" data-lang-en="Advanced: Number Generation"></h2>
+                            <p data-lang-zh="本软件独有的高级功能。点击“号码生成器”，您可以选择目标国家，输入手机号段前缀（如美国洛杉矶的“1213”），并设定生成数量。软件将按规则随机生成该地区的手机号码列表，用于后续验证，是进行大规模市场探索的利器。"
+                                data-lang-en="A unique advanced feature of this software. Click the 'Number Generator', select a target country, enter a mobile number prefix (e.g., '1213' for Los Angeles, USA), and specify the quantity to generate. The software will randomly create a list of phone numbers for that region according to the rules, which can then be used for validation—a powerful tool for large-scale market exploration.">
+                            </p>
+                             <div class="docs-image-container">
+                                <img src="assets/img/WhatsAppValidator/docs-wa-generator.webp" alt="号码生成器示意图" class="docs-image">
+                            </div>
+                        </section>
+                        <section id="wv-filtering">
+                            <h2 data-lang-zh="执行筛选" data-lang-en="Performing Filtering"></h2>
+                            <p data-lang-zh="在导入或生成号码后，点击“开始筛选”按钮。软件将通过多线程模拟真实客户端行为，高速验证列表中的号码是否已注册 WhatsApp，并抓取公开的头像、昵称和个性签名等信息。"
+                                data-lang-en="After importing or generating numbers, click the 'Start Filtering' button. The software will use multi-threading to simulate real client behavior, rapidly verifying if the numbers in the list are registered on WhatsApp and fetching public information like avatars, nicknames, and bios.">
+                            </p>
+                            <div class="docs-image-container">
+                                <img src="assets/img/WhatsAppValidator/screening-diagram.webp" alt="筛选示意图" class="docs-image">
+                            </div>
+                        </section>
+                        <section id="wv-exporting">
+                            <h2 data-lang-zh="导出结果" data-lang-en="Exporting Results"></h2>
+                            <p data-lang-zh="筛选完成后，您可以点击“导出结果”。软件支持导出为 .xlsx (包含头像图片) 或 .csv 格式。您还可以选择仅导出已激活的用户、或按其他条件筛选后导出，方便您进行精准营销。"
+                                data-lang-en="Once filtering is complete, you can click 'Export Results'. The software supports exporting to .xlsx (including profile pictures) or .csv format. You can also choose to export only active users or filter by other criteria before exporting for precision marketing.">
+                            </p>
+                            <div class="docs-image-container">
+                                <img src="assets/img/WhatsAppValidator/docs-wa-export.webp" alt="导出结果示意图" class="docs-image">
                             </div>
                         </section>
                     </article>
