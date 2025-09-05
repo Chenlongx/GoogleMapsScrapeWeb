@@ -314,6 +314,7 @@
         <section class="checkout-section">
             <div class="container">
                 <div class="checkout-grid">
+
                     <div class="product-card" id="gmaps-card">
                         <h2 data-lang-zh="谷歌地图抓取器" data-lang-en="Google Maps Scraper"></h2>
                         <p class="plan-description" data-lang-zh="按月收费"
@@ -348,6 +349,25 @@
                             <i class='bx bxs-lock-alt'></i> <span data-lang-zh="支付宝安全支付" data-lang-en="Secure Payment by Alipay"></span>
                         </div>
                     </div>
+                    
+                    <!-- WhatsApp Number Validator -->
+                    <div class="product-card" id="whatsapp-validator-card">
+                        <h2 data-lang-zh="WhatsApp号码验证器" data-lang-en="WhatsApp Number Validator"></h2>
+                        <p class="plan-description" data-lang-zh="一次性付费，永久使用" data-lang-en="One-time payment, lifetime use"></p>
+                        <div class="plan-selector">
+                            <button class="plan-btn" data-price="29.00" data-plan="standard" data-lang-zh="标准版" data-lang-en="Standard"></button>
+                            <button class="plan-btn active" data-price="49.00" data-plan="premium" data-lang-zh="高级版" data-lang-en="Premium"></button>
+                        </div>
+                        <div class="product-price">$49<span class="price-period" data-lang-zh="/终身版" data-lang-en="/lifetime"></span></div>
+                        <ul class="product-features"></ul>
+                        <label for="whatsapp_validator_email" data-lang-zh="输入接收激活码的邮箱" data-lang-en="Enter email to receive license key"></label>
+                        <input type="email" id="whatsapp_validator_email" placeholder="your-email@example.com" required>
+                        <button class="btn btn-primary" data-product-id="whatsapp_validator">购买高级版激活码</button>
+                        <div class="secure-payment-badge">
+                            <i class='bx bxs-lock-alt'></i> <span data-lang-zh="支付宝安全支付" data-lang-en="Secure Payment by Alipay"></span>
+                        </div>
+                    </div>
+                            
                 </div>
             </div>
         </section>
@@ -408,17 +428,82 @@
 
             const plans = {
                 gmaps: {
-                    standard: { price: '4.90', features_zh: ['每月 10,000 条数据', '基础技术支持'], features_en: ['10,000 records/mo', 'Basic Support'], period_zh: '/月', period_en: '/mo' },
+                    standard: { price: '4.90', features_zh: ['每天50次导出', '基础技术支持'], features_en: ['50 exports per day', 'Basic Support'], period_zh: '/月', period_en: '/mo' },
                     premium: { price: '9.00', features_zh: ['无限数据', '<strong>优先</strong>技术支持', 'API 访问'], features_en: ['Unlimited Records', '<strong>Priority</strong> Support', 'API Access'], period_zh: '/月', period_en: '/mo' }
                 },
                 validator: {
                     standard: { price: '29.00', features_zh: ['全功能验证', '授权 <strong>1</strong> 台设备'], features_en: ['All Features', 'License for <strong>1</strong> Device'], period_zh: '/终身版', period_en: '/lifetime' },
                     premium: { price: '79.00', features_zh: ['全功能验证', '<strong>优先</strong>技术支持', '授权 <strong>3</strong> 台设备'], features_en: ['All Features', '<strong>Priority</strong> Support', 'License for <strong>3</strong> Devices'], period_zh: '/终身版', period_en: '/lifetime' }
+                },
+                whatsapp_validator: {
+                    standard: { 
+                        price: '29.00', 
+                        features_zh: ['批量验证WhatsApp号码', '支持多种筛选条件', '实时验证结果'], 
+                        features_en: ['Bulk WhatsApp number validation', 'Support for multiple filtering conditions', 'Real-time validation results'], 
+                        period_zh: '/终身版', 
+                        period_en: '/lifetime' 
+                    },
+                    premium: { 
+                        price: '49.00', 
+                        features_zh: ['批量验证WhatsApp号码', '支持多种筛选条件', '实时验证结果', '<strong>专属</strong>技术支持'], 
+                        features_en: ['Bulk WhatsApp number validation', 'Support for multiple filtering conditions', 'Real-time validation results', '<strong>Dedicated</strong> technical support'], 
+                        period_zh: '/终身版', 
+                        period_en: '/lifetime' 
+                    }
                 }
             };
 
+            // function updateCardUI(cardElement) {
+            //     const productId = cardElement.id.replace('-card', '');
+            //     const activePlanBtn = cardElement.querySelector('.plan-btn.active');
+            //     if (!activePlanBtn) return;
+
+            //     const selectedPlan = activePlanBtn.dataset.plan;
+            //     const planData = plans[productId][selectedPlan];
+            //     const lang = document.documentElement.lang.startsWith('zh') ? 'zh' : 'en';
+
+            //     const priceEl = cardElement.querySelector('.product-price');
+            //     const usdPrice = parseFloat(planData.price);
+                
+            //     let displayPriceHTML;
+            //     if (lang === 'zh') {
+            //         const cnyPrice = (usdPrice * USD_TO_CNY_RATE).toFixed(2);
+            //         displayPriceHTML = `¥${cnyPrice}<span class="price-period">${planData['period_' + lang]}</span>`;
+            //     } else {
+            //         displayPriceHTML = `$${usdPrice.toFixed(2)}<span class="price-period">${planData['period_' + lang]}</span>`;
+            //     }
+            //     priceEl.innerHTML = displayPriceHTML;
+
+            //     const featuresEl = cardElement.querySelector('.product-features');
+            //     const features = planData['features_' + lang];
+            //     featuresEl.innerHTML = features.map(f => `<li><i class='bx bx-check'></i>${f}</li>`).join('');
+
+            //     const purchaseBtn = cardElement.querySelector('.btn[data-product-id]');
+            //     purchaseBtn.dataset.price = planData.price; 
+                
+            //     const btnTextKey = `btn_text_${selectedPlan}_${lang}`;
+            //     const btnTexts = {
+            //         btn_text_standard_zh: productId === 'gmaps' ? '开通标准版' : '购买标准版',
+            //         btn_text_standard_en: productId === 'gmaps' ? 'Activate Standard' : 'Buy Standard',
+            //         btn_text_premium_zh: productId === 'gmaps' ? '开通高级版' : '购买高级版',
+            //         btn_text_premium_en: productId === 'gmaps' ? 'Activate Premium' : 'Buy Premium',
+                    
+            //     };
+            //     purchaseBtn.textContent = btnTexts[btnTextKey];
+            // }
+
             function updateCardUI(cardElement) {
-                const productId = cardElement.id.replace('-card', '');
+                // 原来
+                // const productId = cardElement.id.replace('-card', '');
+                
+                // 修改为：
+                const idMap = {
+                    'gmaps-card': 'gmaps',
+                    'validator-card': 'validator',
+                    'whatsapp-validator-card': 'whatsapp_validator'
+                };
+                const productId = idMap[cardElement.id];
+                
                 const activePlanBtn = cardElement.querySelector('.plan-btn.active');
                 if (!activePlanBtn) return;
 
@@ -444,7 +529,8 @@
 
                 const purchaseBtn = cardElement.querySelector('.btn[data-product-id]');
                 purchaseBtn.dataset.price = planData.price; 
-                
+
+                // 按钮文字更新
                 const btnTextKey = `btn_text_${selectedPlan}_${lang}`;
                 const btnTexts = {
                     btn_text_standard_zh: productId === 'gmaps' ? '开通标准版' : '购买标准版',
@@ -510,9 +596,29 @@
                 const lang = document.documentElement.lang.startsWith('zh') ? 'zh' : 'en';
                 const planName = details.plan.charAt(0).toUpperCase() + details.plan.slice(1);
                 const planText = lang === 'zh' ? (details.plan === 'premium' ? '高级版' : '标准版') : planName;
-                const productName = lang === 'zh' 
-                    ? (details.product === 'gmaps' ? '谷歌地图抓取器' : '邮箱批量验证器')
-                    : (details.product === 'gmaps' ? 'Google Maps Scraper' : 'Email Validator');
+                
+                // const productName = lang === 'zh' 
+                //     ? (details.product === 'gmaps' ? '谷歌地图抓取器' : '邮箱批量验证器')
+                //     : (details.product === 'gmaps' ? 'Google Maps Scraper' : 'Email Validator');
+
+                let productName;
+                if (lang === 'zh') {
+                    if (details.product === 'gmaps') {
+                        productName = '谷歌地图抓取器';
+                    } else if (details.product === 'validator') {
+                        productName = '邮箱批量验证器';
+                    } else if (details.product === 'whatsapp_validator') {
+                        productName = 'WhatsApp 号码验证器';
+                    }
+                } else {
+                    if (details.product === 'gmaps') {
+                        productName = 'Google Maps Scraper';
+                    } else if (details.product === 'validator') {
+                        productName = 'Email Validator';
+                    } else if (details.product === 'whatsapp_validator') {
+                        productName = 'WhatsApp Number Validator';
+                    }
+                }
                 
                 orderDetailsEl.innerHTML = `
                     <li><span>${lang === 'zh' ? '订单号' : 'Order ID'}</span><span>${details.orderId}</span></li>

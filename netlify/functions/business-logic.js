@@ -91,6 +91,57 @@ async function processBusinessLogic(orderParams) {
                     <p style="color: #94a3b8; font-size: 12px; text-align: center;">如果您没有进行此操作，请忽略此邮件。这是一个自动发送的邮件，请勿直接回复。</p>
                 </div>
             </div>`;
+        } else if (productId.includes('WhatsApp Validator')) {
+            // 逻辑与 Email Validator 非常相似: 查找一个可用的激活码
+            const { data: license, error: findError } = await supabase
+                .from('whatsapp_activation_code') // 假设 WhatsApp Validator 激活码也存在 'licenses' 表中
+                .select('key')
+                .eq('product_type', 'whatsapp_validator') // 增加一个字段用于区分产品类型
+                .eq('status', 'available')
+                .limit(1)
+                .single();
+
+            if (findError || !license) {
+                // 如果没有可用的激活码，抛出错误，这将导致后续的邮件不会发送
+                throw new Error('No available license keys for WhatsApp Validator.');
+            }
+
+            const activationCode = license.key;
+            
+            // 将激活码状态更新为已激活，并关联客户邮箱
+            const { error: updateError } = await supabase
+                .from('licenses')
+                .update({ 
+                    status: 'activated', 
+                    activation_date: new Date().toISOString(), 
+                    customer_email: customerEmail 
+                })
+                .eq('key', activationCode);
+
+            if (updateError) {
+                throw new Error(`Failed to update license key status: ${updateError.message}`);
+            }
+
+            // 准备发送激活码邮件
+            emailSubject = '【GlobalFlow】您的 WhatsApp Validator 激活码';
+            emailHtml = `
+            <div style="background-color: #f3f4f6; padding: 20px; font-family: Arial, sans-serif; line-height: 1.6;">
+                <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; padding: 40px;">
+                    <h1 style="color: #1e293b; font-size: 24px; text-align: center;">感谢您的购买！</h1>
+                    <p style="color: #475569; font-size: 16px;">您好，</p>
+                    <p style="color: #475569; font-size: 16px;">这是您购买的 <strong style="color: #3b82f6;">WhatsApp Number Validator</strong> 软件激活码。请在软件内使用它来激活您的产品。</p>
+                    <div style="background-color: #f1f5f9; border: 1px dashed #cbd5e1; border-radius: 8px; padding: 20px; text-align: center; margin: 20px 0;">
+                        <p style="font-size: 20px; font-weight: bold; color: #1e293b; letter-spacing: 1px; margin: 0;">${activationCode}</p>
+                    </div>
+                    <p style="color: #475569; font-size: 16px;">如果您还没有下载软件，可以通过下方的按钮获取。</p>
+                    <div style="text-align: center; margin-top: 30px;">
+                        <a href="https://mediamingle.cn/products/whatsapp-validator" target="_blank" style="background-color: #3b82f6; color: #ffffff; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-size: 16px; font-weight: bold;">下载软件</a>
+                    </div>
+                    <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 40px 0;">
+                    <p style="color: #94a3b8; font-size: 12px; text-align: center;">如果您没有进行此操作，请忽略此邮件。这是一个自动发送的邮件，请勿直接回复。</p>
+                </div>
+            </div>`;
+        // ▲▲▲ 新增结束 ▲▲▲
         } else {
             console.warn('[Info] Unknown productId:', productId);
             return { success: false, error: `Unknown productId: ${productId}` };
