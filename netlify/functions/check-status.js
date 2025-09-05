@@ -77,7 +77,7 @@ exports.handler = async (event) => {
                 subject = dbProductId.includes('premium') ? 'Google Maps Scraper 高级版' : 'Google Maps Scraper 标准版';
             } else if (dbProductId.startsWith('validator')) {
                 subject = dbProductId.includes('premium') ? 'Email Validator 高级版激活码' : 'Email Validator 标准版激活码';
-            } else if (dbProductId.startsWith('whatsapp_validator')) {
+            } else if (dbProductId.startsWith('whatsapp-validator')) {
                 subject = dbProductId.includes('premium') ? 'WhatsApp Validator 高级版激活码' : 'WhatsApp Validator 标准版激活码';
             }
             

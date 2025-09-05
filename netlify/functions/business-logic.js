@@ -96,7 +96,6 @@ async function processBusinessLogic(orderParams) {
             const { data: license, error: findError } = await supabase
                 .from('whatsapp_activation_code') // 假设 WhatsApp Validator 激活码也存在 'licenses' 表中
                 .select('key')
-                .eq('product_type', 'whatsapp_validator') // 增加一个字段用于区分产品类型
                 .eq('status', 'available')
                 .limit(1)
                 .single();
@@ -110,7 +109,7 @@ async function processBusinessLogic(orderParams) {
             
             // 将激活码状态更新为已激活，并关联客户邮箱
             const { error: updateError } = await supabase
-                .from('licenses')
+                .from('whatsapp_activation_code')
                 .update({ 
                     status: 'activated', 
                     activation_date: new Date().toISOString(), 
