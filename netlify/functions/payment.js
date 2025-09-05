@@ -32,8 +32,8 @@ const productPriceMap = {
     'gmaps_premium': 63.00,
     'validator_standard': 203.00,
     'validator_premium': 553.00,
-    'whatsapp_validator_standard': 203.00, // $29.00 * 7.0
-    'whatsapp_validator_premium': 343.00  // $49.00 * 7.0
+    'whatsapp-validator_standard': 203.00, 
+    'whatsapp-validator_premium': 343.00
 };
 
 exports.handler = async (event) => {
