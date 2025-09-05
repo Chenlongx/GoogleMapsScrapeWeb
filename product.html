@@ -154,7 +154,84 @@
             border: 1px solid var(--border-color);
             font-weight: 500;
         }
+        /* 新增：鼠标悬浮放大效果 */
+        .hover-zoom {
+            transition: transform 0.5s ease; /* 添加平滑过渡效果 */
+            transform-origin: center center; /* 确保从图片中心开始放大 */
+            cursor: zoom-in; /* 鼠标悬停时显示放大镜图标 */
+        }
 
+        .hover-zoom:hover {
+            transform: scale(1.1); /* 鼠标悬浮时放大到1.1倍 */
+            /* 如果需要更强的放大效果，可以将 1.1 改为 1.2 或更大 */
+        }
+                .lightbox {
+            display: none; /* 默认隐藏 */
+            position: fixed; /* 固定在屏幕上 */
+            z-index: 1000; /* 确保在最顶层 */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.9); /* 半透明黑色背景 */
+            -webkit-animation: fadeIn 0.5s;
+            animation: fadeIn 0.5s;
+        }
+
+        .lightbox-content {
+            margin: auto;
+            display: block;
+            max-width: 90%;
+            max-height: 80%; /* 留出一些空间给下面的文字说明 */
+            -webkit-animation: zoom 0.6s;
+            animation: zoom 0.6s;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .lightbox-close:hover,
+        .lightbox-close:focus {
+            color: #bbb;
+            text-decoration: none;
+        }
+
+        .lightbox-caption {
+            margin: auto;
+            display: block;
+            width: 80%;
+            text-align: center;
+            color: #ccc;
+            padding: 10px 0;
+            position: absolute;
+            bottom: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* 动画效果 */
+        @keyframes zoom {
+            from {transform: translate(-50%, -50%) scale(0.1);}
+            to {transform: translate(-50%, -50%) scale(1);}
+        }
+
+        @keyframes fadeIn {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
         /* 响应式调整 */
         @media (max-width: 991px) {
 
@@ -199,7 +276,9 @@
                                data-lang-en="Start Your Free Trial"></a>
                         </div>
                         <div class="product-hero-visual">
-                            <img src="./assets/img/home-background.webp" alt="Google Maps Scraper 软件界面">
+                            <a href="assets/img/home-background.webp" class="lightbox-trigger">
+                                <img src="./assets/img/home-background.webp" class="img-fluid hover-zoom" alt="Google Maps Scraper 软件界面">
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -296,6 +375,10 @@
                         <div class="info-item"><i class='bx bx-map'></i><span data-lang-zh="详细地址" data-lang-en="Full Address"></span></div>
                         <div class="info-item"><i class='bx bx-phone'></i><span data-lang-zh="电话号码" data-lang-en="Phone Number"></span></div>
                         <div class="info-item"><i class='bx bx-at'></i><span data-lang-zh="电子邮箱" data-lang-en="Email Address"></span></div>
+                        <div class="info-item"><i class='bx bxl-facebook-square'></i><span data-lang-zh="Facebook" data-lang-en="Facebook"></span></div>
+                        <div class="info-item"><i class='bx bxl-linkedin-square'></i><span data-lang-zh="领英" data-lang-en="LinkedIn"></span></div>
+                        <div class="info-item"><i class='bx bxl-instagram-alt'></i><span data-lang-zh="Instagram" data-lang-en="Instagram"></span></div>
+                        <div class="info-item"><i class='bx bxl-whatsapp'></i><span data-lang-zh="WhatsApp" data-lang-en="WhatsApp"></span></div>
                         <div class="info-item"><i class='bx bx-globe'></i><span data-lang-zh="官方网站" data-lang-en="Website"></span></div>
                         <div class="info-item"><i class='bx bxl-linkedin-square'></i><span data-lang-zh="社交媒体链接" data-lang-en="Social Media Links"></span></div>
                         <div class="info-item"><i class='bx bx-star'></i><span data-lang-zh="平均评分" data-lang-en="Average Rating"></span></div>
@@ -348,7 +431,9 @@
                                 data-lang-en="View Pricing"></a>
                         </div>
                         <div class="product-hero-visual">
-                            <img src="assets/img/MailProEmail/MailProEmail.webp" alt="Email Validator 软件界面">
+                            <a href="assets/img/MailProEmail/MailProEmail.webp" class="lightbox-trigger">
+                                <img src="assets/img/MailProEmail/MailProEmail.webp" alt="Email Validator 软件界面">
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -439,7 +524,9 @@
                             data-lang-en="Get Started Now"></a>
                     </div>
                     <div class="product-hero-visual">
-                        <img src="assets/img/WhatsAppValidator/whatsapp-hero.webp" alt="WhatsApp Validator 软件界面">
+                        <a href="assets/img/WhatsAppValidator/whatsapp-hero.webp" class="lightbox-trigger">
+                            <img src="assets/img/WhatsAppValidator/whatsapp-hero.webp" alt="WhatsApp Validator 软件界面">
+                        </a>
                     </div>
                 </div>
             </div>
@@ -481,9 +568,53 @@
     </main>
 
     <footer id="main-footer" class="main-footer"></footer>
-
+    <!-- 显示放大图片的黑色蒙层和图片容器 -->
+    <div id="lightbox" class="lightbox">
+        <span class="lightbox-close">&times;</span>
+        <img class="lightbox-content" id="lightbox-img">
+        <div class="lightbox-caption" id="lightbox-caption"></div>
+    </div>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            var lightbox = document.getElementById('lightbox');
+            var lightboxImg = document.getElementById('lightbox-img');
+            var captionText = document.getElementById('lightbox-caption');
+            var closeBtn = document.querySelector('.lightbox-close');
+
+            // 获取所有触发点击的图片链接
+            var triggers = document.querySelectorAll('.lightbox-trigger');
+
+            // 为每个链接添加点击事件
+            triggers.forEach(function(trigger) {
+                trigger.addEventListener('click', function(event) {
+                    event.preventDefault(); // 阻止链接的默认跳转行为
+                    lightbox.style.display = 'block'; // 显示黑色蒙层
+                    lightboxImg.src = this.href;      // 将大图的路径赋给弹窗中的图片
+                    captionText.innerHTML = this.querySelector('img').alt; // 用小图的alt属性作为图片说明
+                });
+            });
+
+            // 定义关闭函数
+            function closeModal() {
+                lightbox.style.display = 'none';
+            }
+
+            // 点击关闭按钮 (×) 来关闭弹窗
+            closeBtn.addEventListener('click', closeModal);
+
+            // 点击黑色蒙层区域来关闭弹窗
+            lightbox.addEventListener('click', function(event) {
+                if (event.target === lightbox) { // 确保是点击在蒙层背景上，而不是图片上
+                    closeModal();
+                }
+            });
+
+            // 按下键盘的 'ESC' 键关闭弹窗
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape' && lightbox.style.display === 'block') {
+                    closeModal();
+                }
+            });
             const productContents = document.querySelectorAll('.product-content');
             const urlParams = new URLSearchParams(window.location.search);
             let productId = urlParams.get('id');
