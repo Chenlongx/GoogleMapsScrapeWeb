@@ -82,9 +82,21 @@ exports.handler = async (event) => {
             return { statusCode: 400, headers, body: JSON.stringify({ success: false, message: 'Invalid price' }) };
         }
 
+        const productCodeMap = {
+            'gmaps_standard': 'gs',
+            'gmaps_premium': 'gp',
+            'validator_standard': 'vs',
+            'validator_premium': 'vp',
+            'whatsapp-validator_standard': 'wvs', // 新产品的短代码
+            'whatsapp-validator_premium': 'wvp'  // 新产品的短代码
+        };
+        const productCode = productCodeMap[productId] || 'unknown'; // 获取短代码
 
         const encodedEmail = Buffer.from(email).toString('base64');
-        const outTradeNo = `${productId}-${Date.now()}-${encodedEmail}`;
+        // const outTradeNo = `${productId}-${Date.now()}-${encodedEmail}`;
+
+        const outTradeNo = `${productCode}-${Date.now()}-${encodedEmail}`;
+
         let subject = '未知商品';
         if (productId.startsWith('gmaps')) {
             subject = productId.includes('premium') ? 'Google Maps Scraper 高级版' : 'Google Maps Scraper 标准版';
