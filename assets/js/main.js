@@ -49,9 +49,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                 </ul>
                             </li>
                             <li><a href="./checkout.html" data-lang-zh="定价" data-lang-en="checkout">定价</a></li>
-                            <li><a href="./docs.html" data-lang-zh="文档" data-lang-en="Docs">文档</a></li>
                             <li><a href="./faq.html" data-lang-zh="FAQ" data-lang-en="FAQ">FAQ</a></li>
                             <li><a href="./download.html" data-lang-zh="下载" data-lang-en="Download">下载</a></li>
+                            <li><a href="./docs.html" data-lang-zh="使用文档" data-lang-en="Docs">使用文档</a></li>
                             <li><a href="./contact.html" data-lang-zh="联系我们" data-lang-en="Contact">联系我们</a></li>
                         </ul>
                     </nav>
