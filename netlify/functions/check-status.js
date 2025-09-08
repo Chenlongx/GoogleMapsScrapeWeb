@@ -57,7 +57,7 @@ exports.handler = async (event) => {
             privateKey: formatKey(process.env.ALIPAY_PRIVATE_KEY, 'private'),
             alipayPublicKey: formatKey(process.env.ALIPAY_PUBLIC_KEY, 'public'),
             gateway: "https://openapi.alipay.com/gateway.do",
-            timeout: 10000
+            timeout: 30000
         });
 
         const alipayResult = await alipaySdk.exec('alipay.trade.query', {
