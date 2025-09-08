@@ -250,7 +250,7 @@ exports.handler = async (event) => {
 
             // 1. 逻辑简化：不再区分邮箱和账号，统一在 'account' 字段中查询
             const { data: userRecord, error: dbQueryError } = await supabase
-                .from('users') 
+                .from('user_accounts') 
                 .select('account') // 只查询存在的 'account' 字段
                 .eq('account', identifierFromFrontend) // 在 'account' 字段中匹配前端传来的值
                 .single();
