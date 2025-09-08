@@ -73,7 +73,11 @@ exports.handler = async (event) => {
             // 我们从自己的数据库中获取 product_id 来构造一个正确的 subject
             const dbProductId = order.product_id; 
             let subject = '未知商品';
-             if (dbProductId.startsWith('gmaps')) {
+            if (dbProductId.startsWith('gmaps_renewal')) { // 优先判断是否为续费
+                if (dbProductId.includes('monthly')) subject = '谷歌地图抓取器 - 月度续费';
+                else if (dbProductId.includes('quarterly')) subject = '谷歌地图抓取器 - 季度续费';
+                else if (dbProductId.includes('yearly')) subject = '谷歌地图抓取器 - 年度续费';
+            } else if (dbProductId.startsWith('gmaps')) {
                 subject = dbProductId.includes('premium') ? 'Google Maps Scraper 高级版' : 'Google Maps Scraper 标准版';
             } else if (dbProductId.startsWith('validator')) {
                 subject = dbProductId.includes('premium') ? 'Email Validator 高级版激活码' : 'Email Validator 标准版激活码';

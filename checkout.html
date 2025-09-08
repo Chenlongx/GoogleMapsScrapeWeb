@@ -669,27 +669,30 @@
 
                 let productName = '';
                 let planText = '';
+                const productId = details.product; // 接收完整的 productId
 
-                if (details.product.includes('renewal')) {
+                if (productId.includes('renewal')) {
                     productName = lang === 'zh' ? '谷歌地图抓取器 - 续费' : 'Google Maps Scraper - Renewal';
                     const durationMap = { monthly: '月度', quarterly: '季度', yearly: '年度' };
-                    planText = lang === 'zh' ? durationMap[details.plan] || details.plan : details.plan;
+                    const durationMapEn = { monthly: 'Monthly', quarterly: 'Quarterly', yearly: 'Yearly' };
+                    planText = lang === 'zh' ? durationMap[details.plan] || details.plan : durationMapEn[details.plan] || details.plan;
                 } else {
                     const productMap = {
                         gmaps: { zh: '谷歌地图抓取器', en: 'Google Maps Scraper' },
                         validator: { zh: '邮箱批量验证器', en: 'Email Validator' },
                         'whatsapp-validator': { zh: 'WhatsApp号码验证器', en: 'WhatsApp Number Validator' }
                     };
-                    productName = productMap[details.product] ? productMap[details.product][lang] : 'Unknown Product';
+                    const productBase = productId.split('_')[0];
+                    productName = productMap[productBase] ? productMap[productBase][lang] : 'Unknown Product';
                     planText = lang === 'zh' ? (details.plan === 'premium' ? '高级版' : '标准版') : (details.plan.charAt(0).toUpperCase() + details.plan.slice(1));
                 }
 
                 orderDetailsEl.innerHTML = `
-            <li><span>${lang === 'zh' ? '订单号' : 'Order ID'}</span><span>${details.orderId}</span></li>
-            <li><span>${lang === 'zh' ? '产品名称' : 'Product'}</span><span>${productName} (${planText})</span></li>
-            <li><span>${lang === 'zh' ? '支付金额' : 'Amount'}</span><span>¥ ${details.price}</span></li>
-            <li><span>${lang === 'zh' ? '激活/续费邮箱' : 'Email'}</span><span>${details.email}</span></li>
-        `;
+                    <li><span>${lang === 'zh' ? '订单号' : 'Order ID'}</span><span>${details.orderId}</span></li>
+                    <li><span>${lang === 'zh' ? '产品名称' : 'Product'}</span><span>${productName} (${planText})</span></li>
+                    <li><span>${lang === 'zh' ? '支付金额' : 'Amount'}</span><span>¥ ${details.price}</span></li>
+                    <li><span>${lang === 'zh' ? '激活/续费邮箱' : 'Email'}</span><span>${details.email}</span></li>
+                `;
                 document.getElementById('success-modal').classList.add('active');
             }
 
@@ -733,12 +736,29 @@
                                 modalElements.modal.classList.remove('active');
 
                                 const parts = productId.split('_');
-                                const productBase = parts.slice(0, parts.length - 1).join('_');
+
+                                let productBaseKey = parts[0];
+                                if (productId.includes('renewal')) {
+                                    productBaseKey = 'gmaps_renewal';
+                                } else if (productId.includes('whatsapp-validator')) {
+                                    productBaseKey = 'whatsapp-validator';
+                                }
+
                                 const plan = parts[parts.length - 1];
 
+                                // 在这里重新获取价格并计算人民币金额
+                                const planDetails = plans[productBaseKey] && plans[productBaseKey][plan] ? plans[productBaseKey][plan] : null;
+                                let cnyPrice = 'N/A';
+                                if (planDetails && planDetails.price) {
+                                    cnyPrice = (parseFloat(planDetails.price) * USD_TO_CNY_RATE).toFixed(2);
+                                }
+
                                 openSuccessModal({
-                                    orderId: outTradeNo, product: productBase,
-                                    plan: plan, price: priceInCny, email: email
+                                    orderId: outTradeNo,
+                                    product: productId,
+                                    plan: plan,
+                                    price: cnyPrice,
+                                    email: email
                                 });
                             }
                         } catch (pollError) {
