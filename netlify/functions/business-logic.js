@@ -80,7 +80,24 @@ async function processBusinessLogic(orderParams) {
                 }
                 
                 emailSubject = '【GlobalFlow】您的 Google Maps Scraper 账户已成功续费！';
-                emailHtml = `... 您的续费成功邮件HTML内容 ...`;
+                // 将 newExpiryDate 对象格式化为 YYYY-MM-DD 格式的日期字符串
+                const formattedExpiry = newExpiryDate.toLocaleDateString('sv-SE'); // 使用 sv-SE 格式可以稳定地得到 YYYY-MM-DD
+
+                emailHtml = `
+                <div style="background-color: #f3f4f6; padding: 20px; font-family: Arial, sans-serif; line-height: 1.6;">
+                    <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; padding: 40px;">
+                        <h1 style="color: #1e293b; font-size: 24px; text-align: center;">续费成功！</h1>
+                        <p style="color: #475569; font-size: 16px;">您好，</p>
+                        <p style="color: #475569; font-size: 16px;">您的 <strong style="color: #3b82f6;">Google Maps Scraper</strong> 账户 (<span style="color: #3b82f6;">${customerEmail}</span>) 已成功续费。</p>
+                        <p style="color: #475569; font-size: 16px;">您的新服务到期日为：</p>
+                        <div style="background-color: #f1f5f9; border: 1px dashed #cbd5e1; border-radius: 8px; padding: 20px; text-align: center; margin: 20px 0;">
+                            <p style="font-size: 20px; font-weight: bold; color: #1e293b; letter-spacing: 1px; margin: 0;">${formattedExpiry}</p>
+                        </div>
+                        <p style="color: #475569; font-size: 16px;">感谢您的支持。</p>
+                        <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 40px 0;">
+                        <p style="color: #94a3b8; font-size: 12px; text-align: center;">如果您没有进行此操作，请忽略此邮件。这是一个自动发送的邮件，请勿直接回复。</p>
+                    </div>
+                </div>`;
 
             } else {
                 const password = generatePassword();
