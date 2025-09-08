@@ -74,7 +74,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="container">
                     <div class="footer-content">
                         <div class="footer-about">
-                            <div class="mapouter"><div class="gmap_canvas"><iframe class="gmap_iframe" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?width=300&amp;height=300&amp;hl=en&amp;q=高义创新产业园&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe><a href="https://embedgooglemap.xyz/">google maps iframe</a></div><style>.mapouter{position:relative;text-align:right;width:300px;height:300px;}.gmap_canvas {overflow:hidden;background:none!important;width:300px;height:300px;}.gmap_iframe {width:300px!important;height:300px!important;}</style></div>
+                            <div class="mapouter">
+                                <div class="gmap_canvas">
+                                    <iframe class="gmap_iframe" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
+                                        src="https://maps.google.com/maps?width=300&amp;height=300&amp;hl=zh-CN&amp;q=广州天河软件园&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed">
+                                    </iframe>
+                                    <a href="https://embedgooglemap.xyz/">google maps iframe</a>
+                                </div>
+                                <style>
+                                    .mapouter {
+                                        position: relative;
+                                        text-align: right;
+                                        width: 300px;
+                                        height: 300px;
+                                    }
+                                    .gmap_canvas {
+                                        overflow: hidden;
+                                        background: none!important;
+                                        width: 300px;
+                                        height: 300px;
+                                    }
+                                    .gmap_iframe {
+                                        width: 300px!important;
+                                        height: 300px!important;
+                                    }
+                                </style>
+                            </div>
                             <p data-lang-zh="中心位置" data-lang-en="Location">中心位置</p>
                         </div>
                         <div class="footer-links">
@@ -103,6 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <p>&copy; ${new Date().getFullYear()} GoogleMapsScraper. All rights reserved.</p>
                     </div>
                 </div>
+
             `;
         },
 
