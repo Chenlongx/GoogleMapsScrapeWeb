@@ -180,21 +180,13 @@ const allowedOrigins = [
 // 格式化密钥的辅助函数
 function formatKey(key, type) {
     if (!key || key.includes('\n')) {
-        return key; // 如果密钥不存在或已包含换行符，则直接返回
+        return key;
     }
-    
     console.log(`[Info] Reformatting single-line ${type} key...`);
-    
-    const header = type === 'private' 
-        ? '-----BEGIN RSA PRIVATE KEY-----' 
-        : '-----BEGIN PUBLIC KEY-----';
-    const footer = type === 'private' 
-        ? '-----END RSA PRIVATE KEY-----' 
-        : '-----END PUBLIC KEY-----';
-
+    const header = type === 'private' ? '-----BEGIN RSA PRIVATE KEY-----' : '-----BEGIN PUBLIC KEY-----';
+    const footer = type === 'private' ? '-----END RSA PRIVATE KEY-----' : '-----END PUBLIC KEY-----';
     return key.replace(header, `${header}\n`).replace(footer, `\n${footer}`);
 }
-
 
 // 后端权威价格表 (人民币, CNY)
 const productPriceMap = {
@@ -250,38 +242,18 @@ exports.handler = async (event) => {
         
         const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
         
-        // 对于新购场景，该值直接使用
-        // 对于续费场景，该值将被数据库中的权威信息覆盖
         let finalIdentifier = identifierFromFrontend; 
 
-        // ▼▼▼【核心修改】处理续费时邮箱可能不存在的情况 ▼▼▼
+        // ▼▼▼【核心修改】根据您的数据库结构进行简化和修正 ▼▼▼
         if (productId.startsWith('gmaps_renewal')) {
-            const identifier = identifierFromFrontend;
-            console.log(`[Info] Renewal check for identifier: ${identifier}`);
+            console.log(`[Info] Renewal check for identifier: ${identifierFromFrontend}`);
 
-            let userRecord = null;
-            let dbQueryError = null;
-
-            // 1. 修改查询语句，同时获取 email 和 account
-            const columnsToSelect = 'email, account';
-
-            if (identifier.includes('@')) {
-                const { data, error } = await supabase
-                    .from('users') 
-                    .select(columnsToSelect)
-                    .eq('email', identifier)
-                    .single();
-                userRecord = data;
-                dbQueryError = error;
-            } else {
-                const { data, error } = await supabase
-                    .from('users')
-                    .select(columnsToSelect)
-                    .eq('account', identifier)
-                    .single();
-                userRecord = data;
-                dbQueryError = error;
-            }
+            // 1. 逻辑简化：不再区分邮箱和账号，统一在 'account' 字段中查询
+            const { data: userRecord, error: dbQueryError } = await supabase
+                .from('users') 
+                .select('account') // 只查询存在的 'account' 字段
+                .eq('account', identifierFromFrontend) // 在 'account' 字段中匹配前端传来的值
+                .single();
 
             if (dbQueryError && dbQueryError.code !== 'PGRST116') { 
                 console.error('Supabase query error during renewal user check:', dbQueryError);
@@ -289,7 +261,7 @@ exports.handler = async (event) => {
             }
 
             if (!userRecord) {
-                console.warn(`[Renewal Blocked] User not found for identifier: ${identifier}`);
+                console.warn(`[Renewal Blocked] User not found for identifier: ${identifierFromFrontend}`);
                 return {
                     statusCode: 404,
                     headers,
@@ -297,13 +269,8 @@ exports.handler = async (event) => {
                 };
             }
             
-            // 2. 关键判断：优先使用邮箱，若邮箱为空，则使用账户名
-            finalIdentifier = userRecord.email || userRecord.account;
-            if (!finalIdentifier) {
-                 // 兜底：如果邮箱和账户名都为空，则拒绝（理论上不应发生）
-                 console.error(`[Renewal Blocked] User record found for ${identifier} but has no email or account.`);
-                 return { statusCode: 500, headers, body: JSON.stringify({ success: false, message: '账户数据异常，请联系客服。' }) };
-            }
+            // 2. 使用从数据库中查到的、权威的账户信息作为最终标识符
+            finalIdentifier = userRecord.account;
             console.log(`[Info] User validated. Proceeding with identifier: ${finalIdentifier}`);
         }
         // ▲▲▲ 修改结束 ▲▲▲
@@ -315,7 +282,6 @@ exports.handler = async (event) => {
         };
         const productCode = productCodeMap[productId] || 'unknown';
 
-        // 3. 使用最终确定的标识符（finalIdentifier）
         const encodedIdentifier = Buffer.from(finalIdentifier).toString('base64');
         const outTradeNo = `${productCode}-${Date.now()}-${encodedIdentifier}`;
 
@@ -332,12 +298,11 @@ exports.handler = async (event) => {
             subject = productId.includes('premium') ? 'WhatsApp Validator 高级版激活码' : 'WhatsApp Validator 标准版激活码';
         }
 
-        // 4. 将最终标识符存入订单表的 customer_email 字段
         const { error: insertError } = await supabase.from('orders').insert([
             {
                 out_trade_no: outTradeNo,
                 product_id: productId,
-                customer_email: finalIdentifier,
+                customer_email: finalIdentifier, // 将最终标识符存入订单表
                 status: 'PENDING'
             }
         ]);
