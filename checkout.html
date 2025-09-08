@@ -837,7 +837,7 @@
                         statusEl: document.getElementById('payment-status'),
                         timerEl: document.getElementById('payment-timer')
                     };
-                    await processPayment(productId, priceToSend, email, modalElements);
+                    await processPayment(productId, email, modalElements);
                 });
             });
 
@@ -871,6 +871,7 @@
                         statusEl: document.getElementById('renewal-status'),
                         timerEl: document.getElementById('renewal-timer')
                     };
+
                     await processPayment(productId, email, modalElements);
                 });
             }

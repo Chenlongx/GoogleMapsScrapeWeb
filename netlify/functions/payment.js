@@ -33,11 +33,7 @@
 //     'validator_standard': 203.00,
 //     'validator_premium': 553.00,
 //     'whatsapp-validator_standard': 203.00, 
-//     'whatsapp-validator_premium': 343.00,
-
-//     'gmaps_renewal_monthly': 63.00,
-//     'gmaps_renewal_quarterly': 175.00,
-//     'gmaps_renewal_yearly': 623.00,
+//     'whatsapp-validator_premium': 343.00
 // };
 
 // exports.handler = async (event) => {
@@ -154,8 +150,6 @@
 //         };
 //     }
 // };
-
-
 
 
 const { AlipaySdk } = require('alipay-sdk');
