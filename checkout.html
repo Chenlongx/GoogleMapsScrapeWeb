@@ -450,7 +450,7 @@
                                 data-lang-en="Enter your account email and select a duration to renew."></p>
                         </div>
                         <div class="renewal-form">
-                            <input type="email" id="renewal_email" placeholder="your-account@example.com" required>
+                            <input type="text" id="renewal_email" placeholder="输入您的邮箱或账户名" data-lang-en-placeholder="Your Email or Username" required>
                             <select id="renewal_duration">
                                 <option value="monthly" data-price="4.27" data-lang-zh="月度续费 - ¥29.90"
                                     data-lang-en="Monthly - $4.27"></option>
@@ -859,11 +859,15 @@
                     const duration = selectedOption.value;
                     const productId = `gmaps_renewal_${duration}`;
 
-                    const email = emailInput.value;
+                    // ▼▼▼【前端修改】▼▼▼
+                    const identifier = emailInput.value; // 1. 使用更通用的变量名
 
-                    if (!email || !email.includes('@')) {
-                        alert('请输入有效的续费账户邮箱！'); return;
+                    // 2. 放宽验证，只检查是否为空
+                    if (!identifier || identifier.trim() === '') {
+                        alert('请输入您的邮箱或账户名进行续费！');
+                        return;
                     }
+                    // ▲▲▲ 修改结束 ▲▲▲
 
                     const modalElements = {
                         modal: document.getElementById('renewal-modal'),
@@ -872,7 +876,8 @@
                         timerEl: document.getElementById('renewal-timer')
                     };
 
-                    await processPayment(productId, email, modalElements);
+                    // 3. 将 identifier 传递给支付函数
+                    await processPayment(productId, identifier, modalElements);
                 });
             }
 
