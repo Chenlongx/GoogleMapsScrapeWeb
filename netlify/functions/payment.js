@@ -287,9 +287,9 @@ exports.handler = async (event) => {
 
         let subject = '未知商品';
         if (productId.startsWith('gmaps_renewal')) {
-            if (productId.includes('monthly')) subject = '谷歌地图抓取器 - 月度续费';
-            else if (productId.includes('quarterly')) subject = '谷歌地图抓取器 - 季度续费';
-            else if (productId.includes('yearly')) subject = '谷歌地图抓取器 - 年度续费';
+            if (productId.includes('monthly')) subject = 'Google Maps Scraper - 月度续费';
+            else if (productId.includes('quarterly')) subject = 'Google Maps Scraper - 季度续费';
+            else if (productId.includes('yearly')) subject = 'Google Maps Scraper - 年度续费';
         } else if (productId.startsWith('gmaps')) {
             subject = productId.includes('premium') ? 'Google Maps Scraper 高级版' : 'Google Maps Scraper 标准版';
         } else if (productId.startsWith('validator')) {

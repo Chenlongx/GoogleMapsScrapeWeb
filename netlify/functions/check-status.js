@@ -74,9 +74,9 @@ exports.handler = async (event) => {
             const dbProductId = order.product_id; 
             let subject = '未知商品';
             if (dbProductId.startsWith('gmaps_renewal')) { // 优先判断是否为续费
-                if (dbProductId.includes('monthly')) subject = '谷歌地图抓取器 - 月度续费';
-                else if (dbProductId.includes('quarterly')) subject = '谷歌地图抓取器 - 季度续费';
-                else if (dbProductId.includes('yearly')) subject = '谷歌地图抓取器 - 年度续费';
+                if (dbProductId.includes('monthly')) subject = 'Google Maps Scraper - 月度续费';
+                else if (dbProductId.includes('quarterly')) subject = 'Google Maps Scraper - 季度续费';
+                else if (dbProductId.includes('yearly')) subject = 'Google Maps Scraper - 年度续费';
             } else if (dbProductId.startsWith('gmaps')) {
                 subject = dbProductId.includes('premium') ? 'Google Maps Scraper 高级版' : 'Google Maps Scraper 标准版';
             } else if (dbProductId.startsWith('validator')) {
