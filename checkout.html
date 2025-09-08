@@ -609,7 +609,7 @@
 
     <div id="contact-modal-container" class="modal-container">
         <div class="modal-content">
-            <button id="modal-close-btn" class="modal-close-btn" aria-label="Close">&times;</button>
+            <button id="contact-modal-close-btn" class="modal-close-btn" aria-label="Close">&times;</button>
             <h2 data-lang-zh="联系我们" data-lang-en="Contact Us">联系我们</h2>
             <div class="contact-channels">
                 <div class="contact-channel">
@@ -979,6 +979,25 @@
                 productCards.forEach(card => updateCardUI(card));
                 // 这里可以添加续费区域的UI更新（如果需要）
             });
+
+            // ▼▼▼ 【新增】为联系我们弹窗绑定独立的关闭事件 ▼▼▼
+            const contactModal = document.getElementById('contact-modal-container');
+            const contactCloseBtn = document.getElementById('contact-modal-close-btn');
+            const contactFab = document.getElementById('contact-fab');
+
+            if (contactFab && contactModal) {
+                // 打开弹窗的逻辑 (可能已在 main.js 中，但为确保功能完整，在此处也添加)
+                contactFab.addEventListener('click', () => {
+                    contactModal.classList.add('active');
+                });
+            }
+
+            if (contactModal && contactCloseBtn) {
+                // 关闭弹窗的逻辑
+                contactCloseBtn.addEventListener('click', () => {
+                    contactModal.classList.remove('active');
+                });
+            }
         });
     </script>
 </body>
