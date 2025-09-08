@@ -11,21 +11,11 @@
     <style>
         /* ===== 页面整体与卡片基础样式 (无变动) ===== */
         .checkout-section {
-            padding: 5rem 0;
+            padding: 4rem 0;
+            /* 减小上下边距 */
             background-color: var(--background-color);
         }
-        .checkout-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 3rem;
-            max-width: 960px;
-            margin: 0 auto;
-        }
-        @media (min-width: 768px) {
-            .checkout-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
+
         .product-card {
             background-color: var(--surface-color);
             border: 1px solid var(--border-color);
@@ -37,24 +27,29 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
+
         html[data-theme="dark"] .product-card {
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
         }
+
         .product-card:hover {
             transform: translateY(-8px);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         }
+
         .product-card h2 {
             margin-bottom: 0.75rem;
-            font-size: 2rem;
+            font-size: 1.8rem;
             color: var(--text-primary-color);
         }
+
         .product-card .plan-description {
             color: var(--text-secondary-color);
             margin-bottom: 2rem;
             min-height: 40px;
             font-size: 1rem;
         }
+
         .plan-selector {
             display: flex;
             background-color: var(--background-color);
@@ -64,6 +59,7 @@
             margin-bottom: 2rem;
             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.04);
         }
+
         .plan-btn {
             flex: 1;
             background: transparent;
@@ -76,23 +72,27 @@
             color: var(--text-secondary-color);
             transition: all 0.2s ease;
         }
+
         .plan-btn.active {
             background: var(--primary-color);
             color: #fff;
             box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
         }
+
         .product-price {
             font-size: 3rem;
             font-weight: 700;
             color: var(--text-primary-color);
             margin-bottom: 2rem;
         }
+
         .product-price .price-period {
             font-size: 1.1rem;
             font-weight: 500;
             color: var(--text-secondary-color);
             margin-left: 0.25rem;
         }
+
         .product-features {
             list-style: none;
             padding: 0;
@@ -103,16 +103,19 @@
             border-top: 1px solid var(--border-color);
             padding-top: 2rem;
         }
+
         .product-features li {
             display: flex;
             align-items: center;
             gap: 0.75rem;
             margin-bottom: 1rem;
         }
+
         .product-features .bx {
             color: var(--secondary-color);
             font-size: 1.25rem;
         }
+
         .product-card label {
             display: block;
             text-align: left;
@@ -120,6 +123,7 @@
             margin-bottom: 0.5rem;
             color: var(--text-primary-color);
         }
+
         .product-card input {
             width: 100%;
             padding: 0.8rem 1rem;
@@ -131,11 +135,13 @@
             box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
+
         .product-card input:focus {
             border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
             outline: none;
         }
+
         .secure-payment-badge {
             display: flex;
             align-items: center;
@@ -145,75 +151,205 @@
             font-size: 0.9rem;
             margin-top: 1.5rem;
         }
+
         .secure-payment-badge .bx {
             color: var(--secondary-color);
         }
-        .trust-section {
-            padding: 5rem 0;
-            background-color: var(--background-color);
-        }
-        .trust-grid {
+
+        /* --- ▼▼▼ 【核心修改】调整网格布局为三列 ▼▼▼ --- */
+        .checkout-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 2.5rem;
-        }
-        .trust-card {
-            text-align: center;
-            display: flex;             /* 启用 Flex 布局 */
-            flex-direction: column;    /* 设置主轴为垂直方向 */
-            align-items: center;       /* 水平居中所有子元素 */
-        }
-        .trust-card .bx {
-            font-size: 3.5rem;
-            color: var(--primary-color);
-            margin-bottom: 1rem;
-        }
-        .trust-card h3 {
-            font-size: 1.25rem;
-            margin-bottom: 0.5rem;
-            color: var(--text-primary-color);
-        }
-        .trust-card p {
-            color: var(--text-secondary-color);
-            line-height: 1.6;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            /* 减小卡片间距 */
+            max-width: 1280px;
+            margin: 0 auto;
         }
 
-        /* ===== 弹窗通用样式 ===== */
+        @media (min-width: 768px) {
+            .checkout-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .checkout-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* --- ▼▼▼ 【新增】续费区域专属样式 ▼▼▼ --- */
+        .renewal-section {
+            background-color: var(--surface-color);
+            border: 2px solid var(--secondary-color);
+            border-radius: 16px;
+            padding: 2rem 2.5rem;
+            margin-bottom: 4rem;
+            box-shadow: 0 10px 30px -5px rgba(16, 185, 129, 0.2);
+        }
+
+        .renewal-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        @media (min-width: 992px) {
+            .renewal-content {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+        }
+
+        .renewal-info {
+            text-align: center;
+        }
+
+        @media (min-width: 992px) {
+            .renewal-info {
+                text-align: left;
+            }
+        }
+
+        .renewal-info h2 {
+            font-size: 1.8rem;
+            color: var(--text-primary-color);
+        }
+
+        .renewal-info p {
+            color: var(--text-secondary-color);
+            margin-top: 0.25rem;
+        }
+
+        .renewal-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .renewal-form input,
+        .renewal-form select {
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: var(--background-color);
+            color: var(--text-primary-color);
+            min-width: 220px;
+        }
+
+        .renewal-form button {
+            background-color: var(--secondary-color);
+            flex-shrink: 0;
+        }
+
+        .renewal-form button:hover {
+            background-color: #059669;
+        }
+
+        /* --- ▼▼▼ 【新增】新购区域的标题样式 ▼▼▼ --- */
+        .section-title {
+            text-align: center;
+            font-size: 1.8rem;
+            color: var(--text-secondary-color);
+            margin-bottom: 2.5rem;
+            position: relative;
+            display: block;
+        }
+
+        .section-title::before,
+        .section-title::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 25%;
+            height: 1px;
+            background-color: var(--border-color);
+        }
+
+        @media (min-width: 768px) {
+
+            .section-title::before,
+            .section-title::after {
+                width: 30%;
+            }
+        }
+
+        .section-title::before {
+            left: 0;
+        }
+
+        .section-title::after {
+            right: 0;
+        }
+
+        /* --- 弹窗样式 (无变动) --- */
         .modal {
-            display: none;
+            /* 默认隐藏，使用 flex 布局使其子元素可以轻松居中 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            /* 固定定位，覆盖整个屏幕 */
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background-color: rgba(0, 0, 0, 0.7);
+
+            /* 半透明黑色背景遮罩 */
+            background-color: rgba(15, 23, 42, 0.7);
+            /* 使用深色系作为背景，并增加透明度 */
+            backdrop-filter: blur(5px);
+            /* 添加流行的毛玻璃效果 */
+            -webkit-backdrop-filter: blur(5px);
+
+            /* 确保在最顶层 */
             z-index: 1000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+
+            /* 用于实现淡入淡出动画 */
             opacity: 0;
-            transition: opacity 0.3s ease-in-out;
             pointer-events: none;
+            /* 隐藏时不可交互 */
+            transition: opacity 0.3s ease-in-out;
         }
+
+
         .modal.active {
+            /* 激活时，变为可见且可交互 */
             opacity: 1;
             pointer-events: auto;
         }
+
+
         .modal-box {
+            /* 弹窗内容盒子 */
             background-color: var(--surface-color);
+            /* 使用主题变量，适配深色模式 */
             padding: 2.5rem;
-            border-radius: var(--border-radius);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            /* 更大的圆角 */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            /* 更柔和的阴影 */
             text-align: center;
             max-width: 90%;
+            /* 在小屏幕上留出边距 */
             position: relative;
-            transform: translateY(-20px);
+
+            /* 实现从上向下滑入的轻微动效 */
+            transform: scale(0.95) translateY(-20px);
             transition: transform 0.3s ease-in-out;
         }
+
         .modal.active .modal-box {
-            transform: translateY(0);
+            /* 激活时，恢复到正常位置和大小 */
+            transform: scale(1) translateY(0);
         }
+
         .modal-close-btn {
+            /* 关闭按钮 (X) */
             position: absolute;
             top: 1rem;
             right: 1rem;
@@ -226,58 +362,57 @@
             transition: transform 0.2s ease, color 0.2s ease;
             z-index: 10;
         }
+
         .modal-close-btn:hover {
             color: var(--text-primary-color);
             transform: rotate(90deg);
+            /* 增加旋转动效 */
         }
-        
-        /* ===== 支付弹窗特定样式 ===== */
-        #payment-box {
+
+        #payment-box,
+        #renewal-modal .modal-box {
             width: 400px;
         }
-        #qrcode {
+
+        #qrcode,
+        #renewal-qrcode {
             margin: 1.5rem auto;
             padding: 0.5rem;
             background-color: #fff;
-            border-radius: var(--border-radius-sm);
+            border-radius: 8px;
             display: inline-block;
         }
-        #payment-box p {
-            margin-bottom: 0.8rem;
-            font-size: 1.1rem;
-            color: var(--text-primary-color);
-        }
-        #payment-box p:last-of-type {
-            margin-bottom: 0;
-        }
-        
-        /* 【CSS新增】成功弹窗特定样式 */
+
         #success-box {
             width: 420px;
         }
+
         #success-box .icon {
             font-size: 4rem;
             color: var(--secondary-color);
         }
+
         #success-box h3 {
             font-size: 1.75rem;
             margin-top: 1rem;
             margin-bottom: 0.75rem;
-            color: var(--text-primary-color);
         }
+
         #success-box .message {
-            color: var(--text-secondary-color);
             margin-bottom: 1.5rem;
         }
+
         #order-details {
             list-style: none;
             padding: 1rem 1.5rem;
             margin: 0 0 2rem 0;
             text-align: left;
             background-color: var(--background-color);
+            /* 使用更深的背景色以区分 */
             border-radius: 8px;
             border: 1px solid var(--border-color);
         }
+
         #order-details li {
             padding: 0.75rem 0;
             display: flex;
@@ -285,16 +420,9 @@
             border-bottom: 1px solid var(--border-color);
             font-size: 0.95rem;
         }
+
         #order-details li:last-child {
             border-bottom: none;
-        }
-        #order-details li span:first-child {
-            font-weight: 500;
-            color: var(--text-secondary-color);
-        }
-        #order-details li span:last-child {
-            font-weight: 600;
-            color: var(--text-primary-color);
         }
     </style>
 </head>
@@ -313,87 +441,106 @@
 
         <section class="checkout-section">
             <div class="container">
-                <div class="checkout-grid">
 
+                <div class="renewal-section">
+                    <div class="renewal-content">
+                        <div class="renewal-info">
+                            <h2 data-lang-zh="老用户续费" data-lang-en="Existing User Renewal"></h2>
+                            <p data-lang-zh="输入您的账户邮箱，选择时长即可快速续费。"
+                                data-lang-en="Enter your account email and select a duration to renew."></p>
+                        </div>
+                        <div class="renewal-form">
+                            <input type="email" id="renewal_email" placeholder="your-account@example.com" required>
+                            <select id="renewal_duration">
+                                <option value="monthly" data-price="4.27" data-lang-zh="月度续费 - ¥29.90"
+                                    data-lang-en="Monthly - $4.27"></option>
+                                <option value="quarterly" data-price="12.81" data-lang-zh="季度续费 - ¥89.70"
+                                    data-lang-en="Quarterly - $12.81"></option>
+                                <option value="yearly" data-price="51.26" data-lang-zh="年度续费 - ¥358.80"
+                                    data-lang-en="Yearly - $51.26"></option>
+                            </select>
+                            <button class="btn btn-primary" id="renewal-pay-button">立即续费</button>
+                        </div>
+                    </div>
+                </div>
+                <h2 class="section-title" data-lang-zh="或者，购买新许可" data-lang-en="Or, Purchase a New License"></h2>
+
+                <div class="checkout-grid">
                     <div class="product-card" id="gmaps-card">
                         <h2 data-lang-zh="谷歌地图抓取器" data-lang-en="Google Maps Scraper"></h2>
                         <p class="plan-description" data-lang-zh="按月收费"
                             data-lang-en="Monthly subscription, cancel anytime"></p>
                         <div class="plan-selector">
-                            <button class="plan-btn" data-price="4.90" data-plan="standard" data-lang-zh="标准版" data-lang-en="Standard"></button>
-                            <button class="plan-btn active" data-price="9.00" data-plan="premium" data-lang-zh="高级版" data-lang-en="Premium"></button>
+                            <button class="plan-btn" data-price="4.90" data-plan="standard" data-lang-zh="标准版"
+                                data-lang-en="Standard"></button>
+                            <button class="plan-btn active" data-price="9.00" data-plan="premium" data-lang-zh="高级版"
+                                data-lang-en="Premium"></button>
                         </div>
-                        <div class="product-price">$9<span class="price-period" data-lang-zh="/月" data-lang-en="/mo"></span></div>
+                        <div class="product-price">$9<span class="price-period" data-lang-zh="/月"
+                                data-lang-en="/mo"></span></div>
                         <ul class="product-features"></ul>
-                        <label for="gmaps_email" data-lang-zh="输入您要开通的账户邮箱" data-lang-en="Enter account email to activate"></label>
+                        <label for="gmaps_email" data-lang-zh="输入您要开通的账户邮箱"
+                            data-lang-en="Enter account email to activate"></label>
                         <input type="email" id="gmaps_email" placeholder="your-account@example.com" required>
                         <button class="btn btn-primary" data-product-id="gmaps">立即开通高级版</button>
                         <div class="secure-payment-badge">
-                            <i class='bx bxs-lock-alt'></i> <span data-lang-zh="支付宝安全支付" data-lang-en="Secure Payment by Alipay"></span>
+                            <i class='bx bxs-lock-alt'></i> <span data-lang-zh="支付宝安全支付"
+                                data-lang-en="Secure Payment by Alipay"></span>
                         </div>
                     </div>
 
                     <div class="product-card" id="validator-card">
                         <h2 data-lang-zh="邮箱批量验证器" data-lang-en="Email Validator"></h2>
-                        <p class="plan-description" data-lang-zh="一次性付费，永久使用" data-lang-en="One-time payment, lifetime use"></p>
+                        <p class="plan-description" data-lang-zh="一次性付费，永久使用"
+                            data-lang-en="One-time payment, lifetime use"></p>
                         <div class="plan-selector">
-                            <button class="plan-btn" data-price="29.00" data-plan="standard" data-lang-zh="标准版" data-lang-en="Standard"></button>
-                            <button class="plan-btn active" data-price="79.00" data-plan="premium" data-lang-zh="高级版" data-lang-en="Premium"></button>
+                            <button class="plan-btn" data-price="29.00" data-plan="standard" data-lang-zh="标准版"
+                                data-lang-en="Standard"></button>
+                            <button class="plan-btn active" data-price="79.00" data-plan="premium" data-lang-zh="高级版"
+                                data-lang-en="Premium"></button>
                         </div>
-                        <div class="product-price">$79<span class="price-period" data-lang-zh="/终身版" data-lang-en="/lifetime"></span></div>
+                        <div class="product-price">$79<span class="price-period" data-lang-zh="/终身版"
+                                data-lang-en="/lifetime"></span></div>
                         <ul class="product-features"></ul>
-                        <label for="validator_email" data-lang-zh="输入接收激活码的邮箱" data-lang-en="Enter email to receive license key"></label>
+                        <label for="validator_email" data-lang-zh="输入接收激活码的邮箱"
+                            data-lang-en="Enter email to receive license key"></label>
                         <input type="email" id="validator_email" placeholder="your-email@example.com" required>
                         <button class="btn btn-primary" data-product-id="validator">购买高级版激活码</button>
                         <div class="secure-payment-badge">
-                            <i class='bx bxs-lock-alt'></i> <span data-lang-zh="支付宝安全支付" data-lang-en="Secure Payment by Alipay"></span>
+                            <i class='bx bxs-lock-alt'></i> <span data-lang-zh="支付宝安全支付"
+                                data-lang-en="Secure Payment by Alipay"></span>
                         </div>
                     </div>
-                    
-                    <!-- WhatsApp Number Validator -->
+
                     <div class="product-card" id="whatsapp-validator-card">
                         <h2 data-lang-zh="WhatsApp号码验证器" data-lang-en="WhatsApp Number Validator"></h2>
-                        <p class="plan-description" data-lang-zh="一次性付费，永久使用" data-lang-en="One-time payment, lifetime use"></p>
+                        <p class="plan-description" data-lang-zh="一次性付费，永久使用"
+                            data-lang-en="One-time payment, lifetime use"></p>
                         <div class="plan-selector">
-                            <button class="plan-btn" data-price="29.00" data-plan="standard" data-lang-zh="标准版" data-lang-en="Standard"></button>
-                            <button class="plan-btn active" data-price="49.00" data-plan="premium" data-lang-zh="高级版" data-lang-en="Premium"></button>
+                            <button class="plan-btn" data-price="29.00" data-plan="standard" data-lang-zh="标准版"
+                                data-lang-en="Standard"></button>
+                            <button class="plan-btn active" data-price="49.00" data-plan="premium" data-lang-zh="高级版"
+                                data-lang-en="Premium"></button>
                         </div>
-                        <div class="product-price">$49<span class="price-period" data-lang-zh="/终身版" data-lang-en="/lifetime"></span></div>
+                        <div class="product-price">$49<span class="price-period" data-lang-zh="/终身版"
+                                data-lang-en="/lifetime"></span></div>
                         <ul class="product-features"></ul>
-                        <label for="whatsapp_validator_email" data-lang-zh="输入接收激活码的邮箱" data-lang-en="Enter email to receive license key"></label>
+                        <label for="whatsapp_validator_email" data-lang-zh="输入接收激活码的邮箱"
+                            data-lang-en="Enter email to receive license key"></label>
                         <input type="email" id="whatsapp_validator_email" placeholder="your-email@example.com" required>
                         <button class="btn btn-primary" data-product-id="whatsapp-validator">购买高级版激活码</button>
                         <div class="secure-payment-badge">
-                            <i class='bx bxs-lock-alt'></i> <span data-lang-zh="支付宝安全支付" data-lang-en="Secure Payment by Alipay"></span>
+                            <i class='bx bxs-lock-alt'></i> <span data-lang-zh="支付宝安全支付"
+                                data-lang-en="Secure Payment by Alipay"></span>
                         </div>
                     </div>
-                            
                 </div>
             </div>
         </section>
 
         <section class="trust-section">
-            <div class="container">
-                <div class="trust-grid">
-                    <div class="trust-card">
-                        <i class='bx bxs-check-shield'></i>
-                        <h3 data-lang-zh="SSL 安全加密" data-lang-en="SSL Secure Encryption"></h3>
-                        <p data-lang-zh="您的所有信息都经过256位SSL加密传输，确保数据安全。" data-lang-en="All your information is transmitted over 256-bit SSL encryption."></p>
-                    </div>
-                    <div class="trust-card">
-                        <i class='bx bxs-credit-card'></i>
-                        <h3 data-lang-zh="支付宝官方认证" data-lang-en="Official Alipay Partner"></h3>
-                        <p data-lang-zh="我们是支付宝官方签约商户，所有交易均在支付宝安全体系下进行。" data-lang-en="We are an officially signed merchant with Alipay. All transactions are secure."></p>
-                    </div>
-                    <div class="trust-card">
-                        <i class='bx bxs-chat'></i>
-                        <h3 data-lang-zh="专属客户支持" data-lang-en="Dedicated Support">专属客户支持</h3>
-                        <p data-lang-zh="使用过程中遇到任何问题，随时通过邮件联系我们，我们将尽快为您解答。" data-lang-en="If you encounter any issues, contact us anytime via email for prompt assistance.">使用过程中遇到任何问题，随时通过邮件联系我们，我们将尽快为您解答。</p>
-                    </div>
-                </div>
-            </div>
         </section>
-        
+
         <div id="payment-modal" class="modal">
             <div id="payment-box" class="modal-box">
                 <button id="modal-close-btn" class="modal-close-btn" aria-label="Close">&times;</button>
@@ -416,14 +563,38 @@
                 <button id="success-confirm-btn" class="btn btn-primary" data-lang-zh="好的" data-lang-en="Confirm"></button>
             </div>
         </div>
+
+        <div id="renewal-modal" class="modal">
+            <div id="renewal-box" class="modal-box">
+                <button id="renewal-close-btn" class="modal-close-btn" aria-label="Close">&times;</button>
+                <p data-lang-zh="请使用支付宝扫码续费" data-lang-en="Please use Alipay to scan and renew"></p>
+                <div id="renewal-qrcode"></div>
+                <p id="renewal-status" data-lang-zh="等待支付中..." data-lang-en="Waiting for payment..."></p>
+                <p id="renewal-timer" style="font-size: 0.9rem; color: var(--text-secondary-color);"></p>
+            </div>
+        </div>
     </main>
 
     <footer id="main-footer" class="main-footer"></footer>
 
     <script src="https://cdn.jsdelivr.net/npm/qrcode-generator/qrcode.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator/qrcode.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const backendUrl = 'https://google-maps-backend-master.netlify.app/.netlify/functions/';
+            // ===================================================================
+            // 1. 全局常量和配置
+            // ===================================================================
+            let backendUrl;
+            // 检查当前页面的主机名是否为 localhost 或 127.0.0.1
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.port === '8888') {
+                // 如果是，则我们处于本地开发环境
+                backendUrl = 'http://localhost:5001/.netlify/functions/';
+                console.log('检测到本地开发环境，后端API路径设置为:', backendUrl);
+            } else {
+                // 否则，我们处于已部署的生产环境
+                backendUrl = 'https://google-maps-backend-master.netlify.app/.netlify/functions/';
+                console.log('检测到生产环境，后端API路径设置为:', backendUrl);
+            }
             const USD_TO_CNY_RATE = 7.0;
 
             const plans = {
@@ -435,75 +606,165 @@
                     standard: { price: '29.00', features_zh: ['全功能验证', '授权 <strong>1</strong> 台设备'], features_en: ['All Features', 'License for <strong>1</strong> Device'], period_zh: '/终身版', period_en: '/lifetime' },
                     premium: { price: '79.00', features_zh: ['全功能验证', '<strong>优先</strong>技术支持', '授权 <strong>3</strong> 台设备'], features_en: ['All Features', '<strong>Priority</strong> Support', 'License for <strong>3</strong> Devices'], period_zh: '/终身版', period_en: '/lifetime' }
                 },
-                whatsapp_validator: {
-                    standard: { 
-                        price: '29.00', 
-                        features_zh: ['批量验证WhatsApp号码', '支持多种筛选条件', '实时验证结果'], 
-                        features_en: ['Bulk WhatsApp number validation', 'Support for multiple filtering conditions', 'Real-time validation results'], 
-                        period_zh: '/终身版', 
-                        period_en: '/lifetime' 
-                    },
-                    premium: { 
-                        price: '49.00', 
-                        features_zh: ['批量验证WhatsApp号码', '支持多种筛选条件', '实时验证结果', '<strong>专属</strong>技术支持'], 
-                        features_en: ['Bulk WhatsApp number validation', 'Support for multiple filtering conditions', 'Real-time validation results', '<strong>Dedicated</strong> technical support'], 
-                        period_zh: '/终身版', 
-                        period_en: '/lifetime' 
-                    }
+                'whatsapp-validator': { // 注意：这里的键名需要与 data-product-id 匹配
+                    standard: { price: '29.00', features_zh: ['批量验证WhatsApp号码', '支持多种筛选条件', '实时验证结果'], features_en: ['Bulk WhatsApp number validation', 'Support for multiple filtering conditions', 'Real-time validation results'], period_zh: '/终身版', period_en: '/lifetime' },
+                    premium: { price: '49.00', features_zh: ['批量验证WhatsApp号码', '支持多种筛选条件', '实时验证结果', '<strong>专属</strong>技术支持'], features_en: ['Bulk WhatsApp number validation', 'Support for multiple filtering conditions', 'Real-time validation results', '<strong>Dedicated</strong> technical support'], period_zh: '/终身版', period_en: '/lifetime' }
+                },
+                gmaps_renewal: {
+                    monthly: { price: '4.27', period_zh: '/月', period_en: '/mo' },
+                    quarterly: { price: '12.81', period_zh: '/季度', period_en: '/quarter' },
+                    yearly: { price: '51.26', period_zh: '/年', period_en: '/year' }
                 }
             };
 
-            // function updateCardUI(cardElement) {
-            //     const productId = cardElement.id.replace('-card', '');
-            //     const activePlanBtn = cardElement.querySelector('.plan-btn.active');
-            //     if (!activePlanBtn) return;
+            let statusInterval, paymentTimeout, countdownInterval;
 
-            //     const selectedPlan = activePlanBtn.dataset.plan;
-            //     const planData = plans[productId][selectedPlan];
-            //     const lang = document.documentElement.lang.startsWith('zh') ? 'zh' : 'en';
+            // ===================================================================
+            // 2. 核心支付与弹窗处理函数
+            // ===================================================================
 
-            //     const priceEl = cardElement.querySelector('.product-price');
-            //     const usdPrice = parseFloat(planData.price);
-                
-            //     let displayPriceHTML;
-            //     if (lang === 'zh') {
-            //         const cnyPrice = (usdPrice * USD_TO_CNY_RATE).toFixed(2);
-            //         displayPriceHTML = `¥${cnyPrice}<span class="price-period">${planData['period_' + lang]}</span>`;
-            //     } else {
-            //         displayPriceHTML = `$${usdPrice.toFixed(2)}<span class="price-period">${planData['period_' + lang]}</span>`;
-            //     }
-            //     priceEl.innerHTML = displayPriceHTML;
+            function stopAllTimers() {
+                if (statusInterval) clearInterval(statusInterval);
+                if (paymentTimeout) clearTimeout(paymentTimeout);
+                if (countdownInterval) clearInterval(countdownInterval);
+            }
 
-            //     const featuresEl = cardElement.querySelector('.product-features');
-            //     const features = planData['features_' + lang];
-            //     featuresEl.innerHTML = features.map(f => `<li><i class='bx bx-check'></i>${f}</li>`).join('');
+            function closeAllModals() {
+                document.querySelectorAll('.modal').forEach(modal => modal.classList.remove('active'));
+            }
 
-            //     const purchaseBtn = cardElement.querySelector('.btn[data-product-id]');
-            //     purchaseBtn.dataset.price = planData.price; 
-                
-            //     const btnTextKey = `btn_text_${selectedPlan}_${lang}`;
-            //     const btnTexts = {
-            //         btn_text_standard_zh: productId === 'gmaps' ? '开通标准版' : '购买标准版',
-            //         btn_text_standard_en: productId === 'gmaps' ? 'Activate Standard' : 'Buy Standard',
-            //         btn_text_premium_zh: productId === 'gmaps' ? '开通高级版' : '购买高级版',
-            //         btn_text_premium_en: productId === 'gmaps' ? 'Activate Premium' : 'Buy Premium',
-                    
-            //     };
-            //     purchaseBtn.textContent = btnTexts[btnTextKey];
-            // }
+            function openSuccessModal(details) {
+                const lang = document.documentElement.lang.startsWith('zh') ? 'zh' : 'en';
+                const orderDetailsEl = document.getElementById('order-details');
+
+                let productName = '';
+                let planText = '';
+
+                if (details.product.includes('renewal')) {
+                    productName = lang === 'zh' ? '谷歌地图抓取器 - 续费' : 'Google Maps Scraper - Renewal';
+                    const durationMap = { monthly: '月度', quarterly: '季度', yearly: '年度' };
+                    planText = lang === 'zh' ? durationMap[details.plan] || details.plan : details.plan;
+                } else {
+                    const productMap = {
+                        gmaps: { zh: '谷歌地图抓取器', en: 'Google Maps Scraper' },
+                        validator: { zh: '邮箱批量验证器', en: 'Email Validator' },
+                        'whatsapp-validator': { zh: 'WhatsApp号码验证器', en: 'WhatsApp Number Validator' }
+                    };
+                    productName = productMap[details.product] ? productMap[details.product][lang] : 'Unknown Product';
+                    planText = lang === 'zh' ? (details.plan === 'premium' ? '高级版' : '标准版') : (details.plan.charAt(0).toUpperCase() + details.plan.slice(1));
+                }
+
+                orderDetailsEl.innerHTML = `
+            <li><span>${lang === 'zh' ? '订单号' : 'Order ID'}</span><span>${details.orderId}</span></li>
+            <li><span>${lang === 'zh' ? '产品名称' : 'Product'}</span><span>${productName} (${planText})</span></li>
+            <li><span>${lang === 'zh' ? '支付金额' : 'Amount'}</span><span>¥ ${details.price}</span></li>
+            <li><span>${lang === 'zh' ? '激活/续费邮箱' : 'Email'}</span><span>${details.email}</span></li>
+        `;
+                document.getElementById('success-modal').classList.add('active');
+            }
+
+            async function processPayment(productId, email, modalElements) {
+                stopAllTimers();
+
+                modalElements.qrcodeContainer.innerHTML = '正在生成二维码...';
+                modalElements.statusEl.textContent = '等待支付中...';
+                modalElements.statusEl.style.color = '';
+                modalElements.timerEl.textContent = '';
+                modalElements.modal.classList.add('active');
+
+                try {
+                    const response = await fetch(`${backendUrl}payment`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ productId, email })
+                    });
+                    const data = await response.json();
+
+                    if (!data.success || !data.qrCodeUrl) {
+                        throw new Error(data.message || 'Failed to get QR code');
+                    }
+
+                    modalElements.qrcodeContainer.innerHTML = '';
+                    const qr = qrcode(0, 'L');
+                    qr.addData(data.qrCodeUrl);
+                    qr.make();
+                    modalElements.qrcodeContainer.innerHTML = qr.createImgTag(8);
+
+                    const outTradeNo = data.outTradeNo;
+                    const PAYMENT_TIMEOUT_DURATION = 5 * 60 * 1000;
+
+                    statusInterval = setInterval(async () => {
+                        try {
+                            const statusRes = await fetch(`${backendUrl}check-status?outTradeNo=${outTradeNo}`);
+                            const statusData = await statusRes.json();
+
+                            if (statusData.status === 'completed') {
+                                stopAllTimers();
+                                modalElements.modal.classList.remove('active');
+
+                                const parts = productId.split('_');
+                                const productBase = parts.slice(0, parts.length - 1).join('_');
+                                const plan = parts[parts.length - 1];
+
+                                openSuccessModal({
+                                    orderId: outTradeNo, product: productBase,
+                                    plan: plan, price: priceInCny, email: email
+                                });
+                            }
+                        } catch (pollError) {
+                            console.error('Polling error:', pollError);
+                            stopAllTimers();
+                        }
+                    }, 3000);
+
+                    let timeLeft = PAYMENT_TIMEOUT_DURATION;
+                    countdownInterval = setInterval(() => {
+                        timeLeft -= 1000;
+                        if (timeLeft <= 0) {
+                            clearInterval(countdownInterval);
+                            modalElements.timerEl.textContent = '二维码已失效';
+                            return;
+                        }
+                        const minutes = Math.floor(timeLeft / (1000 * 60));
+                        const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                        const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+                        const lang = document.documentElement.lang.startsWith('zh') ? 'zh' : 'en';
+                        modalElements.timerEl.textContent = lang === 'zh'
+                            ? `二维码将在 ${formattedTime} 后失效`
+                            : `QR code expires in ${formattedTime}`;
+                    }, 1000);
+
+                    paymentTimeout = setTimeout(() => {
+                        if (modalElements.modal.classList.contains('active')) {
+                            const lang = document.documentElement.lang.startsWith('zh') ? 'zh' : 'en';
+                            const message = lang === 'zh' ? '支付超时，订单已关闭。' : 'Payment timed out, order has been closed.';
+
+                            stopAllTimers();
+                            modalElements.modal.classList.remove('active');
+                            alert(message);
+                        }
+                    }, PAYMENT_TIMEOUT_DURATION);
+
+                } catch (error) {
+                    console.error('Payment Error:', error);
+                    modalElements.qrcodeContainer.innerHTML = `生成失败: ${error.message}`;
+                }
+            }
+
+            // ===================================================================
+            // 3. UI 更新与事件绑定
+            // ===================================================================
 
             function updateCardUI(cardElement) {
-                // 原来
-                // const productId = cardElement.id.replace('-card', '');
-                
-                // 修改为：
                 const idMap = {
                     'gmaps-card': 'gmaps',
                     'validator-card': 'validator',
-                    'whatsapp-validator-card': 'whatsapp_validator'
+                    'whatsapp-validator-card': 'whatsapp-validator'
                 };
                 const productId = idMap[cardElement.id];
-                
+                if (!productId || !plans[productId]) return;
+
                 const activePlanBtn = cardElement.querySelector('.plan-btn.active');
                 if (!activePlanBtn) return;
 
@@ -513,7 +774,7 @@
 
                 const priceEl = cardElement.querySelector('.product-price');
                 const usdPrice = parseFloat(planData.price);
-                
+
                 let displayPriceHTML;
                 if (lang === 'zh') {
                     const cnyPrice = (usdPrice * USD_TO_CNY_RATE).toFixed(2);
@@ -528,9 +789,8 @@
                 featuresEl.innerHTML = features.map(f => `<li><i class='bx bx-check'></i>${f}</li>`).join('');
 
                 const purchaseBtn = cardElement.querySelector('.btn[data-product-id]');
-                purchaseBtn.dataset.price = planData.price; 
+                purchaseBtn.dataset.price = planData.price;
 
-                // 按钮文字更新
                 const btnTextKey = `btn_text_${selectedPlan}_${lang}`;
                 const btnTexts = {
                     btn_text_standard_zh: productId === 'gmaps' ? '开通标准版' : '购买标准版',
@@ -541,7 +801,8 @@
                 purchaseBtn.textContent = btnTexts[btnTextKey];
             }
 
-            const productCards = document.querySelectorAll('.product-card');
+            // --- 新购产品卡片的事件绑定 ---
+            const productCards = document.querySelectorAll('.product-card:not(.renewal-section .product-card)');
             productCards.forEach(card => {
                 updateCardUI(card);
                 card.querySelectorAll('.plan-btn').forEach(btn => {
@@ -551,201 +812,86 @@
                         updateCardUI(card);
                     });
                 });
-            });
-            
-            // --- 支付逻辑 ---
-            const paymentModal = document.getElementById('payment-modal');
-            const qrcodeContainer = document.getElementById('qrcode');
-            const closeModalBtn = document.getElementById('modal-close-btn'); 
-            const paymentButtons = document.querySelectorAll('.btn[data-product-id]');
-            const paymentStatusEl = document.getElementById('payment-status');
-            const paymentTimerEl = document.getElementById('payment-timer');
 
-            // 【JS新增】获取成功弹窗相关元素
-            const successModal = document.getElementById('success-modal');
-            const closeSuccessBtn = document.getElementById('success-close-btn');
-            const confirmSuccessBtn = document.getElementById('success-confirm-btn');
-            const orderDetailsEl = document.getElementById('order-details');
-
-            let statusInterval, paymentTimeout, countdownInterval;
-            const PAYMENT_TIMEOUT_DURATION = 5 * 60 * 1000;
-
-            function stopAllTimers() {
-                if (statusInterval) clearInterval(statusInterval);
-                if (paymentTimeout) clearTimeout(paymentTimeout);
-                if (countdownInterval) clearInterval(countdownInterval);
-                statusInterval = paymentTimeout = countdownInterval = null;
-            }
-
-            function closePaymentModal() {
-                stopAllTimers();
-                paymentModal.classList.remove('active');
-                const lang = document.documentElement.lang.startsWith('zh') ? 'zh' : 'en';
-                paymentStatusEl.textContent = lang === 'zh' ? '等待支付中...' : 'Waiting for payment...';
-                paymentStatusEl.style.color = '';
-                paymentTimerEl.textContent = '';
-            }
-            
-            // 【JS新增】关闭成功弹窗的函数
-            function closeSuccessModal() {
-                successModal.classList.remove('active');
-            }
-            
-            // 【JS新增】打开并填充成功弹窗的函数
-            function openSuccessModal(details) {
-                const lang = document.documentElement.lang.startsWith('zh') ? 'zh' : 'en';
-                const planName = details.plan.charAt(0).toUpperCase() + details.plan.slice(1);
-                const planText = lang === 'zh' ? (details.plan === 'premium' ? '高级版' : '标准版') : planName;
-                
-                // const productName = lang === 'zh' 
-                //     ? (details.product === 'gmaps' ? '谷歌地图抓取器' : '邮箱批量验证器')
-                //     : (details.product === 'gmaps' ? 'Google Maps Scraper' : 'Email Validator');
-
-                let productName;
-                if (lang === 'zh') {
-                    if (details.product === 'gmaps') {
-                        productName = '谷歌地图抓取器';
-                    } else if (details.product === 'validator') {
-                        productName = '邮箱批量验证器';
-                    } else if (details.product === 'whatsapp_validator') {
-                        productName = 'WhatsApp 号码验证器';
-                    }
-                } else {
-                    if (details.product === 'gmaps') {
-                        productName = 'Google Maps Scraper';
-                    } else if (details.product === 'validator') {
-                        productName = 'Email Validator';
-                    } else if (details.product === 'whatsapp_validator') {
-                        productName = 'WhatsApp Number Validator';
-                    }
-                }
-                
-                orderDetailsEl.innerHTML = `
-                    <li><span>${lang === 'zh' ? '订单号' : 'Order ID'}</span><span>${details.orderId}</span></li>
-                    <li><span>${lang === 'zh' ? '产品名称' : 'Product'}</span><span>${productName} (${planText})</span></li>
-                    <li><span>${lang === 'zh' ? '支付金额' : 'Amount'}</span><span>¥ ${details.price}</span></li>
-                    <li><span>${lang === 'zh' ? '激活邮箱' : 'Email'}</span><span>${details.email}</span></li>
-                `;
-                successModal.classList.add('active');
-            }
-
-            // --- 绑定关闭事件 ---
-            if (closeModalBtn) closeModalBtn.addEventListener('click', closePaymentModal);
-            if (paymentModal) paymentModal.addEventListener('click', (e) => {
-                if (e.target === paymentModal) closePaymentModal();
-            });
-            if (closeSuccessBtn) closeSuccessBtn.addEventListener('click', closeSuccessModal);
-            if (confirmSuccessBtn) confirmSuccessBtn.addEventListener('click', closeSuccessModal);
-            if (successModal) successModal.addEventListener('click', (e) => {
-                if (e.target === successModal) closeSuccessModal();
-            });
-
-            paymentButtons.forEach(button => {
-                button.addEventListener('click', async (e) => {
+                const purchaseBtn = card.querySelector('.btn[data-product-id]');
+                purchaseBtn.addEventListener('click', async (e) => {
                     e.preventDefault();
-                    
                     const lang = document.documentElement.lang.startsWith('zh') ? 'zh' : 'en';
                     if (lang === 'en') {
-                        alert('Alipay is only available for payments in CNY. Please switch the language to Chinese to proceed.');
-                        return;
+                        alert('Alipay is only available for payments in CNY. Please switch the language to Chinese to proceed.'); return;
                     }
-                    const productIdBase = button.dataset.productId;
-                    const cardElement = document.getElementById(`${productIdBase}-card`);
-                    const activePlan = cardElement.querySelector('.plan-btn.active').dataset.plan;
+
+                    const productIdBase = purchaseBtn.dataset.productId;
+                    const activePlan = card.querySelector('.plan-btn.active').dataset.plan;
                     const productId = `${productIdBase}_${activePlan}`;
-                    const usdPrice = parseFloat(button.dataset.price);
-                    const priceToSend = (usdPrice * 7.0).toFixed(2);
-                    const emailInput = cardElement.querySelector('input[type="email"]');
+                    const emailInput = card.querySelector('input[type="email"]');
                     const email = emailInput.value;
 
                     if (!email || !email.includes('@')) {
-                        alert('请输入有效的邮箱地址！');
-                        return;
+                        alert('请输入有效的邮箱地址！'); return;
                     }
 
-                    qrcodeContainer.innerHTML = '正在生成二维码...';
-                    paymentModal.classList.add('active');
-
-                    try {
-                        const response = await fetch(`/.netlify/functions/payment`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ productId, price: priceToSend, email })
-                        });
-                        const data = await response.json();
-
-                        if (data.success && data.qrCodeUrl) { 
-                            qrcodeContainer.innerHTML = '';
-                            const qr = qrcode(0, 'L');
-                            qr.addData(data.qrCodeUrl);
-                            qr.make();
-                            qrcodeContainer.innerHTML = qr.createImgTag(8);
-
-                            const outTradeNo = data.outTradeNo;
-                            stopAllTimers();
-
-                            statusInterval = setInterval(async () => {
-                                try {
-                                    const statusRes = await fetch(`/.netlify/functions/check-status?outTradeNo=${outTradeNo}`);
-                                    const statusData = await statusRes.json();
-                                    
-                                    // 【JS修改】核心逻辑变动
-                                    if (statusData.status === 'completed') {
-                                        stopAllTimers();
-                                        closePaymentModal(); // 先关闭支付弹窗
-                                        // 然后打开成功弹窗并传入订单信息
-                                        openSuccessModal({
-                                            orderId: outTradeNo,
-                                            product: productIdBase,
-                                            plan: activePlan,
-                                            price: priceToSend,
-                                            email: email
-                                        });
-
-                                    } else if (statusData.status === 'closed') {
-                                        stopAllTimers();
-                                        paymentStatusEl.textContent = '支付已关闭';
-                                        paymentStatusEl.style.color = 'var(--error-color, #ef4444)';
-                                    }
-                                } catch (pollError) {
-                                    console.error('Polling error:', pollError);
-                                    stopAllTimers();
-                                }
-                            }, 3000);
-
-                            let timeLeft = PAYMENT_TIMEOUT_DURATION;
-                            countdownInterval = setInterval(() => {
-                                timeLeft -= 1000;
-                                if (timeLeft <= 0) {
-                                    clearInterval(countdownInterval);
-                                    return;
-                                }
-                                const minutes = Math.floor(timeLeft / (1000 * 60));
-                                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-                                const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                                paymentTimerEl.textContent = `二维码将在 ${formattedTime} 后失效`;
-                            }, 1000);
-                            
-                            paymentTimeout = setTimeout(() => {
-                                // 检查弹窗是否还开着，避免在已关闭时弹出提示
-                                if (paymentModal.classList.contains('active')) {
-                                    closePaymentModal();
-                                    alert('支付超时，订单已关闭。');
-                                }
-                            }, PAYMENT_TIMEOUT_DURATION);
-                            
-                        } else {
-                            throw new Error(data.message || 'Failed to get QR code');
-                        }
-                    } catch (error) {
-                        console.error('Error:', error);
-                        qrcodeContainer.innerHTML = `生成失败: ${error.message}`;
-                    }
+                    const modalElements = {
+                        modal: document.getElementById('payment-modal'),
+                        qrcodeContainer: document.getElementById('qrcode'),
+                        statusEl: document.getElementById('payment-status'),
+                        timerEl: document.getElementById('payment-timer')
+                    };
+                    await processPayment(productId, priceToSend, email, modalElements);
                 });
             });
 
+            // --- 续费区域的事件绑定 ---
+            const renewalSection = document.querySelector('.renewal-section');
+            if (renewalSection) {
+                const emailInput = document.getElementById('renewal_email');
+                const durationSelect = document.getElementById('renewal_duration');
+                const payButton = document.getElementById('renewal-pay-button');
+
+                payButton.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    const lang = document.documentElement.lang.startsWith('zh') ? 'zh' : 'en';
+                    if (lang === 'en') {
+                        alert('Alipay is only available for payments in CNY. Please switch the language to Chinese to proceed.'); return;
+                    }
+
+                    const selectedOption = durationSelect.options[durationSelect.selectedIndex];
+                    const duration = selectedOption.value;
+                    const productId = `gmaps_renewal_${duration}`;
+
+                    const email = emailInput.value;
+
+                    if (!email || !email.includes('@')) {
+                        alert('请输入有效的续费账户邮箱！'); return;
+                    }
+
+                    const modalElements = {
+                        modal: document.getElementById('renewal-modal'),
+                        qrcodeContainer: document.getElementById('renewal-qrcode'),
+                        statusEl: document.getElementById('renewal-status'),
+                        timerEl: document.getElementById('renewal-timer')
+                    };
+                    await processPayment(productId, email, modalElements);
+                });
+            }
+
+            // --- 弹窗关闭事件绑定 ---
+            document.querySelectorAll('.modal-close-btn, .modal, #success-confirm-btn').forEach(el => {
+                el.addEventListener('click', (e) => {
+                    if (e.target === el) { //确保只在点击背景或指定按钮时关闭
+                        stopAllTimers();
+                        closeAllModals();
+                    }
+                });
+            });
+            document.querySelectorAll('.modal-box').forEach(box => {
+                box.addEventListener('click', e => e.stopPropagation()); //阻止点击弹窗内容区域关闭弹窗
+            });
+
+            // --- 语言切换事件监听 ---
             document.addEventListener('languageChanged', () => {
                 productCards.forEach(card => updateCardUI(card));
+                // 这里可以添加续费区域的UI更新（如果需要）
             });
         });
     </script>
