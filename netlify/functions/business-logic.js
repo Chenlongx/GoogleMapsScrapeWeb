@@ -119,9 +119,11 @@ async function processBusinessLogic(orderParams) {
                         <div style="background-color: #f1f5f9; border: 1px dashed #cbd5e1; border-radius: 8px; padding: 20px; text-align: center; margin: 20px 0;">
                             <p style="font-size: 20px; font-weight: bold; color: #1e293b; letter-spacing: 2px; margin: 0;">${password}</p>
                         </div>
-                        <p style="color: #475569; font-size: 16px;">为了您的账户安全，请登录后及时修改密码。</p>
+                        <p style="color: #475569; font-size: 16px;">请在您的桌面应用程序中使用以上账户和密码进行登录。为了您的账户安全，建议登录后立即修改密码。</p>
+                        <p style="color: #475569; font-size: 16px;">如果您还没有安装应用程序，可以点击下方按钮下载。</p>
                         <div style="text-align: center; margin-top: 30px;">
-                            <a href="https://mediamingle.cn/login" target="_blank" style="background-color: #3b82f6; color: #ffffff; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-size: 16px; font-weight: bold;">登录网站</a>
+                        <div style="text-align: center; margin-top: 30px;">
+                            <a href="https://mediamingle.cn/download.html" target="_blank" style="background-color: #3b82f6; color: #ffffff; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-size: 16px; font-weight: bold;">下载应用程序</a>
                         </div>
                         <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 40px 0;">
                         <p style="color: #94a3b8; font-size: 12px; text-align: center;">如果您没有进行此操作，请忽略此邮件。这是一个自动发送的邮件，请勿直接回复。</p>
