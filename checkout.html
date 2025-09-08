@@ -402,6 +402,20 @@
             margin-bottom: 1.5rem;
         }
 
+
+        #error-box .icon {
+            font-size: 4rem; /* 保持和成功图标一样大 */
+            color: #ef4444; /* 一个醒目的红色 */
+        }
+        #error-box h3 {
+            font-size: 1.75rem;
+            margin-top: 1rem;
+            margin-bottom: 0.75rem;
+        }
+        #error-box .message {
+            margin-bottom: 1.5rem;
+        }
+
         #order-details {
             list-style: none;
             padding: 1rem 1.5rem;
@@ -573,6 +587,16 @@
                 <p id="renewal-timer" style="font-size: 0.9rem; color: var(--text-secondary-color);"></p>
             </div>
         </div>
+
+        <div id="error-modal" class="modal">
+            <div id="error-box" class="modal-box">
+                <button id="error-close-btn" class="modal-close-btn" aria-label="Close">&times;</button>
+                <i class='bx bxs-x-circle icon'></i> 
+                <h3 data-lang-zh="操作失败" data-lang-en="Operation Failed"></h3>
+                <p id="error-message" class="message"></p> 
+                <button id="error-confirm-btn" class="btn btn-primary" data-lang-zh="好的" data-lang-en="OK"></button>
+            </div>
+        </div>
     </main>
 
     <footer id="main-footer" class="main-footer"></footer>
@@ -632,6 +656,12 @@
             function closeAllModals() {
                 document.querySelectorAll('.modal').forEach(modal => modal.classList.remove('active'));
             }
+
+            function openErrorModal(message) {
+                document.getElementById('error-message').textContent = message;
+                document.getElementById('error-modal').classList.add('active');
+            }
+
 
             function openSuccessModal(details) {
                 const lang = document.documentElement.lang.startsWith('zh') ? 'zh' : 'en';
@@ -747,8 +777,11 @@
                     }, PAYMENT_TIMEOUT_DURATION);
 
                 } catch (error) {
-                    console.error('Payment Error:', error);
-                    modalElements.qrcodeContainer.innerHTML = `生成失败: ${error.message}`;
+                    console.error('Payment Error:', error); // 保留日志用于调试
+                    modalElements.modal.classList.remove('active'); // 关闭支付窗口
+                    
+                    // ▼▼▼ 【核心修改】调用新的错误弹窗函数 ▼▼▼
+                    openErrorModal(error.message);
                 }
             }
 
@@ -882,7 +915,7 @@
             }
 
             // --- 弹窗关闭事件绑定 ---
-            document.querySelectorAll('.modal-close-btn, .modal, #success-confirm-btn').forEach(el => {
+            document.querySelectorAll('.modal-close-btn, .modal, #success-confirm-btn, #error-confirm-btn').forEach(el => {
                 el.addEventListener('click', (e) => {
                     if (e.target === el) { //确保只在点击背景或指定按钮时关闭
                         stopAllTimers();
