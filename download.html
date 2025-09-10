@@ -226,92 +226,8 @@
     </main>
 
     <footer id="main-footer" class="main-footer"></footer>
-    
+
     <!-- <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const GITHUB_USERNAME = 'Chenlongx';
-            const GITHUB_REPO_NAME = 'gogole_maps';
-            const apiUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO_NAME}/releases/latest`;
-
-            // --- 1. 修改 macOS 卡片的静态内容和行为 ---
-            const macosCard = document.getElementById('macos-card');
-            if (macosCard) {
-                const macosVersionInfo = macosCard.querySelector('.version-info');
-                const macosDownloadBtn = macosCard.querySelector('.btn');
-                const macosBtnSpan = macosDownloadBtn.querySelector('span');
-
-                // 更新文本内容
-                macosVersionInfo.textContent = '敬请期待';
-                macosVersionInfo.setAttribute('data-lang-zh', '敬请期待');
-                macosVersionInfo.setAttribute('data-lang-en', 'Coming Soon');
-
-                macosBtnSpan.textContent = '暂未支持';
-                macosBtnSpan.setAttribute('data-lang-zh', '暂未支持');
-                macosBtnSpan.setAttribute('data-lang-en', 'Not Supported');
-
-                // 添加禁用样式并阻止链接跳转
-                macosDownloadBtn.classList.add('disabled');
-                macosDownloadBtn.href = '#';
-                macosDownloadBtn.removeAttribute('download');
-
-                // 添加点击提示事件
-                macosDownloadBtn.addEventListener('click', (event) => {
-                    event.preventDefault();
-                    if (window.App && typeof window.App.showNotification === 'function') {
-                        // 使用您网站已有的通知系统
-                        App.showNotification('macOS 版本即将推出，敬请期待！', 'success');
-                    } else {
-                        // 如果通知系统不可用，则使用原生提示框
-                        alert('macOS 版本即将推出，敬请期待！');
-                    }
-                });
-            }
-
-            // --- 2. 继续执行 Windows 卡片的动态更新 ---
-            const windowsCard = document.getElementById('windows-card');
-            if (windowsCard) {
-                const windowsVersionInfo = windowsCard.querySelector('.version-info');
-                const windowsDownloadBtn = windowsCard.querySelector('.btn');
-                
-                fetch(apiUrl)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (!data.tag_name) throw new Error('No release found');
-
-                        const version = data.tag_name;
-                        const publishedDate = new Date(data.published_at).toLocaleDateString();
-                        const versionTextZh = `版本 ${version.replace('v', '')} | ${publishedDate}`;
-                        const versionTextEn = `Version ${version.replace('v', '')} | ${publishedDate}`;
-                        
-                        // 寻找 Windows 的文件或通用的 zip 文件
-                        const asset = data.assets.find(asset => asset.name.toLowerCase().includes('win') || asset.name.endsWith('.exe') || asset.name.endsWith('.zip'));
-
-                        if (asset) {
-                            windowsVersionInfo.textContent = versionTextZh;
-                            windowsVersionInfo.setAttribute('data-lang-zh', versionTextZh);
-                            windowsVersionInfo.setAttribute('data-lang-en', versionTextEn);
-                            windowsDownloadBtn.href = asset.browser_download_url;
-                        } else {
-                            throw new Error('No suitable download asset found for Windows.');
-                        }
-                        
-                        if (window.App && typeof window.App.applyLang === 'function') {
-                            setTimeout(() => window.App.applyLang(), 0);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error fetching latest release:', error);
-                        const errorTextZh = '获取失败, 请前往GitHub查看';
-                        const errorTextEn = 'Failed to fetch, please check GitHub';
-                        windowsVersionInfo.textContent = errorTextZh;
-                        windowsVersionInfo.setAttribute('data-lang-zh', errorTextZh);
-                        windowsVersionInfo.setAttribute('data-lang-en', errorTextEn);
-                    });
-            }
-        });
-    </script> -->
-
-    <script>
         document.addEventListener('DOMContentLoaded', () => {
             const GITHUB_USERNAME = 'Chenlongx';
 
@@ -410,7 +326,93 @@
                 macosCardId: 'wv-macos-card'
             });
         });
+    </script> -->
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const GITHUB_USERNAME = 'Chenlongx';
+
+            // --- 【最终方案】API地址直接指向我们自己在Cloudflare上配置的代理路径 ---
+            const API_BASE_URL = '/api/github/'; // 使用相对路径，自动适配域名
+
+            /**
+             * 获取并更新 GitHub 产品发布信息
+             */
+            function fetchProductRelease(config) {
+                // 下载加速代理（仍然推荐保留，用于加速文件下载）
+                const downloadProxy = 'https://ghfast.top/';
+                
+                // --- 直接拼接成我们自己的代理API地址 ---
+                const apiUrl = `${API_BASE_URL}${GITHUB_USERNAME}/${config.repoName}/releases/latest`;
+                
+                // --- 后续所有代码逻辑几乎不变 ---
+                const macosCard = document.getElementById(config.macosCardId);
+                if (macosCard) {
+                    macosCard.querySelector('.btn').addEventListener('click', e => {
+                        e.preventDefault();
+                        alert('macOS 版本即将推出，敬请期待！');
+                    });
+                }
+
+                const windowsCard = document.getElementById(config.windowsCardId);
+                if (!windowsCard) return;
+
+                const windowsVersionInfo = windowsCard.querySelector('.version-info');
+                const windowsDownloadBtn = windowsCard.querySelector('.btn');
+                
+                fetch(apiUrl)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`API error: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (!data.tag_name) throw new Error('No release found');
+
+                        const version = data.tag_name;
+                        const publishedDate = new Date(data.published_at).toLocaleDateString();
+                        const versionTextZh = `版本 ${version.replace('v', '')} | ${publishedDate}`;
+                        const versionTextEn = `Version ${version.replace('v', '')} | ${publishedDate}`;
+                        
+                        const asset = data.assets.find(asset => 
+                            asset.name.toLowerCase().includes('win') || 
+                            asset.name.endsWith('.exe') || 
+                            asset.name.endsWith('.zip')
+                        );
+
+                        if (asset) {
+                            windowsVersionInfo.setAttribute('data-lang-zh', versionTextZh);
+                            windowsVersionInfo.setAttribute('data-lang-en', versionTextEn);
+                            
+                            let finalDownloadUrl = downloadProxy + asset.browser_download_url;
+                            windowsDownloadBtn.href = finalDownloadUrl;
+                        } else {
+                            throw new Error('No suitable download asset found for Windows.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error(`Error fetching release for ${config.repoName}:`, error);
+                        const errorTextZh = '获取失败, 请前往GitHub查看';
+                        const errorTextEn = 'Failed to fetch, please check GitHub';
+                        windowsVersionInfo.setAttribute('data-lang-zh', errorTextZh);
+                        windowsVersionInfo.setAttribute('data-lang-en', errorTextEn);
+                    })
+                    .finally(() => {
+                        if (window.App && typeof window.App.applyLang === 'function') {
+                            setTimeout(() => window.App.applyLang(), 0);
+                        }
+                    });
+            }
+
+            // --- 为你的每个产品调用 (不变) ---
+            fetchProductRelease({ repoName: 'gogole_maps', windowsCardId: 'gs-windows-card', macosCardId: 'gs-macos-card' });
+            fetchProductRelease({ repoName: 'email_validator_repo', windowsCardId: 'ev-windows-card', macosCardId: 'ev-macos-card' });
+            fetchProductRelease({ repoName: 'whatsapp_validator_repo', windowsCardId: 'wv-windows-card', macosCardId: 'wv-macos-card' });
+        });
     </script>
+
     </body>
 
 </html>
