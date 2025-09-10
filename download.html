@@ -332,21 +332,13 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const GITHUB_USERNAME = 'Chenlongx';
+            const API_BASE_URL = '/api/github/'; // 使用Cloudflare代理的相对路径
 
-            // --- 【最终方案】API地址直接指向我们自己在Cloudflare上配置的代理路径 ---
-            const API_BASE_URL = '/api/github/'; // 使用相对路径，自动适配域名
-
-            /**
-             * 获取并更新 GitHub 产品发布信息
-             */
             function fetchProductRelease(config) {
-                // 下载加速代理（仍然推荐保留，用于加速文件下载）
-                const downloadProxy = 'https://ghfast.top/';
-                
-                // --- 直接拼接成我们自己的代理API地址 ---
+                const downloadProxy = 'https://ghfast.top/'; // 国内文件下载加速
                 const apiUrl = `${API_BASE_URL}${GITHUB_USERNAME}/${config.repoName}/releases/latest`;
-                
-                // --- 后续所有代码逻辑几乎不变 ---
+
+                // 处理macOS卡片 (逻辑不变)
                 const macosCard = document.getElementById(config.macosCardId);
                 if (macosCard) {
                     macosCard.querySelector('.btn').addEventListener('click', e => {
@@ -383,9 +375,16 @@
                         );
 
                         if (asset) {
+                            // 1. 先像以前一样设置数据属性，这对于语言切换仍然有用
                             windowsVersionInfo.setAttribute('data-lang-zh', versionTextZh);
                             windowsVersionInfo.setAttribute('data-lang-en', versionTextEn);
                             
+                            // --- ▼▼▼ 【核心修复】 ▼▼▼ ---
+                            // 2. 立即手动更新当前显示的文本
+                            const currentLang = document.documentElement.lang || 'zh';
+                            windowsVersionInfo.textContent = (currentLang.startsWith('zh')) ? versionTextZh : versionTextEn;
+                            // --- ▲▲▲ 修复结束 ▲▲▲ ---
+
                             let finalDownloadUrl = downloadProxy + asset.browser_download_url;
                             windowsDownloadBtn.href = finalDownloadUrl;
                         } else {
@@ -396,10 +395,15 @@
                         console.error(`Error fetching release for ${config.repoName}:`, error);
                         const errorTextZh = '获取失败, 请前往GitHub查看';
                         const errorTextEn = 'Failed to fetch, please check GitHub';
+                        
+                        // 同样，不仅要设置属性，还要直接更新文本
                         windowsVersionInfo.setAttribute('data-lang-zh', errorTextZh);
                         windowsVersionInfo.setAttribute('data-lang-en', errorTextEn);
+                        const currentLang = document.documentElement.lang || 'zh';
+                        windowsVersionInfo.textContent = (currentLang.startsWith('zh')) ? errorTextZh : errorTextEn;
                     })
                     .finally(() => {
+                        // 保留这一步，以确保如果用户之后手动切换语言，版本号也能跟着变
                         if (window.App && typeof window.App.applyLang === 'function') {
                             setTimeout(() => window.App.applyLang(), 0);
                         }
@@ -412,7 +416,6 @@
             fetchProductRelease({ repoName: 'whatsapp_validator_repo', windowsCardId: 'wv-windows-card', macosCardId: 'wv-macos-card' });
         });
     </script>
-
     </body>
 
 </html>
