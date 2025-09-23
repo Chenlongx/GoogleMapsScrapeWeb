@@ -230,7 +230,9 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const GITHUB_USERNAME = 'Chenlongx';
-            const API_BASE_URL = '/api/github/'; // 使用Cloudflare代理的相对路径
+            // 动态检测环境并设置 API 基础 URL
+            const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            const API_BASE_URL = isLocal ? '/.netlify/functions/github/' : '/api/github/';
 
             /**
              * 从 GitHub 获取产品发布信息，并带有失败重试逻辑
