@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <a href="javascript:void(0);" class="dropdown-toggle" data-lang-zh="产品" data-lang-en="Product">产品 <i class='bx bx-chevron-down'></i></a>
                                 <ul class="dropdown-menu">
                                     <li><a href="./product.html?id=maps-scraper" data-lang-zh="谷歌地图抓取器" data-lang-en="Google Maps Scraper">谷歌地图抓取器</a></li>
-                                    <li><a href="./product.html?id=email-validator" data-lang-zh="邮箱批量验证器" data-lang-en="Email Validator">邮箱批量验证器</a></li>
+                                    <li><a href="./product.html?id=email-validator" data-lang-zh="MailPro邮件营销大师" data-lang-en="MailPro Email Marketing Master">MailPro邮件营销大师</a></li>
                                     <li><a href="./product.html?id=whatsapp-validator" data-lang-zh="WhatsApp 验证器" data-lang-en="WhatsApp Validator">WhatsApp 验证器</a></li>
                                 </ul>
                             </li>
