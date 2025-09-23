@@ -642,7 +642,8 @@
                 console.log('检测到本地开发环境，后端API路径设置为:', backendUrl);
             } else {
                 // 否则，我们处于已部署的生产环境
-                backendUrl = 'https://mediamingle.cn/.netlify/functions/';
+                // 使用相对路径，让 Netlify 自动处理域名
+                backendUrl = '/.netlify/functions/';
                 console.log('检测到生产环境，后端API路径设置为:', backendUrl);
             }
             const USD_TO_CNY_RATE = 7.0;
