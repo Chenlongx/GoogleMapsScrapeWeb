@@ -6,12 +6,17 @@
   "scripts": {
     "dev": "netlify dev",
     "build": "echo 'No build step required for static site'",
-    "start": "netlify dev"
+    "start": "netlify dev",
+    "clean": "node cleanup-dependencies.js",
+    "install:dev": "npm install --only=dev"
   },
   "keywords": ["google-maps", "scraper", "web"],
   "author": "Chenlongx",
   "license": "MIT",
   "devDependencies": {
     "netlify-cli": "^12.0.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
   }
 }
