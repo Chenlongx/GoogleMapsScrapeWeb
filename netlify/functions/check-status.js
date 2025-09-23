@@ -1,5 +1,5 @@
 const { createClient } = require('@supabase/supabase-js');
-const { AlipaySdk } = require('alipay-sdk');
+const AlipaySdk = require('alipay-sdk').default || require('alipay-sdk');
 const { processBusinessLogic } = require('./business-logic.js');
 
 const allowedOrigins = [

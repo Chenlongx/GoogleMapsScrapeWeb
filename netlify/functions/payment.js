@@ -1,5 +1,5 @@
 // payment.js
-const { AlipaySdk } = require('alipay-sdk');
+const AlipaySdk = require('alipay-sdk').default || require('alipay-sdk');
 const { createClient } = require('@supabase/supabase-js');
 
 // 允许的来源白名单

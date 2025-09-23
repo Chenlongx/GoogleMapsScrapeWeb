@@ -1,4 +1,4 @@
-const { AlipaySdk } = require('alipay-sdk');
+const AlipaySdk = require('alipay-sdk').default || require('alipay-sdk');
 const { createClient } = require('@supabase/supabase-js');
 const { processBusinessLogic } = require('./business-logic.js'); // 引入核心业务逻辑
 
