@@ -33,9 +33,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="container">
                     <div class="logo" style="display: flex; align-items:center">
                         <a href="./index.html">
-                            <img src="assets/img/logo.webp" alt="GoogleMapsScraper Logo" style="height: 60px; width: auto;">
+                            <img src="assets/img/logo.webp" alt="MediaMingle Logo" style="height: 60px; width: auto;">
                         </a>
-                        <span class="logo-text">GoogleMapsScraper</span>
+                        <span class="logo-text">MediaMingle</span>
                     </div>
                     <nav class="main-nav" id="main-nav">
                         <ul>
@@ -49,8 +49,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                 </ul>
                             </li>
                             <li><a href="./checkout.html" data-lang-zh="定价" data-lang-en="checkout">定价</a></li>
-                            <li><a href="./faq.html" data-lang-zh="FAQ" data-lang-en="FAQ">FAQ</a></li>
                             <li><a href="./download.html" data-lang-zh="下载" data-lang-en="Download">下载</a></li>
+                            <li><a href="./troubleshooting.html" data-lang-zh="安装问题" data-lang-en="Installation Issues">安装问题</a></li>
                             <li><a href="./docs.html" data-lang-zh="使用文档" data-lang-en="Docs">使用文档</a></li>
                             <li><a href="./contact.html" data-lang-zh="联系我们" data-lang-en="Contact">联系我们</a></li>
                         </ul>
@@ -107,6 +107,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             <ul>
                                 <li><a href="./checkout.html" data-lang-zh="定价" data-lang-en="checkout">定价</a></li>
                                 <li><a href="./docs.html" data-lang-zh="文档" data-lang-en="Docs">文档</a></li>
+                                <li><a href="./faq.html" data-lang-zh="常见问题" data-lang-en="FAQ">常见问题</a></li>
+                                <li><a href="./troubleshooting.html" data-lang-zh="安装问题" data-lang-en="Installation Issues">安装问题</a></li>
                             </ul>
                         </div>
                         <div class="footer-links">
