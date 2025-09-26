@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>安装及使用常见问题 | Google Maps Scraper - 智能拓客工具套件</title>
+    <meta name="description" content="解决Google Maps Scraper、MailPro营销大师等工具的安装和使用问题，包括系统兼容性、杀毒软件误报、程序启动失败等常见问题的详细解决方案。">
+    <link rel="canonical" href="https://example.com/troubleshooting.html">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://example.com/troubleshooting.html">
+    <meta property="og:title" content="安装及使用常见问题 | Google Maps Scraper">
+    <meta property="og:description" content="解决Google Maps Scraper工具的安装和使用问题，包括系统兼容性、杀毒软件误报、程序启动失败等常见问题的详细解决方案。">
+    <meta property="og:image" content="https://example.com/assets/img/og-image.jpg">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://example.com/troubleshooting.html">
+    <meta property="twitter:title" content="安装及使用常见问题 | Google Maps Scraper">
+    <meta property="twitter:description" content="获取Google Maps Scraper工具套件的安装和使用问题解决方案，包括系统兼容性、杀毒软件误报等常见问题。">
+    <meta property="twitter:image" content="https://example.com/assets/img/twitter-image.jpg">
+
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="./assets/js/main.js" defer></script>
+
+    <style>
+        /* 问题解决方案页面专用样式 */
+        .troubleshooting-section {
+            padding: 5rem 0;
+            background-color: var(--background-color);
+        }
+
+        .troubleshooting-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .troubleshooting-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary-color);
+        }
+
+        .troubleshooting-header p {
+            font-size: 1.1rem;
+            color: var(--text-secondary-color);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .problem-grid {
+            display: grid;
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .problem-card {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .problem-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        html[data-theme="dark"] .problem-card:hover {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        .problem-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .problem-icon {
+            width: 50px;
+            height: 50px;
+            background-color: #fee2e2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        html[data-theme="dark"] .problem-icon {
+            background-color: #7f1d1d;
+        }
+
+        .problem-icon i {
+            font-size: 1.5rem;
+            color: #dc2626;
+        }
+
+        html[data-theme="dark"] .problem-icon i {
+            color: #fca5a5;
+        }
+
+        .problem-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .problem-symptom {
+            color: var(--text-secondary-color);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .problem-details {
+            margin-top: 1.5rem;
+        }
+
+        .detail-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: var(--text-primary-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .detail-label i {
+            font-size: 1rem;
+            color: var(--primary-color);
+        }
+
+        .detail-content {
+            color: var(--text-secondary-color);
+            line-height: 1.6;
+            padding-left: 1.5rem;
+        }
+
+        .detail-content ul {
+            margin: 0.5rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .detail-content li {
+            margin-bottom: 0.5rem;
+        }
+
+        .solution-steps {
+            background-color: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        html[data-theme="dark"] .solution-steps {
+            background-color: #1e3a8a;
+            border-color: #3b82f6;
+        }
+
+        .solution-steps ol {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+
+        .solution-steps li {
+            margin-bottom: 0.5rem;
+            color: var(--text-primary-color);
+        }
+
+        .warning-box {
+            background-color: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        html[data-theme="dark"] .warning-box {
+            background-color: #78350f;
+            border-color: #f59e0b;
+        }
+
+        .warning-box .warning-icon {
+            color: #f59e0b;
+            margin-right: 0.5rem;
+        }
+
+        .info-box {
+            background-color: #ecfdf5;
+            border: 1px solid #10b981;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        html[data-theme="dark"] .info-box {
+            background-color: #064e3b;
+            border-color: #10b981;
+        }
+
+        .info-box .info-icon {
+            color: #10b981;
+            margin-right: 0.5rem;
+        }
+
+        .contact-support {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .contact-support h3 {
+            color: var(--text-primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .contact-support p {
+            color: var(--text-secondary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .troubleshooting-header h1 {
+                font-size: 2rem;
+            }
+
+            .problem-header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .problem-icon {
+                margin-bottom: 1rem;
+            }
+
+            .contact-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .contact-buttons .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="notification-banner" class="notification-banner" role="alert" aria-live="assertive"></div>
+    <header id="main-header" class="main-header"></header>
+
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <img src="assets/img/GoogleMapsScraper-Setup.webp" alt="安装指南" style="max-width: 200px; height: auto; margin-bottom: 1rem;">
+                </div>
+                <h1 data-lang-zh="安装及使用常见问题" data-lang-en="Installation & Usage Troubleshooting"></h1>
+                <p data-lang-zh="遇到问题？我们为您提供详细的解决方案。" data-lang-en="Having issues? We provide detailed solutions for you."></p>
+            </div>
+        </section>
+
+        <section class="troubleshooting-section">
+            <div class="container">
+                <div class="troubleshooting-header">
+                    <h2 data-lang-zh="常见问题与解决方案" data-lang-en="Common Issues & Solutions"></h2>
+                    <p data-lang-zh="以下是客户在使用我们工具时最常遇到的问题及其解决方案" data-lang-en="Below are the most common issues customers encounter when using our tools and their solutions"></p>
+                </div>
+
+                <div class="problem-grid">
+                    <!-- 问题1: 缺少DLL文件 -->
+                    <div class="problem-card">
+                        <div class="problem-header">
+                            <div class="problem-icon">
+                                <i class='bx bx-error-circle'></i>
+                            </div>
+                            <div>
+                                <h3 class="problem-title" data-lang-zh="程序无法启动，提示缺少 api-ms-win-core-path-l1-1-0.dll 文件" data-lang-en="Program fails to start, missing api-ms-win-core-path-l1-1-0.dll file"></h3>
+                                <p class="problem-symptom" data-lang-zh="双击程序后出现系统错误提示，无法正常运行" data-lang-en="System error appears when double-clicking the program, unable to run normally"></p>
+                            </div>
+                        </div>
+                        <div class="problem-details">
+                            <div class="detail-section">
+                                <div class="detail-label">
+                                    <i class='bx bx-search-alt-2'></i>
+                                    <span data-lang-zh="根本原因" data-lang-en="Root Cause"></span>
+                                </div>
+                                <div class="detail-content" data-lang-zh="用户的操作系统版本过旧（通常是未打补丁的 Windows 7），缺少程序运行所必需的系统核心组件。" data-lang-en="User's operating system version is too old (usually unpatched Windows 7), missing essential system core components required for program operation."></div>
+                            </div>
+                            <div class="detail-section">
+                                <div class="detail-label">
+                                    <i class='bx bx-wrench'></i>
+                                    <span data-lang-zh="解决方案" data-lang-en="Solution"></span>
+                                </div>
+                                <div class="detail-content">
+                                    <div class="solution-steps">
+                                        <ol>
+                                            <li data-lang-zh="<strong>（推荐）更新操作系统：</strong> 将 Windows 7 更新到 Service Pack 1 并安装所有最新补丁，或最好升级到 Windows 10/11。" data-lang-en="<strong>(Recommended) Update OS:</strong> Update Windows 7 to Service Pack 1 and install all latest patches, or better yet upgrade to Windows 10/11."></li>
+                                            <li data-lang-zh="<strong>安装通用C运行时：</strong> 搜索并安装微软官方的 'Visual C++ 2015-2022 Redistributable'。通常，程序的安装包里已经集成了这个组件，确保在安装时勾选了相关选项。" data-lang-en="<strong>Install Universal C Runtime:</strong> Search and install Microsoft's official 'Visual C++ 2015-2022 Redistributable'. Usually, this component is already integrated in the program's installation package, ensure to check the relevant options during installation."></li>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 问题2: 杀毒软件误报 -->
+                    <div class="problem-card">
+                        <div class="problem-header">
+                            <div class="problem-icon">
+                                <i class='bx bx-shield-x'></i>
+                            </div>
+                            <div>
+                                <h3 class="problem-title" data-lang-zh="杀毒软件报毒，阻止程序运行或将其删除" data-lang-en="Antivirus software reports virus, blocks program or deletes it"></h3>
+                                <p class="problem-symptom" data-lang-zh="Defender、360、Avast 等杀毒软件将程序标记为威胁" data-lang-en="Defender, 360, Avast and other antivirus software mark the program as a threat"></p>
+                            </div>
+                        </div>
+                        <div class="problem-details">
+                            <div class="detail-section">
+                                <div class="detail-label">
+                                    <i class='bx bx-search-alt-2'></i>
+                                    <span data-lang-zh="根本原因" data-lang-en="Root Cause"></span>
+                                </div>
+                                <div class="detail-content" data-lang-zh="这是误报。由于程序没有数字签名，并且其正常工作行为（如高频网络访问、自动化浏览器）在杀毒软件的"启发式扫描"看来与某些恶意软件相似，因此被错误地标记为威胁。" data-lang-en="This is a false positive. Since the program has no digital signature and its normal working behavior (such as high-frequency network access, automated browser) appears similar to certain malware in the antivirus software's 'heuristic scanning', it is incorrectly marked as a threat."></div>
+                            </div>
+                            <div class="detail-section">
+                                <div class="detail-label">
+                                    <i class='bx bx-wrench'></i>
+                                    <span data-lang-zh="解决方案" data-lang-en="Solution"></span>
+                                </div>
+                                <div class="detail-content">
+                                    <div class="solution-steps">
+                                        <ol>
+                                            <li data-lang-zh="<strong>（推荐）添加到信任区/白名单：</strong> 在杀毒软件的设置中，找到"隔离区"或"病毒报告"，将本程序恢复并选择"信任此程序"或"添加到排除项"。" data-lang-en="<strong>(Recommended) Add to Trust Zone/Whitelist:</strong> In antivirus software settings, find 'Quarantine' or 'Virus Report', restore this program and select 'Trust this program' or 'Add to exclusions'."></li>
+                                            <li data-lang-zh="<strong>暂时关闭杀毒软件：</strong> 在安装和首次运行时，可以暂时禁用杀毒软件的实时保护功能。" data-lang-en="<strong>Temporarily disable antivirus:</strong> During installation and first run, you can temporarily disable the antivirus software's real-time protection."></li>
+                                        </ol>
+                                    </div>
+                                    <div class="warning-box">
+                                        <i class='bx bx-info-circle warning-icon'></i>
+                                        <span data-lang-zh="注意：我们的程序完全安全，这是杀毒软件的误报。添加信任后可以正常使用。" data-lang-en="Note: Our program is completely safe, this is a false positive from antivirus software. It can be used normally after adding to trust."></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 问题3: 缺少VC++运行时 -->
+                    <div class="problem-card">
+                        <div class="problem-header">
+                            <div class="problem-icon">
+                                <i class='bx bx-package'></i>
+                            </div>
+                            <div>
+                                <h3 class="problem-title" data-lang-zh="双击程序无反应，提示缺少 Microsoft Visual C++ Redistributable" data-lang-en="Double-click program no response, missing Microsoft Visual C++ Redistributable"></h3>
+                                <p class="problem-symptom" data-lang-zh="程序无法启动，系统提示缺少必要的运行时库" data-lang-en="Program cannot start, system prompts missing necessary runtime library"></p>
+                            </div>
+                        </div>
+                        <div class="problem-details">
+                            <div class="detail-section">
+                                <div class="detail-label">
+                                    <i class='bx bx-search-alt-2'></i>
+                                    <span data-lang-zh="根本原因" data-lang-en="Root Cause"></span>
+                                </div>
+                                <div class="detail-content" data-lang-zh="用户的电脑缺少 C++ 程序的通用运行时库，这是许多软件（包括本程序的核心组件）运行的基础。" data-lang-en="User's computer is missing the universal runtime library for C++ programs, which is the foundation for running many software (including the core components of this program)."></div>
+                            </div>
+                            <div class="detail-section">
+                                <div class="detail-label">
+                                    <i class='bx bx-wrench'></i>
+                                    <span data-lang-zh="解决方案" data-lang-en="Solution"></span>
+                                </div>
+                                <div class="detail-content">
+                                    <div class="solution-steps">
+                                        <ol>
+                                            <li data-lang-zh="<strong>重新运行安装包：</strong> 我们的安装程序（Inno Setup）已经配置为会自动检测并安装这个VC++库。请重新运行安装程序，并确保没有跳过任何组件安装步骤。" data-lang-en="<strong>Re-run installation package:</strong> Our installer (Inno Setup) is configured to automatically detect and install this VC++ library. Please re-run the installer and ensure no component installation steps are skipped."></li>
+                                            <li data-lang-zh="<strong>手动安装：</strong> 如果自动安装失败，请从微软官网搜索并安装最新的 'Visual C++ 2015-2022 Redistributable' (x64 和 x86 两个版本都建议安装)。" data-lang-en="<strong>Manual installation:</strong> If automatic installation fails, please search and install the latest 'Visual C++ 2015-2022 Redistributable' from Microsoft's official website (both x64 and x86 versions are recommended)."></li>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 问题4: 程序闪退 -->
+                    <div class="problem-card">
+                        <div class="problem-header">
+                            <div class="problem-icon">
+                                <i class='bx bx-x-circle'></i>
+                            </div>
+                            <div>
+                                <h3 class="problem-title" data-lang-zh="程序安装后无法启动，闪退，或弹出 'Failed to execute script' 错误" data-lang-en="Program cannot start after installation, crashes, or shows 'Failed to execute script' error"></h3>
+                                <p class="problem-symptom" data-lang-zh="程序启动后立即关闭，或显示脚本执行失败的错误信息" data-lang-en="Program closes immediately after startup, or shows script execution failure error message"></p>
+                            </div>
+                        </div>
+                        <div class="problem-details">
+                            <div class="detail-section">
+                                <div class="detail-label">
+                                    <i class='bx bx-search-alt-2'></i>
+                                    <span data-lang-zh="根本原因" data-lang-en="Root Cause"></span>
+                                </div>
+                                <div class="detail-content" data-lang-zh="安装包可能已损坏或不完整。这可能是由于下载过程中文件损坏，或者开发者打包配置错误（如您之前遇到的 playwright-stealth 文件缺失问题）导致的。" data-lang-en="Installation package may be corrupted or incomplete. This could be due to file corruption during download, or developer packaging configuration errors (such as the playwright-stealth file missing issue you encountered before)."></div>
+                            </div>
+                            <div class="detail-section">
+                                <div class="detail-label">
+                                    <i class='bx bx-wrench'></i>
+                                    <span data-lang-zh="解决方案" data-lang-en="Solution"></span>
+                                </div>
+                                <div class="detail-content">
+                                    <div class="solution-steps">
+                                        <ol>
+                                            <li data-lang-zh="<strong>（首选）重新下载：</strong> 从您提供的官方渠道重新下载完整的安装包，确保下载过程网络稳定。" data-lang-en="<strong>(First choice) Re-download:</strong> Re-download the complete installation package from your official channel, ensure stable network during download."></li>
+                                            <li data-lang-zh="<strong>以管理员身份运行：</strong> 右键点击程序图标，选择"以管理员身份运行"，这可以解决一些权限问题。" data-lang-en="<strong>Run as administrator:</strong> Right-click the program icon, select 'Run as administrator', this can solve some permission issues."></li>
+                                            <li data-lang-zh="<strong>联系技术支持：</strong> 如果问题依旧，请联系软件发布者，并提供错误截图。" data-lang-en="<strong>Contact technical support:</strong> If the problem persists, please contact the software publisher and provide error screenshots."></li>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 问题5: 程序卡死 -->
+                    <div class="problem-card">
+                        <div class="problem-header">
+                            <div class="problem-icon">
+                                <i class='bx bx-time-five'></i>
+                            </div>
+                            <div>
+                                <h3 class="problem-title" data-lang-zh="点击"开始搜索"后，程序界面长时间无响应（卡死）" data-lang-en="After clicking 'Start Search', program interface is unresponsive for a long time (freezes)"></h3>
+                                <p class="problem-symptom" data-lang-zh="程序界面卡住不动，看起来像是程序崩溃了" data-lang-en="Program interface is stuck, looks like the program has crashed"></p>
+                            </div>
+                        </div>
+                        <div class="problem-details">
+                            <div class="detail-section">
+                                <div class="detail-label">
+                                    <i class='bx bx-search-alt-2'></i>
+                                    <span data-lang-zh="根本原因" data-lang-en="Root Cause"></span>
+                                </div>
+                                <div class="detail-content" data-lang-zh="这是程序在首次运行时，正在后台进行重量级的浏览器实例初始化。这个过程根据电脑性能可能需要10秒到1分钟，并且在旧版程序中可能会阻塞界面。" data-lang-en="This is the program performing heavyweight browser instance initialization in the background during first run. This process may take 10 seconds to 1 minute depending on computer performance, and may block the interface in older versions of the program."></div>
+                            </div>
+                            <div class="detail-section">
+                                <div class="detail-label">
+                                    <i class='bx bx-wrench'></i>
+                                    <span data-lang-zh="解决方案" data-lang-en="Solution"></span>
+                                </div>
+                                <div class="detail-content">
+                                    <div class="solution-steps">
+                                        <ol>
+                                            <li data-lang-zh="<strong>（推荐）耐心等待：</strong> 特别是第一次启动搜索时，请耐心等待几十秒，让后台初始化完成。完成后程序会自动开始搜索。" data-lang-en="<strong>(Recommended) Be patient:</strong> Especially during the first search startup, please wait patiently for dozens of seconds to let the background initialization complete. The program will automatically start searching after completion."></li>
+                                            <li data-lang-zh="<strong>检查后台进程：</strong> 如果长时间无响应，可以打开任务管理器查看 chrome.exe 或 msedgewebview2.exe 进程的CPU和内存占用，确认它是否在工作。" data-lang-en="<strong>Check background processes:</strong> If unresponsive for a long time, you can open Task Manager to check CPU and memory usage of chrome.exe or msedgewebview2.exe processes to confirm if they are working."></li>
+                                            <li data-lang-zh="<strong>更新程序：</strong> 确保用户使用的是最新版程序，因为我们已经通过代码修复，将这个初始化过程改为异步后台加载，解决了界面无响应的问题。" data-lang-en="<strong>Update program:</strong> Ensure users are using the latest version of the program, as we have fixed this through code, changing the initialization process to asynchronous background loading, solving the interface unresponsiveness issue."></li>
+                                        </ol>
+                                    </div>
+                                    <div class="info-box">
+                                        <i class='bx bx-info-circle info-icon'></i>
+                                        <span data-lang-zh="提示：这是正常现象，不是程序错误。请耐心等待初始化完成。" data-lang-en="Tip: This is normal behavior, not a program error. Please wait patiently for initialization to complete."></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 问题6: 降级模式 -->
+                    <div class="problem-card">
+                        <div class="problem-header">
+                            <div class="problem-icon">
+                                <i class='bx bx-down-arrow-alt'></i>
+                            </div>
+                            <div>
+                                <h3 class="problem-title" data-lang-zh="程序提示"进入降级模式"" data-lang-en="Program prompts 'Entering degraded mode'"></h3>
+                                <p class="problem-symptom" data-lang-zh="程序启动后显示降级模式提示，功能可能受限" data-lang-en="Program shows degraded mode prompt after startup, functionality may be limited"></p>
+                            </div>
+                        </div>
+                        <div class="problem-details">
+                            <div class="detail-section">
+                                <div class="detail-label">
+                                    <i class='bx bx-search-alt-2'></i>
+                                    <span data-lang-zh="根本原因" data-lang-en="Root Cause"></span>
+                                </div>
+                                <div class="detail-content" data-lang-zh="程序最核心的 Playwright 浏览器引擎因某种原因（如网络拦截、系统性能不足、打包文件不完整等）启动失败，程序为了防止崩溃而启动了备用的、功能较弱的采集模式。" data-lang-en="The program's core Playwright browser engine failed to start for some reason (such as network blocking, insufficient system performance, incomplete packaging files, etc.), and the program started a backup, weaker collection mode to prevent crashes."></div>
+                            </div>
+                            <div class="detail-section">
+                                <div class="detail-label">
+                                    <i class='bx bx-wrench'></i>
+                                    <span data-lang-zh="解决方案" data-lang-en="Solution"></span>
+                                </div>
+                                <div class="detail-content">
+                                    <div class="solution-steps">
+                                        <ol>
+                                            <li data-lang-zh="<strong>检查网络和杀毒软件：</strong> 确保防火墙或杀毒软件没有拦截程序或其浏览器子进程的网络访问。" data-lang-en="<strong>Check network and antivirus:</strong> Ensure firewall or antivirus software is not blocking network access for the program or its browser subprocesses."></li>
+                                            <li data-lang-zh="<strong>确认安装完整：</strong> 这个问题也可能由不完整的安装包引起，参考问题4的解决方案。" data-lang-en="<strong>Confirm complete installation:</strong> This issue may also be caused by incomplete installation package, refer to Problem 4's solution."></li>
+                                            <li data-lang-zh="<strong>关闭后重试：</strong> 有时临时的系统资源紧张也会导致启动失败，可以完全关闭程序后重新启动。" data-lang-en="<strong>Close and retry:</strong> Sometimes temporary system resource constraints can also cause startup failure, you can completely close the program and restart it."></li>
+                                        </ol>
+                                    </div>
+                                    <div class="warning-box">
+                                        <i class='bx bx-info-circle warning-icon'></i>
+                                        <span data-lang-zh="注意：降级模式下程序仍可正常工作，但功能可能有所限制。建议解决根本问题以获得最佳体验。" data-lang-en="Note: The program can still work normally in degraded mode, but functionality may be limited. It's recommended to solve the root problem for the best experience."></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 联系支持部分 -->
+                <div class="contact-support">
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 1rem;">
+                        <img src="assets/img/wechat.png" alt="微信客服" style="width: 40px; height: 40px;">
+                        <img src="assets/img/whatsapp.png" alt="WhatsApp客服" style="width: 40px; height: 40px;">
+                    </div>
+                    <h3 data-lang-zh="问题仍未解决？" data-lang-en="Still having issues?"></h3>
+                    <p data-lang-zh="如果以上解决方案都无法解决您的问题，请随时联系我们的技术支持团队" data-lang-en="If none of the above solutions resolve your issue, please feel free to contact our technical support team"></p>
+                    <div class="contact-buttons">
+                        <a href="./contact.html" class="btn btn-primary" data-lang-zh="联系技术支持" data-lang-en="Contact Technical Support"></a>
+                        <a href="./faq.html" class="btn btn-secondary" data-lang-zh="查看更多FAQ" data-lang-en="View More FAQs"></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer id="main-footer" class="main-footer"></footer>
+</body>
+</html>
