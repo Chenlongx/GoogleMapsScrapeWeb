@@ -78,7 +78,7 @@ exports.handler = async (event) => {
             timeout: 30000
         });
 
-        const { productId, email: identifierFromFrontend } = JSON.parse(event.body);
+        const { productId, email: identifierFromFrontend, referralCode, agentCode } = JSON.parse(event.body);
         if (!productId || !identifierFromFrontend) {
             return { statusCode: 400, headers, body: JSON.stringify({ success: false, message: 'Missing parameters' }) };
         }
@@ -152,7 +152,9 @@ exports.handler = async (event) => {
                 out_trade_no: outTradeNo,
                 product_id: productId,
                 customer_email: finalIdentifier, // 将最终标识符存入订单表
-                status: 'PENDING'
+                status: 'PENDING',
+                referral_code: referralCode || null, // 添加推广码
+                agent_code: agentCode || null // 添加代理代码
             }
         ]);
 

@@ -20,6 +20,9 @@ document.addEventListener('DOMContentLoaded', () => {
             this.initFaqAccordion();
             this.initTestimonialCarousel();
             this.initContactModal();
+            
+            // 初始化推广链接追踪
+            this.initReferralTracking();
         },
 
         state: {
@@ -342,6 +345,37 @@ document.addEventListener('DOMContentLoaded', () => {
                 const clone = card.cloneNode(true);
                 track.appendChild(clone);
             });
+        },
+
+        // 初始化推广链接追踪
+        initReferralTracking() {
+            // 检查是否有推广链接追踪器
+            if (typeof window.mediamingleReferralTracker !== 'undefined') {
+                console.log('MediaMingle推广追踪器已加载');
+                return;
+            }
+
+            // 如果没有加载，则动态加载推广追踪器
+            const script = document.createElement('script');
+            script.src = 'https://google-maps-backend-master.netlify.app/mediamingle-referral-tracker.js';
+            script.onload = () => {
+                console.log('MediaMingle推广追踪器加载成功');
+            };
+            script.onerror = () => {
+                console.warn('MediaMingle推广追踪器加载失败，使用本地版本');
+                // 如果远程加载失败，使用本地版本
+                this.loadLocalReferralTracker();
+            };
+            document.head.appendChild(script);
+        },
+
+        // 加载本地推广追踪器
+        loadLocalReferralTracker() {
+            // 这里可以添加本地版本的推广追踪器代码
+            // 或者从本地文件加载
+            const script = document.createElement('script');
+            script.src = './assets/js/referral-tracker.js';
+            document.head.appendChild(script);
         }
     };
 

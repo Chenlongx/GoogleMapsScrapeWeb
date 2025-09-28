@@ -723,7 +723,7 @@
                 document.getElementById('success-modal').classList.add('active');
             }
 
-            async function processPayment(productId, email, modalElements) {
+            async function processPayment(productId, email, modalElements, referralCode = null, agentCode = null) {
                 stopAllTimers();
 
                 modalElements.qrcodeContainer.innerHTML = '正在生成二维码...';
@@ -736,7 +736,12 @@
                     const response = await fetch(`${backendUrl}payment`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ productId, email })
+                        body: JSON.stringify({ 
+                            productId, 
+                            email, 
+                            referralCode, 
+                            agentCode 
+                        })
                     });
                     const data = await response.json();
 
@@ -917,7 +922,12 @@
                         statusEl: document.getElementById('payment-status'),
                         timerEl: document.getElementById('payment-timer')
                     };
-                    await processPayment(productId, email, modalElements);
+                    // 获取推广信息
+                    const referralData = window.getReferralData ? window.getReferralData() : null;
+                    const referralCode = referralData ? referralData.fullCode : null;
+                    const agentCode = referralData ? referralData.agentCode : null;
+                    
+                    await processPayment(productId, email, modalElements, referralCode, agentCode);
                 });
             });
 
@@ -957,7 +967,12 @@
                     };
 
                     // 3. 将 identifier 传递给支付函数
-                    await processPayment(productId, identifier, modalElements);
+                    // 获取推广信息
+                    const referralData = window.getReferralData ? window.getReferralData() : null;
+                    const referralCode = referralData ? referralData.fullCode : null;
+                    const agentCode = referralData ? referralData.agentCode : null;
+                    
+                    await processPayment(productId, identifier, modalElements, referralCode, agentCode);
                 });
             }
 

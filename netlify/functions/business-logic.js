@@ -221,11 +221,159 @@ async function processBusinessLogic(orderParams) {
         });
 
         console.log(`[processBusinessLogic] Email sent to ${customerEmail}`);
+        
+        // 处理推广佣金
+        await this.processReferralCommission(outTradeNo, customerEmail, productId);
+        
         return { success: true };
 
     } catch (err) {
         console.error(`[Critical Error] in processBusinessLogic for ${outTradeNo}:`, err.message);
         return { success: false, error: err.message };
+    }
+
+    // 处理推广佣金
+    async processReferralCommission(outTradeNo, customerEmail, productId) {
+        try {
+            const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
+            
+            // 获取订单信息
+            const { data: order, error: orderError } = await supabase
+                .from('orders')
+                .select('referral_code, agent_code')
+                .eq('out_trade_no', outTradeNo)
+                .single();
+
+            if (orderError || !order) {
+                console.log('未找到订单信息，跳过推广佣金处理');
+                return;
+            }
+
+            if (!order.referral_code && !order.agent_code) {
+                console.log('订单无推广信息，跳过推广佣金处理');
+                return;
+            }
+
+            // 获取产品价格
+            const productPriceMap = {
+                'gmaps_standard': 34.30,
+                'gmaps_premium': 63.00,
+                'validator_standard': 203.00,
+                'validator_premium': 553.00,
+                'whatsapp-validator_standard': 203.00,
+                'whatsapp-validator_premium': 343.00,
+                'gmaps_renewal_monthly': 29.90,
+                'gmaps_renewal_quarterly': 89.70,
+                'gmaps_renewal_yearly': 358.80
+            };
+
+            const orderAmount = productPriceMap[productId] || 0;
+            if (orderAmount === 0) {
+                console.log('无法确定订单金额，跳过推广佣金处理');
+                return;
+            }
+
+            let agentId = null;
+            let commissionAmount = 0;
+
+            // 通过推广码查找代理
+            if (order.referral_code) {
+                const { data: promotion, error: promotionError } = await supabase
+                    .from('product_promotions')
+                    .select('agent_id, commission_rate')
+                    .eq('promotion_code', order.referral_code)
+                    .single();
+
+                if (!promotionError && promotion) {
+                    agentId = promotion.agent_id;
+                    commissionAmount = orderAmount * promotion.commission_rate;
+                }
+            }
+
+            // 通过代理代码查找代理
+            if (!agentId && order.agent_code) {
+                const { data: agent, error: agentError } = await supabase
+                    .from('agent_profiles')
+                    .select('id')
+                    .eq('agent_code', order.agent_code)
+                    .single();
+
+                if (!agentError && agent) {
+                    agentId = agent.id;
+                    // 使用默认分佣比例
+                    const defaultCommissionRate = 0.15; // 15%
+                    commissionAmount = orderAmount * defaultCommissionRate;
+                }
+            }
+
+            if (agentId && commissionAmount > 0) {
+                // 创建产品订单记录
+                const { data: productOrder, error: orderInsertError } = await supabase
+                    .from('product_orders')
+                    .insert([{
+                        customer_email: customerEmail,
+                        product_type: this.getProductType(productId),
+                        promotion_code: order.referral_code,
+                        order_amount: orderAmount,
+                        commission_amount: commissionAmount,
+                        agent_id: agentId,
+                        status: 'paid',
+                        payment_method: 'alipay',
+                        payment_id: outTradeNo
+                    }])
+                    .select()
+                    .single();
+
+                if (orderInsertError) {
+                    console.error('创建产品订单失败:', orderInsertError);
+                } else {
+                    console.log('产品订单创建成功:', productOrder.id);
+                }
+
+                // 更新推广记录的转化次数和佣金
+                if (order.referral_code) {
+                    const { error: updatePromotionError } = await supabase
+                        .from('product_promotions')
+                        .update({ 
+                            conversions_count: supabase.sql`conversions_count + 1`,
+                            total_commission: supabase.sql`total_commission + ${commissionAmount}`,
+                            updated_at: new Date().toISOString()
+                        })
+                        .eq('promotion_code', order.referral_code);
+
+                    if (updatePromotionError) {
+                        console.error('更新推广记录失败:', updatePromotionError);
+                    }
+                }
+
+                // 更新代理余额
+                const { error: updateBalanceError } = await supabase
+                    .from('agent_profiles')
+                    .update({ 
+                        total_commission: supabase.sql`total_commission + ${commissionAmount}`,
+                        available_balance: supabase.sql`available_balance + ${commissionAmount}`,
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('id', agentId);
+
+                if (updateBalanceError) {
+                    console.error('更新代理余额失败:', updateBalanceError);
+                } else {
+                    console.log(`代理 ${agentId} 获得佣金 ${commissionAmount} 元`);
+                }
+            }
+
+        } catch (error) {
+            console.error('处理推广佣金失败:', error);
+        }
+    }
+
+    // 获取产品类型
+    getProductType(productId) {
+        if (productId.startsWith('gmaps')) return 'google-maps';
+        if (productId.startsWith('validator') && !productId.includes('whatsapp')) return 'email-filter';
+        if (productId.startsWith('whatsapp-validator')) return 'whatsapp-filter';
+        return 'unknown';
     }
 }
 
