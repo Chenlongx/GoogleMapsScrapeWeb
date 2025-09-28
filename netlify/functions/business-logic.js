@@ -223,7 +223,7 @@ async function processBusinessLogic(orderParams) {
         console.log(`[processBusinessLogic] Email sent to ${customerEmail}`);
         
         // 处理推广佣金
-        await this.processReferralCommission(outTradeNo, customerEmail, productId);
+        await processReferralCommission(outTradeNo, customerEmail, productId);
         
         return { success: true };
 
@@ -232,8 +232,10 @@ async function processBusinessLogic(orderParams) {
         return { success: false, error: err.message };
     }
 
-    // 处理推广佣金
-    async processReferralCommission(outTradeNo, customerEmail, productId) {
+}
+
+// 处理推广佣金
+async function processReferralCommission(outTradeNo, customerEmail, productId) {
         try {
             const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
             

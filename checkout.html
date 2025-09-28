@@ -762,6 +762,20 @@
                     statusInterval = setInterval(async () => {
                         try {
                             const statusRes = await fetch(`${backendUrl}check-status?outTradeNo=${outTradeNo}`);
+                            
+                            // 检查响应状态
+                            if (!statusRes.ok) {
+                                console.error(`Check status failed with status: ${statusRes.status}`);
+                                return; // 继续轮询，不停止
+                            }
+                            
+                            // 检查响应内容类型
+                            const contentType = statusRes.headers.get('content-type');
+                            if (!contentType || !contentType.includes('application/json')) {
+                                console.error('Check status returned non-JSON response');
+                                return; // 继续轮询，不停止
+                            }
+                            
                             const statusData = await statusRes.json();
 
                             if (statusData.status === 'completed') {

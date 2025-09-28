@@ -91,9 +91,15 @@ exports.handler = async (event) => {
             });
             // ▲▲▲ 修复结束 ▲▲▲
             
-            await processBusinessLogic(orderParams);
+            const businessResult = await processBusinessLogic(orderParams);
             
-            return { statusCode: 200, headers, body: JSON.stringify({ status: 'completed' }) };
+            if (businessResult.success) {
+                console.log(`[check-status] Business logic completed successfully for ${outTradeNo}`);
+                return { statusCode: 200, headers, body: JSON.stringify({ status: 'completed' }) };
+            } else {
+                console.error(`[check-status] Business logic failed for ${outTradeNo}:`, businessResult.error);
+                return { statusCode: 500, headers, body: JSON.stringify({ message: 'Business logic failed', error: businessResult.error }) };
+            }
         }
         
         console.log(`[check-status] Alipay status for ${outTradeNo}: ${alipayResult.tradeStatus}. Keep polling.`);
