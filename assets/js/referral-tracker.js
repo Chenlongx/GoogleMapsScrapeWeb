@@ -14,7 +14,10 @@ class MediaMingleReferralTracker {
 
     init() {
         this.parseReferralFromURL();
-        this.trackReferralClick();
+        // 只有在有推广信息时才追踪点击
+        if (this.referralData) {
+            this.trackReferralClick();
+        }
         this.setupPurchaseTracking();
         this.setupProductNavigation();
         this.setupGlobalNavigation();
@@ -181,30 +184,45 @@ class MediaMingleReferralTracker {
      * 追踪推广点击
      */
     async trackReferralClick() {
-        if (!this.referralData) return;
+        if (!this.referralData) {
+            console.log('MediaMingle推广追踪器: 无推广信息，跳过点击追踪');
+            return;
+        }
+
+        console.log('MediaMingle推广追踪器: 开始追踪点击', this.referralData);
 
         try {
+            const requestData = {
+                promotionCode: this.referralData.fullCode,
+                agentCode: this.referralData.agentCode,
+                productType: this.referralData.productType,
+                pageUrl: window.location.href,
+                userAgent: navigator.userAgent,
+                referrer: document.referrer,
+                timestamp: Date.now()
+            };
+
+            console.log('MediaMingle推广追踪器: 发送请求数据', requestData);
+
             const response = await fetch(`${this.apiBaseUrl}/trackReferralClick`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    promotionCode: this.referralData.fullCode,
-                    agentCode: this.referralData.agentCode,
-                    productType: this.referralData.productType,
-                    pageUrl: window.location.href,
-                    userAgent: navigator.userAgent,
-                    referrer: document.referrer,
-                    timestamp: Date.now()
-                })
+                body: JSON.stringify(requestData)
             });
 
+            console.log('MediaMingle推广追踪器: API响应状态', response.status);
+
             if (response.ok) {
-                console.log('MediaMingle推广点击记录成功');
+                const result = await response.json();
+                console.log('MediaMingle推广点击记录成功:', result);
+            } else {
+                const errorText = await response.text();
+                console.error('MediaMingle推广点击记录失败:', response.status, errorText);
             }
         } catch (error) {
-            console.error('推广点击记录失败:', error);
+            console.error('MediaMingle推广点击记录异常:', error);
         }
     }
 
