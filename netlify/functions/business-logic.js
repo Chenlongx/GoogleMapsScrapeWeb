@@ -240,7 +240,7 @@ async function processBusinessLogic(orderParams) {
             // 获取订单信息
             const { data: order, error: orderError } = await supabase
                 .from('orders')
-                .select('referral_code, agent_code')
+                .select('*')
                 .eq('out_trade_no', outTradeNo)
                 .single();
 
@@ -249,7 +249,33 @@ async function processBusinessLogic(orderParams) {
                 return;
             }
 
-            if (!order.referral_code && !order.agent_code) {
+            // 检查订单中是否有推广信息
+            let referralCode = order.referral_code;
+            let agentCode = order.agent_code;
+
+            // 如果订单表中没有推广信息，尝试从临时表中获取
+            if ((!referralCode || !agentCode)) {
+                try {
+                    const { data: referralData, error: referralError } = await supabase
+                        .from('referral_tracking')
+                        .select('referral_code, agent_code')
+                        .eq('out_trade_no', outTradeNo)
+                        .single();
+
+                    if (!referralError && referralData) {
+                        referralCode = referralCode || referralData.referral_code;
+                        agentCode = agentCode || referralData.agent_code;
+                    }
+                } catch (error) {
+                    console.log('从临时表获取推广信息失败:', error.message);
+                }
+            }
+
+            // 检查是否有推广信息
+            const hasReferralInfo = (referralCode && referralCode.trim() !== '') || 
+                                  (agentCode && agentCode.trim() !== '');
+            
+            if (!hasReferralInfo) {
                 console.log('订单无推广信息，跳过推广佣金处理');
                 return;
             }
@@ -277,11 +303,11 @@ async function processBusinessLogic(orderParams) {
             let commissionAmount = 0;
 
             // 通过推广码查找代理
-            if (order.referral_code) {
+            if (referralCode) {
                 const { data: promotion, error: promotionError } = await supabase
                     .from('product_promotions')
                     .select('agent_id, commission_rate')
-                    .eq('promotion_code', order.referral_code)
+                    .eq('promotion_code', referralCode)
                     .single();
 
                 if (!promotionError && promotion) {
@@ -291,11 +317,11 @@ async function processBusinessLogic(orderParams) {
             }
 
             // 通过代理代码查找代理
-            if (!agentId && order.agent_code) {
+            if (!agentId && agentCode) {
                 const { data: agent, error: agentError } = await supabase
                     .from('agent_profiles')
                     .select('id')
-                    .eq('agent_code', order.agent_code)
+                    .eq('agent_code', agentCode)
                     .single();
 
                 if (!agentError && agent) {
@@ -313,7 +339,7 @@ async function processBusinessLogic(orderParams) {
                     .insert([{
                         customer_email: customerEmail,
                         product_type: this.getProductType(productId),
-                        promotion_code: order.referral_code,
+                        promotion_code: referralCode,
                         order_amount: orderAmount,
                         commission_amount: commissionAmount,
                         agent_id: agentId,
@@ -331,7 +357,7 @@ async function processBusinessLogic(orderParams) {
                 }
 
                 // 更新推广记录的转化次数和佣金
-                if (order.referral_code) {
+                if (referralCode) {
                     const { error: updatePromotionError } = await supabase
                         .from('product_promotions')
                         .update({ 
@@ -339,7 +365,7 @@ async function processBusinessLogic(orderParams) {
                             total_commission: supabase.sql`total_commission + ${commissionAmount}`,
                             updated_at: new Date().toISOString()
                         })
-                        .eq('promotion_code', order.referral_code);
+                        .eq('promotion_code', referralCode);
 
                     if (updatePromotionError) {
                         console.error('更新推广记录失败:', updatePromotionError);

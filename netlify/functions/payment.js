@@ -147,20 +147,46 @@ exports.handler = async (event) => {
             subject = productId.includes('premium') ? 'WhatsApp Validator 高级版激活码' : 'WhatsApp Validator 标准版激活码';
         }
 
-        const { error: insertError } = await supabase.from('orders').insert([
-            {
-                out_trade_no: outTradeNo,
-                product_id: productId,
-                customer_email: finalIdentifier, // 将最终标识符存入订单表
-                status: 'PENDING',
-                referral_code: referralCode || null, // 添加推广码
-                agent_code: agentCode || null // 添加代理代码
-            }
-        ]);
+        // 构建订单数据，只包含存在的字段
+        const orderData = {
+            out_trade_no: outTradeNo,
+            product_id: productId,
+            customer_email: finalIdentifier,
+            status: 'PENDING'
+        };
+
+        // 如果数据库支持推广字段，则添加
+        if (referralCode) {
+            orderData.referral_code = referralCode;
+        }
+        if (agentCode) {
+            orderData.agent_code = agentCode;
+        }
+
+        const { error: insertError } = await supabase.from('orders').insert([orderData]);
 
         if (insertError) {
             console.error('Supabase insert error:', insertError);
             throw new Error(`Failed to create order in database: ${insertError.message}`);
+        }
+
+        // 临时存储推广信息（如果数据库不支持推广字段）
+        if ((referralCode || agentCode) && (!orderData.referral_code && !orderData.agent_code)) {
+            try {
+                // 创建一个临时的推广信息记录
+                const { error: referralError } = await supabase.from('referral_tracking').insert([{
+                    out_trade_no: outTradeNo,
+                    referral_code: referralCode,
+                    agent_code: agentCode,
+                    created_at: new Date().toISOString()
+                }]);
+                
+                if (referralError) {
+                    console.log('推广信息临时存储失败，但不影响订单创建:', referralError.message);
+                }
+            } catch (error) {
+                console.log('推广信息临时存储失败，但不影响订单创建:', error.message);
+            }
         }
 
         // 动态获取当前域名
