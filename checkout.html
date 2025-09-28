@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="./assets/css/style.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <script src="./assets/js/main.js" defer></script>
+    <script src="./assets/js/referral-tracker.js" defer></script>
     <style>
         /* ===== 页面整体与卡片基础样式 (无变动) ===== */
         .checkout-section {
@@ -923,7 +924,13 @@
                         timerEl: document.getElementById('payment-timer')
                     };
                     // 获取推广信息
-                    const referralData = window.getReferralData ? window.getReferralData() : null;
+                    let referralData = window.getReferralData ? window.getReferralData() : null;
+                    
+                    // 如果当前页面没有推广信息，尝试从存储中恢复
+                    if (!referralData) {
+                        referralData = restoreReferralFromStorage();
+                    }
+                    
                     const referralCode = referralData ? referralData.fullCode : null;
                     const agentCode = referralData ? referralData.agentCode : null;
                     
@@ -968,7 +975,13 @@
 
                     // 3. 将 identifier 传递给支付函数
                     // 获取推广信息
-                    const referralData = window.getReferralData ? window.getReferralData() : null;
+                    let referralData = window.getReferralData ? window.getReferralData() : null;
+                    
+                    // 如果当前页面没有推广信息，尝试从存储中恢复
+                    if (!referralData) {
+                        referralData = restoreReferralFromStorage();
+                    }
+                    
                     const referralCode = referralData ? referralData.fullCode : null;
                     const agentCode = referralData ? referralData.agentCode : null;
                     
@@ -1014,6 +1027,51 @@
                 });
             }
         });
+
+        // 推广信息恢复函数
+        function restoreReferralFromStorage() {
+            try {
+                // 从localStorage恢复
+                const storedData = localStorage.getItem('mediamingle_referral_data');
+                if (storedData) {
+                    const parsed = JSON.parse(storedData);
+                    // 检查数据是否过期（30天）
+                    const storedTime = new Date(parsed.storedAt);
+                    const now = new Date();
+                    const daysDiff = (now - storedTime) / (1000 * 60 * 60 * 24);
+                    
+                    if (daysDiff <= 30 && parsed.referralData) {
+                        console.log('从localStorage恢复推广信息:', parsed.referralData);
+                        return parsed.referralData;
+                    }
+                }
+                
+                // 从Cookie恢复
+                const cookieData = getCookie('mediamingle_referral_data');
+                if (cookieData) {
+                    const parsed = JSON.parse(decodeURIComponent(cookieData));
+                    const storedTime = new Date(parsed.storedAt);
+                    const now = new Date();
+                    const daysDiff = (now - storedTime) / (1000 * 60 * 60 * 24);
+                    
+                    if (daysDiff <= 30 && parsed.referralData) {
+                        console.log('从Cookie恢复推广信息:', parsed.referralData);
+                        return parsed.referralData;
+                    }
+                }
+            } catch (error) {
+                console.error('恢复推广信息失败:', error);
+            }
+            return null;
+        }
+
+        // 获取Cookie的辅助函数
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
+        }
     </script>
 </body>
 
