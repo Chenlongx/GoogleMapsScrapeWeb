@@ -113,6 +113,7 @@ exports.handler = async (event) => {
             const orderParams = new URLSearchParams({
                 subject: subject, // 使用我们自己数据库信息构造的、可靠的 subject
                 out_trade_no: outTradeNo,
+                product_id: dbProductId, // 添加product_id用于佣金计算
             });
             // ▲▲▲ 修复结束 ▲▲▲
             

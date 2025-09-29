@@ -13,11 +13,14 @@ async function processBusinessLogic(orderParams) {
 
     const rawSubject = orderParams.get('subject');
     const outTradeNo = orderParams.get('out_trade_no');
+    const productId = orderParams.get('product_id');
 
     if (!rawSubject || !outTradeNo) {
         console.error('[Critical] Missing subject or out_trade_no in processBusinessLogic.');
         return { success: false, error: 'Missing subject or out_trade_no' };
     }
+
+    console.log('[Debug] processBusinessLogic params:', { rawSubject, outTradeNo, productId });
 
     let customerEmail;
     try {
