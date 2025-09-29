@@ -1,12 +1,28 @@
 const https = require('https');
+const security = require('./security-middleware');
 
 exports.handler = async (event, context) => {
-    // 设置 CORS 头部
+    // 执行安全检查
+    const securityCheck = security.performSecurityCheck(event);
+    if (!securityCheck.allowed) {
+        return {
+            statusCode: securityCheck.statusCode,
+            headers: {
+                ...security.getSecurityHeaders(),
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json'
+            },
+            body: securityCheck.body
+        };
+    }
+
+    // 设置 CORS 头部和安全头部
     const headers = {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': 'Content-Type',
         'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        ...security.getSecurityHeaders()
     };
 
     // 处理预检请求
