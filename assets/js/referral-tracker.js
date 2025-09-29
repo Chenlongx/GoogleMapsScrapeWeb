@@ -9,6 +9,10 @@ if (typeof window.mediamingleReferralTracker !== 'undefined') {
     console.log('MediaMingle推广追踪器已存在，跳过重复加载');
 } else {
 
+// 使用立即执行函数避免全局污染
+(function() {
+    'use strict';
+
 class MediaMingleReferralTracker {
     constructor() {
         this.apiBaseUrl = 'https://google-maps-backend-master.netlify.app/api';
@@ -438,11 +442,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // 全局函数，供其他脚本调用
     window.getReferralData = () => window.mediamingleReferralTracker.getReferralData();
     window.hasReferral = () => window.mediamingleReferralTracker.hasReferral();
-});
 
-// 导出供其他脚本使用
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = MediaMingleReferralTracker;
-}
+    // 导出供其他脚本使用
+    if (typeof module !== 'undefined' && module.exports) {
+        module.exports = MediaMingleReferralTracker;
+    }
+
+}); // 结束DOMContentLoaded事件监听器
+
+})(); // 结束立即执行函数
 
 } // 结束重复加载检查
