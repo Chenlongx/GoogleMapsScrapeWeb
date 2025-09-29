@@ -211,6 +211,12 @@
             border: 1px solid #f5c6cb;
         }
 
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
         .loading {
             text-align: center;
             padding: 20px;
@@ -425,6 +431,13 @@
                 if (!response.ok) {
                     const errorText = await response.text();
                     console.error('API 错误响应:', errorText);
+                    
+                    // 特殊处理管理员功能未配置的情况
+                    if (response.status === 503) {
+                        showAlert('warning', '管理员功能未配置，请联系系统管理员设置 ADMIN_SECRET_KEY');
+                        return;
+                    }
+                    
                     throw new Error(`HTTP ${response.status}: ${errorText}`);
                 }
                 

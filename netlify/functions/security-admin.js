@@ -7,11 +7,30 @@ exports.handler = async (event, context) => {
     // 基本的安全检查
     const clientIP = security.getClientIP(event);
     
-    // 简单的管理员验证（在生产环境中应该使用更严格的认证）
+    // 严格的管理员验证
     const adminKey = event.headers['x-admin-key'] || event.queryStringParameters?.admin_key;
     const expectedAdminKey = process.env.ADMIN_SECRET_KEY;
     
-    if (!expectedAdminKey || adminKey !== expectedAdminKey) {
+    // 如果没有设置管理员密钥，则完全禁用管理员功能
+    if (!expectedAdminKey) {
+        console.error('🚨 安全警告: ADMIN_SECRET_KEY 未设置，管理员功能已禁用');
+        return {
+            statusCode: 503,
+            headers: {
+                'Content-Type': 'application/json',
+                ...security.getSecurityHeaders()
+            },
+            body: JSON.stringify({
+                error: 'Service Unavailable',
+                message: '管理员功能未配置，请联系系统管理员',
+                code: 'ADMIN_NOT_CONFIGURED'
+            })
+        };
+    }
+    
+    // 验证管理员密钥
+    if (!adminKey || adminKey !== expectedAdminKey) {
+        console.warn(`🚨 安全警告: 无效的管理员访问尝试，IP: ${security.getClientIP(event)}`);
         return {
             statusCode: 401,
             headers: {
@@ -20,7 +39,8 @@ exports.handler = async (event, context) => {
             },
             body: JSON.stringify({
                 error: 'Unauthorized',
-                message: '需要管理员权限'
+                message: '需要有效的管理员密钥',
+                code: 'INVALID_ADMIN_KEY'
             })
         };
     }
