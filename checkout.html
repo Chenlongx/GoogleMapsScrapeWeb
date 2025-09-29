@@ -807,6 +807,18 @@
                                     price: cnyPrice,
                                     email: email
                                 });
+                            } else if (statusData.status === 'error') {
+                                console.error('Payment status check error:', statusData.message);
+                                stopAllTimers();
+                                modalElements.modal.classList.remove('active');
+                                
+                                // 显示错误信息
+                                const lang = document.documentElement.lang.startsWith('zh') ? 'zh' : 'en';
+                                const errorMessage = lang === 'zh' 
+                                    ? `支付状态检查失败: ${statusData.message || '未知错误'}`
+                                    : `Payment status check failed: ${statusData.message || 'Unknown error'}`;
+                                
+                                alert(errorMessage);
                             }
                         } catch (pollError) {
                             console.error('Polling error:', pollError);

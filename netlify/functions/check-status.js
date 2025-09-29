@@ -17,7 +17,11 @@ function formatKey(key, type) {
 
 exports.handler = async (event) => {
     const origin = event.headers.origin;
-    const headers = { 'Access-Control-Allow-Headers': 'Content-Type', 'Access-Control-Allow-Methods': 'GET, OPTIONS' };
+    const headers = { 
+        'Access-Control-Allow-Headers': 'Content-Type', 
+        'Access-Control-Allow-Methods': 'GET, OPTIONS',
+        'Content-Type': 'application/json'
+    };
     if (allowedOrigins.includes(origin)) {
         headers['Access-Control-Allow-Origin'] = origin;
     }
@@ -25,12 +29,26 @@ exports.handler = async (event) => {
         return { statusCode: 204, headers, body: '' };
     }
     if (event.httpMethod !== 'GET') {
-        return { statusCode: 405, headers, body: 'Method Not Allowed' };
+        return { 
+            statusCode: 200, 
+            headers, 
+            body: JSON.stringify({ 
+                status: 'error', 
+                message: 'Method Not Allowed' 
+            }) 
+        };
     }
 
     const outTradeNo = event.queryStringParameters.outTradeNo;
     if (!outTradeNo) {
-        return { statusCode: 400, headers, body: JSON.stringify({ message: 'Missing outTradeNo' }) };
+        return { 
+            statusCode: 200, 
+            headers, 
+            body: JSON.stringify({ 
+                status: 'error', 
+                message: 'Missing outTradeNo' 
+            }) 
+        };
     }
 
     const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
@@ -43,7 +61,14 @@ exports.handler = async (event) => {
             .single();
 
         if (error || !order) {
-            return { statusCode: 404, headers, body: JSON.stringify({ status: 'not_found' }) };
+            return { 
+                statusCode: 200, 
+                headers, 
+                body: JSON.stringify({ 
+                    status: 'not_found',
+                    message: 'Order not found' 
+                }) 
+            };
         }
 
         if (order.status === 'completed') {
@@ -98,7 +123,15 @@ exports.handler = async (event) => {
                 return { statusCode: 200, headers, body: JSON.stringify({ status: 'completed' }) };
             } else {
                 console.error(`[check-status] Business logic failed for ${outTradeNo}:`, businessResult.error);
-                return { statusCode: 500, headers, body: JSON.stringify({ message: 'Business logic failed', error: businessResult.error }) };
+                return { 
+                    statusCode: 200, 
+                    headers, 
+                    body: JSON.stringify({ 
+                        status: 'error', 
+                        message: 'Business logic failed', 
+                        error: businessResult.error 
+                    }) 
+                };
             }
         }
         
@@ -107,6 +140,14 @@ exports.handler = async (event) => {
 
     } catch (err) {
         console.error('[Critical Error] in check-status:', err.message);
-        return { statusCode: 500, headers, body: JSON.stringify({ message: 'Internal Server Error' }) };
+        return { 
+            statusCode: 200, 
+            headers, 
+            body: JSON.stringify({ 
+                status: 'error', 
+                message: 'Internal Server Error',
+                error: err.message 
+            }) 
+        };
     }
 };

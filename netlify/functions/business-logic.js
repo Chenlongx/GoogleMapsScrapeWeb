@@ -369,34 +369,64 @@ async function processReferralCommission(outTradeNo, customerEmail, productId) {
 
                 // 更新推广记录的转化次数和佣金
                 if (referralCode) {
-                    const { error: updatePromotionError } = await supabase
+                    // 先获取当前记录
+                    const { data: currentPromotion, error: fetchError } = await supabase
                         .from('product_promotions')
-                        .update({ 
-                            conversions_count: supabase.sql`conversions_count + 1`,
-                            total_commission: supabase.sql`total_commission + ${commissionAmount}`,
-                            updated_at: new Date().toISOString()
-                        })
-                        .eq('promotion_code', referralCode);
+                        .select('conversions_count, total_commission')
+                        .eq('promotion_code', referralCode)
+                        .single();
 
-                    if (updatePromotionError) {
-                        console.error('更新推广记录失败:', updatePromotionError);
+                    if (!fetchError && currentPromotion) {
+                        const newConversionsCount = (currentPromotion.conversions_count || 0) + 1;
+                        const newTotalCommission = (currentPromotion.total_commission || 0) + commissionAmount;
+
+                        const { error: updatePromotionError } = await supabase
+                            .from('product_promotions')
+                            .update({ 
+                                conversions_count: newConversionsCount,
+                                total_commission: newTotalCommission,
+                                updated_at: new Date().toISOString()
+                            })
+                            .eq('promotion_code', referralCode);
+
+                        if (updatePromotionError) {
+                            console.error('更新推广记录失败:', updatePromotionError);
+                        } else {
+                            console.log(`推广记录更新成功: 转化数+1, 佣金+${commissionAmount}`);
+                        }
+                    } else {
+                        console.error('获取推广记录失败:', fetchError);
                     }
                 }
 
                 // 更新代理余额
-                const { error: updateBalanceError } = await supabase
+                // 先获取当前代理信息
+                const { data: currentAgent, error: fetchAgentError } = await supabase
                     .from('agent_profiles')
-                    .update({ 
-                        total_commission: supabase.sql`total_commission + ${commissionAmount}`,
-                        available_balance: supabase.sql`available_balance + ${commissionAmount}`,
-                        updated_at: new Date().toISOString()
-                    })
-                    .eq('id', agentId);
+                    .select('total_commission, available_balance')
+                    .eq('id', agentId)
+                    .single();
 
-                if (updateBalanceError) {
-                    console.error('更新代理余额失败:', updateBalanceError);
+                if (!fetchAgentError && currentAgent) {
+                    const newTotalCommission = (currentAgent.total_commission || 0) + commissionAmount;
+                    const newAvailableBalance = (currentAgent.available_balance || 0) + commissionAmount;
+
+                    const { error: updateBalanceError } = await supabase
+                        .from('agent_profiles')
+                        .update({ 
+                            total_commission: newTotalCommission,
+                            available_balance: newAvailableBalance,
+                            updated_at: new Date().toISOString()
+                        })
+                        .eq('id', agentId);
+
+                    if (updateBalanceError) {
+                        console.error('更新代理余额失败:', updateBalanceError);
+                    } else {
+                        console.log(`代理 ${agentId} 获得佣金 ${commissionAmount} 元，总佣金: ${newTotalCommission}，可用余额: ${newAvailableBalance}`);
+                    }
                 } else {
-                    console.log(`代理 ${agentId} 获得佣金 ${commissionAmount} 元`);
+                    console.error('获取代理信息失败:', fetchAgentError);
                 }
             }
 
