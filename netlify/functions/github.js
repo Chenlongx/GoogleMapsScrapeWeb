@@ -64,13 +64,21 @@ exports.handler = async (event, context) => {
         
         console.log(`Fetching GitHub API: ${username}/${repo}/${endpoint}`);
 
+        // 准备请求头，包含认证 Token（如果存在）
+        const headers = {
+            'User-Agent': 'Netlify-Function',
+            'Accept': 'application/vnd.github.v3+json'
+        };
+        
+        // 如果环境变量中有 GitHub Token，则添加到请求头中
+        if (process.env.GITHUB_TOKEN) {
+            headers['Authorization'] = `token ${process.env.GITHUB_TOKEN}`;
+        }
+
         // 使用 Promise 包装 https.get
         const response = await new Promise((resolve, reject) => {
             const request = https.get(githubUrl, {
-                headers: {
-                    'User-Agent': 'Netlify-Function',
-                    'Accept': 'application/vnd.github.v3+json'
-                }
+                headers: headers
             }, (res) => {
                 let data = '';
                 
@@ -100,6 +108,37 @@ exports.handler = async (event, context) => {
         // 如果 GitHub API 返回错误状态码
         if (response.statusCode >= 400) {
             console.error('GitHub API error:', response.statusCode, response.data);
+            
+            // 对于 403 错误，提供更友好的错误信息
+            if (response.statusCode === 403) {
+                try {
+                    const errorData = JSON.parse(response.data);
+                    if (errorData.message && errorData.message.includes('API rate limit')) {
+                        return {
+                            statusCode: 429,
+                            headers,
+                            body: JSON.stringify({
+                                error: 'API rate limit exceeded',
+                                message: 'GitHub API 请求频率超限，请稍后重试',
+                                retry_after: errorData.retry_after || 60
+                            })
+                        };
+                    }
+                } catch (e) {
+                    // 如果解析失败，继续使用原始错误
+                }
+                
+                return {
+                    statusCode: 403,
+                    headers,
+                    body: JSON.stringify({
+                        error: 'Access forbidden',
+                        message: 'GitHub API 访问被拒绝，可能是由于访问限制或仓库不存在',
+                        suggestion: '请检查仓库名称是否正确，或稍后重试'
+                    })
+                };
+            }
+            
             return {
                 statusCode: response.statusCode,
                 headers,

@@ -270,7 +270,16 @@
                     fetch(apiUrl)
                         .then(response => {
                             if (!response.ok) {
-                                // 如果HTTP响应状态码不是2xx，则抛出错误，进入catch块
+                                // 对于 429 状态码（速率限制），提供特殊处理
+                                if (response.status === 429) {
+                                    return response.json().then(errorData => {
+                                        const error = new Error(`Rate limit exceeded: ${errorData.message || 'API rate limit exceeded'}`);
+                                        error.status = 429;
+                                        error.retryAfter = errorData.retry_after || 60;
+                                        throw error;
+                                    });
+                                }
+                                // 对于其他错误状态码，抛出通用错误
                                 throw new Error(`API error: ${response.status}`);
                             }
                             return response.json();
@@ -307,11 +316,24 @@
                             // --- 失败后的处理逻辑 (核心改动) ---
                             console.error(`获取 ${config.repoName} 失败, 剩余重试次数: ${retriesLeft - 1}. 错误:`, error);
 
+                            // 对于速率限制错误，使用更长的延迟时间
+                            let retryDelay = delay;
+                            if (error.status === 429 && error.retryAfter) {
+                                retryDelay = error.retryAfter * 1000; // 转换为毫秒
+                            }
+
                             if (retriesLeft > 1) {
                                 // 如果还有剩余重试次数
                                 const currentLang = document.documentElement.lang || 'zh';
-                                const retryingTextZh = `获取失败, ${delay / 1000}秒后重试...`;
-                                const retryingTextEn = `Failed, retrying in ${delay / 1000}s...`;
+                                let retryingTextZh, retryingTextEn;
+                                
+                                if (error.status === 429) {
+                                    retryingTextZh = `API 请求频率超限, ${retryDelay / 1000}秒后重试...`;
+                                    retryingTextEn = `API rate limit exceeded, retrying in ${retryDelay / 1000}s...`;
+                                } else {
+                                    retryingTextZh = `获取失败, ${retryDelay / 1000}秒后重试...`;
+                                    retryingTextEn = `Failed, retrying in ${retryDelay / 1000}s...`;
+                                }
                                 
                                 // 在界面上提示用户正在重试
                                 windowsVersionInfo.textContent = (currentLang.startsWith('zh')) ? retryingTextZh : retryingTextEn;
@@ -319,8 +341,9 @@
                                 // 设置一个定时器，在延迟结束后再次调用 attemptFetch
                                 setTimeout(() => {
                                     // 下一次重试时，剩余次数减1，延迟时间加倍（指数退避策略）
-                                    attemptFetch(retriesLeft - 1, delay * 2);
-                                }, delay);
+                                    const nextDelay = error.status === 429 ? retryDelay * 1.5 : delay * 2;
+                                    attemptFetch(retriesLeft - 1, nextDelay);
+                                }, retryDelay);
                             } else {
                                 // 如果所有重试次数都已用尽，则显示最终的错误信息
                                 console.error(`获取 ${config.repoName} 在所有重试后均失败.`);
