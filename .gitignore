@@ -4,7 +4,17 @@ package-lock.json
 
 # Local Netlify folder
 .netlify
+
+# Environment variables (包含敏感信息)
 .env
+.env.local
+.env.production
+.env.development
+*.env
+
+# 敏感配置文件
+config.json
+secrets.json
 
 # OS generated files
 .DS_Store
