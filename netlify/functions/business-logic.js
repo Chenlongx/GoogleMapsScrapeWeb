@@ -237,6 +237,8 @@ async function processBusinessLogic(orderParams) {
 // 处理推广佣金
 async function processReferralCommission(outTradeNo, customerEmail, productId) {
         try {
+            console.log('开始处理推广佣金:', { outTradeNo, customerEmail, productId });
+            
             const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
             
             // 获取订单信息
@@ -247,13 +249,17 @@ async function processReferralCommission(outTradeNo, customerEmail, productId) {
                 .single();
 
             if (orderError || !order) {
-                console.log('未找到订单信息，跳过推广佣金处理');
+                console.log('未找到订单信息，跳过推广佣金处理:', orderError);
                 return;
             }
+
+            console.log('找到订单信息:', order);
 
             // 检查订单中是否有推广信息
             let referralCode = order.referral_code;
             let agentCode = order.agent_code;
+
+            console.log('订单推广信息:', { referralCode, agentCode });
 
             // 如果订单表中没有推广信息，尝试从临时表中获取
             if ((!referralCode || !agentCode)) {
@@ -267,6 +273,7 @@ async function processReferralCommission(outTradeNo, customerEmail, productId) {
                     if (!referralError && referralData) {
                         referralCode = referralCode || referralData.referral_code;
                         agentCode = agentCode || referralData.agent_code;
+                        console.log('从临时表获取推广信息:', referralData);
                     }
                 } catch (error) {
                     console.log('从临时表获取推广信息失败:', error.message);
@@ -281,6 +288,8 @@ async function processReferralCommission(outTradeNo, customerEmail, productId) {
                 console.log('订单无推广信息，跳过推广佣金处理');
                 return;
             }
+
+            console.log('开始处理推广佣金，推广码:', referralCode, '代理码:', agentCode);
 
             // 获取产品价格
             const productPriceMap = {

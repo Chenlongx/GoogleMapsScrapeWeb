@@ -30,16 +30,20 @@ class MediaMingleReferralTracker {
         const urlParams = new URLSearchParams(window.location.search);
         const refCode = urlParams.get('ref');
         
+        console.log('MediaMingle推广追踪器: 从URL获取推广码:', refCode);
+        
         if (refCode) {
             try {
                 // 解析推广码: AGENT_CODE_PRODUCT_TYPE_TIMESTAMP_RANDOM
                 const parts = refCode.split('_');
+                console.log('MediaMingle推广追踪器: 推广码分割结果:', parts);
+                
                 if (parts.length >= 4) {
                     this.referralData = {
                         agentCode: parts[0],
                         productType: parts[1],
                         timestamp: parts[2],
-                        random: parts[3],
+                        random: parts.slice(3).join('_'), // 处理可能包含下划线的随机部分
                         fullCode: refCode,
                         source: 'url'
                     };
@@ -51,11 +55,14 @@ class MediaMingleReferralTracker {
                     
                     // 显示推广信息提示
                     this.showReferralNotification();
+                } else {
+                    console.error('MediaMingle推广追踪器: 推广码格式不正确，期望至少4个部分，实际:', parts.length);
                 }
             } catch (error) {
                 console.error('推广码解析失败:', error);
             }
         } else {
+            console.log('MediaMingle推广追踪器: URL中没有推广码，尝试从存储中恢复');
             // 尝试从localStorage恢复推广信息
             this.loadStoredReferralData();
         }
@@ -203,6 +210,7 @@ class MediaMingleReferralTracker {
             };
 
             console.log('MediaMingle推广追踪器: 发送请求数据', requestData);
+            console.log('MediaMingle推广追踪器: API地址', `${this.apiBaseUrl}/trackReferralClick`);
 
             const response = await fetch(`${this.apiBaseUrl}/trackReferralClick`, {
                 method: 'POST',
@@ -213,6 +221,7 @@ class MediaMingleReferralTracker {
             });
 
             console.log('MediaMingle推广追踪器: API响应状态', response.status);
+            console.log('MediaMingle推广追踪器: API响应头', response.headers);
 
             if (response.ok) {
                 const result = await response.json();
