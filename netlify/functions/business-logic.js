@@ -349,7 +349,7 @@ async function processReferralCommission(outTradeNo, customerEmail, productId) {
                     .from('product_orders')
                     .insert([{
                         customer_email: customerEmail,
-                        product_type: this.getProductType(productId),
+                        product_type: getProductType(productId),
                         promotion_code: referralCode,
                         order_amount: orderAmount,
                         commission_amount: commissionAmount,
@@ -405,13 +405,12 @@ async function processReferralCommission(outTradeNo, customerEmail, productId) {
         }
     }
 
-    // 获取产品类型
-    getProductType(productId) {
-        if (productId.startsWith('gmaps')) return 'google-maps';
-        if (productId.startsWith('validator') && !productId.includes('whatsapp')) return 'email-filter';
-        if (productId.startsWith('whatsapp-validator')) return 'whatsapp-filter';
-        return 'unknown';
-    }
+// 获取产品类型
+function getProductType(productId) {
+    if (productId.startsWith('gmaps')) return 'google-maps';
+    if (productId.startsWith('validator') && !productId.includes('whatsapp')) return 'email-filter';
+    if (productId.startsWith('whatsapp-validator')) return 'whatsapp-filter';
+    return 'unknown';
 }
 
 module.exports = { processBusinessLogic };
