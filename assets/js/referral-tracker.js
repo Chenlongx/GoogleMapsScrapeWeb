@@ -4,6 +4,11 @@
  * 后端API: https://google-maps-backend-master.netlify.app/api
  */
 
+// 防止重复加载
+if (typeof window.mediamingleReferralTracker !== 'undefined') {
+    console.log('MediaMingle推广追踪器已存在，跳过重复加载');
+} else {
+
 class MediaMingleReferralTracker {
     constructor() {
         this.apiBaseUrl = 'https://google-maps-backend-master.netlify.app/api';
@@ -439,3 +444,5 @@ document.addEventListener('DOMContentLoaded', () => {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = MediaMingleReferralTracker;
 }
+
+} // 结束重复加载检查
