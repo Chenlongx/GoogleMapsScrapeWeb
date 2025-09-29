@@ -330,7 +330,9 @@
     <button class="refresh-btn" onclick="refreshData()" title="刷新数据">🔄</button>
 
     <script>
-        const API_BASE = '/api/security-admin';
+        // 动态检测环境并设置 API 基础 URL
+        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const API_BASE = isLocal ? '/.netlify/functions/security-admin' : '/api/security-admin';
         let adminKey = '';
 
         // 初始化
@@ -340,13 +342,12 @@
             adminKey = urlParams.get('key') || localStorage.getItem('adminKey') || '';
             
             if (!adminKey) {
-                adminKey = prompt('请输入管理员密钥:');
+                adminKey = prompt('请输入管理员密钥（留空则只显示基本统计信息）:');
                 if (adminKey) {
                     localStorage.setItem('adminKey', adminKey);
                 } else {
-                    alert('需要管理员密钥才能访问此页面');
-                    window.location.href = '/';
-                    return;
+                    // 没有管理员密钥，只显示基本统计信息
+                    console.log('未提供管理员密钥，将只显示基本统计信息');
                 }
             }
             
@@ -366,33 +367,82 @@
 
         // 刷新所有数据
         async function refreshData() {
-            await Promise.all([
-                loadStats(),
-                loadBlockedIPs(),
-                loadSuspiciousIPs()
-            ]);
+            // 首先尝试加载基本统计信息（无需管理员权限）
+            await loadBasicStats();
+            
+            // 如果有管理员密钥，则加载完整数据
+            if (adminKey) {
+                await Promise.all([
+                    loadStats(),
+                    loadBlockedIPs(),
+                    loadSuspiciousIPs()
+                ]);
+            }
+        }
+
+        // 加载基本统计信息（无需管理员权限）
+        async function loadBasicStats() {
+            try {
+                console.log('正在请求基本统计信息: /api/security-stats');
+                const response = await fetch('/api/security-stats');
+                
+                console.log('基本统计响应状态:', response.status);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('基本统计信息数据:', data);
+                    
+                    if (data.success) {
+                        document.getElementById('activeIPs').textContent = data.data.activeIPs;
+                        document.getElementById('blockedIPs').textContent = data.data.blockedCount;
+                        document.getElementById('suspiciousIPs').textContent = data.data.suspiciousCount;
+                        document.getElementById('totalRequests').textContent = data.data.totalRequests;
+                        
+                        // 显示服务器时间
+                        if (data.data.serverTime) {
+                            console.log('服务器时间:', data.data.serverTime);
+                        }
+                    }
+                } else {
+                    console.error('基本统计信息请求失败:', response.status);
+                }
+            } catch (error) {
+                console.error('加载基本统计信息失败:', error);
+            }
         }
 
         // 加载统计信息
         async function loadStats() {
             try {
+                console.log('正在请求统计信息:', `${API_BASE}/stats`);
                 const response = await fetch(`${API_BASE}/stats`, {
                     headers: getHeaders()
                 });
                 
+                console.log('响应状态:', response.status);
+                console.log('响应头:', response.headers);
+                
                 if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
+                    const errorText = await response.text();
+                    console.error('API 错误响应:', errorText);
+                    throw new Error(`HTTP ${response.status}: ${errorText}`);
                 }
                 
                 const data = await response.json();
+                console.log('统计信息数据:', data);
+                
                 if (data.success) {
                     document.getElementById('activeIPs').textContent = data.data.activeIPs;
                     document.getElementById('blockedIPs').textContent = data.data.blockedCount;
                     document.getElementById('suspiciousIPs').textContent = data.data.suspiciousCount;
                     document.getElementById('totalRequests').textContent = data.data.totalRequests;
+                } else {
+                    console.error('API 返回失败:', data);
+                    showAlert('danger', `获取统计信息失败: ${data.message || '未知错误'}`);
                 }
             } catch (error) {
                 console.error('加载统计信息失败:', error);
+                showAlert('danger', `加载统计信息失败: ${error.message}`);
             }
         }
 

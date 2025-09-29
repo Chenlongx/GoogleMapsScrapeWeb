@@ -5,7 +5,7 @@ const security = require('./security-middleware');
 
 exports.handler = async (event, context) => {
     // 基本的安全检查
-    const clientIP = security.getClientIP ? security.getClientIP(event) : 'unknown';
+    const clientIP = security.getClientIP(event);
     
     // 简单的管理员验证（在生产环境中应该使用更严格的认证）
     const adminKey = event.headers['x-admin-key'] || event.queryStringParameters?.admin_key;

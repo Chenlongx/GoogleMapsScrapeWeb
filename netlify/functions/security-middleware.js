@@ -334,5 +334,9 @@ module.exports = {
     blockIP,
     getSecurityStats,
     isIPBlocked,
+    getClientIP,
+    requestCounts,
+    blockedIPs,
+    suspiciousIPs,
     SECURITY_CONFIG
 };

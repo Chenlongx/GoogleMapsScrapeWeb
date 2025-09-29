@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>安全监控测试页面</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .btn {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background: #007bff;
+            color: white;
+        }
+        .btn:hover {
+            background: #0056b3;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        input {
+            padding: 8px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛡️ 安全监控测试页面</h1>
+        
+        <div class="test-section">
+            <h3>配置设置</h3>
+            <label>管理员密钥: <input type="text" id="adminKey" placeholder="输入管理员密钥"></label><br>
+            <label>API 基础路径: <input type="text" id="apiBase" value="/api/security-admin" placeholder="API 基础路径"></label><br>
+            <button class="btn" onclick="saveConfig()">保存配置</button>
+        </div>
+
+        <div class="test-section">
+            <h3>API 测试</h3>
+            <button class="btn" onclick="testStats()">测试统计信息</button>
+            <button class="btn" onclick="testBlockedIPs()">测试被封禁IP</button>
+            <button class="btn" onclick="testSuspiciousIPs()">测试可疑IP</button>
+            <button class="btn" onclick="testAll()">测试所有端点</button>
+            <div id="apiResult" class="result"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>模拟请求</h3>
+            <button class="btn" onclick="simulateRequests()">模拟多个请求</button>
+            <button class="btn" onclick="testRateLimit()">测试速率限制</button>
+            <div id="simulateResult" class="result"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>调试信息</h3>
+            <button class="btn" onclick="showDebugInfo()">显示调试信息</button>
+            <div id="debugResult" class="result"></div>
+        </div>
+    </div>
+
+    <script>
+        let config = {
+            adminKey: '',
+            apiBase: '/api/security-admin'
+        };
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 从 localStorage 加载配置
+            const savedConfig = localStorage.getItem('securityTestConfig');
+            if (savedConfig) {
+                config = JSON.parse(savedConfig);
+                document.getElementById('adminKey').value = config.adminKey;
+                document.getElementById('apiBase').value = config.apiBase;
+            }
+        });
+
+        // 保存配置
+        function saveConfig() {
+            config.adminKey = document.getElementById('adminKey').value;
+            config.apiBase = document.getElementById('apiBase').value;
+            localStorage.setItem('securityTestConfig', JSON.stringify(config));
+            showResult('apiResult', '配置已保存', 'success');
+        }
+
+        // 显示结果
+        function showResult(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.className = `result ${type}`;
+        }
+
+        // 获取请求头
+        function getHeaders() {
+            return {
+                'Content-Type': 'application/json',
+                'X-Admin-Key': config.adminKey
+            };
+        }
+
+        // 测试统计信息
+        async function testStats() {
+            try {
+                showResult('apiResult', '正在测试统计信息...', 'info');
+                
+                const response = await fetch(`${config.apiBase}/stats`, {
+                    headers: getHeaders()
+                });
+                
+                const data = await response.text();
+                const result = `状态码: ${response.status}\n响应: ${data}`;
+                
+                if (response.ok) {
+                    showResult('apiResult', result, 'success');
+                } else {
+                    showResult('apiResult', result, 'error');
+                }
+            } catch (error) {
+                showResult('apiResult', `错误: ${error.message}`, 'error');
+            }
+        }
+
+        // 测试被封禁IP
+        async function testBlockedIPs() {
+            try {
+                showResult('apiResult', '正在测试被封禁IP...', 'info');
+                
+                const response = await fetch(`${config.apiBase}/blocked-ips`, {
+                    headers: getHeaders()
+                });
+                
+                const data = await response.text();
+                const result = `状态码: ${response.status}\n响应: ${data}`;
+                
+                if (response.ok) {
+                    showResult('apiResult', result, 'success');
+                } else {
+                    showResult('apiResult', result, 'error');
+                }
+            } catch (error) {
+                showResult('apiResult', `错误: ${error.message}`, 'error');
+            }
+        }
+
+        // 测试可疑IP
+        async function testSuspiciousIPs() {
+            try {
+                showResult('apiResult', '正在测试可疑IP...', 'info');
+                
+                const response = await fetch(`${config.apiBase}/suspicious-ips`, {
+                    headers: getHeaders()
+                });
+                
+                const data = await response.text();
+                const result = `状态码: ${response.status}\n响应: ${data}`;
+                
+                if (response.ok) {
+                    showResult('apiResult', result, 'success');
+                } else {
+                    showResult('apiResult', result, 'error');
+                }
+            } catch (error) {
+                showResult('apiResult', `错误: ${error.message}`, 'error');
+            }
+        }
+
+        // 测试所有端点
+        async function testAll() {
+            showResult('apiResult', '正在测试所有端点...', 'info');
+            
+            const endpoints = [
+                { name: '统计信息', path: '/stats' },
+                { name: '被封禁IP', path: '/blocked-ips' },
+                { name: '可疑IP', path: '/suspicious-ips' }
+            ];
+            
+            let results = [];
+            
+            for (const endpoint of endpoints) {
+                try {
+                    const response = await fetch(`${config.apiBase}${endpoint.path}`, {
+                        headers: getHeaders()
+                    });
+                    
+                    results.push(`${endpoint.name}: ${response.status} ${response.ok ? '✅' : '❌'}`);
+                } catch (error) {
+                    results.push(`${endpoint.name}: 错误 - ${error.message}`);
+                }
+            }
+            
+            showResult('apiResult', results.join('\n'), 'info');
+        }
+
+        // 模拟请求
+        async function simulateRequests() {
+            showResult('simulateResult', '正在模拟请求...', 'info');
+            
+            const requests = [];
+            for (let i = 0; i < 5; i++) {
+                requests.push(
+                    fetch('/api/github/Chenlongx/gogole_maps/releases/latest')
+                        .then(response => ({ index: i, status: response.status, ok: response.ok }))
+                        .catch(error => ({ index: i, error: error.message }))
+                );
+            }
+            
+            const results = await Promise.all(requests);
+            const resultText = results.map(r => 
+                `请求 ${r.index}: ${r.status ? `${r.status} ${r.ok ? '✅' : '❌'}` : `错误: ${r.error}`}`
+            ).join('\n');
+            
+            showResult('simulateResult', resultText, 'info');
+        }
+
+        // 测试速率限制
+        async function testRateLimit() {
+            showResult('simulateResult', '正在测试速率限制...', 'info');
+            
+            const requests = [];
+            for (let i = 0; i < 15; i++) {
+                requests.push(
+                    fetch('/api/github/Chenlongx/gogole_maps/releases/latest')
+                        .then(response => ({ index: i, status: response.status, ok: response.ok }))
+                        .catch(error => ({ index: i, error: error.message }))
+                );
+            }
+            
+            const results = await Promise.all(requests);
+            const resultText = results.map(r => 
+                `请求 ${r.index}: ${r.status ? `${r.status} ${r.ok ? '✅' : '❌'}` : `错误: ${r.error}`}`
+            ).join('\n');
+            
+            showResult('simulateResult', resultText, 'info');
+        }
+
+        // 显示调试信息
+        function showDebugInfo() {
+            const info = [
+                `当前域名: ${window.location.hostname}`,
+                `当前协议: ${window.location.protocol}`,
+                `当前路径: ${window.location.pathname}`,
+                `API 基础路径: ${config.apiBase}`,
+                `管理员密钥: ${config.adminKey ? '已设置' : '未设置'}`,
+                `用户代理: ${navigator.userAgent}`,
+                `时间戳: ${new Date().toISOString()}`
+            ].join('\n');
+            
+            showResult('debugResult', info, 'info');
+        }
+    </script>
+</body>
+</html>

@@ -16,6 +16,13 @@
   status = 200
   force = true
 
+# 安全统计信息（无需管理员权限）
+[[redirects]]
+  from = "/api/security-stats"
+  to = "/.netlify/functions/security-stats"
+  status = 200
+  force = true
+
 # 保护敏感端点
 [[headers]]
   for = "/api/security-admin/*"
