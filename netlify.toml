@@ -23,6 +23,13 @@
   status = 200
   force = true
 
+# GitHub API 代理
+[[redirects]]
+  from = "/api/github/*"
+  to = "/.netlify/functions/github/:splat"
+  status = 200
+  force = true
+
 # 保护敏感端点
 [[headers]]
   for = "/api/security-admin/*"
