@@ -201,13 +201,14 @@ exports.handler = async (event, context) => {
     
     console.log(`✅ 开始生成支付二维码: 订单ID=${orderId}, 金额=¥${amount.toFixed(2)}, 商品=${productSubject}`);
 
-    // 使用 alipay.trade.precreate（扫码支付）生成二维码URL
+    // 🔒 【修复】使用 alipay.trade.precreate（扫码支付）生成二维码URL
+    // 回调 URL 改为 alipay-notify（它会调用 business-logic.js 处理续费）
     const result = await alipaySdk.exec('alipay.trade.precreate', {
       bizContent: {
         out_trade_no: orderId,
         total_amount: amount.toFixed(2),
         subject: productSubject,
-        notify_url: 'https://mediamingle.cn/.netlify/functions/alipayCallback'
+        notify_url: 'https://mediamingle.cn/.netlify/functions/alipay-notify'
       }
     });
 

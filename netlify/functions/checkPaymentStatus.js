@@ -95,15 +95,17 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // 查询订单状态
+    // 🔒 【修复】查询订单状态（使用正确的表和字段）
+    console.log(`🔍 查询订单状态: orderId=${orderId}, userId=${userId}`);
+    
     const { data: orderData, error: orderError } = await supabase
-      .from('renewal_orders')
+      .from('orders')  // ✅ 使用 orders 表（与 createRenewalOrder.js 统一）
       .select('*')
-      .eq('order_id', orderId)
-      .eq('user_id', userId)
+      .eq('out_trade_no', orderId)  // ✅ 使用 out_trade_no 字段
       .single();
 
     if (orderError || !orderData) {
+      console.log(`⚠️ 订单不存在: ${orderError?.message || '未找到'}`);
       return {
         statusCode: 404,
         headers,
@@ -115,8 +117,26 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // 如果订单已完成，返回支付成功
-    if (orderData.status === 'completed') {
+    console.log(`✅ 找到订单: status=${orderData.status}, product_id=${orderData.product_id}`);
+
+    // 🔒 【修复】检查订单是否已完成（状态可能是 COMPLETED 或 SUCCESS）
+    if (orderData.status === 'COMPLETED' || orderData.status === 'SUCCESS') {
+      // 从 product_id 提取续费类型
+      let renewalType = 'monthly';
+      if (orderData.product_id.includes('quarterly')) renewalType = 'quarterly';
+      else if (orderData.product_id.includes('yearly')) renewalType = 'yearly';
+      
+      // 查询用户的新到期时间
+      const { data: userData, error: userError } = await supabase
+        .from('user_accounts')
+        .select('expiry_at')
+        .eq('account', orderData.customer_email)
+        .single();
+      
+      const newExpiryDate = userData?.expiry_at || null;
+      
+      console.log(`✅ 支付已完成: renewalType=${renewalType}, newExpiry=${newExpiryDate}`);
+      
       return {
         statusCode: 200,
         headers,
@@ -124,10 +144,9 @@ exports.handler = async (event, context) => {
           success: true,
           paid: true,
           orderId: orderId,
-          renewalType: orderData.renewal_type,
-          amount: orderData.amount,
-          newExpiryDate: orderData.new_expiry_date,
-          paidAt: orderData.paid_at,
+          renewalType: renewalType,
+          amount: PRICES[renewalType]?.amount || 0,
+          newExpiryDate: newExpiryDate,
           message: '支付已完成'
         })
       };
