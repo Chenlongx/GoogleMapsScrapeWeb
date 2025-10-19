@@ -196,26 +196,25 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // 🔒 【真实支付】使用支付宝SDK生成支付链接
+    // 🔒 【真实支付】使用支付宝扫码支付（与payment.js保持一致）
     const productSubject = productName || `谷歌地图商家爬虫-${PRICES[renewalType]?.duration || ''}续费`;
     
-    const formData = {
-      method: 'alipay.trade.wap.pay',
+    console.log(`✅ 开始生成支付二维码: 订单ID=${orderId}, 金额=¥${amount.toFixed(2)}, 商品=${productSubject}`);
+
+    // 使用 alipay.trade.precreate（扫码支付）生成二维码URL
+    const result = await alipaySdk.exec('alipay.trade.precreate', {
       bizContent: {
         out_trade_no: orderId,
         total_amount: amount.toFixed(2),
         subject: productSubject,
-        product_code: 'QUICK_WAP_PAY',  // ✅ 修复：应该是 PAY 而不是 WAY
-        quit_url: 'https://mediamingle.cn/pricing.html'
-      },
-      returnUrl: `https://mediamingle.cn/payment-success.html?orderId=${orderId}`,
-      notifyUrl: 'https://mediamingle.cn/.netlify/functions/alipayCallback'
-    };
+        notify_url: 'https://mediamingle.cn/.netlify/functions/alipayCallback'
+      }
+    });
 
-    console.log(`✅ 生成支付链接: 订单ID=${orderId}, 金额=¥${amount.toFixed(2)}, 商品=${productSubject}`);
-
-    // 使用支付宝SDK生成带签名的支付URL
-    const paymentUrl = await alipaySdk.pageExec(formData, 'GET');
+    // precreate 返回的是一个短链接，适合生成二维码
+    const paymentUrl = result.qrCode;
+    
+    console.log(`✅ 支付二维码生成成功: ${paymentUrl}`);
 
     // 返回成功响应
     return {
