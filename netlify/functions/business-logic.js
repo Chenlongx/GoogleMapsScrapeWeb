@@ -76,17 +76,51 @@ async function processBusinessLogic(orderParams) {
 
                 // 2. 计算新的到期时间
                 const currentExpiry = new Date(user.expiry_at);
-                // 如果账户已过期，则从当前时间开始计算
-                const startDate = currentExpiry < new Date() ? new Date() : currentExpiry;
+                const now = new Date();
+                
+                console.log(`[Renewal] 当前到期时间: ${currentExpiry.toISOString()}`);
+                console.log(`[Renewal] 当前时间: ${now.toISOString()}`);
+                
+                // 如果账户已过期，则从当前时间开始计算；否则从原到期时间延长
+                const startDate = currentExpiry < now ? now : currentExpiry;
+                console.log(`[Renewal] 续费起始时间: ${startDate.toISOString()}`);
                 
                 const newExpiryDate = new Date(startDate);
-                if (subjectText.includes('月度')) {
-                    newExpiryDate.setMonth(newExpiryDate.getMonth() + 1);
-                } else if (subjectText.includes('季度')) {
-                    newExpiryDate.setMonth(newExpiryDate.getMonth() + 3);
-                } else if (subjectText.includes('年度')) {
-                    newExpiryDate.setFullYear(newExpiryDate.getFullYear() + 1);
+                
+                // 🔒 【修复】优先使用 product_id 判断续费时长，更可靠
+                let renewalMonths = 0;
+                if (productId) {
+                    if (productId.includes('monthly')) {
+                        renewalMonths = 1;
+                    } else if (productId.includes('quarterly')) {
+                        renewalMonths = 3;
+                    } else if (productId.includes('yearly')) {
+                        renewalMonths = 12;
+                    }
+                    console.log(`[Renewal] 从 product_id (${productId}) 判断: ${renewalMonths} 个月`);
                 }
+                
+                // 如果 product_id 没有匹配，回退到 subject 文本判断
+                if (renewalMonths === 0) {
+                    if (subjectText.includes('月度') || subjectText.includes('月付') || subjectText.includes('1个月')) {
+                        renewalMonths = 1;
+                    } else if (subjectText.includes('季度') || subjectText.includes('季付') || subjectText.includes('3个月')) {
+                        renewalMonths = 3;
+                    } else if (subjectText.includes('年度') || subjectText.includes('年付') || subjectText.includes('1年')) {
+                        renewalMonths = 12;
+                    }
+                    console.log(`[Renewal] 从 subject (${subjectText}) 判断: ${renewalMonths} 个月`);
+                }
+                
+                // 如果还是没有匹配，默认为1个月
+                if (renewalMonths === 0) {
+                    console.warn(`[Renewal] 无法判断续费时长，默认为1个月`);
+                    renewalMonths = 1;
+                }
+                
+                // 计算新的到期时间
+                newExpiryDate.setMonth(newExpiryDate.getMonth() + renewalMonths);
+                console.log(`[Renewal] 新的到期时间: ${newExpiryDate.toISOString()} (延长 ${renewalMonths} 个月)`);
 
                 // 3. 更新数据库
                 const { error: updateError } = await supabase
