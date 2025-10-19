@@ -3,28 +3,40 @@
  * 
  * 功能：
  * 1. 创建续费订单记录
- * 2. 生成支付宝支付链接
+ * 2. 生成支付宝支付链接（使用真实的支付宝SDK）
  * 3. 返回订单ID和支付URL
  */
 
+const AlipaySdk = require('alipay-sdk').default || require('alipay-sdk');
 const { createClient } = require('@supabase/supabase-js');
 
-// 初始化Supabase客户端（使用正确的环境变量名）
+// 格式化密钥的辅助函数
+function formatKey(key, type) {
+    if (!key || key.includes('\n')) {
+        return key;
+    }
+    console.log(`[Info] Reformatting single-line ${type} key...`);
+    const header = type === 'private' ? '-----BEGIN RSA PRIVATE KEY-----' : '-----BEGIN PUBLIC KEY-----';
+    const footer = type === 'private' ? '-----END RSA PRIVATE KEY-----' : '-----END PUBLIC KEY-----';
+    return key.replace(header, `${header}\n`).replace(footer, `\n${footer}`);
+}
+
+// 初始化Supabase客户端
 let supabase = null;
 try {
   const supabaseUrl = process.env.SUPABASE_URL;
-  // 优先使用 SUPABASE_SERVICE_ROLE_KEY，兼容其他可能的命名
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 
                        process.env.SUPABASE_SERVICE_KEY || 
-                       process.env.SUPABASE_KEY;
+                       process.env.SUPABASE_KEY ||
+                       process.env.SUPABASE_ANON_KEY;
   
   if (supabaseUrl && supabaseKey) {
     supabase = createClient(supabaseUrl, supabaseKey);
     console.log('✅ Supabase客户端初始化成功');
   } else {
-    console.warn('⚠️ Supabase环境变量未配置，将使用模拟模式');
-    console.warn(`SUPABASE_URL: ${supabaseUrl ? '已配置' : '未配置'}`);
-    console.warn(`SUPABASE_SERVICE_ROLE_KEY: ${process.env.SUPABASE_SERVICE_ROLE_KEY ? '已配置' : '未配置'}`);
+    console.error('❌ Supabase环境变量未配置');
+    console.error(`SUPABASE_URL: ${supabaseUrl ? '已配置' : '未配置'}`);
+    console.error(`SUPABASE_KEY: ${supabaseKey ? '已配置' : '未配置'}`);
   }
 } catch (error) {
   console.error('❌ 初始化Supabase失败:', error);
@@ -61,29 +73,44 @@ exports.handler = async (event, context) => {
   }
 
   try {
-    // 🔧 如果Supabase未配置，返回模拟数据（用于测试）
+    // 🔒 【真实支付模式】检查必要的环境变量
     if (!supabase) {
-      console.log('⚠️ 使用模拟模式生成订单');
-      
-      const body = JSON.parse(event.body || '{}');
-      const orderId = `MOCK_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      
-      // 生成模拟支付URL（用于测试）
-      const mockPaymentUrl = `https://qr.alipay.com/bax${orderId}`;
-      
+      console.error('❌ Supabase未配置，无法创建订单');
       return {
-        statusCode: 200,
+        statusCode: 500,
         headers,
         body: JSON.stringify({
-          success: true,
-          message: '订单创建成功（测试模式）',
-          orderId: orderId,
-          paymentUrl: mockPaymentUrl,
-          mode: 'mock',
-          note: '这是测试模式，请配置Supabase环境变量以使用真实订单系统'
+          success: false,
+          message: '服务器配置错误，请联系管理员',
+          error: 'Supabase未配置'
         })
       };
     }
+
+    const requiredEnvVars = ['ALIPAY_APP_ID', 'ALIPAY_PRIVATE_KEY', 'ALIPAY_PUBLIC_KEY'];
+    const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
+    
+    if (missingVars.length > 0) {
+      console.error('❌ 缺少支付宝配置:', missingVars);
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({
+          success: false,
+          message: '支付配置错误，请联系管理员',
+          error: '缺少支付宝配置'
+        })
+      };
+    }
+
+    // 初始化支付宝SDK
+    const alipaySdk = new AlipaySdk({
+      appId: process.env.ALIPAY_APP_ID,
+      privateKey: formatKey(process.env.ALIPAY_PRIVATE_KEY, 'private'),
+      alipayPublicKey: formatKey(process.env.ALIPAY_PUBLIC_KEY, 'public'),
+      gateway: "https://openapi.alipay.com/gateway.do",
+      timeout: 30000
+    });
     
     // 解析请求体
     const { userId, username, renewalType, amount, duration, productName } = JSON.parse(event.body);
@@ -125,23 +152,33 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // 生成订单ID
-    const orderId = `RNW-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    // 生成订单ID（与payment.js格式统一）
+    const productIdMap = {
+      'monthly': 'gmaps_renewal_monthly',
+      'quarterly': 'gmaps_renewal_quarterly',
+      'yearly': 'gmaps_renewal_yearly'
+    };
+    const productId = productIdMap[renewalType] || 'gmaps_renewal_monthly';
+    
+    const productCodeMap = {
+      'gmaps_renewal_monthly': 'grm',
+      'gmaps_renewal_quarterly': 'grq',
+      'gmaps_renewal_yearly': 'gry'
+    };
+    const productCode = productCodeMap[productId] || 'grm';
+    
+    const encodedIdentifier = Buffer.from(username || userId).toString('base64');
+    const orderId = `${productCode}-${Date.now()}-${encodedIdentifier}`;
 
-    // 创建订单记录
+    // 🔒 【真实支付】创建订单记录（使用与payment.js相同的orders表）
     const { data: orderData, error: orderError } = await supabase
-      .from('renewal_orders')
+      .from('orders')
       .insert([
         {
-          order_id: orderId,
-          user_id: userId,
-          username: username || '未知用户',
-          renewal_type: renewalType,
-          amount: amount,
-          duration: duration,
-          product_name: productName || '谷歌地图商家爬虫',
-          status: 'pending',
-          created_at: new Date().toISOString()
+          out_trade_no: orderId,
+          product_id: productId,
+          customer_email: username || userId,
+          status: 'PENDING'
         }
       ])
       .select();
@@ -159,9 +196,26 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // 生成支付宝支付链接
-    // 注意：这里使用简化的URL scheme，实际生产环境需要使用支付宝SDK
-    const paymentUrl = generateAlipayUrl(orderId, amount, productName || '谷歌地图商家爬虫');
+    // 🔒 【真实支付】使用支付宝SDK生成支付链接
+    const productSubject = productName || `谷歌地图商家爬虫-${PRICES[renewalType]?.duration || ''}续费`;
+    
+    const formData = {
+      method: 'alipay.trade.wap.pay',
+      bizContent: {
+        out_trade_no: orderId,
+        total_amount: amount.toFixed(2),
+        subject: productSubject,
+        product_code: 'QUICK_WAP_PAY',  // ✅ 修复：应该是 PAY 而不是 WAY
+        quit_url: 'https://mediamingle.cn/pricing.html'
+      },
+      returnUrl: `https://mediamingle.cn/payment-success.html?orderId=${orderId}`,
+      notifyUrl: 'https://mediamingle.cn/.netlify/functions/alipayCallback'
+    };
+
+    console.log(`✅ 生成支付链接: 订单ID=${orderId}, 金额=¥${amount.toFixed(2)}, 商品=${productSubject}`);
+
+    // 使用支付宝SDK生成带签名的支付URL
+    const paymentUrl = await alipaySdk.pageExec(formData, 'GET');
 
     // 返回成功响应
     return {
@@ -191,74 +245,6 @@ exports.handler = async (event, context) => {
   }
 };
 
-/**
- * 生成支付宝支付URL
- * 
- * @param {string} orderId - 订单ID
- * @param {number} amount - 金额
- * @param {string} subject - 商品名称
- * @returns {string} 支付URL
- */
-function generateAlipayUrl(orderId, amount, subject) {
-  // 检查是否配置了支付宝参数
-  const alipayAppId = process.env.ALIPAY_APP_ID;
-  
-  // 如果没有配置支付宝，返回模拟支付URL（供测试）
-  if (!alipayAppId) {
-    console.warn('⚠️ 未配置支付宝参数，返回测试URL');
-    // 返回一个可以正常显示二维码但不能真实支付的URL
-    // 使用订单ID作为唯一标识
-    return `https://mediamingle.cn/test-payment?orderId=${orderId}&amount=${amount}&subject=${encodeURIComponent(subject)}`;
-  }
-  
-  // 真实支付宝支付参数
-  const timestamp = new Date().toISOString().replace(/[-:]/g, '').split('.')[0];
-  
-  const params = {
-    // ========== 必需参数 ==========
-    app_id: alipayAppId,                              // 支付宝分配的AppID
-    method: 'alipay.trade.wap.pay',                   // 接口名称
-    format: 'JSON',                                    // 仅支持JSON
-    charset: 'utf-8',                                  // 编码格式
-    sign_type: 'RSA2',                                 // 签名类型
-    timestamp: new Date().toLocaleString('zh-CN', { 
-      timeZone: 'Asia/Shanghai',
-      year: 'numeric',
-      month: '2-digit', 
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: false
-    }).replace(/\//g, '-').replace(/,/g, ''),          // 格式：yyyy-MM-dd HH:mm:ss
-    version: '1.0',                                    // 接口版本
-    
-    // ========== 业务参数 ==========
-    biz_content: JSON.stringify({
-      out_trade_no: orderId,                          // 商户订单号
-      total_amount: amount.toFixed(2),                // 订单金额
-      subject: subject,                               // 订单标题
-      product_code: 'QUICK_WAP_PAY',                  // 产品码（手机网站支付）
-      quit_url: 'https://mediamingle.cn/pricing.html' // 用户付款中途退出返回的地址
-    }),
-    
-    // ========== 可选参数 ==========
-    notify_url: `https://mediamingle.cn/.netlify/functions/alipayCallback`,  // 异步通知地址
-    return_url: `https://mediamingle.cn/payment-success.html?orderId=${orderId}` // 同步跳转地址
-  };
-
-  // 注意：实际生产环境需要对参数进行RSA2签名
-  // 这里暂时返回未签名的URL（仅用于测试二维码显示）
-  // 真实环境必须使用支付宝SDK进行签名
-  
-  const queryString = Object.entries(params)
-    .filter(([key, value]) => value) // 过滤空值
-    .sort(([a], [b]) => a.localeCompare(b)) // 按键名排序
-    .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
-    .join('&');
-
-  // 返回支付宝网关地址
-  // 注意：缺少sign参数，真实支付会失败，但可以生成二维码
-  return `https://openapi.alipay.com/gateway.do?${queryString}`;
-}
+// ✅ 真实支付模式：使用支付宝SDK生成带签名的支付URL
+// 不再需要手动构建URL，SDK会自动处理签名
 
