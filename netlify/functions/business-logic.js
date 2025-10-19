@@ -13,7 +13,7 @@ async function processBusinessLogic(orderParams) {
 
     const rawSubject = orderParams.get('subject');
     const outTradeNo = orderParams.get('out_trade_no');
-    const productId = orderParams.get('product_id');
+    let productId = orderParams.get('product_id');
 
     if (!rawSubject || !outTradeNo) {
         console.error('[Critical] Missing subject or out_trade_no in processBusinessLogic.');
@@ -30,17 +30,36 @@ async function processBusinessLogic(orderParams) {
         return { success: false, error: 'Failed to decode email' };
     }
 
-    const productId = decodeURIComponent(rawSubject.replace(/\+/g, ' '));
+    const subjectText = decodeURIComponent((rawSubject || '').replace(/\+/g, ' '));
     const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
     const resend = new Resend(process.env.RESEND_API_KEY);
+
+    // 如果通知参数中没有携带 product_id（如来自支付宝异步通知），则从数据库回填
+    if (!productId) {
+        try {
+            const { data: orderRow, error: orderFetchError } = await supabase
+                .from('orders')
+                .select('product_id')
+                .eq('out_trade_no', outTradeNo)
+                .single();
+            if (!orderFetchError && orderRow && orderRow.product_id) {
+                productId = orderRow.product_id;
+                console.log('[Debug] Fallback loaded product_id from DB:', productId);
+            } else {
+                console.warn('[Warn] Unable to load product_id from DB for out_trade_no:', outTradeNo, orderFetchError);
+            }
+        } catch (e) {
+            console.warn('[Warn] Exception when loading product_id from DB:', e.message);
+        }
+    }
 
     let emailSubject = '';
     let emailHtml = '';
 
     try {
-        if (productId.includes('Google Maps Scraper')) {
+        if (subjectText.includes('Google Maps Scraper')) {
 
-            if (productId.includes('续费')) {
+            if (subjectText.includes('续费')) {
                 // --- 这是续费逻辑 ---
                 console.log(`[Renewal] Processing renewal for ${customerEmail}`);
 
@@ -61,11 +80,11 @@ async function processBusinessLogic(orderParams) {
                 const startDate = currentExpiry < new Date() ? new Date() : currentExpiry;
                 
                 const newExpiryDate = new Date(startDate);
-                if (productId.includes('月度')) {
+                if (subjectText.includes('月度')) {
                     newExpiryDate.setMonth(newExpiryDate.getMonth() + 1);
-                } else if (productId.includes('季度')) {
+                } else if (subjectText.includes('季度')) {
                     newExpiryDate.setMonth(newExpiryDate.getMonth() + 3);
-                } else if (productId.includes('年度')) {
+                } else if (subjectText.includes('年度')) {
                     newExpiryDate.setFullYear(newExpiryDate.getFullYear() + 1);
                 }
 
@@ -104,7 +123,7 @@ async function processBusinessLogic(orderParams) {
 
             } else {
                 const password = generatePassword();
-                const userType = productId.includes('高级版') ? 'premium' : 'regular'; // 【修正】将 'standard' 修改为 'regular'
+                const userType = subjectText.includes('高级版') ? 'premium' : 'regular'; // 【修正】将 'standard' 修改为 'regular'
                 const expiryDate = new Date();
                 expiryDate.setDate(expiryDate.getDate() + 30);
 
@@ -134,7 +153,7 @@ async function processBusinessLogic(orderParams) {
                 </div>`;
             }
 
-        } else if (productId.includes('Email Validator')) {
+        } else if (subjectText.includes('Email Validator')) {
             const { data: license, error: findError } = await supabase.from('licenses').select('key').eq('status', 'available').limit(1).single();
             if (findError || !license) throw new Error('No available license keys.');
 
@@ -161,7 +180,7 @@ async function processBusinessLogic(orderParams) {
                     <p style="color: #94a3b8; font-size: 12px; text-align: center;">如果您没有进行此操作，请忽略此邮件。这是一个自动发送的邮件，请勿直接回复。</p>
                 </div>
             </div>`;
-        } else if (productId.includes('WhatsApp Validator')) {
+        } else if (subjectText.includes('WhatsApp Validator')) {
             // 逻辑与 Email Validator 非常相似: 查找一个可用的激活码
             const { data: license, error: findError } = await supabase
                 .from('whatsapp_activation_code') // 假设 WhatsApp Validator 激活码也存在 'licenses' 表中
@@ -212,7 +231,7 @@ async function processBusinessLogic(orderParams) {
             </div>`;
         // ▲▲▲ 新增结束 ▲▲▲
         } else {
-            console.warn('[Info] Unknown productId:', productId);
+            console.warn('[Info] Unknown product subject:', subjectText);
             return { success: false, error: `Unknown productId: ${productId}` };
         }
 

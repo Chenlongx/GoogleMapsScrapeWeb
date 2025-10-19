@@ -200,27 +200,65 @@ exports.handler = async (event, context) => {
  * @returns {string} 支付URL
  */
 function generateAlipayUrl(orderId, amount, subject) {
-  // 简化版：使用支付宝手机网站支付（alipays://）
-  // 实际生产环境应该使用支付宝SDK生成标准的支付链接
+  // 检查是否配置了支付宝参数
+  const alipayAppId = process.env.ALIPAY_APP_ID;
+  
+  // 如果没有配置支付宝，返回模拟支付URL（供测试）
+  if (!alipayAppId) {
+    console.warn('⚠️ 未配置支付宝参数，返回测试URL');
+    // 返回一个可以正常显示二维码但不能真实支付的URL
+    // 使用订单ID作为唯一标识
+    return `https://mediamingle.cn/test-payment?orderId=${orderId}&amount=${amount}&subject=${encodeURIComponent(subject)}`;
+  }
+  
+  // 真实支付宝支付参数
+  const timestamp = new Date().toISOString().replace(/[-:]/g, '').split('.')[0];
   
   const params = {
-    out_trade_no: orderId,
-    total_amount: amount.toFixed(2),
-    subject: subject,
-    // 回调URL（支付成功后的通知地址）
-    notify_url: `https://mediamingle.cn/.netlify/functions/alipayCallback`,
-    // 支付完成后的跳转地址
-    return_url: `https://mediamingle.cn/payment-success.html?orderId=${orderId}`
+    // ========== 必需参数 ==========
+    app_id: alipayAppId,                              // 支付宝分配的AppID
+    method: 'alipay.trade.wap.pay',                   // 接口名称
+    format: 'JSON',                                    // 仅支持JSON
+    charset: 'utf-8',                                  // 编码格式
+    sign_type: 'RSA2',                                 // 签名类型
+    timestamp: new Date().toLocaleString('zh-CN', { 
+      timeZone: 'Asia/Shanghai',
+      year: 'numeric',
+      month: '2-digit', 
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    }).replace(/\//g, '-').replace(/,/g, ''),          // 格式：yyyy-MM-dd HH:mm:ss
+    version: '1.0',                                    // 接口版本
+    
+    // ========== 业务参数 ==========
+    biz_content: JSON.stringify({
+      out_trade_no: orderId,                          // 商户订单号
+      total_amount: amount.toFixed(2),                // 订单金额
+      subject: subject,                               // 订单标题
+      product_code: 'QUICK_WAP_PAY',                  // 产品码（手机网站支付）
+      quit_url: 'https://mediamingle.cn/pricing.html' // 用户付款中途退出返回的地址
+    }),
+    
+    // ========== 可选参数 ==========
+    notify_url: `https://mediamingle.cn/.netlify/functions/alipayCallback`,  // 异步通知地址
+    return_url: `https://mediamingle.cn/payment-success.html?orderId=${orderId}` // 同步跳转地址
   };
 
-  // 注意：这是简化版URL，实际应使用支付宝SDK正确签名
-  // 生产环境需要配置：app_id, private_key, alipay_public_key等
+  // 注意：实际生产环境需要对参数进行RSA2签名
+  // 这里暂时返回未签名的URL（仅用于测试二维码显示）
+  // 真实环境必须使用支付宝SDK进行签名
+  
   const queryString = Object.entries(params)
+    .filter(([key, value]) => value) // 过滤空值
+    .sort(([a], [b]) => a.localeCompare(b)) // 按键名排序
     .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
     .join('&');
 
-  // 返回支付宝支付链接（这里使用网页版支付链接）
-  // 实际生产中应该返回正确的支付宝SDK生成的URL
-  return `https://openapi.alipay.com/gateway.do?${queryString}&method=alipay.trade.wap.pay`;
+  // 返回支付宝网关地址
+  // 注意：缺少sign参数，真实支付会失败，但可以生成二维码
+  return `https://openapi.alipay.com/gateway.do?${queryString}`;
 }
 
