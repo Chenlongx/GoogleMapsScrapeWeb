@@ -202,15 +202,20 @@ exports.handler = async (event, context) => {
           
           console.log(`✅ 订单状态已更新为 COMPLETED`);
           
-          // 🔒 【关键】调用 business-logic.js 处理续费逻辑
-          // 构建模拟的支付宝回调参数
+          // 🔒 【关键修复】调用 business-logic.js 处理续费逻辑
+          // 构建模拟的支付宝回调参数（必须包含 subject 和 product_id）
           const mockParams = new URLSearchParams();
           mockParams.append('out_trade_no', orderId);
           mockParams.append('trade_status', 'TRADE_SUCCESS');
           mockParams.append('total_amount', queryResult.totalAmount || '0');
           mockParams.append('trade_no', queryResult.tradeNo || '');
+          // ✅ 关键：添加 product_id，让 business-logic.js 能正确判断续费时长
+          mockParams.append('product_id', orderData.product_id);
+          // ✅ 关键：添加 subject，作为备用判断方式
+          mockParams.append('subject', `Google Maps Scraper - 续费`);
           
           console.log(`🔧 开始调用 business-logic.js 处理续费...`);
+          console.log(`📦 传入参数: product_id=${orderData.product_id}, out_trade_no=${orderId}`);
           await processBusinessLogic(mockParams);
           console.log(`✅ business-logic.js 处理完成`);
           
