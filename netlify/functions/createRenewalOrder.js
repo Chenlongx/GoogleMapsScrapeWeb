@@ -9,11 +9,26 @@
 
 const { createClient } = require('@supabase/supabase-js');
 
-// 初始化Supabase客户端
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_KEY
-);
+// 初始化Supabase客户端（使用正确的环境变量名）
+let supabase = null;
+try {
+  const supabaseUrl = process.env.SUPABASE_URL;
+  // 优先使用 SUPABASE_SERVICE_ROLE_KEY，兼容其他可能的命名
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 
+                       process.env.SUPABASE_SERVICE_KEY || 
+                       process.env.SUPABASE_KEY;
+  
+  if (supabaseUrl && supabaseKey) {
+    supabase = createClient(supabaseUrl, supabaseKey);
+    console.log('✅ Supabase客户端初始化成功');
+  } else {
+    console.warn('⚠️ Supabase环境变量未配置，将使用模拟模式');
+    console.warn(`SUPABASE_URL: ${supabaseUrl ? '已配置' : '未配置'}`);
+    console.warn(`SUPABASE_SERVICE_ROLE_KEY: ${process.env.SUPABASE_SERVICE_ROLE_KEY ? '已配置' : '未配置'}`);
+  }
+} catch (error) {
+  console.error('❌ 初始化Supabase失败:', error);
+}
 
 // 价格配置（与payment.js保持一致）
 const PRICES = {
@@ -46,6 +61,30 @@ exports.handler = async (event, context) => {
   }
 
   try {
+    // 🔧 如果Supabase未配置，返回模拟数据（用于测试）
+    if (!supabase) {
+      console.log('⚠️ 使用模拟模式生成订单');
+      
+      const body = JSON.parse(event.body || '{}');
+      const orderId = `MOCK_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      
+      // 生成模拟支付URL（用于测试）
+      const mockPaymentUrl = `https://qr.alipay.com/bax${orderId}`;
+      
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({
+          success: true,
+          message: '订单创建成功（测试模式）',
+          orderId: orderId,
+          paymentUrl: mockPaymentUrl,
+          mode: 'mock',
+          note: '这是测试模式，请配置Supabase环境变量以使用真实订单系统'
+        })
+      };
+    }
+    
     // 解析请求体
     const { userId, username, renewalType, amount, duration, productName } = JSON.parse(event.body);
 

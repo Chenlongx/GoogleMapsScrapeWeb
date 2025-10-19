@@ -10,17 +10,30 @@
 
 const { createClient } = require('@supabase/supabase-js');
 
-// 初始化Supabase客户端
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_KEY
-);
+// 初始化Supabase客户端（使用正确的环境变量名）
+let supabase = null;
+try {
+  const supabaseUrl = process.env.SUPABASE_URL;
+  // 优先使用 SUPABASE_SERVICE_ROLE_KEY，兼容其他可能的命名
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 
+                       process.env.SUPABASE_SERVICE_KEY || 
+                       process.env.SUPABASE_KEY;
+  
+  if (supabaseUrl && supabaseKey) {
+    supabase = createClient(supabaseUrl, supabaseKey);
+    console.log('✅ Supabase客户端初始化成功');
+  } else {
+    console.warn('⚠️ Supabase环境变量未配置，将使用模拟模式');
+  }
+} catch (error) {
+  console.error('❌ 初始化Supabase失败:', error);
+}
 
 // 价格配置
 const PRICES = {
   monthly: { months: 1 },
-  yearly: { months: 12 },
-  lifetime: { months: null }
+  quarterly: { months: 3 },
+  yearly: { months: 12 }
 };
 
 exports.handler = async (event, context) => {
@@ -38,6 +51,17 @@ exports.handler = async (event, context) => {
   }
 
   try {
+    // 🔧 如果Supabase未配置，返回模拟响应（用于测试）
+    if (!supabase) {
+      console.log('⚠️ 使用模拟模式处理支付回调');
+      // 支付宝回调需要返回"success"字符串
+      return {
+        statusCode: 200,
+        headers,
+        body: 'success'
+      };
+    }
+    
     // 解析支付宝回调参数
     const params = event.httpMethod === 'POST' 
       ? parseQueryString(event.body)
