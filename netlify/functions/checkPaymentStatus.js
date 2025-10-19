@@ -3,11 +3,24 @@
  * 
  * 功能：
  * 1. 查询订单支付状态
- * 2. 如果已支付，更新用户到期时间
- * 3. 返回支付状态和新的到期时间
+ * 2. 主动调用支付宝API查询订单状态
+ * 3. 如果已支付，更新用户到期时间
+ * 4. 返回支付状态和新的到期时间
  */
 
+const AlipaySdk = require('alipay-sdk').default || require('alipay-sdk');
 const { createClient } = require('@supabase/supabase-js');
+const { processBusinessLogic } = require('./business-logic.js');
+
+// 格式化密钥的辅助函数
+function formatKey(key, type) {
+    if (!key || key.includes('\n')) {
+        return key;
+    }
+    const header = type === 'private' ? '-----BEGIN RSA PRIVATE KEY-----' : '-----BEGIN PUBLIC KEY-----';
+    const footer = type === 'private' ? '-----END RSA PRIVATE KEY-----' : '-----END PUBLIC KEY-----';
+    return key.replace(header, `${header}\n`).replace(footer, `\n${footer}`);
+}
 
 // 初始化Supabase客户端（使用正确的环境变量名）
 let supabase = null;
@@ -152,9 +165,94 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // 如果订单还在pending状态，检查支付宝是否已支付
-    // 这里应该调用支付宝API查询订单状态
-    // 简化处理：假设支付宝回调已经更新了订单状态
+    // 🔒 【关键修复】如果订单还在 PENDING 状态，主动查询支付宝订单状态
+    if (orderData.status === 'PENDING') {
+      console.log(`🔍 订单状态为 PENDING，主动查询支付宝订单状态...`);
+      
+      try {
+        // 初始化支付宝SDK
+        const alipaySdk = new AlipaySdk({
+          appId: process.env.ALIPAY_APP_ID,
+          privateKey: formatKey(process.env.ALIPAY_PRIVATE_KEY, 'private'),
+          alipayPublicKey: formatKey(process.env.ALIPAY_PUBLIC_KEY, 'public'),
+          gateway: "https://openapi.alipay.com/gateway.do",
+          timeout: 30000
+        });
+        
+        // 调用支付宝订单查询接口
+        const queryResult = await alipaySdk.exec('alipay.trade.query', {
+          bizContent: {
+            out_trade_no: orderId
+          }
+        });
+        
+        console.log(`📊 支付宝订单查询结果:`, JSON.stringify(queryResult, null, 2));
+        
+        // 检查支付状态
+        const tradeStatus = queryResult.tradeStatus;
+        
+        if (tradeStatus === 'TRADE_SUCCESS' || tradeStatus === 'TRADE_FINISHED') {
+          console.log(`✅ 支付宝确认订单已支付，开始更新订单状态...`);
+          
+          // 更新订单状态为 COMPLETED
+          await supabase
+            .from('orders')
+            .update({ status: 'COMPLETED' })
+            .eq('out_trade_no', orderId);
+          
+          console.log(`✅ 订单状态已更新为 COMPLETED`);
+          
+          // 🔒 【关键】调用 business-logic.js 处理续费逻辑
+          // 构建模拟的支付宝回调参数
+          const mockParams = new URLSearchParams();
+          mockParams.append('out_trade_no', orderId);
+          mockParams.append('trade_status', 'TRADE_SUCCESS');
+          mockParams.append('total_amount', queryResult.totalAmount || '0');
+          mockParams.append('trade_no', queryResult.tradeNo || '');
+          
+          console.log(`🔧 开始调用 business-logic.js 处理续费...`);
+          await processBusinessLogic(mockParams);
+          console.log(`✅ business-logic.js 处理完成`);
+          
+          // 重新查询用户的新到期时间
+          const { data: userData } = await supabase
+            .from('user_accounts')
+            .select('expiry_at')
+            .eq('account', orderData.customer_email)
+            .single();
+          
+          // 从 product_id 提取续费类型
+          let renewalType = 'monthly';
+          if (orderData.product_id.includes('quarterly')) renewalType = 'quarterly';
+          else if (orderData.product_id.includes('yearly')) renewalType = 'yearly';
+          
+          const newExpiryDate = userData?.expiry_at || null;
+          
+          console.log(`✅ 续费成功！renewalType=${renewalType}, newExpiry=${newExpiryDate}`);
+          
+          return {
+            statusCode: 200,
+            headers,
+            body: JSON.stringify({
+              success: true,
+              paid: true,
+              orderId: orderId,
+              renewalType: renewalType,
+              amount: PRICES[renewalType]?.amount || 0,
+              newExpiryDate: newExpiryDate,
+              message: '支付已完成'
+            })
+          };
+        }
+        
+        // 订单还未支付
+        console.log(`⏳ 支付宝订单状态: ${tradeStatus}，等待支付...`);
+        
+      } catch (alipayError) {
+        console.error(`⚠️ 查询支付宝订单失败: ${alipayError.message}`);
+        // 查询失败不影响返回，继续返回等待支付状态
+      }
+    }
     
     // 返回未支付
     return {

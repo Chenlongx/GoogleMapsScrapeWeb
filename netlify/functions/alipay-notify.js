@@ -11,13 +11,18 @@ function formatKey(key, type) {
 }
 
 exports.handler = async (event) => {
+    console.log('🔔 [alipay-notify] 收到支付宝回调');
+    
     if (event.httpMethod !== 'POST') {
+        console.log('⚠️ [alipay-notify] 非POST请求，拒绝');
         return { statusCode: 405, body: 'Method Not Allowed' };
     }
 
     try {
         const params = new URLSearchParams(event.body);
         const paramsJSON = Object.fromEntries(params.entries());
+        
+        console.log('📦 [alipay-notify] 回调参数:', JSON.stringify(paramsJSON, null, 2));
 
         const alipaySdk = new AlipaySdk({
             appId: process.env.ALIPAY_APP_ID,
@@ -26,16 +31,19 @@ exports.handler = async (event) => {
             gateway: process.env.ALIPAY_GATEWAY,
         });
 
+        console.log('🔐 [alipay-notify] 开始验证签名...');
         const isSignVerified = alipaySdk.checkNotifySign(paramsJSON);
         if (!isSignVerified) {
-            console.error('Alipay sign verification failed.');
+            console.error('❌ [alipay-notify] 签名验证失败！');
             return { statusCode: 200, body: 'failure' };
         }
         
-        console.log('[alipay-notify] Sign verification successful!');
+        console.log('✅ [alipay-notify] 签名验证成功！');
         
         const tradeStatus = params.get('trade_status');
         const outTradeNo = params.get('out_trade_no');
+        
+        console.log(`📊 [alipay-notify] 订单状态: ${tradeStatus}, 订单号: ${outTradeNo}`);
 
         if (tradeStatus === 'TRADE_SUCCESS') {
             const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
