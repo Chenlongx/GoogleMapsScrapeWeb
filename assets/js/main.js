@@ -36,9 +36,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="container">
                     <div class="logo" style="display: flex; align-items:center">
                         <a href="./index.html">
-                            <img src="assets/img/logo.webp" alt="MediaMingle Logo" style="height: 60px; width: auto;">
+                            <img src="assets/img/logo.webp" alt="智贸云梯 Logo" style="height: 60px; width: auto;">
                         </a>
-                        <span class="logo-text">MediaMingle</span>
+                        <span class="logo-text">智贸云梯</span>
                     </div>
                     <nav class="main-nav" id="main-nav">
                         <ul>
@@ -359,7 +359,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const script = document.createElement('script');
             script.src = 'https://google-maps-backend-master.netlify.app/mediamingle-referral-tracker.js';
             script.onload = () => {
-                console.log('MediaMingle推广追踪器加载成功');
+                console.log('智贸云梯推广追踪器加载成功');
             };
             script.onerror = () => {
                 console.warn('MediaMingle推广追踪器加载失败，使用本地版本');
