@@ -1058,7 +1058,7 @@
         function restoreReferralFromStorage() {
             try {
                 // 从localStorage恢复
-                const storedData = localStorage.getItem('mediamingle_referral_data');
+                const storedData = localStorage.getItem('智贸云梯_referral_data');
                 if (storedData) {
                     const parsed = JSON.parse(storedData);
                     // 检查数据是否过期（30天）
@@ -1073,7 +1073,7 @@
                 }
                 
                 // 从Cookie恢复
-                const cookieData = getCookie('mediamingle_referral_data');
+                const cookieData = getCookie('智贸云梯_referral_data');
                 if (cookieData) {
                     const parsed = JSON.parse(decodeURIComponent(cookieData));
                     const storedTime = new Date(parsed.storedAt);
