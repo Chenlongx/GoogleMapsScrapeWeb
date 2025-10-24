@@ -90,9 +90,11 @@
                 <div class="product-selector">
                     <button class="selector-btn active" data-target="maps-scraper-docs" data-lang-zh="谷歌地图抓取器"
                         data-lang-en="Google Maps Scraper"></button>
-                    <button class="selector-btn" data-target="email-validator-docs" data-lang-zh="MailPro邮件营销大师"
+                    <button class="selector-btn" data-target="mediamingle-pro-docs" data-lang-zh="搜索引擎拓客器"
+                        data-lang-en="MediaMingle Pro"></button>
+                    <button class="selector-btn" data-target="email-validator-docs" data-lang-zh="邮件营销大师"
                         data-lang-en="MailPro Email Marketing Master"></button>
-                    <button class="selector-btn" data-target="whatsapp-validator-docs" data-lang-zh="WhatsApp 验证器"
+                    <button class="selector-btn" data-target="whatsapp-validator-docs" data-lang-zh="WhatsApp验证器"
                         data-lang-en="WhatsApp Validator"></button>
                 </div>
             </div>
@@ -804,13 +806,13 @@
                         </section>
                         <section id="wv-import">
                             <h2 data-lang-zh="导入号码" data-lang-en="Importing Numbers"></h2>
-                            <p data-lang-zh="点击“导入号码”按钮，您可以从 .txt, .csv, 或 .xlsx 文件中批量导入手机号码。请确保文件中的号码每行一个，并包含国家代码（例如：1XXXXXXXXXX）。"
+                            <p data-lang-zh="点击"导入号码"按钮，您可以从 .txt, .csv, 或 .xlsx 文件中批量导入手机号码。请确保文件中的号码每行一个，并包含国家代码（例如：1XXXXXXXXXX）。"
                                 data-lang-en="Click the 'Import Numbers' button to batch import phone numbers from .txt, .csv, or .xlsx files. Please ensure each number is on a new line and includes the country code (e.g., 1XXXXXXXXXX).">
                             </p>
                         </section>
                         <section id="wv-generation">
                             <h2 data-lang-zh="高级功能：号码生成" data-lang-en="Advanced: Number Generation"></h2>
-                            <p data-lang-zh="本软件独有的高级功能。点击“号码生成器”，您可以选择目标国家，输入手机号段前缀（如美国洛杉矶的“1213”），并设定生成数量。软件将按规则随机生成该地区的手机号码列表，用于后续验证，是进行大规模市场探索的利器。"
+                            <p data-lang-zh="本软件独有的高级功能。点击"号码生成器"，您可以选择目标国家，输入手机号段前缀（如美国洛杉矶的"1213"），并设定生成数量。软件将按规则随机生成该地区的手机号码列表，用于后续验证，是进行大规模市场探索的利器。"
                                 data-lang-en="A unique advanced feature of this software. Click the 'Number Generator', select a target country, enter a mobile number prefix (e.g., '1213' for Los Angeles, USA), and specify the quantity to generate. The software will randomly create a list of phone numbers for that region according to the rules, which can then be used for validation—a powerful tool for large-scale market exploration.">
                             </p>
                              <div class="docs-image-container">
@@ -819,7 +821,7 @@
                         </section>
                         <section id="wv-filtering">
                             <h2 data-lang-zh="执行筛选" data-lang-en="Performing Filtering"></h2>
-                            <p data-lang-zh="在导入或生成号码后，点击“开始筛选”按钮。软件将通过多线程模拟真实客户端行为，高速验证列表中的号码是否已注册 WhatsApp，并抓取公开的头像、昵称和个性签名等信息。"
+                            <p data-lang-zh="在导入或生成号码后，点击"开始筛选"按钮。软件将通过多线程模拟真实客户端行为，高速验证列表中的号码是否已注册 WhatsApp，并抓取公开的头像、昵称和个性签名等信息。"
                                 data-lang-en="After importing or generating numbers, click the 'Start Filtering' button. The software will use multi-threading to simulate real client behavior, rapidly verifying if the numbers in the list are registered on WhatsApp and fetching public information like avatars, nicknames, and bios.">
                             </p>
                             <div class="docs-image-container">
@@ -828,12 +830,306 @@
                         </section>
                         <section id="wv-exporting">
                             <h2 data-lang-zh="导出结果" data-lang-en="Exporting Results"></h2>
-                            <p data-lang-zh="筛选完成后，您可以点击“导出结果”。软件支持导出为 .xlsx (包含头像图片) 或 .csv 格式。您还可以选择仅导出已激活的用户、或按其他条件筛选后导出，方便您进行精准营销。"
+                            <p data-lang-zh="筛选完成后，您可以点击"导出结果"。软件支持导出为 .xlsx (包含头像图片) 或 .csv 格式。您还可以选择仅导出已激活的用户、或按其他条件筛选后导出，方便您进行精准营销。"
                                 data-lang-en="Once filtering is complete, you can click 'Export Results'. The software supports exporting to .xlsx (including profile pictures) or .csv format. You can also choose to export only active users or filter by other criteria before exporting for precision marketing.">
                             </p>
                             <div class="docs-image-container">
                                 <img src="assets/img/WhatsAppValidator/docs-wa-export.webp" alt="导出结果示意图" class="docs-image">
                             </div>
+                        </section>
+                    </article>
+                </div>
+            </div>
+
+            <div id="mediamingle-pro-docs" class="docs-wrapper" style="display: none;">
+                <div class="docs-layout">
+                    <aside class="docs-sidebar">
+                        <nav>
+                            <ul>
+                                <li><a href="#mm-getting-started" class="active" data-lang-zh="入门指南"
+                                        data-lang-en="Getting Started"></a></li>
+                                <li><a href="#mm-interface" data-lang-zh="界面概览" data-lang-en="Interface Overview"></a></li>
+                                <li><a href="#mm-search-config" data-lang-zh="搜索配置" data-lang-en="Search Configuration"></a></li>
+                                <li><a href="#mm-execution" data-lang-zh="执行搜索" data-lang-en="Execute Search"></a></li>
+                                <li><a href="#mm-crawling" data-lang-zh="网站爬取" data-lang-en="Website Crawling"></a></li>
+                                <li><a href="#mm-advanced" data-lang-zh="高级功能" data-lang-en="Advanced Features"></a></li>
+                                <li><a href="#mm-exporting" data-lang-zh="导出数据" data-lang-en="Exporting Data"></a></li>
+                            </ul>
+                        </nav>
+                    </aside>
+                    <article class="docs-content">
+                        <section id="mm-getting-started">
+                            <h2 data-lang-zh="入门指南" data-lang-en="Getting Started"></h2>
+                            <p data-lang-zh="欢迎使用智贸云梯 MediaMingle 专业版！这是一款强大的综合搜索引擎邮件挖掘工具，帮助您从多个搜索引擎和企业网站中自动提取高质量商业邮箱。首次使用前，请确保您已成功激活软件授权。"
+                                data-lang-en="Welcome to MediaMingle Professional Edition! This is a powerful comprehensive search engine email mining tool that helps you automatically extract high-quality business emails from multiple search engines and corporate websites. Before first use, please ensure you have successfully activated the software license.">
+                            </p>
+                            
+                            <h3 data-lang-zh="核心功能概览" data-lang-en="Core Features Overview"></h3>
+                            <p data-lang-zh="MediaMingle 专业版集成了以下核心功能：<br>
+                            • <strong>多搜索引擎支持</strong> - Google、Bing、DuckDuckGo、Yandex、Yahoo<br>
+                            • <strong>智能网站爬取</strong> - 基于Playwright的高性能爬虫引擎<br>
+                            • <strong>邮箱智能提取</strong> - 自动识别并提取企业邮箱<br>
+                            • <strong>邮箱有效性验证</strong> - 实时验证邮箱可用性<br>
+                            • <strong>代理IP支持</strong> - 内置代理轮换，保护隐私<br>
+                            • <strong>任务管理系统</strong> - 完整的任务创建、执行和历史记录"
+                                data-lang-en="MediaMingle Professional integrates the following core features:<br>
+                            • <strong>Multi-Search Engine Support</strong> - Google, Bing, DuckDuckGo, Yandex, Yahoo<br>
+                            • <strong>Intelligent Website Crawling</strong> - High-performance crawler engine based on Playwright<br>
+                            • <strong>Smart Email Extraction</strong> - Automatically identifies and extracts business emails<br>
+                            • <strong>Email Validation</strong> - Real-time email availability verification<br>
+                            • <strong>Proxy IP Support</strong> - Built-in proxy rotation for privacy protection<br>
+                            • <strong>Task Management System</strong> - Complete task creation, execution and history">
+                            </p>
+                        </section>
+
+                        <section id="mm-interface">
+                            <h2 data-lang-zh="界面概览" data-lang-en="Interface Overview"></h2>
+                            
+                            <h3 data-lang-zh="1. 主界面布局" data-lang-en="1. Main Interface Layout"></h3>
+                            <p data-lang-zh="软件主界面采用选项卡式设计，分为以下几个主要部分：<br>
+                            • <strong>任务创建</strong> - 配置搜索参数和选项<br>
+                            • <strong>任务历史</strong> - 查看和管理历史任务<br>
+                            • <strong>邮件结果</strong> - 查看提取的邮箱数据<br>
+                            • <strong>设置</strong> - 配置代理、搜索引擎等高级选项"
+                                data-lang-en="The software main interface uses a tabbed design, divided into the following main sections:<br>
+                            • <strong>Task Creation</strong> - Configure search parameters and options<br>
+                            • <strong>Task History</strong> - View and manage historical tasks<br>
+                            • <strong>Email Results</strong> - View extracted email data<br>
+                            • <strong>Settings</strong> - Configure proxy, search engines and other advanced options">
+                            </p>
+
+                            <div class="docs-image-container">
+                                <img src="assets/img/MediaMingle/mediamingle-pro-hero.webp" alt="MediaMingle 专业版界面" class="docs-image">
+                            </div>
+                            <h3 data-lang-zh="2. 状态栏" data-lang-en="2. Status Bar"></h3>
+                            <p data-lang-zh="底部状态栏实时显示：<br>
+                            • 当前任务状态<br>
+                            • 已找到的邮箱数量<br>
+                            • 已处理的网站数量<br>
+                            • 任务运行时间"
+                                data-lang-en="Bottom status bar displays in real-time:<br>
+                            • Current task status<br>
+                            • Number of emails found<br>
+                            • Number of websites processed<br>
+                            • Task running time">
+                            </p>
+                            <div class="docs-image-container">
+                                <img src="assets/img/MediaMingle/mediamingle-pro-status-bar.webp" alt="MediaMingle 专业版状态栏" class="docs-image">
+                            </div>
+                        </section>
+
+                        <section id="mm-search-config">
+                            <h2 data-lang-zh="搜索配置" data-lang-en="Search Configuration"></h2>
+                            
+                            <h3 data-lang-zh="1. 基础搜索设置" data-lang-en="1. Basic Search Settings"></h3>
+                            <p data-lang-zh="在任务创建页面配置以下参数：<br>
+                            • <strong>搜索关键词</strong> - 输入目标行业或公司类型关键词<br>
+                            • <strong>搜索类型</strong> - 选择按关键词或按域名搜索<br>
+                            • <strong>最大结果数</strong> - 设置要处理的搜索结果数量<br>
+                            • <strong>国家/地区</strong> - 选择目标国家或地区（影响搜索引擎TLD）"
+                                data-lang-en="Configure the following parameters in the task creation page:<br>
+                            • <strong>Search Keywords</strong> - Enter target industry or company type keywords<br>
+                            • <strong>Search Type</strong> - Choose search by keyword or by domain<br>
+                            • <strong>Max Results</strong> - Set the number of search results to process<br>
+                            • <strong>Country/Region</strong> - Select target country or region (affects search engine TLD)">
+                            </p>
+                            <div class="docs-image-container">
+                                <img src="assets/img/MediaMingle/mediamingle-pro-search-config.webp" alt="MediaMingle 专业版搜索配置" class="docs-image">
+                            </div>
+                            
+                            <h3 data-lang-zh="2. 搜索引擎选择" data-lang-en="2. Search Engine Selection"></h3>
+                            <p data-lang-zh="支持同时使用多个搜索引擎：<br>
+                            • <strong>Google</strong> - 覆盖最广泛的搜索引擎<br>
+                            • <strong>Bing</strong> - 微软搜索引擎<br>
+                            • <strong>DuckDuckGo</strong> - 注重隐私的搜索引擎<br>
+                            • <strong>Yandex</strong> - 适合东欧和俄语地区<br>
+                            • <strong>Yahoo</strong> - 传统搜索引擎"
+                                data-lang-en="Supports using multiple search engines simultaneously:<br>
+                            • <strong>Google</strong> - Most widely covered search engine<br>
+                            • <strong>Bing</strong> - Microsoft search engine<br>
+                            • <strong>DuckDuckGo</strong> - Privacy-focused search engine<br>
+                            • <strong>Yandex</strong> - Suitable for Eastern Europe and Russian-speaking regions<br>
+                            • <strong>Yahoo</strong> - Traditional search engine">
+                            </p>
+                        </section>
+
+                        <section id="mm-execution">
+                            <h2 data-lang-zh="执行搜索" data-lang-en="Execute Search"></h2>
+                            
+                            <h3 data-lang-zh="1. 启动任务" data-lang-en="1. Start Task"></h3>
+                            <p data-lang-zh="配置完成后，点击"开始搜索"按钮启动任务。系统将：<br>
+                            1. 在选定的搜索引擎中搜索关键词<br>
+                            2. 提取搜索结果中的网站链接<br>
+                            3. 自动访问这些网站并提取邮箱<br>
+                            4. 实时验证邮箱有效性<br>
+                            5. 将结果显示在邮件结果表格中"
+                                data-lang-en="After configuration, click the 'Start Search' button to launch the task. The system will:<br>
+                            1. Search for keywords in selected search engines<br>
+                            2. Extract website links from search results<br>
+                            3. Automatically visit these websites and extract emails<br>
+                            4. Validate email availability in real-time<br>
+                            5. Display results in the email results table">
+                            </p>
+                            
+                            <h3 data-lang-zh="2. 任务控制" data-lang-en="2. Task Control"></h3>
+                            <p data-lang-zh="任务执行过程中可以：<br>
+                            • <strong>暂停任务</strong> - 临时暂停当前任务<br>
+                            • <strong>恢复任务</strong> - 从暂停点继续执行<br>
+                            • <strong>停止任务</strong> - 完全停止当前任务<br>
+                            • <strong>查看进度</strong> - 实时查看任务执行进度"
+                                data-lang-en="During task execution you can:<br>
+                            • <strong>Pause Task</strong> - Temporarily pause current task<br>
+                            • <strong>Resume Task</strong> - Continue from pause point<br>
+                            • <strong>Stop Task</strong> - Completely stop current task<br>
+                            • <strong>View Progress</strong> - View task execution progress in real-time">
+                            </p>
+                            <div class="docs-image-container">
+                                <img src="assets/img/MediaMingle/mediamingle-pro-task-control.webp" alt="MediaMingle 专业版任务控制" class="docs-image">
+                            </div>
+                        </section>
+
+                        <section id="mm-crawling">
+                            <h2 data-lang-zh="网站爬取" data-lang-en="Website Crawling"></h2>
+                            
+                            <h3 data-lang-zh="1. 爬取深度设置" data-lang-en="1. Crawling Depth Settings"></h3>
+                            <p data-lang-zh="可以设置网站爬取的深度级别：<br>
+                            • <strong>1级</strong> - 仅爬取首页<br>
+                            • <strong>2级</strong> - 爬取首页和一级子页面（推荐）<br>
+                            • <strong>3级</strong> - 深度爬取多级子页面<br>
+                            注意：爬取深度越深，耗时越长，但获得的邮箱数量可能更多。"
+                                data-lang-en="You can set the depth level of website crawling:<br>
+                            • <strong>Level 1</strong> - Only crawl homepage<br>
+                            • <strong>Level 2</strong> - Crawl homepage and first-level sub-pages (recommended)<br>
+                            • <strong>Level 3</strong> - Deep crawl multi-level sub-pages<br>
+                            Note: Deeper crawling takes longer but may yield more emails.">
+                            </p>
+                            
+                            <h3 data-lang-zh="2. 智能过滤" data-lang-en="2. Smart Filtering"></h3>
+                            <p data-lang-zh="系统自动过滤以下内容：<br>
+                            • 临时邮箱和一次性邮箱<br>
+                            • 明显无效的邮箱格式<br>
+                            • 重复的邮箱地址<br>
+                            • 低质量邮箱（如noreply@、info@等通用邮箱）"
+                                data-lang-en="The system automatically filters:<br>
+                            • Temporary and disposable emails<br>
+                            • Obviously invalid email formats<br>
+                            • Duplicate email addresses<br>
+                            • Low-quality emails (such as noreply@, info@, etc.)">
+                            </p>
+                        </section>
+
+                        <section id="mm-advanced">
+                            <h2 data-lang-zh="高级功能" data-lang-en="Advanced Features"></h2>
+                            
+                            <h3 data-lang-zh="1. 代理服务器配置" data-lang-en="1. Proxy Server Configuration"></h3>
+                            <p data-lang-zh="在设置页面可以配置代理服务器：<br>
+                            • 支持HTTP、HTTPS、SOCKS5代理<br>
+                            • 支持添加多个代理服务器<br>
+                            • 自动测试代理可用性<br>
+                            • 智能代理轮换，避免IP限制"
+                                data-lang-en="Configure proxy servers in the settings page:<br>
+                            • Supports HTTP, HTTPS, SOCKS5 proxies<br>
+                            • Supports adding multiple proxy servers<br>
+                            • Automatically tests proxy availability<br>
+                            • Intelligent proxy rotation to avoid IP restrictions">
+                            </p>
+                            
+                            <h3 data-lang-zh="2. Playwright浏览器引擎" data-lang-en="2. Playwright Browser Engine"></h3>
+                            <p data-lang-zh="可以选择使用Playwright进行更强大的网页爬取：<br>
+                            • 支持JavaScript渲染的动态网页<br>
+                            • 模拟真实浏览器行为<br>
+                            • 自动处理页面重定向<br>
+                            • 支持验证码识别（需手动处理）"
+                                data-lang-en="Option to use Playwright for more powerful web scraping:<br>
+                            • Supports JavaScript-rendered dynamic web pages<br>
+                            • Simulates real browser behavior<br>
+                            • Automatically handles page redirects<br>
+                            • Supports captcha recognition (requires manual handling)">
+                            </p>
+                            
+                            <h3 data-lang-zh="3. 速度模式" data-lang-en="3. Speed Mode"></h3>
+                            <p data-lang-zh="启用速度模式可以：<br>
+                            • 增加并发线程数<br>
+                            • 减少页面加载等待时间<br>
+                            • 跳过某些次要元素的加载<br>
+                            • 大幅提升整体采集速度"
+                                data-lang-en="Enable speed mode to:<br>
+                            • Increase concurrent thread count<br>
+                            • Reduce page load wait time<br>
+                            • Skip loading of certain minor elements<br>
+                            • Significantly improve overall collection speed">
+                            </p>
+                        </section>
+
+                        <section id="mm-exporting">
+                            <h2 data-lang-zh="导出数据" data-lang-en="Exporting Data"></h2>
+                            
+                            <h3 data-lang-zh="1. 支持的导出格式" data-lang-en="1. Supported Export Formats"></h3>
+                            <p data-lang-zh="软件支持多种数据导出格式：<br>
+                            • <strong>Excel (.xlsx)</strong> - 推荐格式，支持丰富的数据展示<br>
+                            • <strong>CSV (.csv)</strong> - 通用格式，兼容各种工具<br>
+                            • <strong>JSON (.json)</strong> - 结构化数据格式<br>
+                            • <strong>TXT (.txt)</strong> - 纯文本格式，每行一个邮箱"
+                                data-lang-en="The software supports multiple data export formats:<br>
+                            • <strong>Excel (.xlsx)</strong> - Recommended format, supports rich data display<br>
+                            • <strong>CSV (.csv)</strong> - Universal format, compatible with various tools<br>
+                            • <strong>JSON (.json)</strong> - Structured data format<br>
+                            • <strong>TXT (.txt)</strong> - Plain text format, one email per line">
+                            </p>
+                            
+                            <h3 data-lang-zh="2. 导出数据内容" data-lang-en="2. Export Data Content"></h3>
+                            <p data-lang-zh="导出的数据包含以下信息：<br>
+                            • <strong>邮箱地址</strong> - 提取的邮箱<br>
+                            • <strong>来源网站</strong> - 邮箱所在的网站URL<br>
+                            • <strong>页面标题</strong> - 网页标题，便于识别<br>
+                            • <strong>验证状态</strong> - 邮箱是否通过验证<br>
+                            • <strong>搜索引擎</strong> - 通过哪个搜索引擎找到的<br>
+                            • <strong>国家/地区</strong> - 目标国家或地区<br>
+                            • <strong>提取时间</strong> - 数据提取的时间戳"
+                                data-lang-en="Exported data contains the following information:<br>
+                            • <strong>Email Address</strong> - Extracted email<br>
+                            • <strong>Source Website</strong> - Website URL where email was found<br>
+                            • <strong>Page Title</strong> - Web page title for easy identification<br>
+                            • <strong>Validation Status</strong> - Whether email passed validation<br>
+                            • <strong>Search Engine</strong> - Which search engine found it<br>
+                            • <strong>Country/Region</strong> - Target country or region<br>
+                            • <strong>Extraction Time</strong> - Data extraction timestamp">
+                            </p>
+                            
+                            <h3 data-lang-zh="3. 导出操作流程" data-lang-en="3. Export Operation Process"></h3>
+                            <p data-lang-zh="导出数据的步骤：<br>
+                            1. 在邮件结果页面查看提取的邮箱<br>
+                            2. 点击"导出结果"按钮<br>
+                            3. 选择导出格式<br>
+                            4. 选择保存位置和文件名<br>
+                            5. 点击确认，等待导出完成<br>
+                            6. 导出完成后会自动打开文件所在文件夹"
+                                data-lang-en="Steps to export data:<br>
+                            1. View extracted emails in the email results page<br>
+                            2. Click the 'Export Results' button<br>
+                            3. Select export format<br>
+                            4. Choose save location and filename<br>
+                            5. Click confirm and wait for export to complete<br>
+                            6. Folder will automatically open after export completion">
+                            </p>
+                            
+                            <div class="docs-image-container">
+                                <img src="assets/img/MediaMingle/mediamingle-pro-export-results.webp" alt="MediaMingle 专业版导出结果" class="docs-image">
+                            </div>
+
+
+                            <h3 data-lang-zh="4. 数据质量保证" data-lang-en="4. Data Quality Assurance"></h3>
+                            <p data-lang-zh="系统确保导出数据的质量：<br>
+                            • 自动去重，避免重复数据<br>
+                            • 格式标准化，便于后续处理<br>
+                            • 包含验证状态，方便筛选有效邮箱<br>
+                            • 完整的来源信息，便于追踪和核实"
+                                data-lang-en="The system ensures exported data quality:<br>
+                            • Automatic deduplication to avoid duplicate data<br>
+                            • Format standardization for easy subsequent processing<br>
+                            • Includes validation status for easy filtering of valid emails<br>
+                            • Complete source information for easy tracking and verification">
+                            </p>
                         </section>
                     </article>
                 </div>
