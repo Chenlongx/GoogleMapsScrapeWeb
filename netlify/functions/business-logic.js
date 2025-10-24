@@ -127,7 +127,8 @@ async function processBusinessLogic(orderParams) {
                     .from('user_accounts')
                     .update({ 
                         expiry_at: newExpiryDate.toISOString(),
-                        status: 'active' // 确保账户状态为激活
+                        status: 'active', // 确保账户状态为激活
+                        user_type: 'regular' // 【修复】续费后确保是正式用户
                     })
                     .eq('account', customerEmail);
                 
