@@ -659,7 +659,7 @@ h2.faq-question:has(button[aria-expanded="true"]) + .faq-answer {
     border-radius: 12px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     width: 90%;
-    max-width: 500px;
+    max-width: 750px;
     position: relative;
     text-align: center;
     transform: scale(0.95);
