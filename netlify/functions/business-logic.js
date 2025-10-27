@@ -351,7 +351,7 @@ async function processReferralCommission(outTradeNo, customerEmail, productId) {
             // 获取产品价格
             const productPriceMap = {
                 'gmaps_standard': 34.30,
-                'gmaps_premium': 63.00,
+                'gmaps_premium': 49.90,
                 'validator_standard': 203.00,
                 'validator_premium': 553.00,
                 'whatsapp-validator_standard': 203.00,

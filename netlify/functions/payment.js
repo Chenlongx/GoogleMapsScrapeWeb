@@ -23,7 +23,7 @@ function formatKey(key, type) {
 // 后端权威价格表 (人民币, CNY)
 const productPriceMap = {
     'gmaps_standard': 34.30,
-    'gmaps_premium': 63.00,
+    'gmaps_premium': 49.90,
     'validator_standard': 203.00,
     'validator_premium': 553.00,
     'whatsapp-validator_standard': 203.00,
