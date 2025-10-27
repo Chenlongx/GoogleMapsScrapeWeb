@@ -28,9 +28,9 @@ const productPriceMap = {
     'validator_premium': 553.00,
     'whatsapp-validator_standard': 203.00,
     'whatsapp-validator_premium': 343.00,
-    'gmaps_renewal_monthly': 29.90,
-    'gmaps_renewal_quarterly': 89.70,
-    'gmaps_renewal_yearly': 358.80
+    'gmaps_renewal_monthly': 49.90,
+    'gmaps_renewal_quarterly': 149.70,
+    'gmaps_renewal_yearly': 598.80
 };
 
 exports.handler = async (event) => {

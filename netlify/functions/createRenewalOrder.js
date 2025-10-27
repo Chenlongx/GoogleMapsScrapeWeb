@@ -44,9 +44,9 @@ try {
 
 // 价格配置（与payment.js保持一致）
 const PRICES = {
-  monthly: { amount: 29.90, duration: '1个月', months: 1 },
-  quarterly: { amount: 89.70, duration: '3个月', months: 3 },
-  yearly: { amount: 358.80, duration: '1年', months: 12 }
+  monthly: { amount: 49.90, duration: '1个月', months: 1 },
+  quarterly: { amount: 149.70, duration: '3个月', months: 3 },
+  yearly: { amount: 598.80, duration: '1年', months: 12 }
 };
 
 exports.handler = async (event, context) => {
