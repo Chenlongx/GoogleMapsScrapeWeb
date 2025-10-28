@@ -176,14 +176,24 @@ function validateRequest(event) {
     }
     
     // 检查被阻止的User-Agent
+    // 但是允许浏览器发起的请求（检查是否包含浏览器特征）
     const lowerUserAgent = userAgent.toLowerCase();
-    for (const blockedUA of SECURITY_CONFIG.REQUEST_VALIDATION.BLOCKED_USER_AGENTS) {
-        if (lowerUserAgent.includes(blockedUA)) {
-            return {
-                valid: false,
-                reason: 'blocked_user_agent',
-                details: blockedUA
-            };
+    const isBrowser = lowerUserAgent.includes('mozilla') || 
+                      lowerUserAgent.includes('chrome') || 
+                      lowerUserAgent.includes('safari') || 
+                      lowerUserAgent.includes('firefox') ||
+                      lowerUserAgent.includes('edge');
+    
+    // 只有在不是浏览器请求的情况下才检查被阻止的User-Agent
+    if (!isBrowser) {
+        for (const blockedUA of SECURITY_CONFIG.REQUEST_VALIDATION.BLOCKED_USER_AGENTS) {
+            if (lowerUserAgent.includes(blockedUA)) {
+                return {
+                    valid: false,
+                    reason: 'blocked_user_agent',
+                    details: blockedUA
+                };
+            }
         }
     }
     

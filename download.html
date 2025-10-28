@@ -262,9 +262,57 @@
             // 动态检测环境并设置 API 基础 URL
             const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
             const API_BASE_URL = isLocal ? '/.netlify/functions/github/' : '/api/github/';
+            
+            // 缓存配置 - 缓存 1 小时
+            const CACHE_DURATION = 60 * 60 * 1000; // 1小时（毫秒）
+            
+            /**
+             * 从缓存中获取数据
+             * @param {string} key - 缓存键
+             * @returns {object|null} - 缓存的数据或 null
+             */
+            function getCache(key) {
+                try {
+                    const cached = localStorage.getItem(key);
+                    if (!cached) return null;
+                    
+                    const { data, timestamp } = JSON.parse(cached);
+                    const now = Date.now();
+                    
+                    // 检查缓存是否过期
+                    if (now - timestamp > CACHE_DURATION) {
+                        localStorage.removeItem(key);
+                        return null;
+                    }
+                    
+                    console.log(`✅ 使用缓存数据: ${key}, 缓存于 ${new Date(timestamp).toLocaleString()}`);
+                    return data;
+                } catch (e) {
+                    console.error('读取缓存失败:', e);
+                    return null;
+                }
+            }
+            
+            /**
+             * 保存数据到缓存
+             * @param {string} key - 缓存键
+             * @param {object} data - 要缓存的数据
+             */
+            function setCache(key, data) {
+                try {
+                    const cacheData = {
+                        data: data,
+                        timestamp: Date.now()
+                    };
+                    localStorage.setItem(key, JSON.stringify(cacheData));
+                    console.log(`💾 已缓存数据: ${key}`);
+                } catch (e) {
+                    console.error('保存缓存失败:', e);
+                }
+            }
 
             /**
-             * 从 GitHub 获取产品发布信息，并带有失败重试逻辑
+             * 从 GitHub 获取产品发布信息，并带有失败重试逻辑和缓存
              * @param {object} config - 产品配置对象
              */
             function fetchProductRelease(config) {
@@ -289,6 +337,48 @@
 
                 const windowsVersionInfo = windowsCard.querySelector('.version-info');
                 const windowsDownloadBtn = windowsCard.querySelector('.btn');
+                
+                // 生成缓存键
+                const cacheKey = `github_release_${config.repoName}`;
+                
+                /**
+                 * 更新UI的函数，可复用于缓存数据和新获取的数据
+                 */
+                function updateUIWithReleaseData(data, versionInfo, downloadBtn, proxy) {
+                    if (!data.tag_name) throw new Error('No release found');
+
+                    const version = data.tag_name;
+                    const publishedDate = new Date(data.published_at).toLocaleDateString();
+                    const versionTextZh = `版本 ${version.replace('v', '')} | ${publishedDate}`;
+                    const versionTextEn = `Version ${version.replace('v', '')} | ${publishedDate}`;
+                    
+                    const asset = data.assets.find(asset => 
+                        asset.name.toLowerCase().includes('win') || 
+                        asset.name.endsWith('.exe') || 
+                        asset.name.endsWith('.zip')
+                    );
+
+                    if (asset) {
+                        versionInfo.setAttribute('data-lang-zh', versionTextZh);
+                        versionInfo.setAttribute('data-lang-en', versionTextEn);
+                        
+                        const currentLang = document.documentElement.lang || 'zh';
+                        versionInfo.textContent = (currentLang.startsWith('zh')) ? versionTextZh : versionTextEn;
+
+                        let finalDownloadUrl = proxy + asset.browser_download_url;
+                        downloadBtn.href = finalDownloadUrl;
+                    } else {
+                        throw new Error('No suitable download asset found for Windows.');
+                    }
+                }
+                
+                // 首先尝试从缓存获取数据
+                const cachedData = getCache(cacheKey);
+                if (cachedData) {
+                    // 如果有缓存数据，直接使用
+                    updateUIWithReleaseData(cachedData, windowsVersionInfo, windowsDownloadBtn, downloadProxy);
+                    return;
+                }
 
                 /**
                  * 尝试获取数据的内部函数
@@ -314,32 +404,12 @@
                             return response.json();
                         })
                         .then(data => {
-                            // --- 成功获取数据后的处理逻辑 (与原版相同) ---
-                            if (!data.tag_name) throw new Error('No release found');
-
-                            const version = data.tag_name;
-                            const publishedDate = new Date(data.published_at).toLocaleDateString();
-                            const versionTextZh = `版本 ${version.replace('v', '')} | ${publishedDate}`;
-                            const versionTextEn = `Version ${version.replace('v', '')} | ${publishedDate}`;
+                            // --- 成功获取数据后的处理逻辑 ---
+                            // 保存到缓存
+                            setCache(cacheKey, data);
                             
-                            const asset = data.assets.find(asset => 
-                                asset.name.toLowerCase().includes('win') || 
-                                asset.name.endsWith('.exe') || 
-                                asset.name.endsWith('.zip')
-                            );
-
-                            if (asset) {
-                                windowsVersionInfo.setAttribute('data-lang-zh', versionTextZh);
-                                windowsVersionInfo.setAttribute('data-lang-en', versionTextEn);
-                                
-                                const currentLang = document.documentElement.lang || 'zh';
-                                windowsVersionInfo.textContent = (currentLang.startsWith('zh')) ? versionTextZh : versionTextEn;
-
-                                let finalDownloadUrl = downloadProxy + asset.browser_download_url;
-                                windowsDownloadBtn.href = finalDownloadUrl;
-                            } else {
-                                throw new Error('No suitable download asset found for Windows.');
-                            }
+                            // 更新UI
+                            updateUIWithReleaseData(data, windowsVersionInfo, windowsDownloadBtn, downloadProxy);
                         })
                         .catch(error => {
                             // --- 失败后的处理逻辑 (核心改动) ---
@@ -357,11 +427,14 @@
                                 let retryingTextZh, retryingTextEn;
                                 
                                 if (error.status === 429) {
-                                    retryingTextZh = `API 请求频率超限, ${retryDelay / 1000}秒后重试...`;
-                                    retryingTextEn = `API rate limit exceeded, retrying in ${retryDelay / 1000}s...`;
+                                    retryingTextZh = `API 请求频率超限, ${Math.ceil(retryDelay / 1000)}秒后重试...`;
+                                    retryingTextEn = `API rate limit exceeded, retrying in ${Math.ceil(retryDelay / 1000)}s...`;
+                                } else if (error.status === 404) {
+                                    retryingTextZh = `仓库未找到, ${Math.ceil(retryDelay / 1000)}秒后重试...`;
+                                    retryingTextEn = `Repository not found, retrying in ${Math.ceil(retryDelay / 1000)}s...`;
                                 } else {
-                                    retryingTextZh = `获取失败, ${retryDelay / 1000}秒后重试...`;
-                                    retryingTextEn = `Failed, retrying in ${retryDelay / 1000}s...`;
+                                    retryingTextZh = `获取失败, ${Math.ceil(retryDelay / 1000)}秒后重试...`;
+                                    retryingTextEn = `Failed, retrying in ${Math.ceil(retryDelay / 1000)}s...`;
                                 }
                                 
                                 // 在界面上提示用户正在重试
@@ -376,18 +449,37 @@
                             } else {
                                 // 如果所有重试次数都已用尽，则显示最终的错误信息
                                 console.error(`获取 ${config.repoName} 在所有重试后均失败.`);
-                                const errorTextZh = '获取失败, 请刷新或前往GitHub查看';
-                                const errorTextEn = 'Failed to fetch, please refresh or check GitHub';
+                                
+                                let errorTextZh, errorTextEn, alertMessage;
+                                
+                                if (error.status === 429) {
+                                    errorTextZh = 'API 限额已用完，请稍后重试';
+                                    errorTextEn = 'API rate limit exceeded, please try again later';
+                                    alertMessage = 'GitHub API 请求限额已用完。\n\n建议：\n1. 请1小时后再试\n2. 或联系管理员配置 GitHub Token\n3. 或联系客服获取最新版本';
+                                } else if (error.status === 404) {
+                                    errorTextZh = '仓库不存在或无访问权限';
+                                    errorTextEn = 'Repository not found or inaccessible';
+                                    alertMessage = '无法找到此软件的发布版本。\n\n请联系客服获取最新版本。';
+                                } else {
+                                    errorTextZh = '获取失败, 请刷新或联系客服';
+                                    errorTextEn = 'Failed to fetch, please refresh or contact support';
+                                    alertMessage = '版本信息获取失败，无法下载。\n\n建议：\n1. 刷新页面重试\n2. 清除浏览器缓存\n3. 联系客服获取最新版本';
+                                }
                                 
                                 windowsVersionInfo.setAttribute('data-lang-zh', errorTextZh);
                                 windowsVersionInfo.setAttribute('data-lang-en', errorTextEn);
                                 const currentLang = document.documentElement.lang || 'zh';
                                 windowsVersionInfo.textContent = (currentLang.startsWith('zh')) ? errorTextZh : errorTextEn;
 
-                                // 【新增】修改下载按钮的行为，使其点击时弹出提示
-                                const alertMessage = '版本信息获取失败，无法下载。请联系客服获取最新版本。';
-                                windowsDownloadBtn.href = `javascript:alert('${alertMessage}');`;
-                                // 【新增】移除download属性，防止浏览器仍然尝试下载一个无效链接
+                                // 修改下载按钮的行为，使其点击时弹出提示
+                                windowsDownloadBtn.onclick = (e) => {
+                                    e.preventDefault();
+                                    alert(alertMessage);
+                                    return false;
+                                };
+                                // 移除 href 以避免任何下载尝试
+                                windowsDownloadBtn.href = 'javascript:void(0);';
+                                // 移除download属性
                                 windowsDownloadBtn.removeAttribute('download');
                             }
                         });
