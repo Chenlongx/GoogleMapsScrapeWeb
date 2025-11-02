@@ -113,6 +113,46 @@
         margin-left: auto; /* 配合 max-width 实现居中 */
         margin-right: auto; /* 配合 max-width 实现居中 */
     }
+    
+    /* 下载安全提示样式 */
+    .download-safety-notice {
+        background-color: var(--surface-color);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin: 2rem auto;
+        max-width: 800px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    
+    .download-safety-notice h3 {
+        font-size: 1.2rem;
+        color: var(--text-primary-color);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .download-safety-notice h3 i {
+        color: #f59e0b;
+        font-size: 1.5rem;
+    }
+    
+    .download-safety-notice ul {
+        margin: 1rem 0;
+        padding-left: 1.5rem;
+        color: var(--text-secondary-color);
+        line-height: 1.8;
+    }
+    
+    .download-safety-notice li {
+        margin: 0.5rem 0;
+    }
+    
+    .download-safety-notice strong {
+        color: var(--text-primary-color);
+    }
 </style>
 
 <body>
@@ -138,7 +178,7 @@
                             <i class='bx bxl-windows download-icon'></i>
                             <h2 data-lang-zh="Windows 版本" data-lang-en="Windows Version"></h2>
                             <p class="version-info" data-lang-zh="正在获取最新版本..." data-lang-en="Fetching latest version..."></p>
-                            <a href="#" class="btn btn-primary" download>
+                            <a href="#" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
                                 <i class='bx bxs-download'></i>
                                 <span data-lang-zh="下载 .exe" data-lang-en="Download .exe"></span>
                             </a>
@@ -167,7 +207,7 @@
                             <i class='bx bxl-windows download-icon'></i>
                             <h2 data-lang-zh="Windows 版本" data-lang-en="Windows Version"></h2>
                             <p class="version-info" data-lang-zh="正在获取最新版本..." data-lang-en="Fetching latest version..."></p>
-                            <a href="#" class="btn btn-primary" download>
+                            <a href="#" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
                                 <i class='bx bxs-download'></i>
                                 <span data-lang-zh="下载 .exe" data-lang-en="Download .exe"></span>
                             </a>
@@ -194,7 +234,7 @@
                             <i class='bx bxl-windows download-icon'></i>
                             <h2 data-lang-zh="Windows 版本" data-lang-en="Windows Version"></h2>
                             <p class="version-info" data-lang-zh="正在获取最新版本..." data-lang-en="Fetching latest version..."></p>
-                            <a href="#" class="btn btn-primary" download>
+                            <a href="#" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
                                 <i class='bx bxs-download'></i>
                                 <span data-lang-zh="下载 .exe" data-lang-en="Download .exe"></span>
                             </a>
@@ -222,7 +262,7 @@
                             <i class='bx bxl-windows download-icon'></i>
                             <h2 data-lang-zh="Windows 版本" data-lang-en="Windows Version"></h2>
                             <p class="version-info" data-lang-zh="正在获取最新版本..." data-lang-en="Fetching latest version..."></p>
-                            <a href="#" class="btn btn-primary" download>
+                            <a href="#" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
                                 <i class='bx bxs-download'></i>
                                 <span data-lang-zh="下载 .exe" data-lang-en="Download .exe"></span>
                             </a>
@@ -241,6 +281,19 @@
                     </div>
                 </div>
 
+
+                <!-- 下载安全提示 -->
+                <div class="download-safety-notice">
+                    <h3>
+                        <i class='bx bx-info-circle'></i>
+                        <span data-lang-zh="如果浏览器阻止下载，请按以下步骤操作" data-lang-en="If your browser blocks the download, please follow these steps"></span>
+                    </h3>
+                    <ul>
+                        <li data-lang-zh="<strong>Microsoft Edge/Chrome：</strong> 点击下载按钮后，如果看到阻止提示，请点击浏览器地址栏右侧的『下载已阻止』或『查看下载』，然后选择『保留』或『允许下载』。" data-lang-en="<strong>Microsoft Edge/Chrome:</strong> After clicking the download button, if you see a blocking message, click 'Downloads blocked' or 'View downloads' in the browser address bar, then select 'Keep' or 'Allow download'."></li>
+                        <li data-lang-zh="<strong>Windows 安全中心：</strong> 如果 Windows Defender SmartScreen 提示『不常见的下载』，请点击『更多信息』，然后选择『仍要运行』。这是正常的，因为我们无法为所有下载提供数字签名。" data-lang-en="<strong>Windows Security:</strong> If Windows Defender SmartScreen shows 'Uncommon download', click 'More info' then select 'Run anyway'. This is normal as we cannot provide digital signatures for all downloads."></li>
+                        <li data-lang-zh="<strong>仍然无法下载？</strong> 尝试以下方法：<br>1. 按住 <strong>Ctrl</strong> 键点击下载按钮 → 使用 GitHub 直接链接<br>2. 按住 <strong>Shift</strong> 键点击下载按钮 → 使用外部代理链接<br>3. 右键点击下载按钮 → 选择『在新标签页中打开链接』<br>4. 联系客服获取下载链接" data-lang-en="<strong>Still can't download?</strong> Try these methods:<br>1. Hold <strong>Ctrl</strong> and click → Use direct GitHub link<br>2. Hold <strong>Shift</strong> and click → Use external proxy link<br>3. Right-click the button → Select 'Open link in new tab'<br>4. Contact customer service for download link"></li>
+                    </ul>
+                </div>
 
                 <div class="release-notes">
                     <h3 data-lang-zh="发行说明" data-lang-en="Release Notes"></h3>
@@ -365,8 +418,76 @@
                         const currentLang = document.documentElement.lang || 'zh';
                         versionInfo.textContent = (currentLang.startsWith('zh')) ? versionTextZh : versionTextEn;
 
-                        let finalDownloadUrl = proxy + asset.browser_download_url;
+                        // 保存各种下载 URL 选项
+                        let directGitHubUrl = asset.browser_download_url; // GitHub 直接链接
+                        let proxyUrl = proxy + asset.browser_download_url; // 外部代理链接
+                        
+                        // 检查文件大小（如果 GitHub API 提供了 size 信息）
+                        // Netlify Functions 只能处理 <5MB 的文件，大文件需要直接下载
+                        const fileSize = asset.size || 0;
+                        const MAX_PROXY_SIZE = 5 * 1024 * 1024; // 5MB
+                        
+                        let finalDownloadUrl;
+                        
+                        // 如果文件太大（>5MB），直接使用 GitHub 链接，否则使用代理
+                        if (fileSize > MAX_PROXY_SIZE || fileSize === 0) {
+                            // 大文件或未知大小：直接使用 GitHub 链接
+                            finalDownloadUrl = directGitHubUrl;
+                            console.log(`文件较大（${(fileSize / 1024 / 1024).toFixed(2)}MB），使用直接链接`);
+                        } else {
+                            // 小文件：使用我们的下载代理
+                            const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                            finalDownloadUrl = isLocal 
+                                ? `/.netlify/functions/download-proxy?url=${encodeURIComponent(directGitHubUrl)}`
+                                : `/api/download?url=${encodeURIComponent(directGitHubUrl)}`;
+                            console.log(`文件较小（${(fileSize / 1024 / 1024).toFixed(2)}MB），使用下载代理`);
+                        }
+                        
+                        // 设置下载链接
                         downloadBtn.href = finalDownloadUrl;
+                        downloadBtn.target = '_blank';
+                        downloadBtn.rel = 'noopener noreferrer';
+                        
+                        // 存储各种 URL 选项到按钮数据属性，以便备用
+                        downloadBtn.dataset.githubUrl = directGitHubUrl;
+                        downloadBtn.dataset.proxyUrl = proxyUrl;
+                        downloadBtn.dataset.downloadProxyUrl = finalDownloadUrl;
+                        downloadBtn.dataset.filename = asset.name;
+                        
+                        // 添加智能下载处理
+                        downloadBtn.addEventListener('click', function(e) {
+                            // 如果按住 Ctrl (Windows) 或 Cmd (Mac)，使用直接 GitHub 链接
+                            if (e.ctrlKey || e.metaKey) {
+                                e.preventDefault();
+                                const directUrl = downloadBtn.dataset.githubUrl;
+                                console.log('使用直接 GitHub 链接下载:', directUrl);
+                                window.open(directUrl, '_blank', 'noopener,noreferrer');
+                                return false;
+                            }
+                            
+                            // 如果按住 Shift，使用外部代理链接
+                            if (e.shiftKey) {
+                                e.preventDefault();
+                                const proxyUrl = downloadBtn.dataset.proxyUrl;
+                                console.log('使用外部代理链接下载:', proxyUrl);
+                                window.open(proxyUrl, '_blank', 'noopener,noreferrer');
+                                return false;
+                            }
+                            
+                            // 默认：允许浏览器处理链接导航
+                            // 如果代理返回 JSON（文件太大），浏览器会显示 JSON
+                            // 我们可以通过检测这种情况来改进用户体验，但这需要后端支持
+                            console.log('使用下载链接:', finalDownloadUrl);
+                            
+                            // 允许默认行为继续（链接导航）
+                            // 浏览器会自动处理下载或重定向
+                        });
+                        
+                        // 添加右键菜单提示
+                        downloadBtn.addEventListener('contextmenu', function(e) {
+                            // 右键菜单保持默认行为
+                            // 用户可以选择"在新标签页中打开链接"作为备用方案
+                        });
                     } else {
                         throw new Error('No suitable download asset found for Windows.');
                     }
@@ -489,7 +610,8 @@
                 attemptFetch(MAX_RETRIES, INITIAL_DELAY);
             }
 
-            // --- 为你的每个产品调用 (保持不变) ---
+            // --- 为你的每个产品调用 ---
+            // 仓库名称必须与 GitHub 上的实际仓库名称完全匹配
             fetchProductRelease({ repoName: 'gogole_maps', windowsCardId: 'gs-windows-card', macosCardId: 'gs-macos-card' });
             fetchProductRelease({ repoName: 'email_validator_repo', windowsCardId: 'ev-windows-card', macosCardId: 'ev-macos-card' });
             fetchProductRelease({ repoName: 'whatsapp_validator_repo', windowsCardId: 'wv-windows-card', macosCardId: 'wv-macos-card' });

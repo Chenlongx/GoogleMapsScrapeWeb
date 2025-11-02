@@ -30,6 +30,13 @@
   status = 200
   force = true
 
+# 下载代理（用于绕过浏览器安全限制）
+[[redirects]]
+  from = "/api/download"
+  to = "/.netlify/functions/download-proxy"
+  status = 200
+  force = true
+
 # 保护敏感端点
 [[headers]]
   for = "/api/security-admin/*"

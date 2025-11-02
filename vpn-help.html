@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>科学上网帮助指南 | Google Maps Scraper</title>
+    <meta name="description" content="Google Maps Scraper 使用科学上网工具指南，帮助您解决网络访问问题，确保程序正常运行。">
+    <meta name="robots" content="noindex, nofollow"> <!-- 隐藏页面，不在搜索引擎中显示 -->
+    
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="./assets/js/main.js" defer></script>
+
+    <style>
+        /* VPN 帮助页面专用样式 */
+        .vpn-help-section {
+            padding: 5rem 0;
+            background-color: var(--background-color);
+            min-height: calc(100vh - var(--header-height) - 200px);
+        }
+
+        .vpn-help-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .vpn-help-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .vpn-help-header h1 i {
+            color: var(--primary-color);
+        }
+
+        .vpn-help-header p {
+            font-size: 1.1rem;
+            color: var(--text-secondary-color);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        .vpn-content-grid {
+            display: grid;
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .vpn-card {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .vpn-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        html[data-theme="dark"] .vpn-card:hover {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        .vpn-card-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .vpn-card-icon {
+            width: 50px;
+            height: 50px;
+            background-color: #dbeafe;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        html[data-theme="dark"] .vpn-card-icon {
+            background-color: #1e3a8a;
+        }
+
+        .vpn-card-icon i {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .vpn-card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .vpn-card-content {
+            color: var(--text-secondary-color);
+            line-height: 1.8;
+        }
+
+        .vpn-card-content ul {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .vpn-card-content li {
+            margin-bottom: 0.75rem;
+        }
+
+        .vpn-card-content li strong {
+            color: var(--text-primary-color);
+        }
+
+        .info-box {
+            background-color: #ecfdf5;
+            border: 1px solid #10b981;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            display: flex;
+            gap: 1rem;
+        }
+
+        html[data-theme="dark"] .info-box {
+            background-color: #064e3b;
+            border-color: #10b981;
+        }
+
+        .info-box i {
+            font-size: 1.5rem;
+            color: #10b981;
+            flex-shrink: 0;
+        }
+
+        .info-box-content {
+            flex: 1;
+        }
+
+        .info-box-content strong {
+            display: block;
+            color: var(--text-primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .warning-box {
+            background-color: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            display: flex;
+            gap: 1rem;
+        }
+
+        html[data-theme="dark"] .warning-box {
+            background-color: #78350f;
+            border-color: #f59e0b;
+        }
+
+        .warning-box i {
+            font-size: 1.5rem;
+            color: #f59e0b;
+            flex-shrink: 0;
+        }
+
+        .warning-box-content {
+            flex: 1;
+            color: var(--text-primary-color);
+        }
+
+        .solution-steps {
+            background-color: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        html[data-theme="dark"] .solution-steps {
+            background-color: #1e3a8a;
+            border-color: #3b82f6;
+        }
+
+        .solution-steps ol {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+
+        .solution-steps li {
+            margin-bottom: 0.75rem;
+            color: var(--text-primary-color);
+            line-height: 1.8;
+        }
+
+        .back-button {
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .back-button .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .vpn-help-header h1 {
+                font-size: 2rem;
+                flex-direction: column;
+            }
+
+            .vpn-card {
+                padding: 1.5rem;
+            }
+
+            .vpn-card-header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="notification-banner" class="notification-banner" role="alert" aria-live="assertive"></div>
+    <header id="main-header" class="main-header"></header>
+
+    <main>
+        <section class="vpn-help-section">
+            <div class="container">
+                <div class="vpn-help-header">
+                    <h1>
+                        <i class='bx bx-shield-quarter'></i>
+                        <span>科学上网帮助指南</span>
+                    </h1>
+                    <p>
+                        由于网络访问限制，Google Maps Scraper 需要使用科学上网工具才能正常访问 Google 服务。
+                        本指南将帮助您配置和使用科学上网工具，确保程序正常运行。
+                    </p>
+                </div>
+
+                <div class="vpn-content-grid">
+                    <!-- 为什么需要科学上网 -->
+                    <div class="vpn-card">
+                        <div class="vpn-card-header">
+                            <div class="vpn-card-icon">
+                                <i class='bx bx-question-mark'></i>
+                            </div>
+                            <div>
+                                <h2 class="vpn-card-title">为什么需要科学上网？</h2>
+                            </div>
+                        </div>
+                        <div class="vpn-card-content">
+                            <p>Google Maps Scraper 需要访问 Google 地图服务来抓取商家信息。由于网络访问限制，以下情况需要使用科学上网工具：</p>
+                            <ul>
+                                <li><strong>访问 Google 服务受限：</strong>部分地区无法直接访问 Google Maps、Google 搜索等服务</li>
+                                <li><strong>提升访问稳定性：</strong>通过 VPN 可以提高连接稳定性和访问速度</li>
+                                <li><strong>避免 IP 封禁：</strong>使用 VPN 可以降低被 Google 识别为爬虫的风险</li>
+                                <li><strong>访问全球数据：</strong>某些地区的 Google Maps 数据需要通过特定地区的 IP 访问</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- VPN 工具推荐 -->
+                    <div class="vpn-card">
+                        <div class="vpn-card-header">
+                            <div class="vpn-card-icon">
+                                <i class='bx bx-network-chart'></i>
+                            </div>
+                            <div>
+                                <h2 class="vpn-card-title">VPN 工具选择建议</h2>
+                            </div>
+                        </div>
+                        <div class="vpn-card-content">
+                            <p>选择合适的 VPN 工具对于程序正常运行至关重要。以下是选择 VPN 时的考虑因素：</p>
+                            <div class="info-box">
+                                <i class='bx bx-info-circle'></i>
+                                <div class="info-box-content">
+                                    <strong>推荐选择标准：</strong>
+                                    <ul style="margin-top: 0.5rem; padding-left: 1.5rem;">
+                                        <li>连接稳定，不会频繁掉线</li>
+                                        <li>速度较快，支持高速带宽</li>
+                                        <li>支持多个服务器节点，可选择不同地区</li>
+                                        <li>具有良好的隐私保护政策</li>
+                                        <li>支持多种设备（Windows、Mac、移动端等）</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="warning-box">
+                                <i class='bx bx-error-circle'></i>
+                                <div class="warning-box-content">
+                                    <strong>注意事项：</strong>
+                                    请选择合法、可靠的 VPN 服务商。免费 VPN 可能存在安全风险或连接不稳定，建议使用付费的专业 VPN 服务。
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- VPN 使用方法 -->
+                    <div class="vpn-card">
+                        <div class="vpn-card-header">
+                            <div class="vpn-card-icon">
+                                <i class='bx bx-play-circle'></i>
+                            </div>
+                            <div>
+                                <h2 class="vpn-card-title">如何使用 VPN</h2>
+                            </div>
+                        </div>
+                        <div class="vpn-card-content">
+                            <p>使用 VPN 的一般步骤：</p>
+                            <div class="solution-steps">
+                                <ol>
+                                    <li><strong>安装 VPN 客户端：</strong>从 VPN 服务商官网下载并安装适用于您操作系统的客户端程序</li>
+                                    <li><strong>注册账号并登录：</strong>创建账号或使用已有账号登录 VPN 客户端</li>
+                                    <li><strong>选择服务器节点：</strong>在客户端中选择合适的服务器节点（建议选择速度较快的节点）</li>
+                                    <li><strong>连接 VPN：</strong>点击"连接"按钮建立 VPN 连接，等待连接成功</li>
+                                    <li><strong>验证连接：</strong>打开浏览器访问 google.com 验证是否成功连接</li>
+                                    <li><strong>启动程序：</strong>VPN 连接成功后，启动 Google Maps Scraper 程序即可正常使用</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 代理服务器设置 -->
+                    <div class="vpn-card">
+                        <div class="vpn-card-header">
+                            <div class="vpn-card-icon">
+                                <i class='bx bx-server'></i>
+                            </div>
+                            <div>
+                                <h2 class="vpn-card-title">代理服务器设置（高级）</h2>
+                            </div>
+                        </div>
+                        <div class="vpn-card-content">
+                            <p>如果您使用的是代理服务器而非 VPN，可以在程序中进行代理设置：</p>
+                            <div class="solution-steps">
+                                <ol>
+                                    <li><strong>获取代理信息：</strong>从代理服务商获取代理服务器地址、端口、用户名和密码（如需要）</li>
+                                    <li><strong>在程序中设置：</strong>打开 Google Maps Scraper，进入"设置" → "网络设置"</li>
+                                    <li><strong>填写代理信息：</strong>输入代理服务器地址和端口，如果代理需要认证，填写用户名和密码</li>
+                                    <li><strong>测试连接：</strong>点击"测试连接"按钮验证代理是否可用</li>
+                                    <li><strong>保存设置：</strong>连接成功后保存设置，程序将使用代理进行网络访问</li>
+                                </ol>
+                            </div>
+                            <div class="info-box">
+                                <i class='bx bx-info-circle'></i>
+                                <div class="info-box-content">
+                                    <strong>代理类型说明：</strong>
+                                    常见的代理类型包括 HTTP 代理、SOCKS5 代理等。大多数情况下使用 HTTP 代理即可，SOCKS5 代理兼容性更好但可能速度稍慢。
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 常见问题 -->
+                    <div class="vpn-card">
+                        <div class="vpn-card-header">
+                            <div class="vpn-card-icon">
+                                <i class='bx bx-help-circle'></i>
+                            </div>
+                            <div>
+                                <h2 class="vpn-card-title">常见问题解答</h2>
+                            </div>
+                        </div>
+                        <div class="vpn-card-content">
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="margin-bottom: 1.5rem;">
+                                    <strong style="color: var(--primary-color); display: block; margin-bottom: 0.5rem;">Q: VPN 连接后程序仍然无法访问？</strong>
+                                    <span style="color: var(--text-secondary-color);">A: 请确保 VPN 已完全连接成功，可以尝试更换不同的服务器节点，或者重启程序后再试。</span>
+                                </li>
+                                <li style="margin-bottom: 1.5rem;">
+                                    <strong style="color: var(--primary-color); display: block; margin-bottom: 0.5rem;">Q: 使用 VPN 后程序运行很慢？</strong>
+                                    <span style="color: var(--text-secondary-color);">A: 这可能是 VPN 服务器速度较慢导致的。建议选择距离较近或速度更快的服务器节点，或者更换更快的 VPN 服务商。</span>
+                                </li>
+                                <li style="margin-bottom: 1.5rem;">
+                                    <strong style="color: var(--primary-color); display: block; margin-bottom: 0.5rem;">Q: 可以不使用 VPN 吗？</strong>
+                                    <span style="color: var(--text-secondary-color);">A: 如果您所在地区可以正常访问 Google 服务，并且程序可以正常运行，则不需要使用 VPN。VPN 主要用于解决网络访问受限的问题。</span>
+                                </li>
+                                <li style="margin-bottom: 1.5rem;">
+                                    <strong style="color: var(--primary-color); display: block; margin-bottom: 0.5rem;">Q: VPN 是否安全？</strong>
+                                    <span style="color: var(--text-secondary-color);">A: 选择正规、信誉良好的 VPN 服务商通常是安全的。建议选择有良好隐私政策、不记录用户日志的 VPN 服务商，并避免使用来源不明的免费 VPN。</span>
+                                </li>
+                                <li style="margin-bottom: 1.5rem;">
+                                    <strong style="color: var(--primary-color); display: block; margin-bottom: 0.5rem;">Q: 程序运行过程中 VPN 断线怎么办？</strong>
+                                    <span style="color: var(--text-secondary-color);">A: 如果 VPN 断线，程序可能会停止工作。建议使用具有自动重连功能的 VPN，或者在程序运行时保持 VPN 连接稳定。如果频繁断线，可能需要更换 VPN 服务商。</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 使用技巧 -->
+                    <div class="vpn-card">
+                        <div class="vpn-card-header">
+                            <div class="vpn-card-icon">
+                                <i class='bx bx-bulb'></i>
+                            </div>
+                            <div>
+                                <h2 class="vpn-card-title">使用技巧与建议</h2>
+                            </div>
+                        </div>
+                        <div class="vpn-card-content">
+                            <ul>
+                                <li><strong>优先使用全局代理模式：</strong>将 VPN 设置为全局模式，确保所有网络流量都通过 VPN，避免部分流量直连导致的连接问题</li>
+                                <li><strong>选择稳定的服务器节点：</strong>优先选择延迟低、稳定性高的服务器节点，避免频繁切换节点</li>
+                                <li><strong>在程序启动前连接 VPN：</strong>建议在启动 Google Maps Scraper 之前先建立 VPN 连接，确保程序从一开始就能正常访问网络</li>
+                                <li><strong>定期检查 VPN 连接状态：</strong>长时间运行时，定期检查 VPN 连接是否正常，避免因 VPN 断线导致程序异常</li>
+                                <li><strong>备用 VPN 方案：</strong>准备多个 VPN 服务作为备用，以防主 VPN 服务出现问题</li>
+                                <li><strong>网络测试：</strong>连接 VPN 后，可以在浏览器中访问 <code>google.com</code> 或 <code>maps.google.com</code> 验证连接是否正常</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 联系支持 -->
+                    <div class="vpn-card" style="background: linear-gradient(135deg, var(--primary-color) 0%, #1e40af 100%); color: white; border: none;">
+                        <div class="vpn-card-header">
+                            <div class="vpn-card-icon" style="background-color: rgba(255, 255, 255, 0.2);">
+                                <i class='bx bx-support' style="color: white;"></i>
+                            </div>
+                            <div>
+                                <h2 class="vpn-card-title" style="color: white;">需要更多帮助？</h2>
+                            </div>
+                        </div>
+                        <div style="color: rgba(255, 255, 255, 0.9);">
+                            <p style="margin-bottom: 1rem;">如果您在配置科学上网工具或使用程序时遇到问题，我们的技术支持团队随时为您提供帮助。</p>
+                            <p><strong>联系方式：</strong></p>
+                            <ul style="margin-top: 0.5rem;">
+                                <li>访问 <a href="./contact.html" style="color: white; text-decoration: underline;">联系我们页面</a> 提交工单</li>
+                                <li>发送邮件至技术支持邮箱</li>
+                                <li>查看 <a href="./troubleshooting.html" style="color: white; text-decoration: underline;">常见问题解答</a> 页面</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="back-button">
+                    <a href="./index.html" class="btn btn-primary">
+                        <i class='bx bx-home'></i>
+                        <span>返回首页</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer id="main-footer" class="main-footer"></footer>
+
+</body>
+
+</html>
+
