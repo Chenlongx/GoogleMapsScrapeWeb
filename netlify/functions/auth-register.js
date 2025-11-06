@@ -1,5 +1,5 @@
 /**
- * 用户注册 API（自定义表版本）
+ * 用户注册 API（Supabase Auth + 自定义表版本）
  * POST /api/auth/register
  * 
  * 请求体:
@@ -11,24 +11,29 @@
  */
 
 const { createClient } = require('@supabase/supabase-js');
-const bcrypt = require('bcrypt');
-const crypto = require('crypto');
 
-// 初始化 Supabase 客户端（使用 Service Role Key）
+// 初始化 Supabase 客户端（使用 ANON_KEY 访问 Auth）
 const getSupabaseClient = () => {
   const supabaseUrl = process.env.SUPABASE_URL;
-  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
 
-  if (!supabaseUrl || !supabaseKey) {
+  if (!supabaseUrl || !supabaseAnonKey) {
     throw new Error('缺少 Supabase 环境变量');
   }
 
-  return createClient(supabaseUrl, supabaseKey);
+  return createClient(supabaseUrl, supabaseAnonKey);
 };
 
-// 生成验证令牌
-const generateToken = () => {
-  return crypto.randomBytes(32).toString('hex');
+// 获取管理客户端（使用 Service Role Key 操作自定义表）
+const getSupabaseAdminClient = () => {
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl || !supabaseServiceKey) {
+    throw new Error('缺少 Supabase Service Role Key');
+  }
+
+  return createClient(supabaseUrl, supabaseServiceKey);
 };
 
 exports.handler = async (event, context) => {
@@ -102,63 +107,72 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // 初始化 Supabase
+    // 初始化客户端
     const supabase = getSupabaseClient();
+    const supabaseAdmin = getSupabaseAdminClient();
 
-    // 检查邮箱是否已存在
-    const { data: existingUser } = await supabase
-      .from('email_finder_users')
-      .select('id')
-      .eq('email', email)
-      .single();
+    // 1. 使用 Supabase Auth 注册（会自动发送验证邮件）
+    const { data: authData, error: authError } = await supabase.auth.signUp({
+      email: email,
+      password: password,
+      options: {
+        emailRedirectTo: `chrome-extension://${process.env.EXTENSION_ID || 'your-extension-id'}/email-verified.html`,
+        data: {
+          username: username || email.split('@')[0]
+        }
+      }
+    });
 
-    if (existingUser) {
+    if (authError) {
+      console.error('Supabase Auth 注册错误:', authError.message);
+      
+      // 处理常见错误
+      if (authError.message.includes('already registered')) {
+        return {
+          statusCode: 400,
+          headers,
+          body: JSON.stringify({ 
+            success: false, 
+            message: '该邮箱已被注册' 
+          })
+        };
+      }
+      
       return {
         statusCode: 400,
         headers,
-        body: JSON.stringify({
-          success: false,
-          message: '该邮箱已被注册'
+        body: JSON.stringify({ 
+          success: false, 
+          message: authError.message 
         })
       };
     }
 
-    // 哈希密码
-    const saltRounds = 10;
-    const passwordHash = await bcrypt.hash(password, saltRounds);
+    // 2. 同时在自定义表中创建用户记录
+    try {
+      const { error: insertError } = await supabaseAdmin
+        .from('email_finder_users')
+        .insert([
+          {
+            id: authData.user.id, // 使用相同的 UUID
+            email: email,
+            username: username || email.split('@')[0],
+            password_hash: 'managed_by_supabase_auth', // 标记密码由 Auth 管理
+            email_verified: false, // 初始为未验证
+            verification_token: null, // Auth 管理，不需要
+            supabase_auth_user: true // 标记为 Auth 用户
+          }
+        ]);
 
-    // 生成验证令牌（如果需要邮箱验证）
-    const verificationToken = generateToken();
-
-    // 插入新用户
-    const { data: newUser, error: insertError } = await supabase
-      .from('email_finder_users')
-      .insert([
-        {
-          email: email,
-          username: username || email.split('@')[0],
-          password_hash: passwordHash,
-          email_verified: false, // 如果不需要邮箱验证，改为 true
-          verification_token: verificationToken
-        }
-      ])
-      .select()
-      .single();
-
-    if (insertError) {
-      console.error('插入用户错误:', insertError);
-      return {
-        statusCode: 500,
-        headers,
-        body: JSON.stringify({
-          success: false,
-          message: '注册失败，请稍后重试'
-        })
-      };
+      if (insertError) {
+        console.error('插入自定义表错误:', insertError);
+        // 如果自定义表插入失败，记录错误但不影响 Auth 注册
+        // 可以选择删除 Auth 用户或在后续通过触发器同步
+      }
+    } catch (customTableError) {
+      console.error('自定义表操作失败:', customTableError);
+      // 不影响主流程
     }
-
-    // TODO: 发送验证邮件
-    // await sendVerificationEmail(email, verificationToken);
 
     // 注册成功
     return {
@@ -166,16 +180,17 @@ exports.handler = async (event, context) => {
       headers,
       body: JSON.stringify({
         success: true,
-        message: '注册成功' + (newUser.email_verified ? '' : '，请检查邮箱验证链接'),
+        message: '注册成功！验证邮件已发送到您的邮箱，请查收并点击验证链接',
         data: {
           user: {
-            id: newUser.id,
-            email: newUser.email,
-            username: newUser.username,
-            email_verified: newUser.email_verified,
-            created_at: newUser.created_at
+            id: authData.user.id,
+            email: authData.user.email,
+            username: username || email.split('@')[0],
+            email_verified: false
           },
-          needEmailVerification: !newUser.email_verified
+          needEmailVerification: true,
+          // 可选：返回 session（如果需要自动登录）
+          // session: authData.session
         }
       })
     };

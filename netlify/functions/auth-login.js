@@ -1,5 +1,5 @@
 /**
- * 用户登录 API（自定义表版本）
+ * 用户登录 API（Supabase Auth + 自定义表版本）
  * POST /api/auth/login
  * 
  * 请求体:
@@ -10,41 +10,29 @@
  */
 
 const { createClient } = require('@supabase/supabase-js');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const crypto = require('crypto');
 
-// 初始化 Supabase 客户端（使用 Service Role Key）
+// 初始化 Supabase 客户端（使用 ANON_KEY 访问 Auth）
 const getSupabaseClient = () => {
   const supabaseUrl = process.env.SUPABASE_URL;
-  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
 
-  if (!supabaseUrl || !supabaseKey) {
+  if (!supabaseUrl || !supabaseAnonKey) {
     throw new Error('缺少 Supabase 环境变量');
   }
 
-  return createClient(supabaseUrl, supabaseKey);
+  return createClient(supabaseUrl, supabaseAnonKey);
 };
 
-// 生成 JWT Token
-const generateAccessToken = (userId, email) => {
-  const secret = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
-  const expiresIn = '1h'; // 1小时
+// 获取管理客户端（用于更新自定义表）
+const getSupabaseAdminClient = () => {
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-  return jwt.sign(
-    { 
-      userId, 
-      email,
-      type: 'access'
-    }, 
-    secret, 
-    { expiresIn }
-  );
-};
+  if (!supabaseUrl || !supabaseServiceKey) {
+    throw new Error('缺少 Supabase Service Role Key');
+  }
 
-// 生成 Refresh Token
-const generateRefreshToken = () => {
-  return crypto.randomBytes(64).toString('hex');
+  return createClient(supabaseUrl, supabaseServiceKey);
 };
 
 exports.handler = async (event, context) => {
@@ -93,91 +81,62 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // 初始化 Supabase
     const supabase = getSupabaseClient();
+    const supabaseAdmin = getSupabaseAdminClient();
 
-    // 查找用户
-    const { data: user, error: queryError } = await supabase
-      .from('email_finder_users')
-      .select('*')
-      .eq('email', email)
-      .single();
+    // 使用 Supabase Auth 登录
+    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password
+    });
 
-    if (queryError || !user) {
+    if (authError) {
+      console.error('登录错误:', authError.message);
       return {
         statusCode: 401,
         headers,
-        body: JSON.stringify({
-          success: false,
-          message: '邮箱或密码错误'
+        body: JSON.stringify({ 
+          success: false, 
+          message: '邮箱或密码错误' 
         })
       };
     }
 
-    // 检查用户状态
-    if (user.status !== 'active') {
+    // 检查邮箱是否已验证
+    if (!authData.user.email_confirmed_at) {
       return {
         statusCode: 403,
         headers,
         body: JSON.stringify({
           success: false,
-          message: '账号已被禁用，请联系管理员'
+          message: '请先验证您的邮箱地址。验证邮件已发送到您的邮箱，请查收并点击验证链接',
+          needEmailVerification: true
         })
       };
     }
 
-    // 验证密码
-    const passwordMatch = await bcrypt.compare(password, user.password_hash);
+    // 更新自定义表中的登录信息（可选）
+    try {
+      const { data: customUser } = await supabaseAdmin
+        .from('email_finder_users')
+        .select('login_count')
+        .eq('id', authData.user.id)
+        .single();
 
-    if (!passwordMatch) {
-      return {
-        statusCode: 401,
-        headers,
-        body: JSON.stringify({
-          success: false,
-          message: '邮箱或密码错误'
-        })
-      };
+      if (customUser) {
+        await supabaseAdmin
+          .from('email_finder_users')
+          .update({
+            last_login_at: new Date().toISOString(),
+            login_count: (customUser.login_count || 0) + 1,
+            email_verified: true // 同步验证状态
+          })
+          .eq('id', authData.user.id);
+      }
+    } catch (updateError) {
+      console.error('更新自定义表错误:', updateError);
+      // 不影响登录流程
     }
-
-    // 生成 Token
-    const accessToken = generateAccessToken(user.id, user.email);
-    const refreshToken = generateRefreshToken();
-
-    // 获取客户端信息
-    const ipAddress = event.headers['x-forwarded-for'] || event.headers['client-ip'] || 'unknown';
-    const userAgent = event.headers['user-agent'] || 'unknown';
-
-    // 创建会话记录
-    const expiresAt = new Date();
-    expiresAt.setHours(expiresAt.getHours() + 1); // 1小时后过期
-
-    const { error: sessionError } = await supabase
-      .from('email_finder_sessions')
-      .insert([
-        {
-          user_id: user.id,
-          access_token: accessToken,
-          refresh_token: refreshToken,
-          ip_address: ipAddress,
-          user_agent: userAgent,
-          expires_at: expiresAt.toISOString()
-        }
-      ]);
-
-    if (sessionError) {
-      console.error('创建会话错误:', sessionError);
-      // 不影响登录流程，继续返回 token
-    }
-
-    // 更新用户登录信息
-    await supabase
-      .from('email_finder_users')
-      .update({
-        last_login_at: new Date().toISOString(),
-        login_count: user.login_count + 1
-      })
-      .eq('id', user.id);
 
     // 登录成功
     return {
@@ -187,15 +146,15 @@ exports.handler = async (event, context) => {
         success: true,
         message: '登录成功',
         data: {
-          accessToken,
-          refreshToken,
-          expiresIn: 3600, // 1小时（秒）
+          accessToken: authData.session.access_token,
+          refreshToken: authData.session.refresh_token,
+          expiresIn: authData.session.expires_in || 3600,
           user: {
-            id: user.id,
-            email: user.email,
-            username: user.username,
-            email_verified: user.email_verified,
-            created_at: user.created_at
+            id: authData.user.id,
+            email: authData.user.email,
+            username: authData.user.user_metadata?.username || authData.user.email.split('@')[0],
+            email_verified: true,
+            created_at: authData.user.created_at
           }
         }
       })
