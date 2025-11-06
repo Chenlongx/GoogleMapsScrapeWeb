@@ -37,6 +37,37 @@
   status = 200
   force = true
 
+# Email Finder 用户认证 API
+[[redirects]]
+  from = "/api/auth/register"
+  to = "/.netlify/functions/auth-register"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/auth/login"
+  to = "/.netlify/functions/auth-login"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/auth/forgot-password"
+  to = "/.netlify/functions/auth-forgot-password"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/auth/reset-password"
+  to = "/.netlify/functions/auth-reset-password"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/auth/verify-token"
+  to = "/.netlify/functions/auth-verify-token"
+  status = 200
+  force = true
+
 # 保护敏感端点
 [[headers]]
   for = "/api/security-admin/*"
