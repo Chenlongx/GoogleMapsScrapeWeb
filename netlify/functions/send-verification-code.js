@@ -235,15 +235,22 @@ exports.handler = async (event, context) => {
     const emailServiceType = process.env.EMAIL_SERVICE || 'console';
     
     if (emailServiceType === 'resend' && process.env.RESEND_API_KEY) {
-      const Resend = require('resend');
+      const { Resend } = require('resend');  // ✅ 解构导入
       const resend = new Resend(process.env.RESEND_API_KEY);
       
-      await resend.emails.send({
+      const { data, error } = await resend.emails.send({
         from: process.env.EMAIL_FROM || 'noreply@mediamingle.cn',
         to: email,
         subject: emailTemplate.subject,
         html: emailTemplate.html
       });
+      
+      if (error) {
+        console.error('Resend 发送失败:', error);
+        throw new Error(`邮件发送失败: ${error.message}`);
+      }
+      
+      console.log('✅ 验证码邮件已发送:', data);
     } else {
       // 开发模式：输出到控制台
       console.log('📧 验证码（开发模式）:');
