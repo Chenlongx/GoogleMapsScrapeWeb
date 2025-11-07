@@ -1,6 +1,11 @@
 /**
- * 用户注册 API（Supabase Auth + 自定义表版本）
+ * 用户注册 API（两阶段验证版本）
  * POST /api/auth/register
+ * 
+ * 修改说明：
+ * - 注册时不立即创建用户，而是存储到 pending_users 表
+ * - 发送验证邮件，包含验证 token
+ * - 用户点击验证链接后，才真正创建账号
  * 
  * 请求体:
  * {
@@ -11,20 +16,19 @@
  */
 
 const { createClient } = require('@supabase/supabase-js');
+const crypto = require('crypto');
 
-// 初始化 Supabase 客户端（使用 ANON_KEY 访问 Auth）
-const getSupabaseClient = () => {
-  const supabaseUrl = process.env.SUPABASE_URL;
-  const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
-
-  if (!supabaseUrl || !supabaseAnonKey) {
-    throw new Error('缺少 Supabase 环境变量');
-  }
-
-  return createClient(supabaseUrl, supabaseAnonKey);
+// 生成验证 token
+const generateVerificationToken = () => {
+  return crypto.randomBytes(32).toString('hex');
 };
 
-// 获取管理客户端（使用 Service Role Key 操作自定义表）
+// 密码哈希函数（使用 bcrypt 或简单哈希，这里用 crypto）
+const hashPassword = (password) => {
+  return crypto.createHash('sha256').update(password).digest('hex');
+};
+
+// 获取管理客户端（使用 Service Role Key）
 const getSupabaseAdminClient = () => {
   const supabaseUrl = process.env.SUPABASE_URL;
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -107,90 +111,115 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // 初始化客户端
-    const supabase = getSupabaseClient();
+    // 初始化管理客户端
     const supabaseAdmin = getSupabaseAdminClient();
 
-    // 1. 使用 Supabase Auth 注册（会自动发送验证邮件）
-    const { data: authData, error: authError } = await supabase.auth.signUp({
-      email: email,
-      password: password,
-      options: {
-        emailRedirectTo: `chrome-extension://${process.env.EXTENSION_ID || 'your-extension-id'}/email-verified.html`,
-        data: {
-          username: username || email.split('@')[0]
-        }
-      }
-    });
+    // 1. 检查邮箱是否已被注册（检查正式用户表和待验证表）
+    const { data: existingUser } = await supabaseAdmin
+      .from('email_finder_users')
+      .select('email')
+      .eq('email', email)
+      .single();
 
-    if (authError) {
-      console.error('Supabase Auth 注册错误:', authError.message);
-      
-      // 处理常见错误
-      if (authError.message.includes('already registered')) {
-        return {
-          statusCode: 400,
-          headers,
-          body: JSON.stringify({ 
-            success: false, 
-            message: '该邮箱已被注册' 
-          })
-        };
-      }
-      
+    if (existingUser) {
       return {
         statusCode: 400,
         headers,
-        body: JSON.stringify({ 
-          success: false, 
-          message: authError.message 
+        body: JSON.stringify({
+          success: false,
+          message: '该邮箱已被注册'
         })
       };
     }
 
-    // 2. 同时在自定义表中创建用户记录
-    try {
-      const { error: insertError } = await supabaseAdmin
-        .from('email_finder_users')
-        .insert([
-          {
-            id: authData.user.id, // 使用相同的 UUID
-            email: email,
-            username: username || email.split('@')[0],
-            password_hash: 'managed_by_supabase_auth', // 标记密码由 Auth 管理
-            email_verified: false, // 初始为未验证
-            verification_token: null, // Auth 管理，不需要
-            supabase_auth_user: true // 标记为 Auth 用户
-          }
-        ]);
+    const { data: pendingUser } = await supabaseAdmin
+      .from('pending_users')
+      .select('email')
+      .eq('email', email)
+      .single();
 
-      if (insertError) {
-        console.error('插入自定义表错误:', insertError);
-        // 如果自定义表插入失败，记录错误但不影响 Auth 注册
-        // 可以选择删除 Auth 用户或在后续通过触发器同步
+    if (pendingUser) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          success: false,
+          message: '该邮箱已提交注册，请查收验证邮件。如未收到，请稍后重试'
+        })
+      };
+    }
+
+    // 2. 生成验证 token 和过期时间（24小时）
+    const verificationToken = generateVerificationToken();
+    const tokenExpiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+    
+    // 3. 哈希密码
+    const passwordHash = hashPassword(password);
+
+    // 4. 将用户信息存储到 pending_users 表
+    const { error: insertError } = await supabaseAdmin
+      .from('pending_users')
+      .insert([
+        {
+          email: email,
+          username: username || email.split('@')[0],
+          password_hash: passwordHash,
+          verification_token: verificationToken,
+          token_expires_at: tokenExpiresAt
+        }
+      ]);
+
+    if (insertError) {
+      console.error('存储待验证用户失败:', insertError);
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({
+          success: false,
+          message: '注册失败，请稍后重试'
+        })
+      };
+    }
+
+    // 5. 发送验证邮件
+    const extensionId = process.env.EXTENSION_ID || 'your-extension-id';
+    const verificationUrl = `chrome-extension://${extensionId}/email-verified.html?token=${verificationToken}`;
+    
+    // 调用发送邮件的 Netlify Function
+    try {
+      const sendEmailResponse = await fetch(`${process.env.URL}/.netlify/functions/send-verification-email`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: email,
+          username: username || email.split('@')[0],
+          verificationUrl: verificationUrl,
+          token: verificationToken
+        })
+      });
+
+      if (!sendEmailResponse.ok) {
+        console.error('发送验证邮件失败');
+        // 即使发送失败，也返回成功（用户可以稍后重新发送）
       }
-    } catch (customTableError) {
-      console.error('自定义表操作失败:', customTableError);
+    } catch (emailError) {
+      console.error('邮件发送错误:', emailError);
       // 不影响主流程
     }
 
-    // 注册成功
+    // 注册成功响应
     return {
       statusCode: 200,
       headers,
       body: JSON.stringify({
         success: true,
-        message: '注册成功！验证邮件已发送到您的邮箱，请查收并点击验证链接',
+        message: '注册信息已提交！验证邮件已发送到您的邮箱，请查收并点击验证链接完成注册',
         data: {
-          user: {
-            id: authData.user.id,
-            email: authData.user.email,
-            username: username || email.split('@')[0],
-            email_verified: false
-          },
+          email: email,
           needEmailVerification: true,
-          // 可选：返回 session（如果需要自动登录）
-          // session: authData.session
+          tokenExpiresIn: '24小时'
         }
       })
     };

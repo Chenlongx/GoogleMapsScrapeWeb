@@ -1,6 +1,11 @@
 /**
- * 用户登录 API（Supabase Auth + 自定义表版本）
+ * 用户登录 API（自定义密码验证版本）
  * POST /api/auth/login
+ * 
+ * 修改说明：
+ * - 使用自定义表进行密码验证
+ * - 检查邮箱验证状态
+ * - 生成 JWT token
  * 
  * 请求体:
  * {
@@ -10,20 +15,45 @@
  */
 
 const { createClient } = require('@supabase/supabase-js');
+const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
 
-// 初始化 Supabase 客户端（使用 ANON_KEY 访问 Auth）
-const getSupabaseClient = () => {
-  const supabaseUrl = process.env.SUPABASE_URL;
-  const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
-
-  if (!supabaseUrl || !supabaseAnonKey) {
-    throw new Error('缺少 Supabase 环境变量');
-  }
-
-  return createClient(supabaseUrl, supabaseAnonKey);
+// 密码哈希函数（与注册时使用的相同）
+const hashPassword = (password) => {
+  return crypto.createHash('sha256').update(password).digest('hex');
 };
 
-// 获取管理客户端（用于更新自定义表）
+// 生成 JWT token
+const generateToken = (userId, email) => {
+  const jwtSecret = process.env.JWT_SECRET || 'your-secret-key-please-change-in-production';
+  
+  return jwt.sign(
+    { 
+      userId: userId,
+      email: email,
+      type: 'access'
+    },
+    jwtSecret,
+    { expiresIn: '7d' }
+  );
+};
+
+// 生成 Refresh Token
+const generateRefreshToken = (userId, email) => {
+  const jwtSecret = process.env.JWT_SECRET || 'your-secret-key-please-change-in-production';
+  
+  return jwt.sign(
+    { 
+      userId: userId,
+      email: email,
+      type: 'refresh'
+    },
+    jwtSecret,
+    { expiresIn: '30d' }
+  );
+};
+
+// 获取管理客户端
 const getSupabaseAdminClient = () => {
   const supabaseUrl = process.env.SUPABASE_URL;
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -81,64 +111,71 @@ exports.handler = async (event, context) => {
       };
     }
 
-    const supabase = getSupabaseClient();
     const supabaseAdmin = getSupabaseAdminClient();
 
-    // 使用 Supabase Auth 登录
-    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password
-    });
+    // 1. 查询用户信息
+    const { data: user, error: queryError } = await supabaseAdmin
+      .from('email_finder_users')
+      .select('*')
+      .eq('email', email)
+      .single();
 
-    if (authError) {
-      console.error('登录错误:', authError.message);
+    if (queryError || !user) {
       return {
         statusCode: 401,
         headers,
-        body: JSON.stringify({ 
-          success: false, 
-          message: '邮箱或密码错误' 
+        body: JSON.stringify({
+          success: false,
+          message: '邮箱或密码错误'
         })
       };
     }
 
-    // 检查邮箱是否已验证
-    if (!authData.user.email_confirmed_at) {
+    // 2. 检查邮箱是否已验证
+    if (!user.email_verified) {
       return {
         statusCode: 403,
         headers,
         body: JSON.stringify({
           success: false,
-          message: '请先验证您的邮箱地址。验证邮件已发送到您的邮箱，请查收并点击验证链接',
+          message: '请先验证您的邮箱地址。请查收注册时发送的验证邮件并点击验证链接',
           needEmailVerification: true
         })
       };
     }
 
-    // 更新自定义表中的登录信息（可选）
-    try {
-      const { data: customUser } = await supabaseAdmin
-        .from('email_finder_users')
-        .select('login_count')
-        .eq('id', authData.user.id)
-        .single();
+    // 3. 验证密码
+    const passwordHash = hashPassword(password);
+    if (passwordHash !== user.password_hash) {
+      return {
+        statusCode: 401,
+        headers,
+        body: JSON.stringify({
+          success: false,
+          message: '邮箱或密码错误'
+        })
+      };
+    }
 
-      if (customUser) {
-        await supabaseAdmin
-          .from('email_finder_users')
-          .update({
-            last_login_at: new Date().toISOString(),
-            login_count: (customUser.login_count || 0) + 1,
-            email_verified: true // 同步验证状态
-          })
-          .eq('id', authData.user.id);
-      }
+    // 4. 生成 token
+    const accessToken = generateToken(user.id, user.email);
+    const refreshToken = generateRefreshToken(user.id, user.email);
+
+    // 5. 更新登录信息
+    try {
+      await supabaseAdmin
+        .from('email_finder_users')
+        .update({
+          last_login_at: new Date().toISOString(),
+          login_count: (user.login_count || 0) + 1
+        })
+        .eq('id', user.id);
     } catch (updateError) {
-      console.error('更新自定义表错误:', updateError);
+      console.error('更新登录信息失败:', updateError);
       // 不影响登录流程
     }
 
-    // 登录成功
+    // 6. 登录成功
     return {
       statusCode: 200,
       headers,
@@ -146,15 +183,15 @@ exports.handler = async (event, context) => {
         success: true,
         message: '登录成功',
         data: {
-          accessToken: authData.session.access_token,
-          refreshToken: authData.session.refresh_token,
-          expiresIn: authData.session.expires_in || 3600,
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+          expiresIn: 7 * 24 * 3600, // 7天
           user: {
-            id: authData.user.id,
-            email: authData.user.email,
-            username: authData.user.user_metadata?.username || authData.user.email.split('@')[0],
-            email_verified: true,
-            created_at: authData.user.created_at
+            id: user.id,
+            email: user.email,
+            username: user.username,
+            email_verified: user.email_verified,
+            created_at: user.created_at
           }
         }
       })
