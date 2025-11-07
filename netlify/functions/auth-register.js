@@ -1,34 +1,30 @@
 /**
- * 用户注册 API（两阶段验证版本）
+ * 用户注册 API（验证码验证版本）
  * POST /api/auth/register
  * 
  * 修改说明：
- * - 注册时不立即创建用户，而是存储到 pending_users 表
- * - 发送验证邮件，包含验证 token
- * - 用户点击验证链接后，才真正创建账号
+ * - 用户先调用 send-verification-code 获取验证码
+ * - 前端输入验证码后，提交到此接口
+ * - 验证验证码正确后，创建正式用户账号
  * 
  * 请求体:
  * {
  *   "email": "user@example.com",
  *   "password": "password123",
- *   "username": "username"
+ *   "username": "username",
+ *   "verificationCode": "123456"
  * }
  */
 
 const { createClient } = require('@supabase/supabase-js');
 const crypto = require('crypto');
 
-// 生成验证 token
-const generateVerificationToken = () => {
-  return crypto.randomBytes(32).toString('hex');
-};
-
-// 密码哈希函数（使用 bcrypt 或简单哈希，这里用 crypto）
+// 密码哈希函数
 const hashPassword = (password) => {
   return crypto.createHash('sha256').update(password).digest('hex');
 };
 
-// 获取管理客户端（使用 Service Role Key）
+// 获取管理客户端
 const getSupabaseAdminClient = () => {
   const supabaseUrl = process.env.SUPABASE_URL;
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -72,7 +68,7 @@ exports.handler = async (event, context) => {
 
   try {
     // 解析请求体
-    const { email, password, username } = JSON.parse(event.body);
+    const { email, password, username, verificationCode } = JSON.parse(event.body);
 
     // 验证必填字段
     if (!email || !password) {
@@ -82,6 +78,17 @@ exports.handler = async (event, context) => {
         body: JSON.stringify({
           success: false,
           message: '邮箱和密码为必填项'
+        })
+      };
+    }
+
+    if (!verificationCode) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          success: false,
+          message: '请输入验证码'
         })
       };
     }
@@ -111,10 +118,21 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // 初始化管理客户端
+    // 验证验证码格式
+    if (!/^\d{6}$/.test(verificationCode)) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          success: false,
+          message: '验证码格式不正确'
+        })
+      };
+    }
+
     const supabaseAdmin = getSupabaseAdminClient();
 
-    // 1. 检查邮箱是否已被注册（检查正式用户表和待验证表）
+    // 1. 检查邮箱是否已注册
     const { data: existingUser } = await supabaseAdmin
       .from('email_finder_users')
       .select('email')
@@ -132,45 +150,109 @@ exports.handler = async (event, context) => {
       };
     }
 
-    const { data: pendingUser } = await supabaseAdmin
+    // 2. 查找待验证用户并验证验证码
+    const { data: pendingUser, error: queryError } = await supabaseAdmin
       .from('pending_users')
-      .select('email')
+      .select('*')
       .eq('email', email)
       .single();
 
-    if (pendingUser) {
+    if (queryError || !pendingUser) {
       return {
         statusCode: 400,
         headers,
         body: JSON.stringify({
           success: false,
-          message: '该邮箱已提交注册，请查收验证邮件。如未收到，请稍后重试'
+          message: '请先获取验证码'
         })
       };
     }
 
-    // 2. 生成验证 token 和过期时间（24小时）
-    const verificationToken = generateVerificationToken();
-    const tokenExpiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+    // 3. 检查验证码是否过期
+    const now = new Date();
+    const expiresAt = new Date(pendingUser.code_expires_at);
     
-    // 3. 哈希密码
-    const passwordHash = hashPassword(password);
+    if (now > expiresAt) {
+      // 验证码过期，删除记录
+      await supabaseAdmin
+        .from('pending_users')
+        .delete()
+        .eq('email', email);
 
-    // 4. 将用户信息存储到 pending_users 表
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          success: false,
+          message: '验证码已过期，请重新获取'
+        })
+      };
+    }
+
+    // 4. 检查尝试次数（防止暴力破解）
+    if (pendingUser.attempts >= 5) {
+      await supabaseAdmin
+        .from('pending_users')
+        .delete()
+        .eq('email', email);
+
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          success: false,
+          message: '验证码错误次数过多，请重新获取验证码'
+        })
+      };
+    }
+
+    // 5. 验证验证码
+    if (verificationCode !== pendingUser.verification_code) {
+      // 更新尝试次数
+      await supabaseAdmin
+        .from('pending_users')
+        .update({ attempts: pendingUser.attempts + 1 })
+        .eq('email', email);
+
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          success: false,
+          message: `验证码错误，还剩 ${4 - pendingUser.attempts} 次机会`
+        })
+      };
+    }
+
+    // 6. 验证码正确，创建正式用户
+    const passwordHash = hashPassword(password);
+    
     const { error: insertError } = await supabaseAdmin
-      .from('pending_users')
-      .insert([
-        {
-          email: email,
-          username: username || email.split('@')[0],
-          password_hash: passwordHash,
-          verification_token: verificationToken,
-          token_expires_at: tokenExpiresAt
-        }
-      ]);
+      .from('email_finder_users')
+      .insert([{
+        email: email,
+        username: username || email.split('@')[0],
+        password_hash: passwordHash,
+        email_verified: true,  // 验证码验证成功，标记为已验证
+        verification_token: null,
+        supabase_auth_user: false,
+        created_at: new Date().toISOString()
+      }]);
 
     if (insertError) {
-      console.error('存储待验证用户失败:', insertError);
+      console.error('创建用户失败:', insertError);
+      
+      if (insertError.code === '23505') {
+        return {
+          statusCode: 400,
+          headers,
+          body: JSON.stringify({
+            success: false,
+            message: '该邮箱已被注册'
+          })
+        };
+      }
+
       return {
         statusCode: 500,
         headers,
@@ -181,45 +263,22 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // 5. 发送验证邮件
-    const extensionId = process.env.EXTENSION_ID || 'your-extension-id';
-    const verificationUrl = `chrome-extension://${extensionId}/email-verified.html?token=${verificationToken}`;
-    
-    // 调用发送邮件的 Netlify Function
-    try {
-      const sendEmailResponse = await fetch(`${process.env.URL}/.netlify/functions/send-verification-email`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          email: email,
-          username: username || email.split('@')[0],
-          verificationUrl: verificationUrl,
-          token: verificationToken
-        })
-      });
+    // 7. 删除待验证记录
+    await supabaseAdmin
+      .from('pending_users')
+      .delete()
+      .eq('email', email);
 
-      if (!sendEmailResponse.ok) {
-        console.error('发送验证邮件失败');
-        // 即使发送失败，也返回成功（用户可以稍后重新发送）
-      }
-    } catch (emailError) {
-      console.error('邮件发送错误:', emailError);
-      // 不影响主流程
-    }
-
-    // 注册成功响应
+    // 8. 注册成功
     return {
       statusCode: 200,
       headers,
       body: JSON.stringify({
         success: true,
-        message: '注册信息已提交！验证邮件已发送到您的邮箱，请查收并点击验证链接完成注册',
+        message: '注册成功！现在可以登录了',
         data: {
           email: email,
-          needEmailVerification: true,
-          tokenExpiresIn: '24小时'
+          username: username || email.split('@')[0]
         }
       })
     };
