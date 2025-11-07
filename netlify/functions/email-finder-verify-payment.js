@@ -4,6 +4,7 @@
  */
 
 const { createClient } = require('@supabase/supabase-js');
+const { resolveSupabaseUser } = require('./utils/resolve-user');
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
@@ -41,12 +42,33 @@ exports.handler = async (event) => {
       };
     }
 
+    let resolvedUser;
+    try {
+      resolvedUser = await resolveSupabaseUser({
+        supabase,
+        userId: user_id
+      });
+    } catch (e) {
+      console.error('解析用户失败:', e);
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          success: false,
+          message: e.code === 'LEGACY_USER_NOT_FOUND'
+            ? '未找到该账号的支付记录，请重新登录后再试'
+            : '用户校验失败',
+          code: e.code || 'USER_RESOLVE_FAILED'
+        })
+      };
+    }
+
     // 1. 查询支付记录
     const { data: payment, error: paymentError } = await supabase
       .from('payments')
       .select('*')
       .eq('order_id', order_id)
-      .eq('user_id', user_id)
+      .eq('user_id', resolvedUser.supabaseUserId)
       .single();
 
     if (paymentError || !payment) {
@@ -76,7 +98,8 @@ exports.handler = async (event) => {
       await supabase
         .from('payments')
         .update({ payment_status: 'expired' })
-        .eq('order_id', order_id);
+        .eq('order_id', order_id)
+        .eq('user_id', resolvedUser.supabaseUserId);
 
       return {
         statusCode: 200,
@@ -146,7 +169,8 @@ exports.handler = async (event) => {
           payment_status: 'completed',
           verified_time: new Date().toISOString()
         })
-        .eq('order_id', order_id);
+        .eq('order_id', order_id)
+        .eq('user_id', resolvedUser.supabaseUserId);
 
       // 8. 升级账号
       const { error: upgradeError } = await supabase
@@ -159,7 +183,7 @@ exports.handler = async (event) => {
           payment_date: new Date().toISOString(),
           expiry_date: expiryDateStr
         })
-        .eq('id', user_id);
+        .eq('id', resolvedUser.supabaseUserId);
 
       if (upgradeError) {
         console.error('升级账号失败:', upgradeError);
@@ -174,7 +198,7 @@ exports.handler = async (event) => {
       await supabase
         .from('account_upgrades')
         .insert({
-          user_id,
+          user_id: resolvedUser.supabaseUserId,
           username: payment.username,
           from_account_type: 'trial',
           to_account_type: 'premium',
@@ -193,7 +217,8 @@ exports.handler = async (event) => {
           account_upgraded: true,
           new_account_type: 'premium',
           expiry_date: expiryDateStr,
-          message: '🎉 支付成功！您的账号已升级为正式账号'
+          message: '🎉 支付成功！您的账号已升级为正式账号',
+          resolved_user_id: resolvedUser.supabaseUserId
         })
       };
     } else {

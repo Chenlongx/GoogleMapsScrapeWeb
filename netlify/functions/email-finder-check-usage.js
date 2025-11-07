@@ -4,6 +4,7 @@
  */
 
 const { createClient } = require('@supabase/supabase-js');
+const { resolveSupabaseUser } = require('./utils/resolve-user');
 
 // Supabase配置（从环境变量获取）
 const supabase = createClient(
@@ -48,11 +49,32 @@ exports.handler = async (event) => {
       };
     }
 
+    let resolvedUser;
+    try {
+      resolvedUser = await resolveSupabaseUser({
+        supabase,
+        userId: user_id
+      });
+    } catch (e) {
+      console.error('解析用户失败:', e);
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          success: false,
+          message: e.code === 'LEGACY_USER_NOT_FOUND'
+            ? '未找到该账号，请重新登录后再试'
+            : '用户校验失败',
+          code: e.code || 'USER_RESOLVE_FAILED'
+        })
+      };
+    }
+
     // 获取用户profile
     const { data: user, error } = await supabase
       .from('user_profiles')
       .select('account_type, daily_search_limit, daily_search_used, last_reset_date')
-      .eq('id', user_id)
+      .eq('id', resolvedUser.supabaseUserId)
       .single();
 
     if (error) {
@@ -74,7 +96,7 @@ exports.handler = async (event) => {
           daily_search_used: 0,
           last_reset_date: today
         })
-        .eq('id', user_id);
+        .eq('id', resolvedUser.supabaseUserId);
 
       user.daily_search_used = 0;
     }
@@ -94,7 +116,8 @@ exports.handler = async (event) => {
         remaining: user.daily_search_limit - user.daily_search_used,
         message: canSearch ? 
           `今日还可搜索${user.daily_search_limit - user.daily_search_used}次` : 
-          '今日搜索次数已用完'
+          '今日搜索次数已用完',
+        resolved_user_id: resolvedUser.supabaseUserId
       })
     };
   } catch (error) {

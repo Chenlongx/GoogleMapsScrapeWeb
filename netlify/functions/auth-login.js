@@ -157,11 +157,28 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // 4. 生成 token
-    const accessToken = generateToken(user.id, user.email);
-    const refreshToken = generateRefreshToken(user.id, user.email);
+    // 4. 🔥 修复：获取真实的 auth.users ID
+    let authUserId = user.id;  // 默认使用 email_finder_users 的 ID
+    
+    // 尝试从 auth.users 获取真实的 UUID
+    try {
+      const { data: authUserData } = await supabaseAdmin.auth.admin.getUserByEmail(email);
+      if (authUserData && authUserData.user) {
+        authUserId = authUserData.user.id;  // 使用 auth.users 的真实 UUID
+        console.log('✅ 找到 auth.users ID:', authUserId);
+      } else {
+        console.warn('⚠️ 未找到 auth.users 记录，使用 email_finder_users ID');
+      }
+    } catch (authError) {
+      console.error('查询 auth.users 失败:', authError);
+      // 降级：继续使用 email_finder_users 的 ID
+    }
 
-    // 5. 更新登录信息
+    // 5. 生成 token（使用真实的 auth.users ID）
+    const accessToken = generateToken(authUserId, user.email);
+    const refreshToken = generateRefreshToken(authUserId, user.email);
+
+    // 6. 更新登录信息
     try {
       await supabaseAdmin
         .from('email_finder_users')
@@ -175,7 +192,7 @@ exports.handler = async (event, context) => {
       // 不影响登录流程
     }
 
-    // 6. 登录成功
+    // 7. 登录成功（返回真实的 auth.users ID）
     return {
       statusCode: 200,
       headers,
@@ -187,7 +204,7 @@ exports.handler = async (event, context) => {
           refreshToken: refreshToken,
           expiresIn: 7 * 24 * 3600, // 7天
           user: {
-            id: user.id,
+            id: authUserId,  // 🔥 返回 auth.users 的真实 ID
             email: user.email,
             username: user.username,
             email_verified: user.email_verified,
