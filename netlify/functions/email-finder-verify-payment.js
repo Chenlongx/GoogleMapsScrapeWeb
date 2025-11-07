@@ -98,6 +98,26 @@ exports.handler = async (event) => {
     const paymentCompleted = true; // 模拟支付成功
     
     if (paymentCompleted) {
+      // 4.1 升级前兜底：确保 user_profiles 存在（避免历史数据缺失）
+      const { data: existingProfile, error: profileErr } = await supabase
+        .from('user_profiles')
+        .select('id')
+        .eq('id', user_id)
+        .single();
+      if (profileErr && profileErr.code !== 'PGRST116') {
+        console.error('查询 user_profiles 失败（忽略继续）:', profileErr);
+      }
+      if (!existingProfile) {
+        const { error: createProfileErr } = await supabase
+          .from('user_profiles')
+          .insert({ id: user_id, username: payment.username || null })
+          .select('id')
+          .single();
+        if (createProfileErr) {
+          console.error('创建 user_profiles 失败（忽略继续）:', createProfileErr);
+        }
+      }
+
       // 5. 获取套餐信息
       const { data: plan, error: planError } = await supabase
         .from('subscription_plans')

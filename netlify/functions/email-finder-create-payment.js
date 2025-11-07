@@ -41,6 +41,55 @@ exports.handler = async (event) => {
       };
     }
 
+    // 0. 校验 user_id 是否为有效的 Supabase 认证用户（auth.users）
+    try {
+      const { data: userAdminRes, error: adminErr } = await supabase.auth.admin.getUserById(user_id);
+      if (adminErr || !userAdminRes || !userAdminRes.user) {
+        return {
+          statusCode: 400,
+          headers,
+          body: JSON.stringify({
+            success: false,
+            message: '用户不存在或未登录，请重新登录后再试',
+            code: 'USER_NOT_FOUND'
+          })
+        };
+      }
+
+      // 确保 user_profiles 存在（防止历史数据缺失导致后续流程报错）
+      const { data: profile, error: profileErr } = await supabase
+        .from('user_profiles')
+        .select('id')
+        .eq('id', user_id)
+        .single();
+
+      if (profileErr && profileErr.code !== 'PGRST116') {
+        // 非 not found 的错误
+        console.error('查询 user_profiles 失败:', profileErr);
+      }
+
+      if (!profile) {
+        const { error: upsertErr } = await supabase
+          .from('user_profiles')
+          .insert({
+            id: user_id,
+            email: userAdminRes.user.email || null,
+            username: username || userAdminRes.user.email || null
+          });
+        if (upsertErr) {
+          // 不中断主流程，但记录日志
+          console.error('创建 user_profiles 失败（忽略继续）:', upsertErr);
+        }
+      }
+    } catch (e) {
+      console.error('校验用户失败:', e);
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({ success: false, message: '用户校验失败', detail: String(e) })
+      };
+    }
+
     // 1. 获取套餐信息
     const { data: plan, error: planError } = await supabase
       .from('subscription_plans')
@@ -100,7 +149,12 @@ exports.handler = async (event) => {
       return {
         statusCode: 500,
         headers,
-        body: JSON.stringify({ success: false, message: '创建支付失败' })
+        body: JSON.stringify({
+          success: false,
+          message: '创建支付失败',
+          code: paymentError.code,
+          detail: paymentError.message
+        })
       };
     }
 
