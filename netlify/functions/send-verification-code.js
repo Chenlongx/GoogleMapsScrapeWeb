@@ -233,6 +233,7 @@ exports.handler = async (event, context) => {
     
     // 邮件服务配置
     const emailServiceType = process.env.EMAIL_SERVICE || 'console';
+    let emailSent = false;  // 标记是否真实发送了邮件
     
     if (emailServiceType === 'resend' && process.env.RESEND_API_KEY) {
       const { Resend } = require('resend');  // ✅ 解构导入
@@ -251,6 +252,7 @@ exports.handler = async (event, context) => {
       }
       
       console.log('✅ 验证码邮件已发送:', data);
+      emailSent = true;  // 标记已发送
     } else {
       // 开发模式：输出到控制台
       console.log('📧 验证码（开发模式）:');
@@ -265,7 +267,8 @@ exports.handler = async (event, context) => {
       body: JSON.stringify({
         success: true,
         message: '验证码已发送到您的邮箱，请查收',
-        debug: process.env.NODE_ENV === 'development' ? { code: verificationCode } : undefined
+        // ✅ 只在开发模式（未真实发送邮件）时返回验证码
+        debug: !emailSent ? { code: verificationCode } : undefined
       })
     };
 
