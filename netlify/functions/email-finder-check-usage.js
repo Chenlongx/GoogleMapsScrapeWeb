@@ -70,10 +70,10 @@ exports.handler = async (event) => {
       };
     }
 
-    // 获取用户profile
+    // 获取用户profile（包含过期时间）
     const { data: user, error } = await supabase
       .from('user_profiles')
-      .select('account_type, daily_search_limit, daily_search_used, last_reset_date')
+      .select('account_type, daily_search_limit, daily_search_used, last_reset_date, expiry_date, payment_status, searches_left')
       .eq('id', resolvedUser.supabaseUserId)
       .single();
 
@@ -84,6 +84,42 @@ exports.handler = async (event) => {
         headers,
         body: JSON.stringify({ success: false, message: '查询失败' })
       };
+    }
+
+    // 🔥 检查正式账号是否过期
+    if (user.account_type === 'premium' && user.expiry_date) {
+      const expiryDate = new Date(user.expiry_date);
+      const now = new Date();
+      
+      if (now > expiryDate) {
+        console.warn('⚠️ 账号已过期，自动降级为试用账号:', {
+          user_id: resolvedUser.supabaseUserId,
+          expiry_date: user.expiry_date
+        });
+        
+        // 降级为试用账号
+        await supabase
+          .from('user_profiles')
+          .update({
+            account_type: 'trial',
+            plan_type: null,
+            payment_status: 'expired',
+            searches_left: 10,
+            daily_search_limit: 10,
+            daily_search_used: 0,
+            last_reset_date: new Date().toISOString().split('T')[0]
+          })
+          .eq('id', resolvedUser.supabaseUserId);
+        
+        // 更新本地user对象
+        user.account_type = 'trial';
+        user.daily_search_limit = 10;
+        user.daily_search_used = 0;
+        user.searches_left = 10;
+        user.payment_status = 'expired';
+        
+        console.log('✅ 已降级为试用账号');
+      }
     }
 
     // 检查是否需要重置
@@ -113,7 +149,10 @@ exports.handler = async (event) => {
         account_type: user.account_type,
         daily_limit: user.daily_search_limit,
         daily_used: user.daily_search_used,
+        searches_left: user.searches_left,
         remaining: user.daily_search_limit - user.daily_search_used,
+        payment_status: user.payment_status,
+        expiry_date: user.expiry_date,
         message: canSearch ? 
           `今日还可搜索${user.daily_search_limit - user.daily_search_used}次` : 
           '今日搜索次数已用完',
