@@ -250,17 +250,21 @@ exports.handler = async (event) => {
       }
 
       // 8. 升级账号（设置账号类型、到期时间、搜索次数）
+      // 🔥 正式会员设置为无限搜索（searches_left = -1）
       const { error: upgradeError } = await supabase
         .from('user_profiles')
         .update({
-          account_type: payment.plan_type,  // 使用具体的套餐类型
+          account_type: 'premium',  // 🔥 统一设置为 premium（正式会员）
+          plan_type: payment.plan_type,  // 🔥 具体套餐类型（premium_monthly/quarterly/yearly）
           daily_search_limit: plan.search_limit,
+          searches_left: -1,  // 🔥 -1 表示无限次搜索
           payment_status: 'paid',
           payment_amount: payment.amount,
-          payment_date: new Date().toISOString(),
+          payment_date: now.toISOString(),  // 🔥 使用支付时间
           expiry_date: expiryDateStr,
           subscription_start: subscriptionStart,
-          subscription_end: subscriptionEnd
+          subscription_end: subscriptionEnd,
+          updated_at: now.toISOString()
         })
         .eq('id', resolvedUser.supabaseUserId);
 
@@ -291,7 +295,8 @@ exports.handler = async (event) => {
 
       console.log('✅ Email Finder账号升级成功！', {
         user_id: resolvedUser.supabaseUserId,
-        account_type: payment.plan_type,
+        account_type: 'premium',
+        plan_type: payment.plan_type,
         subscription_end: subscriptionEnd
       });
 
@@ -302,10 +307,15 @@ exports.handler = async (event) => {
           success: true,
           payment_status: 'completed',
           account_upgraded: true,
-          new_account_type: payment.plan_type,
-          expiry_date: expiryDateStr,
-          subscription_end: subscriptionEnd,
-          searches_left: plan.search_limit,
+          account_type: 'premium',  // 🔥 账号类型：premium（正式会员）
+          plan_type: payment.plan_type,  // 🔥 具体套餐：premium_monthly/quarterly/yearly
+          plan_name: plan.plan_name,  // 🔥 套餐名称
+          daily_search_limit: plan.search_limit,  // 🔥 每日搜索限制
+          searches_left: -1,  // 🔥 剩余搜索次数：-1表示无限
+          payment_date: now.toISOString(),  // 🔥 付款时间
+          expiry_date: expiryDateStr,  // 🔥 到期时间（YYYY-MM-DD）
+          subscription_start: subscriptionStart,  // 🔥 订阅开始时间
+          subscription_end: subscriptionEnd,  // 🔥 订阅结束时间
           message: '🎉 支付成功！您的账号已升级为正式账号',
           resolved_user_id: resolvedUser.supabaseUserId
         })
