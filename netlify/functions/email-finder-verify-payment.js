@@ -112,13 +112,12 @@ exports.handler = async (event) => {
       };
     }
 
-    // 4. 🔴 这里需要调用支付服务商API检查真实支付状态
-    // 示例：检查微信支付或支付宝的支付状态
-    // const actualStatus = await checkPaymentWithProvider(order_id);
+    // 4. 检查支付状态：只能通过手动确认完成支付
+    // 注意：Email Finder 使用二维码收款，需要手动在后台确认收款后更新订单状态
+    // 或者用户在支付完成后点击"我已完成支付"按钮来触发验证
     
-    // 🔴 临时：自动通过验证（测试用）
-    // 生产环境需要删除下面这行，改用真实的支付验证
-    const paymentCompleted = true; // 模拟支付成功
+    // 🔥 修复：不再自动通过验证，必须数据库中订单状态为 completed
+    const paymentCompleted = false;  // 默认未支付，等待手动确认
     
     if (paymentCompleted) {
       // 4.1 升级前兜底：确保 user_profiles 存在（避免历史数据缺失）
