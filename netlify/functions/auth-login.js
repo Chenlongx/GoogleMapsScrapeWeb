@@ -113,23 +113,27 @@ exports.handler = async (event, context) => {
 
     const supabaseAdmin = getSupabaseAdminClient();
 
-    // 1. 查询用户信息
+    // 1. 从 user_profiles 表查询用户信息
+    console.log('🔍 查询用户:', email);
     const { data: user, error: queryError } = await supabaseAdmin
-      .from('email_finder_users')
+      .from('user_profiles')
       .select('*')
       .eq('email', email)
       .single();
 
     if (queryError || !user) {
+      console.error('查询用户失败:', queryError);
       return {
         statusCode: 401,
         headers,
         body: JSON.stringify({
           success: false,
-          message: '邮箱或密码错误'
+          message: '用户不存在或密码错误，请检查您的邮箱和密码'
         })
       };
     }
+    
+    console.log('✅ 找到用户:', user.email, '账号类型:', user.account_type);
 
     // 2. 检查邮箱是否已验证
     if (!user.email_verified) {
@@ -157,42 +161,33 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // 4. 🔥 修复：获取真实的 auth.users ID
-    let authUserId = user.id;  // 默认使用 email_finder_users 的 ID
+    // 4. user_profiles.id 就是 auth.users 的 UUID，直接使用
+    const authUserId = user.id;  // user_profiles.id 引用 auth.users(id)
     
-    // 尝试从 auth.users 获取真实的 UUID
-    try {
-      const { data: authUserData } = await supabaseAdmin.auth.admin.getUserByEmail(email);
-      if (authUserData && authUserData.user) {
-        authUserId = authUserData.user.id;  // 使用 auth.users 的真实 UUID
-        console.log('✅ 找到 auth.users ID:', authUserId);
-      } else {
-        console.warn('⚠️ 未找到 auth.users 记录，使用 email_finder_users ID');
-      }
-    } catch (authError) {
-      console.error('查询 auth.users 失败:', authError);
-      // 降级：继续使用 email_finder_users 的 ID
-    }
+    console.log('✅ 用户UUID:', authUserId);
 
-    // 5. 生成 token（使用真实的 auth.users ID）
+    // 5. 生成 token
     const accessToken = generateToken(authUserId, user.email);
     const refreshToken = generateRefreshToken(authUserId, user.email);
 
-    // 6. 更新登录信息
+    // 6. 更新登录信息到 user_profiles
     try {
       await supabaseAdmin
-        .from('email_finder_users')
+        .from('user_profiles')
         .update({
           last_login_at: new Date().toISOString(),
-          login_count: (user.login_count || 0) + 1
+          login_count: (user.login_count || 0) + 1,
+          updated_at: new Date().toISOString()
         })
         .eq('id', user.id);
+      
+      console.log('✅ 登录信息已更新');
     } catch (updateError) {
       console.error('更新登录信息失败:', updateError);
       // 不影响登录流程
     }
 
-    // 7. 登录成功（返回真实的 auth.users ID）
+    // 7. 登录成功，返回完整的用户信息
     return {
       statusCode: 200,
       headers,
@@ -204,10 +199,16 @@ exports.handler = async (event, context) => {
           refreshToken: refreshToken,
           expiresIn: 7 * 24 * 3600, // 7天
           user: {
-            id: authUserId,  // 🔥 返回 auth.users 的真实 ID
+            id: authUserId,  // auth.users UUID
             email: user.email,
             username: user.username,
             email_verified: user.email_verified,
+            account_type: user.account_type,  // 账号类型
+            daily_search_limit: user.daily_search_limit,
+            daily_search_used: user.daily_search_used,
+            payment_status: user.payment_status,
+            expiry_date: user.expiry_date,
+            subscription_end: user.subscription_end,
             created_at: user.created_at
           }
         }
