@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>支付确认 - MediaMingle Email Finder</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    .container {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      max-width: 500px;
+      width: 100%;
+      padding: 32px 24px;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    
+    .header h1 {
+      font-size: 24px;
+      color: #1f2937;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    
+    .header p {
+      color: #6b7280;
+      font-size: 14px;
+    }
+    
+    .order-card {
+      background: #f9fafb;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+    
+    .order-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .order-item:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+    
+    .order-label {
+      color: #6b7280;
+      font-size: 14px;
+    }
+    
+    .order-value {
+      color: #1f2937;
+      font-size: 16px;
+      font-weight: 500;
+    }
+    
+    .order-value.amount {
+      color: #ef4444;
+      font-size: 24px;
+      font-weight: 700;
+    }
+    
+    .payment-section {
+      margin-bottom: 24px;
+    }
+    
+    .payment-section h3 {
+      font-size: 16px;
+      color: #1f2937;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+    
+    .payment-methods {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    
+    .payment-method {
+      flex: 1;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 16px 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .payment-method:hover {
+      border-color: #667eea;
+      background: #f9fafb;
+    }
+    
+    .payment-method.selected {
+      border-color: #667eea;
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    }
+    
+    .method-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+    
+    .method-name {
+      font-size: 14px;
+      color: #1f2937;
+      font-weight: 500;
+    }
+    
+    .payment-info {
+      background: #fef3c7;
+      border: 1px solid #fbbf24;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+    
+    .payment-info h4 {
+      font-size: 14px;
+      color: #92400e;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    
+    .payment-info ol {
+      margin-left: 20px;
+      color: #78350f;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    
+    .payment-info li {
+      margin-bottom: 6px;
+    }
+    
+    .btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 12px;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    }
+    
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .btn-secondary {
+      background: white;
+      color: #667eea;
+      border: 2px solid #667eea;
+    }
+    
+    .btn-secondary:hover {
+      background: #f9fafb;
+    }
+    
+    .loading {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 0.6s linear infinite;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .success-icon {
+      text-align: center;
+      font-size: 64px;
+      margin-bottom: 16px;
+    }
+    
+    .success-message {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    
+    .success-message h2 {
+      font-size: 20px;
+      color: #10b981;
+      margin-bottom: 8px;
+    }
+    
+    .success-message p {
+      font-size: 14px;
+      color: #6b7280;
+    }
+    
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 订单信息 -->
+    <div id="orderSection">
+      <div class="header">
+        <h1>📱 扫码成功</h1>
+        <p>请选择支付方式完成付款</p>
+      </div>
+      
+      <div class="order-card">
+        <div class="order-item">
+          <span class="order-label">订单号</span>
+          <span class="order-value" id="orderId">-</span>
+        </div>
+        <div class="order-item">
+          <span class="order-label">套餐</span>
+          <span class="order-value" id="planName">-</span>
+        </div>
+        <div class="order-item">
+          <span class="order-label">金额</span>
+          <span class="order-value amount" id="amount">¥0</span>
+        </div>
+      </div>
+      
+      <div class="payment-section">
+        <h3>选择支付方式</h3>
+        <div class="payment-methods">
+          <div class="payment-method selected" data-method="wechat">
+            <div class="method-icon">💚</div>
+            <div class="method-name">微信支付</div>
+          </div>
+          <div class="payment-method" data-method="alipay">
+            <div class="method-icon">🔵</div>
+            <div class="method-name">支付宝</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="payment-info">
+        <h4>📋 支付流程说明</h4>
+        <ol>
+          <li>请使用<strong>微信</strong>或<strong>支付宝</strong>向以下账号转账：<br>
+              <strong>账号：mediamingle@example.com</strong>
+          </li>
+          <li>转账时请备注您的<strong>订单号</strong></li>
+          <li>完成转账后，点击下方"我已完成支付"按钮</li>
+          <li>管理员将在<strong>1-5分钟</strong>内确认并升级您的账号</li>
+        </ol>
+      </div>
+      
+      <button class="btn btn-primary" id="confirmBtn">
+        ✅ 我已完成支付
+      </button>
+      
+      <button class="btn btn-secondary" id="cancelBtn">
+        返回
+      </button>
+    </div>
+    
+    <!-- 确认成功 -->
+    <div id="successSection" class="hidden">
+      <div class="success-icon">✅</div>
+      <div class="success-message">
+        <h2>提交成功</h2>
+        <p>您的支付确认已提交<br>管理员确认后将自动升级您的账号</p>
+      </div>
+      
+      <div class="order-card">
+        <div class="order-item">
+          <span class="order-label">订单号</span>
+          <span class="order-value" id="successOrderId">-</span>
+        </div>
+        <div class="order-item">
+          <span class="order-label">金额</span>
+          <span class="order-value" id="successAmount">¥0</span>
+        </div>
+      </div>
+      
+      <button class="btn btn-secondary" onclick="window.close()">
+        关闭页面
+      </button>
+    </div>
+  </div>
+  
+  <script>
+    const API_BASE_URL = 'https://mediamingle.cn/.netlify/functions';
+    
+    // 从URL获取参数
+    const urlParams = new URLSearchParams(window.location.search);
+    const orderId = urlParams.get('order_id');
+    const amount = urlParams.get('amount');
+    const planName = urlParams.get('plan');
+    
+    // 显示订单信息
+    document.getElementById('orderId').textContent = orderId || '-';
+    document.getElementById('planName').textContent = decodeURIComponent(planName || '-');
+    document.getElementById('amount').textContent = `¥${amount || '0'}`;
+    
+    // 支付方式选择
+    const paymentMethods = document.querySelectorAll('.payment-method');
+    let selectedMethod = 'wechat';
+    
+    paymentMethods.forEach(method => {
+      method.addEventListener('click', () => {
+        paymentMethods.forEach(m => m.classList.remove('selected'));
+        method.classList.add('selected');
+        selectedMethod = method.dataset.method;
+      });
+    });
+    
+    // 确认支付按钮
+    const confirmBtn = document.getElementById('confirmBtn');
+    confirmBtn.addEventListener('click', async () => {
+      if (!orderId) {
+        alert('订单信息错误，请重新扫码');
+        return;
+      }
+      
+      // 禁用按钮
+      confirmBtn.disabled = true;
+      const originalHTML = confirmBtn.innerHTML;
+      confirmBtn.innerHTML = '<div class="loading"></div> 提交中...';
+      
+      try {
+        // 调用确认接口（手机端专用）
+        const response = await fetch(`${API_BASE_URL}/email-finder-confirm-payment-mobile`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            order_id: orderId
+          })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          // 显示成功页面
+          document.getElementById('orderSection').classList.add('hidden');
+          document.getElementById('successSection').classList.remove('hidden');
+          document.getElementById('successOrderId').textContent = orderId;
+          document.getElementById('successAmount').textContent = `¥${amount}`;
+        } else {
+          throw new Error(result.message || '提交失败');
+        }
+      } catch (error) {
+        console.error('确认失败:', error);
+        alert('提交失败：' + error.message);
+        
+        // 恢复按钮
+        confirmBtn.disabled = false;
+        confirmBtn.innerHTML = originalHTML;
+      }
+    });
+    
+    // 取消按钮
+    document.getElementById('cancelBtn').addEventListener('click', () => {
+      window.close();
+    });
+  </script>
+</body>
+</html>
+

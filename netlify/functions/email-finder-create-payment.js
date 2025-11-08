@@ -87,17 +87,12 @@ exports.handler = async (event) => {
     const order_id = `EMF${timestamp}${random}`;
 
     // 3. 生成支付URL和二维码
-    // 🔴 这里需要对接您的支付服务商（微信支付/支付宝）
-    // 示例：使用二维码生成服务
-    const payment_info = {
-      order_id,
-      amount: plan.price,
-      product: plan.plan_name
-    };
+    // 🔥 修复：生成可访问的支付确认页面URL
+    // 用户扫码后可以在手机上查看订单信息并确认支付
+    const payment_url = `https://mediamingle.cn/payment-confirm.html?order_id=${order_id}&amount=${plan.price}&plan=${encodeURIComponent(plan.plan_name)}`;
     
-    // 简单的二维码URL（实际需要调用支付接口）
-    const payment_url = `wxp://f2f0${order_id}`;
-    const qr_code_url = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(JSON.stringify(payment_info))}`;
+    // 生成二维码（指向支付确认页面）
+    const qr_code_url = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(payment_url)}`;
 
     // 4. 创建支付记录
     const expiresAt = new Date(Date.now() + 30 * 60 * 1000); // 30分钟后过期
