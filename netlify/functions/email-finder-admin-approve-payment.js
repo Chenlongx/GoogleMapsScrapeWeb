@@ -65,7 +65,7 @@ exports.handler = async (event) => {
 
     // 2. 查询支付记录
     const { data: payment, error: paymentError } = await supabase
-      .from('payments')
+      .from('google_plugin_payments')
       .select('*')
       .eq('order_id', order_id)
       .single();
@@ -115,8 +115,8 @@ exports.handler = async (event) => {
 
     // 6. 更新支付状态
     await supabase
-      .from('payments')
-      .update({
+      .from('google_plugin_payments')
+      .update({ 
         payment_status: 'completed',
         verified_time: new Date().toISOString(),
         transaction_id: transaction_id || null,

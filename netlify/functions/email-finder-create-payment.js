@@ -180,7 +180,7 @@ exports.handler = async (event) => {
     const expiresAt = new Date(Date.now() + 30 * 60 * 1000); // 30分钟后过期
     
     const { data: payment, error: paymentError } = await supabase
-      .from('payments')
+      .from('google_plugin_payments')
       .insert({
         user_id: resolvedUser.supabaseUserId,
         username: resolvedUser.username || '',

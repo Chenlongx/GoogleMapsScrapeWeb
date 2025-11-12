@@ -52,7 +52,7 @@ exports.handler = async (event) => {
     
     // 2. 查询订单信息
     const { data: payment, error: paymentError } = await supabaseAdmin
-      .from('payments')
+      .from('google_plugin_payments')
       .select('*')
       .eq('order_id', order_id)
       .single();
@@ -120,7 +120,7 @@ exports.handler = async (event) => {
     
     // 5. 更新支付状态为"用户已确认"
     const { error: updateError } = await supabaseAdmin
-      .from('payments')
+      .from('google_plugin_payments')
       .update({
         payment_status: 'confirmed_by_user',
         confirmed_at: new Date().toISOString(),

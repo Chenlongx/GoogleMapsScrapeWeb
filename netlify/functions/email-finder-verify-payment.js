@@ -78,7 +78,7 @@ exports.handler = async (event) => {
 
     // 1. 查询支付记录
     const { data: payment, error: paymentError } = await supabase
-      .from('payments')
+      .from('google_plugin_payments')
       .select('*')
       .eq('order_id', order_id)
       .eq('user_id', resolvedUser.supabaseUserId)
@@ -109,7 +109,7 @@ exports.handler = async (event) => {
     // 3. 检查是否过期
     if (new Date() > new Date(payment.expires_at)) {
       await supabase
-        .from('payments')
+        .from('google_plugin_payments')
         .update({ payment_status: 'expired' })
         .eq('order_id', order_id)
         .eq('user_id', resolvedUser.supabaseUserId);
@@ -157,7 +157,7 @@ exports.handler = async (event) => {
           
           // 更新数据库中的支付状态
           await supabase
-            .from('payments')
+            .from('google_plugin_payments')
             .update({
               payment_status: 'completed',
               transaction_id: alipayResult.tradeNo,  // 支付宝交易号
@@ -240,7 +240,7 @@ exports.handler = async (event) => {
       // 7. 如果支付状态还不是 completed，更新为 completed
       if (payment.payment_status !== 'completed') {
         await supabase
-          .from('payments')
+          .from('google_plugin_payments')
           .update({
             payment_status: 'completed',
             verified_time: new Date().toISOString()

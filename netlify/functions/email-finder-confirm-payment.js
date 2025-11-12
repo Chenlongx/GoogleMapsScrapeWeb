@@ -67,7 +67,7 @@ exports.handler = async (event) => {
 
     // 1. 查询支付记录
     const { data: payment, error: paymentError } = await supabase
-      .from('payments')
+      .from('google_plugin_payments')
       .select('*')
       .eq('order_id', order_id)
       .eq('user_id', resolvedUser.supabaseUserId)
@@ -112,7 +112,7 @@ exports.handler = async (event) => {
     // 例如：用户输入支付凭证号、或者管理员输入特殊确认码
     
     await supabase
-      .from('payments')
+      .from('google_plugin_payments')
       .update({
         payment_status: 'confirming',  // 待确认状态
         confirm_code: confirm_code || null,
