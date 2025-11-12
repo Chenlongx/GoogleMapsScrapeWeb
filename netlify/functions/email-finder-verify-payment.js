@@ -3,11 +3,11 @@
  * 路径: /.netlify/functions/email-finder-verify-payment
  * 
  * 🔥 功能：主动调用支付宝API查询支付状态，支付成功后自动升级账号
+ * 🔥 修复：直接从 user_profiles 表查询用户，不再依赖 auth.users
  */
 
 const AlipaySdk = require('alipay-sdk').default || require('alipay-sdk');
 const { createClient } = require('@supabase/supabase-js');
-const { resolveSupabaseUser } = require('./utils/resolve-user');
 
 // 格式化密钥的辅助函数
 function formatKey(key, type) {
@@ -23,6 +23,39 @@ const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
+
+// 直接从 user_profiles 表查询用户
+const resolveUserProfile = async ({ supabase, userId }) => {
+  if (!userId) {
+    const error = new Error('缺少 userId');
+    error.code = 'USER_ID_MISSING';
+    throw error;
+  }
+
+  // 直接从 user_profiles 表查询用户
+  const { data: userProfile, error: profileError } = await supabase
+    .from('user_profiles')
+    .select('id, email, username')
+    .eq('id', userId)
+    .single();
+
+  if (profileError || !userProfile) {
+    const error = new Error('找不到对应的用户信息');
+    error.code = 'USER_NOT_FOUND';
+    throw error;
+  }
+
+  const email = userProfile.email;
+  const username = userProfile.username || (email ? email.split('@')[0] : '');
+
+  return {
+    supabaseUserId: userProfile.id,
+    email,
+    username,
+    legacyUser: null,
+    migrated: false
+  };
+};
 
 exports.handler = async (event) => {
   const headers = {
@@ -57,7 +90,7 @@ exports.handler = async (event) => {
 
     let resolvedUser;
     try {
-      resolvedUser = await resolveSupabaseUser({
+      resolvedUser = await resolveUserProfile({
         supabase,
         userId: user_id
       });
@@ -68,7 +101,7 @@ exports.handler = async (event) => {
         headers,
         body: JSON.stringify({
           success: false,
-          message: e.code === 'LEGACY_USER_NOT_FOUND'
+          message: e.code === 'USER_NOT_FOUND'
             ? '未找到该账号的支付记录，请重新登录后再试'
             : '用户校验失败',
           code: e.code || 'USER_RESOLVE_FAILED'
