@@ -132,13 +132,15 @@ exports.handler = async (event, context) => {
 
     const supabaseAdmin = getSupabaseAdminClient();
 
-    // 1. 检查邮箱是否已注册（在 auth.users 中检查）
-    console.log('🔍 检查邮箱是否已注册:', email);
-    
-    const { data: existingAuthUser, error: authCheckError } = await supabaseAdmin.auth.admin.getUserByEmail(email);
-    
-    if (existingAuthUser && existingAuthUser.user) {
-      console.log('❌ 邮箱已在 auth.users 中注册:', email);
+    // 1. 检查邮箱是否已注册（改为 user_profiles 表检查，不依赖 auth.users）
+    console.log('🔍 检查邮箱是否已注册 (user_profiles):', email);
+    const { data: existingProfile } = await supabaseAdmin
+      .from('user_profiles')
+      .select('email')
+      .eq('email', email)
+      .single();
+
+    if (existingProfile) {
       return {
         statusCode: 409,
         headers,
@@ -148,7 +150,6 @@ exports.handler = async (event, context) => {
         })
       };
     }
-    
     console.log('✅ 邮箱可用，开始注册流程');
 
     // 2. 查找待验证用户并验证验证码
@@ -225,73 +226,30 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // 6. 验证码正确，创建正式用户
+    // 6. 验证码正确，创建正式用户（仅使用 user_profiles，不使用 Supabase Auth）
     const passwordHash = hashPassword(password);
-    
-    // 6.1 先在 auth.users 中创建用户
-    console.log('🔐 创建 auth.users 用户...');
-    let authUser;
-    try {
-      const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
-        email: email,
-        password: password,
-        email_confirm: true,  // 验证码验证成功，自动确认邮箱
-        user_metadata: {
-          username: username || email.split('@')[0]
-        }
-      });
-      
-      if (authError) {
-        console.error('❌ 创建 auth.users 失败:', authError);
-        throw authError;
-      }
-      
-      authUser = authData.user;
-      console.log('✅ auth.users 创建成功:', authUser.id);
-    } catch (authError) {
-      console.error('❌ 注册失败:', authError);
-      return {
-        statusCode: 500,
-        headers,
-        body: JSON.stringify({
-          success: false,
-          message: '注册失败：' + authError.message
-        })
-      };
-    }
-    
-    // 6.2 在 user_profiles 中创建用户扩展信息
     console.log('📝 创建 user_profiles 记录...');
-    const { error: insertError } = await supabaseAdmin
+    const { data: createdProfiles, error: insertError } = await supabaseAdmin
       .from('user_profiles')
       .insert([{
-        id: authUser.id,  // 使用 auth.users 的 UUID
+        // id 由数据库默认生成（uuid default）
         email: email,
         username: username || email.split('@')[0],
-        password_hash: passwordHash,  // 存储密码哈希（用于自定义验证）
-        email_verified: true,  // 验证码验证成功，标记为已验证
-        account_type: 'trial',  // 默认试用账号
-        daily_search_limit: 10,  // 每日10次搜索
+        password_hash: passwordHash,
+        email_verified: true,
+        account_type: 'trial',
+        daily_search_limit: 10,
         daily_search_used: 0,
         searches_left: 10,
         last_reset_date: new Date().toISOString().split('T')[0],
         payment_status: 'unpaid',
         status: 'active',
         created_at: new Date().toISOString()
-      }]);
+      }])
+      .select('*');
 
     if (insertError) {
       console.error('❌ 创建 user_profiles 失败:', insertError);
-      
-      // 如果 user_profiles 创建失败，回滚：删除 auth.users 中的用户
-      try {
-        console.log('🔄 回滚：删除 auth.users 用户...');
-        await supabaseAdmin.auth.admin.deleteUser(authUser.id);
-        console.log('✅ 回滚成功');
-      } catch (deleteError) {
-        console.error('❌ 回滚删除用户失败:', deleteError);
-      }
-      
       if (insertError.code === '23505') {
         return {
           statusCode: 400,
@@ -313,7 +271,8 @@ exports.handler = async (event, context) => {
       };
     }
     
-    console.log('✅ user_profiles 创建成功');
+    const created = Array.isArray(createdProfiles) ? createdProfiles[0] : createdProfiles;
+    console.log('✅ user_profiles 创建成功, id:', created?.id);
     console.log('✅ 注册完成:', email);
 
     // 7. 删除待验证记录
@@ -336,7 +295,7 @@ exports.handler = async (event, context) => {
         success: true,
         message: '注册成功！现在可以登录了',
         data: {
-          user_id: authUser.id,
+          user_id: created?.id,
           email: email,
           username: username || email.split('@')[0],
           account_type: 'trial'

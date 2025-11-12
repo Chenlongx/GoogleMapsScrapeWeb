@@ -178,9 +178,9 @@ exports.handler = async (event, context) => {
 
     const supabaseAdmin = getSupabaseAdminClient();
 
-    // 1. 检查邮箱是否已注册
+    // 1. 检查邮箱是否已注册（改为 user_profiles 表）
     const { data: existingUser } = await supabaseAdmin
-      .from('email_finder_users')
+      .from('user_profiles')
       .select('email')
       .eq('email', email)
       .single();
