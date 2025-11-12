@@ -4,12 +4,60 @@
  */
 
 const { createClient } = require('@supabase/supabase-js');
-const { resolveSupabaseUser } = require('./utils/resolve-user');
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
+
+// 直接从 user_profiles 表查询用户（兼容 UUID 或邮箱）
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+async function resolveUserProfile({ supabase, userId, fallbackUsername = '' }) {
+  if (!userId) {
+    const error = new Error('缺少 user_id');
+    error.code = 'USER_ID_MISSING';
+    throw error;
+  }
+
+  // 1) UUID: 通过 id 查找
+  if (typeof userId === 'string' && UUID_REGEX.test(userId)) {
+    const { data, error } = await supabase
+      .from('user_profiles')
+      .select('id, email, username')
+      .eq('id', userId)
+      .single();
+    if (!error && data) {
+      return { supabaseUserId: data.id, email: data.email || '', username: data.username || fallbackUsername || (data.email ? data.email.split('@')[0] : '') };
+    }
+  }
+
+  // 2) 邮箱: 通过 email 查找
+  if (typeof userId === 'string' && userId.includes('@')) {
+    const { data, error } = await supabase
+      .from('user_profiles')
+      .select('id, email, username')
+      .eq('email', userId)
+      .single();
+    if (!error && data) {
+      return { supabaseUserId: data.id, email: data.email || '', username: data.username || fallbackUsername || (data.email ? data.email.split('@')[0] : '') };
+    }
+  }
+
+  // 3) 兜底：仍按 id 再查一次
+  const { data: fallback, error: fbError } = await supabase
+    .from('user_profiles')
+    .select('id, email, username')
+    .eq('id', userId)
+    .single();
+  if (!fbError && fallback) {
+    return { supabaseUserId: fallback.id, email: fallback.email || '', username: fallback.username || fallbackUsername || (fallback.email ? fallback.email.split('@')[0] : '') };
+  }
+
+  const err = new Error('未找到该账号的使用记录，请重新登录后再试');
+  err.code = 'USER_NOT_FOUND';
+  throw err;
+}
 
 exports.handler = async (event) => {
   const headers = {
@@ -44,7 +92,7 @@ exports.handler = async (event) => {
 
     let resolvedUser;
     try {
-      resolvedUser = await resolveSupabaseUser({
+      resolvedUser = await resolveUserProfile({
         supabase,
         userId: user_id,
         fallbackUsername: username
@@ -56,7 +104,7 @@ exports.handler = async (event) => {
         headers,
         body: JSON.stringify({
           success: false,
-          message: e.code === 'LEGACY_USER_NOT_FOUND'
+          message: e.code === 'USER_NOT_FOUND'
             ? '未找到该账号的使用记录，请重新登录后再试'
             : '用户校验失败',
           code: e.code || 'USER_RESOLVE_FAILED'
