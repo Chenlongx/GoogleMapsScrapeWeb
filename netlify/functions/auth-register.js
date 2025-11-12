@@ -228,11 +228,12 @@ exports.handler = async (event, context) => {
 
     // 6. 验证码正确，创建正式用户（仅使用 user_profiles，不使用 Supabase Auth）
     const passwordHash = hashPassword(password);
+    const userId = crypto.randomUUID();
     console.log('📝 创建 user_profiles 记录...');
     const { data: createdProfiles, error: insertError } = await supabaseAdmin
       .from('user_profiles')
       .insert([{
-        // id 由数据库默认生成（uuid default）
+        id: userId,
         email: email,
         username: username || email.split('@')[0],
         password_hash: passwordHash,
