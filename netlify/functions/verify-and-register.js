@@ -103,8 +103,8 @@ exports.handler = async (event) => {
             .from('user_accounts')
             .select('id')
             .eq('device_id', device_id)
-            .maybeSingle();
-
+            .limit(1); // 不要 single/maybeSingle
+            
         if (deviceCheckError) {
             console.error('Error checking device ID:', deviceCheckError);
             return { statusCode: 500, body: JSON.stringify({ success: false, message: '数据库查询失败' }) };
