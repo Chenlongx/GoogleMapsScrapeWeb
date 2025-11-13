@@ -208,7 +208,17 @@ exports.handler = async (event) => {
       body: JSON.stringify({
         success: true,
         message: '登录成功',
-        user: { id: user.id, account: user.account, user_type: user.user_type }
+        user: {
+          id: user.id,
+          username: user.account,
+          userType: user.user_type,
+          expiryAt: user.expiry_at,
+          status: user.status,
+          deviceCode: storedDeviceId,
+          osType: user.os_type,
+          trial_search_used: user.trial_search_used,
+          daily_export_count: user.daily_export_count
+        }
       })
     };
 
