@@ -41,7 +41,7 @@ exports.handler = async (event) => {
             email: email,
             options: {
                 // --- 修改这里 ---
-                shouldCreateUser: true,
+                shouldCreateUser: false,
             },
         });
 
