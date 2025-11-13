@@ -99,7 +99,7 @@ exports.handler = async (event) => {
             return { statusCode: 400, body: JSON.stringify({ success: false, message: '所有字段都不能为空' }) };
         }
         
-        const { data: existingDevice, error: deviceCheckError } = await supabase
+        const { data: existingDevice, error: deviceCheckError, count } = await supabase
             .from('user_accounts')
             .select('id', { count: 'exact', head: true })
             .eq('device_id', device_id)
