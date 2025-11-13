@@ -101,10 +101,14 @@ exports.handler = async (event) => {
         
         const { data: existingDevice, error: deviceCheckError } = await supabase
             .from('user_accounts')
-            .select('id')
+            .select('id', { count: 'exact', head: true })
             .eq('device_id', device_id)
-            .limit(1); // 不要 single/maybeSingle2432
-            
+        
+        if ((count ?? 0) > 0) {
+            return { statusCode: 409, body: JSON.stringify({ success: false, message: '此设备已注册过试用账号' }) };
+        }
+
+
         if (deviceCheckError) {
             console.error('Error checking device ID:', deviceCheckError);
             return { statusCode: 500, body: JSON.stringify({ success: false, message: '数据库查询失败' }) };
