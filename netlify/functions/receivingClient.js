@@ -1,8 +1,147 @@
-const { createClient } = require('@supabase/supabase-js');
+// const { createClient } = require('@supabase/supabase-js');
 
+// const supabaseUrl = process.env.SUPABASE_URL;
+// const supabaseKey = process.env.SUPABASE_ANON_KEY;
+// const supabase = createClient(supabaseUrl, supabaseKey);
+
+// exports.handler = async (event) => {
+//   if (event.httpMethod !== 'POST') {
+//     return { statusCode: 405, body: JSON.stringify({ message: 'Method Not Allowed' }) };
+//   }
+
+//   try {
+//     const { username, password, device_id, os_type } = JSON.parse(event.body);
+
+//     console.log("接收到:", username, password, device_id, os_type);
+
+//     // 查询用户
+//     let { data: user, error: fetchError } = await supabase
+//       .from('user_accounts')
+//       .select('*')
+//       .eq('account', username)
+//       .single();
+
+//     if (fetchError && fetchError.code !== 'PGRST116') {
+//       console.error('数据库查询错误:', fetchError);
+//       return {
+//         statusCode: 500,
+//         body: JSON.stringify({ success: false, message: `数据库查询失败: ${fetchError.message}` }),
+//         headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
+//       };
+//     }
+
+//     if (!user) {
+//       return {
+//         statusCode: 404,
+//         body: JSON.stringify({ success: false, message: '用户不存在' }),
+//         headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
+//       };
+//     }
+
+//     // 明文密码比对（生产建议用哈希）
+//     if (password !== user.password) {
+//       return {
+//         statusCode: 401,
+//         body: JSON.stringify({ success: false, message: '密码错误' }),
+//         headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
+//       };
+//     }
+
+//     if (!device_id) {
+//       return {
+//         statusCode: 400,
+//         body: JSON.stringify({ success: false, message: '设备码缺失' }),
+//         headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
+//       };
+//     }
+
+//     const storedDeviceId = user.device_id;
+
+//     // 情况 1：首次绑定
+//     if (!storedDeviceId) {
+//       const { error: updateError } = await supabase
+//         .from('user_accounts')
+//         .update({ device_id, os_type })
+//         .eq('id', user.id);
+
+//       if (updateError) {
+//         return {
+//           statusCode: 500,
+//           body: JSON.stringify({ success: false, message: `绑定设备失败: ${updateError.message}` }),
+//           headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
+//         };
+//       }
+
+//       return {
+//         statusCode: 200,
+//         body: JSON.stringify({
+//           success: true,
+//           message: '首次登录成功，设备已绑定。',
+//           user: {
+//             id: user.id,
+//             username: user.account,
+//             userType: user.user_type,
+//             expiryAt: user.expiry_at,
+//             status: user.status,
+//             deviceCode: device_id,
+//             osType: os_type,
+//             trial_search_used: user.trial_search_used,
+//             daily_export_count: user.daily_export_count
+//           }
+//         }),
+//         headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
+//       };
+//     }
+
+//     // 情况 2：已绑定设备，但设备码不一致
+//     if (storedDeviceId !== device_id) {
+//       return {
+//         statusCode: 403,
+//         body: JSON.stringify({ success: false, message: '设备码不匹配，请联系管理员。' }),
+//         headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
+//       };
+//     }
+
+//     // 情况 3：已绑定且设备码一致
+//     return {
+//       statusCode: 200,
+//       body: JSON.stringify({
+//         success: true,
+//         message: '登录成功。',
+//         user: {
+//           id: user.id,
+//           username: user.account,
+//           userType: user.user_type,
+//           expiryAt: user.expiry_at,
+//           status: user.status,
+//           deviceCode: storedDeviceId,
+//           osType: user.os_type,
+//           trial_search_used: user.trial_search_used,
+//           daily_export_count: user.daily_export_count
+//         }
+//       }),
+//       headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
+//     };
+
+//   } catch (error) {
+//     console.error("登录时出错:", error);
+//     return {
+//       statusCode: 500,
+//       body: JSON.stringify({ success: false, error: error.message || '内部服务器错误' }),
+//       headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
+//     };
+//   }
+// };
+
+
+
+
+
+// 使用 service role，避免 RLS 拦截
+const { createClient } = require('@supabase/supabase-js');
 const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_ANON_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey);
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY; // 新增
+const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
@@ -11,124 +150,70 @@ exports.handler = async (event) => {
 
   try {
     const { username, password, device_id, os_type } = JSON.parse(event.body);
+    if (!username || !password || !device_id || !os_type) {
+      return { statusCode: 400, body: JSON.stringify({ message: '缺少必要字段' }) };
+    }
 
-    console.log("接收到:", username, password, device_id, os_type);
-
-    // 查询用户
-    let { data: user, error: fetchError } = await supabase
+    // 仅取必要字段，避免拉太多
+    const { data: rows, error: fetchError } = await supabase
       .from('user_accounts')
-      .select('*')
+      .select('id, account, password, status, expiry_at, device_id, user_type')
       .eq('account', username)
-      .single();
+      .limit(1); // 不用 single/maybeSingle
 
-    if (fetchError && fetchError.code !== 'PGRST116') {
+    if (fetchError) {
       console.error('数据库查询错误:', fetchError);
-      return {
-        statusCode: 500,
-        body: JSON.stringify({ success: false, message: `数据库查询失败: ${fetchError.message}` }),
-        headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
-      };
+      return { statusCode: 500, body: JSON.stringify({ success:false, message: '数据库查询失败' }) };
     }
 
-    if (!user) {
-      return {
-        statusCode: 404,
-        body: JSON.stringify({ success: false, message: '用户不存在' }),
-        headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
-      };
+    if (!rows || rows.length === 0) {
+      return { statusCode: 401, body: JSON.stringify({ success:false, message: '账号不存在' }) };
     }
 
-    // 明文密码比对（生产建议用哈希）
-    if (password !== user.password) {
-      return {
-        statusCode: 401,
-        body: JSON.stringify({ success: false, message: '密码错误' }),
-        headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
-      };
+    const user = rows[0];
+
+    // 简单明文校验（后续建议改为哈希）
+    if (user.password !== password) {
+      return { statusCode: 401, body: JSON.stringify({ success:false, message: '密码错误' }) };
     }
 
-    if (!device_id) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({ success: false, message: '设备码缺失' }),
-        headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
-      };
+    // 账户状态校验
+    if (user.status && user.status !== 'active') {
+      return { statusCode: 403, body: JSON.stringify({ success:false, message: '账号未激活或已被禁用' }) };
     }
 
-    const storedDeviceId = user.device_id;
+    // 有效期校验（如有）
+    if (user.expiry_at && new Date(user.expiry_at) < new Date()) {
+      return { statusCode: 403, body: JSON.stringify({ success:false, message: '账号已过期，请续费' }) };
+    }
 
-    // 情况 1：首次绑定
-    if (!storedDeviceId) {
-      const { error: updateError } = await supabase
+    // 设备绑定策略：如果库里没绑定设备，则首登绑定；若已绑定且不一致，拒绝
+    if (!user.device_id) {
+      const { error: bindErr } = await supabase
         .from('user_accounts')
         .update({ device_id, os_type })
         .eq('id', user.id);
 
-      if (updateError) {
-        return {
-          statusCode: 500,
-          body: JSON.stringify({ success: false, message: `绑定设备失败: ${updateError.message}` }),
-          headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
-        };
+      if (bindErr) {
+        console.error('绑定设备失败:', bindErr);
+        return { statusCode: 500, body: JSON.stringify({ success:false, message: '绑定设备失败' }) };
       }
-
-      return {
-        statusCode: 200,
-        body: JSON.stringify({
-          success: true,
-          message: '首次登录成功，设备已绑定。',
-          user: {
-            id: user.id,
-            username: user.account,
-            userType: user.user_type,
-            expiryAt: user.expiry_at,
-            status: user.status,
-            deviceCode: device_id,
-            osType: os_type,
-            trial_search_used: user.trial_search_used,
-            daily_export_count: user.daily_export_count
-          }
-        }),
-        headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
-      };
+    } else if (user.device_id !== device_id) {
+      return { statusCode: 409, body: JSON.stringify({ success:false, message: '此账号已绑定到其他设备' }) };
     }
 
-    // 情况 2：已绑定设备，但设备码不一致
-    if (storedDeviceId !== device_id) {
-      return {
-        statusCode: 403,
-        body: JSON.stringify({ success: false, message: '设备码不匹配，请联系管理员。' }),
-        headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
-      };
-    }
-
-    // 情况 3：已绑定且设备码一致
+    // 一切正常
     return {
       statusCode: 200,
       body: JSON.stringify({
         success: true,
-        message: '登录成功。',
-        user: {
-          id: user.id,
-          username: user.account,
-          userType: user.user_type,
-          expiryAt: user.expiry_at,
-          status: user.status,
-          deviceCode: storedDeviceId,
-          osType: user.os_type,
-          trial_search_used: user.trial_search_used,
-          daily_export_count: user.daily_export_count
-        }
-      }),
-      headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
+        message: '登录成功',
+        user: { id: user.id, account: user.account, user_type: user.user_type }
+      })
     };
 
-  } catch (error) {
-    console.error("登录时出错:", error);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ success: false, error: error.message || '内部服务器错误' }),
-      headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
-    };
+  } catch (e) {
+    console.error('服务器错误:', e);
+    return { statusCode: 500, body: JSON.stringify({ success:false, message: '服务器内部错误' }) };
   }
 };
