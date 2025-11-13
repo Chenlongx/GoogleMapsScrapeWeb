@@ -214,7 +214,7 @@ exports.handler = async (event) => {
           userType: user.user_type,
           expiryAt: user.expiry_at,
           status: user.status,
-          deviceCode: storedDeviceId,
+          deviceCode: user.device_id,
           osType: user.os_type,
           trial_search_used: user.trial_search_used,
           daily_export_count: user.daily_export_count
