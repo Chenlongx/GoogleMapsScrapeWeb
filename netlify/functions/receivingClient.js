@@ -157,7 +157,7 @@ exports.handler = async (event) => {
     // 仅取必要字段，避免拉太多
     const { data: rows, error: fetchError } = await supabase
       .from('user_accounts')
-      .select('id, account, password, status, expiry_at, device_id, user_type')
+      .select('id, account, password, user_type, created_at, expiry_at, status, device_id, os_type, daily_export_count, last_export_date, is_ai_authorized, ai_tokens_remaining, trial_search_used')
       .eq('account', username)
       .limit(1); // 不用 single/maybeSingle
 
