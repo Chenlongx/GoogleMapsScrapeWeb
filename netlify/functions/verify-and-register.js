@@ -103,7 +103,7 @@ exports.handler = async (event) => {
             .from('user_accounts')
             .select('id')
             .eq('device_id', device_id)
-            .limit(1); // 不要 single/maybeSingle
+            .limit(1); // 不要 single/maybeSingle2432
             
         if (deviceCheckError) {
             console.error('Error checking device ID:', deviceCheckError);
