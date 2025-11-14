@@ -39,6 +39,18 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- Header 和 Footer ---
         getHeaderHTML() {
             return `
+                <!-- 双11优惠栏 -->
+                <div class="promo-banner" id="promo-banner">
+                    <div class="container">
+                        <div class="promo-content">
+                            <span class="promo-text" data-lang-zh="🎉 跨境智贸云梯双11，全场会员买1年送1年！" data-lang-en="🎉 Cross-border SmartTrade CloudLadder Double 11, Buy 1 Year Get 1 Year Free!">🎉 跨境智贸云梯双11，全场会员买1年送1年！</span>
+                            <a href="./checkout.html" class="promo-cta" data-lang-zh="立即抢购" data-lang-en="Shop Now">立即抢购</a>
+                        </div>
+                        <button class="promo-close" id="promo-close" aria-label="关闭优惠栏">
+                            <i class='bx bx-x'></i>
+                        </button>
+                    </div>
+                </div>
                 <div class="container">
                     <div class="logo" style="display: flex; align-items:center">
                         <a href="./index.html">
@@ -88,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div class="mapouter">
                                 <div class="gmap_canvas">
                                     <iframe class="gmap_iframe" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
-                                        src="https://maps.google.com/maps?width=300&amp;height=300&amp;hl=zh-CN&amp;q=广州天河软件园&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed">
+                                        src="https://maps.google.com/maps?width=300&amp;height=300&amp;hl=zh-CN&amp;q=佛山市禅城区季华四路创业产业园&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed">
                                     </iframe>
                                     <a href="https://embedgooglemap.xyz/">google maps iframe</a>
                                 </div>
@@ -112,6 +124,11 @@ document.addEventListener('DOMContentLoaded', () => {
                                 </style>
                             </div>
                             <p data-lang-zh="中心位置" data-lang-en="Location">中心位置</p>
+                            <div class="footer-address">
+                                <h4 data-lang-zh="联系地址" data-lang-en="Address">联系地址</h4>
+                                <p data-lang-zh="地址：广东省 佛山市 禅城区 季华四路 创业产业园" data-lang-en="Address: Chuangye Industrial Park, Jihua 4th Road, Chancheng District, Foshan, Guangdong Province">地址：广东省 佛山市 禅城区 季华四路 创业产业园</p>
+                                <p data-lang-zh="邮编：528000" data-lang-en="Postal Code: 528000">邮编：528000</p>
+                            </div>
                         </div>
                         <div class="footer-links">
                             <h3 data-lang-zh="产品" data-lang-en="Product">产品</h3>
@@ -190,6 +207,51 @@ document.addEventListener('DOMContentLoaded', () => {
                         modalContainer.classList.remove('active');
                     }
                 });
+            }
+
+            // ▼▼▼ 下拉菜单点击状态处理 ▼▼▼
+            const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+            dropdownToggles.forEach(toggle => {
+                toggle.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const parentItem = toggle.closest('.nav-item-dropdown');
+                    
+                    // 切换active状态以保持下拉菜单显示
+                    parentItem.classList.toggle('active');
+                    
+                    // 点击其他地方时移除active状态
+                    document.addEventListener('click', (event) => {
+                        if (!parentItem.contains(event.target)) {
+                            parentItem.classList.remove('active');
+                        }
+                    }, { once: true });
+                });
+            });
+
+            // ▼▼▼ 优惠栏关闭按钮处理 ▼▼▼
+            const promoClose = document.getElementById('promo-close');
+            const promoBanner = document.getElementById('promo-banner');
+            const mainHeader = document.querySelector('.main-header');
+            
+            if (promoClose && promoBanner) {
+                promoClose.addEventListener('click', () => {
+                    promoBanner.style.display = 'none';
+                    // 保存关闭状态到localStorage
+                    localStorage.setItem('promo-banner-closed', 'true');
+                    // 确保header正确定位
+                    if (mainHeader) {
+                        mainHeader.style.top = '0';
+                    }
+                });
+            }
+
+            // 检查是否已经关闭过优惠栏
+            if (localStorage.getItem('promo-banner-closed') === 'true' && promoBanner) {
+                promoBanner.style.display = 'none';
+                // 确保header正确定位
+                if (mainHeader) {
+                    mainHeader.style.top = '0';
+                }
             }
         },
 

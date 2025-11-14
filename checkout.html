@@ -506,16 +506,16 @@
 
                     <div class="product-card" id="validator-card">
                         <h2 data-lang-zh="MailPro邮件营销大师" data-lang-en="MailPro Email Marketing Master"></h2>
-                        <p class="plan-description" data-lang-zh="一次性付费，永久使用"
-                            data-lang-en="One-time payment, lifetime use"></p>
+                        <p class="plan-description" data-lang-zh="按年收费，功能强大"
+                            data-lang-en="Annual subscription, powerful features"></p>
                         <div class="plan-selector">
                             <button class="plan-btn" data-price="29.00" data-plan="standard" data-lang-zh="标准版"
                                 data-lang-en="Standard"></button>
                             <button class="plan-btn active" data-price="79.00" data-plan="premium" data-lang-zh="高级版"
                                 data-lang-en="Premium"></button>
                         </div>
-                        <div class="product-price">$79<span class="price-period" data-lang-zh="/终身版"
-                                data-lang-en="/lifetime"></span></div>
+                        <div class="product-price">$79<span class="price-period" data-lang-zh="/年"
+                                data-lang-en="/year"></span></div>
                         <ul class="product-features"></ul>
                         <label for="validator_email" data-lang-zh="输入接收激活码的邮箱"
                             data-lang-en="Enter email to receive license key"></label>
@@ -529,16 +529,16 @@
 
                     <div class="product-card" id="whatsapp-validator-card">
                         <h2 data-lang-zh="WhatsApp号码验证器" data-lang-en="WhatsApp Number Validator"></h2>
-                        <p class="plan-description" data-lang-zh="一次性付费，永久使用"
-                            data-lang-en="One-time payment, lifetime use"></p>
+                        <p class="plan-description" data-lang-zh="按年收费，高效验证"
+                            data-lang-en="Annual subscription, efficient validation"></p>
                         <div class="plan-selector">
                             <button class="plan-btn" data-price="29.00" data-plan="standard" data-lang-zh="标准版"
                                 data-lang-en="Standard"></button>
                             <button class="plan-btn active" data-price="49.00" data-plan="premium" data-lang-zh="高级版"
                                 data-lang-en="Premium"></button>
                         </div>
-                        <div class="product-price">$49<span class="price-period" data-lang-zh="/终身版"
-                                data-lang-en="/lifetime"></span></div>
+                        <div class="product-price">$49<span class="price-period" data-lang-zh="/年"
+                                data-lang-en="/year"></span></div>
                         <ul class="product-features"></ul>
                         <label for="whatsapp_validator_email" data-lang-zh="输入接收激活码的邮箱"
                             data-lang-en="Enter email to receive license key"></label>
@@ -661,12 +661,12 @@
                     premium: { price: '7.13', features_zh: ['无限数据', '<strong>优先</strong>技术支持', '无限导出'], features_en: ['Unlimited Records', '<strong>Priority</strong> Support', 'API Access'], period_zh: '/月', period_en: '/mo' }
                 },
                 validator: {
-                    standard: { price: '29.00', features_zh: ['全功能验证', '授权 <strong>1</strong> 台设备'], features_en: ['All Features', 'License for <strong>1</strong> Device'], period_zh: '/终身版', period_en: '/lifetime' },
-                    premium: { price: '79.00', features_zh: ['全功能验证', '<strong>优先</strong>技术支持', '授权 <strong>1</strong> 台设备'], features_en: ['All Features', '<strong>Priority</strong> Support', 'License for <strong>3</strong> Devices'], period_zh: '/终身版', period_en: '/lifetime' }
+                    standard: { price: '29.00', features_zh: ['全功能验证', '授权 <strong>1</strong> 台设备'], features_en: ['All Features', 'License for <strong>1</strong> Device'], period_zh: '/年', period_en: '/year' },
+                    premium: { price: '79.00', features_zh: ['全功能验证', '<strong>优先</strong>技术支持', '授权 <strong>3</strong> 台设备'], features_en: ['All Features', '<strong>Priority</strong> Support', 'License for <strong>3</strong> Devices'], period_zh: '/年', period_en: '/year' }
                 },
                 'whatsapp-validator': { // 注意：这里的键名需要与 data-product-id 匹配
-                    standard: { price: '29.00', features_zh: ['批量验证WhatsApp号码', '支持多种筛选条件', '实时验证结果'], features_en: ['Bulk WhatsApp number validation', 'Support for multiple filtering conditions', 'Real-time validation results'], period_zh: '/终身版', period_en: '/lifetime' },
-                    premium: { price: '49.00', features_zh: ['批量验证WhatsApp号码', '支持多种筛选条件', '实时验证结果', '<strong>专属</strong>技术支持'], features_en: ['Bulk WhatsApp number validation', 'Support for multiple filtering conditions', 'Real-time validation results', '<strong>Dedicated</strong> technical support'], period_zh: '/终身版', period_en: '/lifetime' }
+                    standard: { price: '29.00', features_zh: ['批量验证WhatsApp号码', '支持多种筛选条件', '实时验证结果'], features_en: ['Bulk WhatsApp number validation', 'Support for multiple filtering conditions', 'Real-time validation results'], period_zh: '/年', period_en: '/year' },
+                    premium: { price: '49.00', features_zh: ['批量验证WhatsApp号码', '支持多种筛选条件', '实时验证结果', '<strong>专属</strong>技术支持'], features_en: ['Bulk WhatsApp number validation', 'Support for multiple filtering conditions', 'Real-time validation results', '<strong>Dedicated</strong> technical support'], period_zh: '/年', period_en: '/year' }
                 },
                 gmaps_renewal: {
                     monthly: { price: '7.13', period_zh: '/月', period_en: '/mo' },
@@ -911,12 +911,12 @@
 
                 const btnTextKey = `btn_text_${selectedPlan}_${lang}`;
                 const btnTexts = {
-                    btn_text_standard_zh: productId === 'gmaps' ? '开通标准版' : '购买标准版',
-                    btn_text_standard_en: productId === 'gmaps' ? 'Activate Standard' : 'Buy Standard',
-                    btn_text_premium_zh: productId === 'gmaps' ? '开通高级版' : '购买高级版',
-                    btn_text_premium_en: productId === 'gmaps' ? 'Activate Premium' : 'Buy Premium',
+                    btn_text_standard_zh: productId === 'gmaps' ? '开通标准版' : '购买标准版激活码',
+                    btn_text_standard_en: productId === 'gmaps' ? 'Activate Standard' : 'Buy Standard License',
+                    btn_text_premium_zh: productId === 'gmaps' ? '立即开通高级版' : '购买高级版激活码',
+                    btn_text_premium_en: productId === 'gmaps' ? 'Activate Premium' : 'Buy Premium License',
                 };
-                purchaseBtn.textContent = btnTexts[btnTextKey];
+                purchaseBtn.textContent = btnTexts[btnTextKey] || (lang === 'zh' ? '立即购买' : 'Buy Now');
             }
 
             // --- 新购产品卡片的事件绑定 ---
@@ -1035,10 +1035,28 @@
             });
 
             // --- 语言切换事件监听 ---
-            document.addEventListener('languageChanged', () => {
-                productCards.forEach(card => updateCardUI(card));
-                // 这里可以添加续费区域的UI更新（如果需要）
+            function updateAllProductCards() {
+                const cards = document.querySelectorAll('.product-card:not(.renewal-section .product-card)');
+                cards.forEach(card => updateCardUI(card));
+            }
+            
+            // 监听语言切换
+            const productObserver = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.type === 'attributes' && mutation.attributeName === 'lang') {
+                        updateAllProductCards();
+                    }
+                });
             });
+
+            // 开始观察document.documentElement的lang属性变化
+            productObserver.observe(document.documentElement, {
+                attributes: true,
+                attributeFilter: ['lang']
+            });
+
+            // 初始化时也更新一次
+            updateAllProductCards();
 
             // ▼▼▼ 【新增】为联系我们弹窗绑定独立的关闭事件 ▼▼▼
             const contactModal = document.getElementById('contact-modal-container');
@@ -1104,6 +1122,41 @@
             if (parts.length === 2) return parts.pop().split(';').shift();
             return null;
         }
+
+        // 监听语言切换事件，更新续费选项的显示文本
+        function updateRenewalOptions() {
+            const lang = document.documentElement.lang.startsWith('zh') ? 'zh' : 'en';
+            const durationSelect = document.getElementById('renewal_duration');
+            
+            if (durationSelect) {
+                const options = durationSelect.querySelectorAll('option');
+                options.forEach(option => {
+                    const langAttr = `data-lang-${lang}`;
+                    const langText = option.getAttribute(langAttr);
+                    if (langText) {
+                        option.textContent = langText;
+                    }
+                });
+            }
+        }
+
+        // 监听语言切换
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'lang') {
+                    updateRenewalOptions();
+                }
+            });
+        });
+
+        // 开始观察document.documentElement的lang属性变化
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['lang']
+        });
+
+        // 初始化时也更新一次
+        updateRenewalOptions();
     </script>
 </body>
 

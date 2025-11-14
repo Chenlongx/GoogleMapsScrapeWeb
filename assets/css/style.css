@@ -92,10 +92,97 @@ body {
     box-sizing: border-box; /* 确保padding包含在宽度内 */
 }
 
-/* --- 3. 头部与导航 --- */
+/* --- 3. 优惠栏 --- */
+.promo-banner {
+    background: linear-gradient(135deg, #ff6b35, #f7931e, #ff8c42);
+    color: white;
+    position: relative;
+    z-index: 101;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.promo-banner .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+.promo-content {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex: 1;
+    justify-content: center;
+}
+
+.promo-text {
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-align: center;
+}
+
+.promo-cta {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.85rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.promo-cta:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.promo-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+    position: absolute;
+    right: 0;
+}
+
+.promo-close:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* 移动端优惠栏调整 */
+@media (max-width: 767px) {
+    .promo-content {
+        flex-direction: column;
+        gap: 0.75rem;
+        text-align: center;
+    }
+    
+    .promo-text {
+        font-size: 0.85rem;
+        line-height: 1.4;
+    }
+    
+    .promo-cta {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.8rem;
+    }
+}
+
+/* --- 4. 头部与导航 --- */
 .main-header {
-    height: var(--header-height);
-    background-color: #f0f0f0; /* 修改这里 */
+    min-height: var(--header-height);
+    height: auto;
+    background-color: var(--surface-color) !important;
+    background-image: none !important;
     border-bottom: 1px solid var(--border-color);
     position: sticky;
     top: 0;
@@ -103,11 +190,25 @@ body {
     transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
+/* 当优惠栏被隐藏时，header应该贴顶 */
+.promo-banner[style*="display: none"] + .main-header,
+.main-header:first-child {
+    top: 0;
+}
+
 .main-header .container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 100%;
+    min-height: var(--header-height);
+    background: transparent; /* 确保容器背景透明 */
+}
+
+/* 强制header背景样式 */
+#main-header {
+    background-color: var(--surface-color) !important;
+    background-image: none !important;
+    background: var(--surface-color) !important;
 }
 
 .logo a {
@@ -127,7 +228,7 @@ body {
 .logo-text {
     font-size: 1.5rem; /* 设置字体大小 */
     font-weight: bold; /* 设置字体加粗 */
-    color: #002887; /* 使用主要颜色 */
+    color: var(--text-primary-color); /* 跟随主题颜色（暗色为白色） */
     margin-left: 10px; /* 图标和文本之间添加间距 */
     vertical-align: middle; /* 垂直对齐 */
 }
@@ -139,7 +240,7 @@ body {
 
 .main-nav a {
     text-decoration: none;
-    color: #333; /* 修改这里 */
+    color: var(--text-primary-color);
     font-weight: 500;
     transition: color 0.2s ease;
     padding: 0.5rem 0;
@@ -221,11 +322,13 @@ body {
     box-shadow: 0 10px 25px rgba(0,0,0,0.1); /* 阴影效果更柔和 */
     z-index: 101;
 
-    /* 添加平滑的过渡动画效果 */
-    transition: opacity 0.2s ease, top 0.2s ease, visibility 0.2s;
+    /* 添加平滑的过渡动画效果，缩短时间减少闪现 */
+    transition: opacity 0.15s ease, top 0.15s ease, visibility 0.15s;
 }
 
-.nav-item-dropdown:hover > .dropdown-menu {
+.nav-item-dropdown:hover > .dropdown-menu,
+.nav-item-dropdown:focus-within > .dropdown-menu,
+.nav-item-dropdown.active > .dropdown-menu {
     display: block; /* 让菜单占据空间 */
     visibility: visible; /* 让菜单可见 */
     opacity: 1; /* 渐显 */
@@ -245,8 +348,11 @@ body {
     line-height: 1.4; /* 设置行高 */
     word-break: keep-all; /* 避免中文逐字断行导致“垂直”效果 */
     overflow-wrap: anywhere; /* 英文长词在必要时断行 */
-    color: var(--text-secondary-color); /* 修正文字颜色继承 */
+    color: var(--text-primary-color); /* 跟随主题：暗色为白色 */
     border-bottom: none !important; /* 确保没有下划线 */
+    width: 100%; /* 确保链接占满整个宽度 */
+    box-sizing: border-box; /* 包含padding在宽度计算中 */
+    min-height: 2.5rem; /* 设置最小高度保持一致性 */
     font-size: 0.9rem; /* 稍微减小字体以适应更多内容 */
 }
 
@@ -274,6 +380,26 @@ body {
 }
 
 .footer-about .logo { margin-bottom: 1rem; }
+
+.footer-address {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.footer-address h4 {
+    color: var(--text-primary-color);
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+.footer-address p {
+    color: var(--text-secondary-color);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 0.5rem;
+}
 
 .footer-links h3 {
     color: var(--text-primary-color);
@@ -1066,8 +1192,10 @@ h2.faq-question:has(button[aria-expanded="true"]) + .faq-answer {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        height: var(--header-height);
+        min-height: var(--header-height);
+        height: auto;
         padding: 0 1rem;
+        flex-wrap: wrap; /* 避免内容拥挤时溢出 */
     }
     
     /* 移动端logo优化 */
@@ -1086,7 +1214,7 @@ h2.faq-question:has(button[aria-expanded="true"]) + .faq-answer {
     .logo-text {
         font-size: 1.2rem !important; /* 移动端减小字体 */
         font-weight: bold;
-        color: #002887;
+        color: var(--text-primary-color);
         white-space: nowrap; /* 防止文本换行 */
     }
     /* --- 基础与布局优化 --- */
@@ -1442,6 +1570,164 @@ h2.faq-question:has(button[aria-expanded="true"]) + .faq-answer {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
+}
+
+/* --- 首页：数据规模统计 --- */
+.stats-section { 
+    padding: 4rem 0; 
+    background-color: var(--surface-color);
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 1.5rem;
+    align-items: stretch;
+}
+.stat-item {
+    text-align: center;
+    padding: 2rem 1.5rem;
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.stat-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+.stat-top { 
+    display: flex; 
+    align-items: baseline; 
+    justify-content: center; 
+    gap: 0.5rem; 
+    margin-bottom: 0.75rem; 
+}
+.stat-num {
+    font-size: 2.75rem;
+    font-weight: 800;
+    line-height: 1;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+.stat-unit { 
+    font-weight: 700; 
+    color: var(--text-primary-color); 
+    font-size: 1.1rem;
+}
+.stat-text { 
+    color: var(--text-secondary-color); 
+    font-weight: 500; 
+    font-size: 0.95rem;
+}
+
+/* --- 首页：数据来源与渠道 --- */
+.sources-section { 
+    padding: 4rem 0; 
+    background-color: var(--background-color);
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+.sources-logos {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.5rem;
+    align-items: center;
+    justify-items: center;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+.source-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 50px;
+    background-color: var(--surface-color);
+    color: var(--text-primary-color);
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    min-height: 50px;
+    justify-content: center;
+}
+.source-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    border-color: var(--primary-color);
+}
+.source-item .bx { 
+    font-size: 1.5rem; 
+    color: var(--primary-color); 
+    flex-shrink: 0;
+}
+
+/* --- 首页：线索中心与增长效果 --- */
+.leads-center-section { 
+    padding: 5rem 0; 
+    background-color: var(--surface-color);
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+.growth-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2rem;
+}
+.growth-card { 
+    text-align: center;
+    padding: 2.5rem 2rem;
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.growth-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+.growth-card .icon-wrapper {
+    font-size: 3rem;
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+}
+.growth-card h3 { 
+    margin: 0.5rem 0 1rem; 
+    font-size: 1.25rem;
+    color: var(--text-primary-color);
+}
+.growth-card p { 
+    color: var(--text-secondary-color); 
+    line-height: 1.6;
+}
+
+/* 响应式 */
+@media (max-width: 1023px) {
+    .stats-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .sources-logos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .growth-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 767px) {
+    .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .sources-logos { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+    .growth-grid { grid-template-columns: 1fr; }
+    .stat-num { font-size: 2.25rem; }
+    .stat-item { padding: 1.5rem 1rem; }
+    .source-item { 
+        padding: 0.75rem 1.25rem; 
+        font-size: 0.85rem;
+    }
+    .growth-card { padding: 2rem 1.5rem; }
+    .stats-section, .sources-section, .leads-center-section {
+        padding: 3rem 0;
+    }
 }
 
 /* --- 桌面端：避免hover位移与JS卡片倾斜冲突 --- */
