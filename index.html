@@ -6,10 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title data-lang-zh="首页 | 智贸云梯 - 全渠道智能获客平台"
-        data-lang-en="Home | 智贸云梯 - Omnichannel Intelligent Lead Generation Platform"></title>
+        data-lang-en="Home | SmartTrade CloudLadder - Omnichannel Intelligent Lead Generation Platform"></title>
     <meta name="description"
         data-lang-zh="智贸云梯 提供全渠道智能获客解决方案，集成地图抓取、邮箱验证、WhatsApp检测等工具，帮助您自动化地发现潜在客户，高效拓展业务。"
-        data-lang-en="智贸云梯 offers omnichannel intelligent lead generation solutions, integrating map scraping, email validation, WhatsApp detection tools to help you automate lead discovery and efficiently grow your business.">
+        data-lang-en="SmartTrade CloudLadder offers omnichannel intelligent lead generation solutions, integrating map scraping, email validation, WhatsApp detection tools to help you automate lead discovery and efficiently grow your business.">
     <link rel="canonical" href="https://example.com/index.html">
 
     <link rel="stylesheet" href="./assets/css/style.css">
@@ -201,19 +201,55 @@
         .faq-answer {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+            padding: 0 0.5rem;
+            transition: max-height 0.5s ease-out, padding 0.5s ease-out;
         }
 
         .faq-answer.open {
-            max-height: 500px;
-            /* 给个足够大的值，保证能展开 */
-            padding: 0 0.5rem 1.5rem;
+            max-height: 3000px;
+            /* 设置足够大的高度确保所有内容完全显示 */
+            padding: 1rem 0.5rem 1.5rem;
+        }
+
+        /* 为了更好的用户体验，添加平滑滚动 */
+        .faq-answer.open {
+            overflow-y: auto;
+            scroll-behavior: smooth;
         }
 
         .faq-answer p {
-            padding: 0 0.5rem 1.5rem;
+            padding: 0;
+            margin: 0;
             color: var(--text-secondary-color);
             line-height: 1.7;
+        }
+
+        .faq-answer p strong {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .faq-answer p br + strong {
+            display: block;
+            margin-top: 0.5rem;
+        }
+
+        /* 移动端FAQ优化 */
+        @media (max-width: 767px) {
+            .faq-answer.open {
+                max-height: 4000px;
+                /* 移动端需要更大的高度，因为内容可能更长 */
+            }
+            
+            .faq-answer p {
+                font-size: 0.95rem;
+                line-height: 1.6;
+            }
+            
+            .faq-question button {
+                font-size: 1rem;
+                padding: 1.25rem 0.5rem;
+            }
         }
 
         /* --- 客户评价 --- */
@@ -327,7 +363,7 @@
                     <div class="hero-text">
                         <h1 data-lang-zh="全渠道智能获客，一站式解决" data-lang-en="Omnichannel Lead Generation, Solved"></h1>
                         <p class="subtitle" data-lang-zh="智贸云梯 为您整合了地图、网站、社媒等多个渠道的数据能力，打造了一套完整的自动化增长工具生态，助您轻松链接全球商机。"
-                            data-lang-en="智贸云梯 integrates data capabilities from maps, websites, and social media into a complete ecosystem of automated growth tools, helping you connect with global opportunities effortlessly.">
+                            data-lang-en="SmartTrade CloudLadder integrates data capabilities from maps, websites, and social media into a complete ecosystem of automated growth tools, helping you connect with global opportunities effortlessly.">
                         </p>
                         <div class="hero-actions">
                             <a href="#tools" class="btn btn-primary" data-lang-zh="探索我们的工具"
@@ -349,7 +385,7 @@
                 <div class="section-header">
                     <h2 data-lang-zh="为您打造的全渠道增长引擎" data-lang-en="An Omnichannel Growth Engine Built For You"></h2>
                     <p class="section-subtitle" data-lang-zh="智贸云梯 提供的不只是工具，更是一套完整的商业智能解决方案，助您在竞争中遥遥领先。"
-                        data-lang-en="智贸云梯 offers more than just tools; it's a complete business intelligence solution to keep you ahead of the competition.">
+                        data-lang-en="SmartTrade CloudLadder offers more than just tools; it's a complete business intelligence solution to keep you ahead of the competition.">
                     </p>
                 </div>
                 <div class="new-features-grid">
@@ -371,7 +407,7 @@
                         <div class="icon-wrapper"><i class='bx bx-bot'></i></div>
                         <h3 data-lang-zh="强大的自动化能力" data-lang-en="Powerful Automation"></h3>
                         <p data-lang-zh="设置好您的目标，智贸云梯的全套工具即可7x24小时无人值守地工作，持续不断地为您输送高质量线索。"
-                            data-lang-en="Set your targets, and 智贸云梯's complete suite of tools will work 24/7, unattended, continuously delivering high-quality leads to your pipeline.">
+                            data-lang-en="Set your targets, and SmartTrade CloudLadder's complete suite of tools will work 24/7, unattended, continuously delivering high-quality leads to your pipeline.">
                         </p>
                     </div>
                 </div>
@@ -381,7 +417,7 @@
         <section id="tools" class="how-it-works" style="scroll-margin-top: 80px;">
             <div class="container">
                 <div class="section-header">
-                    <h2 data-lang-zh="智贸云梯 核心工具套件" data-lang-en="智贸云梯 Core Tool Suite"></h2>
+                    <h2 data-lang-zh="智贸云梯 核心工具套件" data-lang-en="SmartTrade CloudLadder Core Tool Suite"></h2>
                 </div>
                 <div class="new-features-grid">
                     <div class="new-feature-card card-hover-effect" style="text-align: left;">
@@ -395,7 +431,7 @@
                     </div>
                     <div class="new-feature-card card-hover-effect" style="text-align: left;">
                         <div class="icon-wrapper" style="text-align: center;"><i class='bx bx-search-alt'></i></div>
-                        <h3 data-lang-zh="智贸云梯 | MediaMingle 专业版" data-lang-en="MediaMingle Professional"></h3>
+                        <h3 data-lang-zh="智贸云梯 | MediaMingle 专业版" data-lang-en="SmartTrade CloudLadder | MediaMingle Professional"></h3>
                         <p data-lang-zh="综合搜索引擎邮件挖掘工具，支持Google、Bing、DuckDuckGo等多个搜索引擎，智能爬取企业网站，深度挖掘高质量商业邮箱，为您的B2B营销提供精准的联系方式。"
                             data-lang-en="Comprehensive search engine email mining tool supporting Google, Bing, DuckDuckGo and more. Intelligently crawls business websites to deeply mine high-quality business emails for your B2B marketing campaigns.">
                         </p>
@@ -450,7 +486,7 @@
                         <div class="step-icon-wrapper"><i class='bx bxs-cctv'></i></div>
                         <h3 data-lang-zh="2. 启动任务" data-lang-en="2. Launch Task"></h3>
                         <p data-lang-zh="点击"开始"，智贸云梯的全套工具将全自动工作，为您搜集成百上千条高质量潜在客户信息，包括邮箱、电话、社交媒体等。"
-                            data-lang-en="Click 'Start', and 智贸云梯's complete suite of tools will work automatically to gather hundreds of high-quality leads for you, including emails, phones, social media and more.">
+                            data-lang-en="Click 'Start', and SmartTrade CloudLadder's complete suite of tools will work automatically to gather hundreds of high-quality leads for you, including emails, phones, social media and more.">
                         </p>
                     </div>
                     <div class="step step-card card-hover-effect">
@@ -470,42 +506,86 @@
                     <h2 data-lang-zh="常见问题解答" data-lang-en="Frequently Asked Questions"></h2>
                 </div>
                 <div id="faq-accordion" class="faq-accordion">
+                    <!-- 产品选择相关 -->
                     <div class="faq-item">
                         <h2 class="faq-question">
                             <button aria-expanded="false" aria-controls="faq-answer-home-1">
-                                <span data-lang-zh="你们的工具有什么不同？我应该选哪个？"
-                                    data-lang-en="What's the difference between your tools? Which one should I choose?"></span>
+                                <span data-lang-zh="你们有哪些产品？每个产品的主要功能是什么？"
+                                    data-lang-en="What products do you offer? What are the main features of each product?"></span>
                             </button>
                         </h2>
                         <div id="faq-answer-home-1" class="faq-answer" hidden>
-                            <p data-lang-zh=""谷歌地图抓取器"专注于从地图中发现新的商业线索，适合需要开拓新市场的用户。"MailPro邮件营销大师"则专注于清洗您已有的邮件列表，提升送达率，同时提供完整的邮件营销功能。"WhatsApp批量真实性检测"确保您的联系号码是活跃用户，适合进行精准营销。而"谷歌插件获客"是Chrome浏览器插件，让您在浏览任何网页时都能快速获取邮箱，支持AI决策人预测和LinkedIn挖掘。这些工具可以独立使用，也可以组合起来，形成一个完整的全渠道客户开发与触达流程。"
-                            data-lang-en="'Google Maps Scraper' focuses on discovering new business leads from maps, ideal for users needing to enter new markets. 'MailPro Email Marketing Master' focuses on cleaning your existing email lists to improve deliverability while providing complete email marketing features. 'WhatsApp Validator' ensures your contact numbers are active users, perfect for targeted marketing. And 'Email Finder Chrome Extension' is a browser plugin that lets you quickly extract emails while browsing any webpage, with AI decision-maker prediction and LinkedIn mining. These tools can be used independently or combined to create a complete omnichannel customer development and outreach workflow.">
+                            <p data-lang-zh="智贸云梯提供5款核心产品：<br><br><strong>1. 谷歌地图抓取器</strong> - 从Google Maps批量提取商家信息，自动获取邮箱、电话、社交媒体链接等联系方式，支持多浏览器并行采集。<br><br><strong>2. MediaMingle专业版</strong> - 综合搜索引擎邮件挖掘工具，支持Google、Bing、DuckDuckGo等多个搜索引擎，深度挖掘企业网站邮箱。<br><br><strong>3. MailPro邮件营销大师</strong> - 专业邮箱验证和邮件营销工具，支持多维度邮箱检测、模板管理、批量发送等功能。<br><br><strong>4. WhatsApp验证器</strong> - 批量验证WhatsApp号码真实性，支持号码生成、用户信息抓取、活跃度检测。<br><br><strong>5. 谷歌插件获客</strong> - Chrome浏览器插件，支持智能邮箱查找、AI决策人预测、LinkedIn挖掘、实时验证等功能。" data-lang-en="SmartTrade CloudLadder offers 5 core products:<br><br><strong>1. Google Maps Scraper</strong> - Bulk extract business information from Google Maps, automatically obtain emails, phones, social media links, supports multi-browser parallel collection.<br><br><strong>2. MediaMingle Professional</strong> - Comprehensive search engine email mining tool, supports Google, Bing, DuckDuckGo and other search engines, deeply mines business website emails.<br><br><strong>3. MailPro Email Marketing Master</strong> - Professional email validation and marketing tool, supports multi-dimensional email verification, template management, bulk sending.<br><br><strong>4. WhatsApp Validator</strong> - Bulk validate WhatsApp number authenticity, supports number generation, user information scraping, activity detection.<br><br><strong>5. Email Finder Chrome Extension</strong> - Chrome browser plugin, supports intelligent email finding, AI decision-maker prediction, LinkedIn mining, real-time validation."
                             </p>
                         </div>
                     </div>
+
+                    <!-- 产品选择建议 -->
                     <div class="faq-item">
                         <h2 class="faq-question">
                             <button aria-expanded="false" aria-controls="faq-answer-home-2">
-                                <span data-lang-zh="数据来源是哪里？使用这些数据合法吗？"
-                                    data-lang-en="What are the data sources? Is using this data legal?"></span>
+                                <span data-lang-zh="我应该选择哪个产品？如何搭配使用？"
+                                    data-lang-en="Which product should I choose? How to use them together?"></span>
                             </button>
                         </h2>
                         <div id="faq-answer-home-2" class="faq-answer" hidden>
-                            <p data-lang-zh="智贸云梯所有的数据均来源于公开渠道，如商家在Google地图、企业网站和Facebook、Instagram、LinkedIn等社交媒体上自行发布的信息。我们聚合和整理这些公开数据，不涉及任何私人或非公开信息。我们建议您在使用数据时，遵守您所在国家和地区的相关法律法规，如 CAN-SPAM 或 GDPR。"
-                                data-lang-en="All 智贸云梯 data comes from public sources, such as information businesses publish on Google Maps, company websites, and social media platforms like Facebook, Instagram, LinkedIn. We aggregate and organize this public data and do not handle any private or non-public information. We advise you to comply with local laws and regulations like CAN-SPAM or GDPR when using the data.">
+                            <p data-lang-zh="选择建议：<br><br><strong>新市场开拓</strong> - 推荐"谷歌地图抓取器"，快速获取目标区域商家信息<br><strong>网站邮箱挖掘</strong> - 推荐"MediaMingle专业版"，深度挖掘企业网站邮箱<br><strong>邮件营销</strong> - 推荐"MailPro邮件营销大师"，验证邮箱并进行营销<br><strong>WhatsApp营销</strong> - 推荐"WhatsApp验证器"，确保号码有效性<br><strong>日常获客</strong> - 推荐"谷歌插件获客"，浏览网页时随时获取邮箱<br><br><strong>最佳搭配</strong>：地图抓取器获取基础数据 → MailPro验证邮箱 → WhatsApp验证器检测号码 → 开展精准营销" data-lang-en="Selection recommendations:<br><br><strong>New Market Development</strong> - Recommend 'Google Maps Scraper' for quick business info in target areas<br><strong>Website Email Mining</strong> - Recommend 'MediaMingle Professional' for deep website email extraction<br><strong>Email Marketing</strong> - Recommend 'MailPro Email Marketing Master' for email validation and marketing<br><strong>WhatsApp Marketing</strong> - Recommend 'WhatsApp Validator' to ensure number validity<br><strong>Daily Lead Generation</strong> - Recommend 'Email Finder Extension' for on-the-go email extraction<br><br><strong>Best Combination</strong>: Maps Scraper for basic data → MailPro for email validation → WhatsApp Validator for number verification → Targeted marketing"
                             </p>
                         </div>
                     </div>
+
+                    <!-- 数据来源和合规性 -->
                     <div class="faq-item">
                         <h2 class="faq-question">
                             <button aria-expanded="false" aria-controls="faq-answer-home-3">
-                                <span data-lang-zh="我需要自己准备代理IP吗？"
-                                    data-lang-en="Do I need to provide my own proxy IPs?"></span>
+                                <span data-lang-zh="数据来源是什么？使用这些数据合法吗？"
+                                    data-lang-en="What are the data sources? Is using this data legal?"></span>
                             </button>
                         </h2>
                         <div id="faq-answer-home-3" class="faq-answer" hidden>
-                            <p data-lang-zh="不需要。智贸云梯的软件内置了先进的防封锁技术和模拟真人行为的浏览器引擎。在大多数情况下您无需任何额外配置。当遇到罕见的人机验证时，软件会智能暂停并提示您手动通过，之后即可恢复任务。"
-                                data-lang-en="No. 智贸云梯's software has built-in advanced anti-blocking technology and a human-like browser engine. In most cases, you don't need any extra configuration. If a rare captcha is encountered, the software will intelligently pause and prompt you to solve it manually before resuming the task.">
+                            <p data-lang-zh="我们的数据来源完全合规：<br><br><strong>公开数据源</strong>：Google Maps商家信息、企业官网联系方式、Facebook/Instagram/LinkedIn等社交媒体公开资料<br><strong>搜索引擎</strong>：Google、Bing、DuckDuckGo等搜索引擎的公开搜索结果<br><strong>合规保证</strong>：所有数据均为商家主动公开发布的信息，不涉及私人或受保护数据<br><br><strong>使用建议</strong>：请遵守当地法律法规（如GDPR、CAN-SPAM法案），在营销时提供退订选项，尊重用户隐私权。我们建议将获取的数据用于B2B商业拓展，避免骚扰性营销。" data-lang-en="Our data sources are fully compliant:<br><br><strong>Public Data Sources</strong>: Google Maps business info, company website contacts, public profiles on Facebook/Instagram/LinkedIn<br><strong>Search Engines</strong>: Public search results from Google, Bing, DuckDuckGo and other search engines<br><strong>Compliance Guarantee</strong>: All data is actively published by businesses, no private or protected data involved<br><br><strong>Usage Guidelines</strong>: Please comply with local laws (GDPR, CAN-SPAM Act), provide unsubscribe options in marketing, respect user privacy. We recommend using the data for B2B business development, avoiding spam marketing."
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 技术和配置 -->
+                    <div class="faq-item">
+                        <h2 class="faq-question">
+                            <button aria-expanded="false" aria-controls="faq-answer-home-4">
+                                <span data-lang-zh="需要技术背景吗？需要配置代理IP吗？"
+                                    data-lang-en="Do I need technical background? Do I need to configure proxy IPs?"></span>
+                            </button>
+                        </h2>
+                        <div id="faq-answer-home-4" class="faq-answer" hidden>
+                            <p data-lang-zh="<strong>零技术门槛</strong>：<br>• 所有产品都采用图形化界面，点击式操作<br>• 内置详细的使用教程和视频指导<br>• 一键启动，自动化运行<br><br><strong>无需代理配置</strong>：<br>• 内置先进的防检测技术<br>• 模拟真人浏览行为<br>• 智能速度控制和间隔设置<br>• 遇到验证码时会智能暂停，提示手动处理<br><br><strong>系统要求</strong>：Windows 10/11，4GB内存，稳定网络连接即可。" data-lang-en="<strong>Zero Technical Barrier</strong>:<br>• All products use graphical interfaces with click-based operations<br>• Built-in detailed tutorials and video guides<br>• One-click start, automated operation<br><br><strong>No Proxy Configuration Needed</strong>:<br>• Built-in advanced anti-detection technology<br>• Simulates human browsing behavior<br>• Intelligent speed control and interval settings<br>• Smart pause when encountering captchas, prompts for manual handling<br><br><strong>System Requirements</strong>: Windows 10/11, 4GB RAM, stable internet connection."
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 数据质量和准确性 -->
+                    <div class="faq-item">
+                        <h2 class="faq-question">
+                            <button aria-expanded="false" aria-controls="faq-answer-home-5">
+                                <span data-lang-zh="数据质量如何？准确率有多高？"
+                                    data-lang-en="How is the data quality? What's the accuracy rate?"></span>
+                            </button>
+                        </h2>
+                        <div id="faq-answer-home-5" class="faq-answer" hidden>
+                            <p data-lang-zh="我们的数据质量行业领先：<br><br><strong>谷歌地图抓取器</strong>：商家信息准确率>95%，邮箱发现率60-80%<br><strong>MediaMingle专业版</strong>：企业邮箱挖掘准确率>90%，支持多层级深度挖掘<br><strong>MailPro邮件营销大师</strong>：邮箱验证准确率>98%，支持语法、域名、SMTP多重验证<br><strong>WhatsApp验证器</strong>：号码有效性检测准确率>95%，实时验证活跃状态<br><strong>谷歌插件获客</strong>：邮箱匹配准确率>92%，AI决策人预测准确率>85%<br><br><strong>质量保证</strong>：内置数据去重、格式标准化、实时验证等功能，确保数据可直接用于营销。" data-lang-en="Our data quality is industry-leading:<br><br><strong>Google Maps Scraper</strong>: Business info accuracy >95%, email discovery rate 60-80%<br><strong>MediaMingle Professional</strong>: Business email mining accuracy >90%, supports multi-level deep extraction<br><strong>MailPro Email Marketing Master</strong>: Email validation accuracy >98%, supports syntax, domain, SMTP multi-verification<br><strong>WhatsApp Validator</strong>: Number validity detection accuracy >95%, real-time active status verification<br><strong>Email Finder Extension</strong>: Email matching accuracy >92%, AI decision-maker prediction accuracy >85%<br><br><strong>Quality Assurance</strong>: Built-in deduplication, format standardization, real-time validation to ensure data is marketing-ready."
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 价格和支持 -->
+                    <div class="faq-item">
+                        <h2 class="faq-question">
+                            <button aria-expanded="false" aria-controls="faq-answer-home-6">
+                                <span data-lang-zh="价格如何？有试用吗？提供什么支持？"
+                                    data-lang-en="What's the pricing? Is there a trial? What support do you provide?"></span>
+                            </button>
+                        </h2>
+                        <div id="faq-answer-home-6" class="faq-answer" hidden>
+                            <p data-lang-zh="<strong>灵活定价</strong>：<br>• 单产品授权：$49-199不等，终身使用<br>• 套餐组合：最高可享受40%折扣<br>• 支持支付宝、微信、PayPal等多种支付方式<br><br><strong>免费试用</strong>：<br>• 所有产品提供免费试用版本<br>• 试用版功能完整，仅限制数据量<br>• 无需信用卡，立即下载体验<br><br><strong>全方位支持</strong>：<br>• 7x24小时技术支持（微信/WhatsApp/QQ）<br>• 详细视频教程和文档<br>• 远程协助安装和配置<br>• 终身免费更新" data-lang-en="<strong>Flexible Pricing</strong>:<br>• Single product license: $49-199, lifetime usage<br>• Bundle packages: Up to 40% discount<br>• Supports Alipay, WeChat Pay, PayPal and more<br><br><strong>Free Trial</strong>:<br>• All products offer free trial versions<br>• Full features in trial, only data volume limited<br>• No credit card required, download immediately<br><br><strong>Comprehensive Support</strong>:<br>• 7x24 technical support (WeChat/WhatsApp/QQ)<br>• Detailed video tutorials and documentation<br>• Remote assistance for installation and configuration<br>• Lifetime free updates"
                             </p>
                         </div>
                     </div>
@@ -522,7 +602,7 @@
                         <div class="testimonial-card card-hover-effect">
                             <blockquote>
                                 <p data-lang-zh=""智贸云梯的全渠道工具彻底改变了我们的拓客方式。在短短一周内，我们获得的有效潜在客户比之前一个月还多。""
-                                    data-lang-en="智贸云梯's omnichannel tools completely changed our lead generation process. We got more qualified leads in a week than we did in the previous month.">
+                                    data-lang-en="SmartTrade CloudLadder's omnichannel tools completely changed our lead generation process. We got more qualified leads in a week than we did in the previous month.">
                                 </p>
                             </blockquote>
                             <p class="testimonial-author" data-lang-zh="—— 李明, 市场总监"
@@ -540,7 +620,7 @@
                         <div class="testimonial-card card-hover-effect">
                             <blockquote>
                                 <p data-lang-zh=""性价比极高。相比其他昂贵的解决方案，智贸云梯 提供了我们需要的一切全渠道获客功能，而且价格更合理。""
-                                    data-lang-en="Excellent value for money. Compared to other expensive solutions, 智贸云梯 provides everything we need for omnichannel lead generation at a more reasonable price.">
+                                    data-lang-en="Excellent value for money. Compared to other expensive solutions, SmartTrade CloudLadder provides everything we need for omnichannel lead generation at a more reasonable price.">
                                 </p>
                             </blockquote>
                             <p class="testimonial-author" data-lang-zh="—— 王强, 销售经理"
@@ -556,7 +636,7 @@
             <div class="container">
                 <h2 data-lang-zh="准备好提升您的业务了吗？" data-lang-en="Ready to Elevate Your Business?"></h2>
                 <p data-lang-zh="立即开始使用 智贸云梯，将繁琐的全渠道拓客工作自动化。"
-                    data-lang-en="Start using 智贸云梯 today and automate the tedious work of omnichannel lead generation.">
+                    data-lang-en="Start using SmartTrade CloudLadder today and automate the tedious work of omnichannel lead generation.">
                 </p>
                 <a href="./checkout.html" class="btn btn-primary" data-lang-zh="选择您的计划"
                     data-lang-en="Choose Your Plan"></a>

@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <a href="./index.html">
                             <img src="assets/img/logo.webp" alt="智贸云梯 Logo" style="height: 60px; width: auto;">
                         </a>
-                        <span class="logo-text">智贸云梯</span>
+                        <span class="logo-text" data-lang-zh="智贸云梯" data-lang-en="SmartTrade CloudLadder">智贸云梯</span>
                     </div>
                     <nav class="main-nav" id="main-nav">
                         <ul>
@@ -46,14 +46,14 @@ document.addEventListener('DOMContentLoaded', () => {
                             <li class="nav-item-dropdown">
                                 <a href="javascript:void(0);" class="dropdown-toggle" data-lang-zh="产品" data-lang-en="Product">产品 <i class='bx bx-chevron-down'></i></a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="./product.html?id=maps-scraper" data-lang-zh="智贸云梯 | 谷歌地图抓取器" data-lang-en="Google Maps Scraper">智贸云梯 | 谷歌地图抓取器</a></li>
-                                    <li><a href="./product.html?id=mediamingle-pro" data-lang-zh="智贸云梯 | 搜索引擎专业版" data-lang-en="MediaMingle Professional">智贸云梯 | 搜索引擎专业版</a></li>
-                                    <li><a href="./product.html?id=email-validator" data-lang-zh="智贸云梯 | 邮件营销大师" data-lang-en="MailPro Email Marketing Master">智贸云梯 | 邮件营销大师</a></li>
-                                    <li><a href="./product.html?id=whatsapp-validator" data-lang-zh="智贸云梯 | WhatsApp验证" data-lang-en="WhatsApp Validator">智贸云梯 | WhatsApp验证</a></li>
-                                    <li><a href="./product.html?id=email-finder-extension" data-lang-zh="智贸云梯 | 谷歌插件获客" data-lang-en="Email Finder Chrome Extension">智贸云梯 | 谷歌插件获客</a></li>
+                                    <li><a href="./product.html?id=maps-scraper" data-lang-zh="智贸云梯 | 谷歌地图抓取器" data-lang-en="SmartTrade CloudLadder | Google Maps Scraper">智贸云梯 | 谷歌地图抓取器</a></li>
+                                    <li><a href="./product.html?id=mediamingle-pro" data-lang-zh="智贸云梯 | 搜索引擎专业版" data-lang-en="SmartTrade CloudLadder | MediaMingle Professional">智贸云梯 | 搜索引擎专业版</a></li>
+                                    <li><a href="./product.html?id=email-validator" data-lang-zh="智贸云梯 | 邮件营销大师" data-lang-en="SmartTrade CloudLadder | MailPro Email Marketing Master">智贸云梯 | 邮件营销大师</a></li>
+                                    <li><a href="./product.html?id=whatsapp-validator" data-lang-zh="智贸云梯 | WhatsApp验证" data-lang-en="SmartTrade CloudLadder | WhatsApp Validator">智贸云梯 | WhatsApp验证</a></li>
+                                    <li><a href="./product.html?id=email-finder-extension" data-lang-zh="智贸云梯 | 谷歌插件获客" data-lang-en="SmartTrade CloudLadder | Email Finder Chrome Extension">智贸云梯 | 谷歌插件获客</a></li>
                                 </ul>
                             </li>
-                            <li><a href="./checkout.html" data-lang-zh="定价" data-lang-en="checkout">定价</a></li>
+                            <li><a href="./checkout.html" data-lang-zh="定价" data-lang-en="Pricing">定价</a></li>
                             <li><a href="./download.html" data-lang-zh="下载" data-lang-en="Download">下载</a></li>
                             <li><a href="./troubleshooting.html" data-lang-zh="安装问题" data-lang-en="Installation Issues">安装问题</a></li>
                             <li><a href="./docs.html" data-lang-zh="使用文档" data-lang-en="Docs">使用文档</a></li>
@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="footer-links">
                             <h3 data-lang-zh="产品" data-lang-en="Product">产品</h3>
                             <ul>
-                                <li><a href="./checkout.html" data-lang-zh="定价" data-lang-en="checkout">定价</a></li>
+                                <li><a href="./checkout.html" data-lang-zh="定价" data-lang-en="Pricing">定价</a></li>
                                 <li><a href="./docs.html" data-lang-zh="文档" data-lang-en="Docs">文档</a></li>
                                 <li><a href="./faq.html" data-lang-zh="常见问题" data-lang-en="FAQ">常见问题</a></li>
                                 <li><a href="./troubleshooting.html" data-lang-zh="安装问题" data-lang-en="Installation Issues">安装问题</a></li>
@@ -324,6 +324,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         const otherAnswerId = button.getAttribute('aria-controls');
                         const otherAnswerElement = document.getElementById(otherAnswerId);
                         if (otherAnswerElement) {
+                            otherAnswerElement.classList.remove('open');
                             otherAnswerElement.hidden = true;
                         }
                     });
@@ -332,6 +333,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         clickedButton.setAttribute('aria-expanded', 'true');
                         if (answerElement) {
                             answerElement.hidden = false;
+                            // 使用setTimeout确保hidden属性先生效，然后再添加open类
+                            setTimeout(() => {
+                                answerElement.classList.add('open');
+                            }, 10);
                         }
                     }
                 });
