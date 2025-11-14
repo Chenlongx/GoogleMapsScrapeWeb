@@ -1,0 +1,17 @@
+Email Finder Chrome Extension - Required Images:
+
+1. email-finder-extension-hero.webp - Main hero image showing the extension interface
+2. step-install-login.webp - Step 1: Installation and login process
+3. step-choose-method.webp - Step 2: Choosing lead generation methods
+4. step-validate-export.webp - Step 3: Validation and export process
+
+These images should showcase:
+- Chrome extension popup interface
+- Google formula search functionality
+- AI decision maker prediction
+- LinkedIn mining capabilities
+- Email validation process
+- Data export features
+
+Recommended dimensions: 600x400px for hero, 500x350px for steps
+Format: WebP for optimal performance

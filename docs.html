@@ -46,6 +46,9 @@
         border-radius: 8px;
         padding: 0.5rem;
         border: 1px solid var(--border-color);
+        max-width: 100%;
+        overflow-x: auto;
+        flex-wrap: nowrap;
     }
 
     .selector-btn {
@@ -58,7 +61,8 @@
         color: var(--text-secondary-color);
         transition: background-color 0.2s ease, color 0.2s ease;
         white-space: nowrap;
-        /* 防止按钮文字换行 */
+        flex-shrink: 0;
+        /* 防止按钮文字换行和收缩 */
     }
 
     .selector-btn.active {
@@ -68,6 +72,69 @@
 
     .selector-btn:not(.active):hover {
         color: var(--text-primary-color);
+    }
+
+    /* 移动端响应式样式 */
+    @media (max-width: 767px) {
+        .product-selector-section {
+            padding: 1rem 0 0;
+            margin-bottom: 1rem;
+        }
+
+        .product-selector-section .container {
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+        }
+
+        .product-selector {
+            width: 100%;
+            max-width: none;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            flex-wrap: nowrap;
+            justify-content: flex-start;
+        }
+
+        .product-selector::-webkit-scrollbar {
+            display: none;
+        }
+
+        .selector-btn {
+            padding: 0.6rem 1rem;
+            font-size: 0.9rem;
+            min-width: auto;
+            flex-shrink: 0;
+        }
+
+        /* 为移动端添加滚动提示 */
+        .product-selector::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 20px;
+            background: linear-gradient(to right, transparent, var(--surface-color));
+            pointer-events: none;
+        }
+
+        .product-selector-section {
+            position: relative;
+        }
+    }
+
+    /* 平板端优化 */
+    @media (min-width: 768px) and (max-width: 1023px) {
+        .product-selector {
+            flex-wrap: wrap;
+            gap: 0.25rem;
+        }
+
+        .selector-btn {
+            padding: 0.7rem 1.2rem;
+        }
     }
 
     /* ▲▲▲ CSS 追加结束 ▲▲▲ */
@@ -96,9 +163,21 @@
                         data-lang-en="MailPro Email Marketing Master"></button>
                     <button class="selector-btn" data-target="whatsapp-validator-docs" data-lang-zh="WhatsApp验证器"
                         data-lang-en="WhatsApp Validator"></button>
+                    <button class="selector-btn" data-target="email-finder-extension-docs" data-lang-zh="谷歌插件获客"
+                        data-lang-en="Email Finder Extension"></button>
                 </div>
             </div>
         </section>
+
+        <!-- 文档阅读进度条 -->
+        <div class="docs-progress-bar" id="docsProgressBar"></div>
+        
+        <!-- 返回顶部按钮 -->
+        <button class="docs-back-to-top" id="backToTop" title="返回顶部">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/>
+            </svg>
+        </button>
 
         <div class="container">
             <div id="maps-scraper-docs" class="docs-wrapper">
@@ -116,6 +195,16 @@
                                         data-lang-en="Performing a Scraping"></a></li>
                                 <li><a href="#gs-scraper-setup" data-lang-zh="高级设置"
                                         data-lang-en="Advanced Settings"></a></li>
+                                <li><a href="#gs-scraper-performance" data-lang-zh="性能优化"
+                                        data-lang-en="Performance Optimization"></a></li>
+                                <li><a href="#gs-scraper-precision" data-lang-zh="精度采集机制"
+                                        data-lang-en="Precision Collection"></a></li>
+                                <li><a href="#gs-scraper-multi-browser" data-lang-zh="多浏览器管理"
+                                        data-lang-en="Multi-Browser Management"></a></li>
+                                <li><a href="#gs-scraper-batch-domain" data-lang-zh="批量域名验证"
+                                        data-lang-en="Batch Domain Validation"></a></li>
+                                <li><a href="#gs-scraper-email-validation" data-lang-zh="邮箱验证功能"
+                                        data-lang-en="Email Validation"></a></li>
                                 <li><a href="#gs-scraper-exporting" data-lang-zh="导出数据"
                                         data-lang-en="Exporting Data"></a></li>
                             </ul>
@@ -317,6 +406,271 @@
                                 <img src="assets/img/advanced-Settings.png" alt="高级设置示意图" class="docs-image">
                             </div>
                         </section>
+                        <section id="gs-scraper-performance">
+                            <h2 data-lang-zh="性能优化" data-lang-en="Performance Optimization"></h2>
+                            
+                            <div class="docs-highlight-box">
+                                <p data-lang-zh="性能优化是提升采集效率的关键。通过合理配置线程池、启用快速模式和图片屏蔽，可以显著提升系统性能。" 
+                                   data-lang-en="Performance optimization is key to improving collection efficiency. By properly configuring thread pools, enabling fast mode and image blocking, system performance can be significantly improved."></p>
+                            </div>
+                            
+                            <h3 data-lang-zh="1. 线程池配置" data-lang-en="1. Thread Pool Configuration"></h3>
+                            <p data-lang-zh="在"拓客设置"中可以配置线程池大小：<br>
+                            • <strong>线程池大小</strong> - 控制同时处理的任务数量（1-32个线程）<br>
+                            • <strong>轻量级并发数</strong> - 控制轻量级任务的并发数量（1-100个并发）<br>
+                            • <strong>建议配置</strong> - 根据CPU核心数设置，一般为CPU核心数的2-4倍<br>
+                            • <strong>性能监控</strong> - 实时监控线程使用情况和任务队列状态"
+                                data-lang-en="Configure thread pool size in 'Customer Acquisition Settings':<br>
+                            • <strong>Thread Pool Size</strong> - Controls the number of concurrent tasks (1-32 threads)<br>
+                            • <strong>Lightweight Concurrency</strong> - Controls lightweight task concurrency (1-100 concurrent)<br>
+                            • <strong>Recommended Configuration</strong> - Set based on CPU cores, typically 2-4 times the number of CPU cores<br>
+                            • <strong>Performance Monitoring</strong> - Real-time monitoring of thread usage and task queue status">
+                            </p>
+
+                            <h3 data-lang-zh="2. 快速模式与图片屏蔽" data-lang-en="2. Fast Mode & Image Blocking"></h3>
+                            <p data-lang-zh="性能优化的核心功能：<br>
+                            • <strong>⚡ 快速模式</strong> - 跳过图片等待，使用占位图片，大幅提升采集速度<br>
+                            • <strong>🚫 屏蔽图片加载</strong> - Playwright浏览器不加载图片、CSS、字体等资源<br>
+                            • <strong>智能资源过滤</strong> - 自动识别并跳过不必要的资源加载<br>
+                            • <strong>内存优化</strong> - 减少内存占用，提高系统稳定性<br>
+                            • <strong>速度提升</strong> - 页面加载速度提升50-80%"
+                                data-lang-en="Core performance optimization features:<br>
+                            • <strong>⚡ Fast Mode</strong> - Skip image loading, use placeholder images, significantly improve collection speed<br>
+                            • <strong>🚫 Block Image Loading</strong> - Playwright browser doesn't load images, CSS, fonts and other resources<br>
+                            • <strong>Smart Resource Filtering</strong> - Automatically identify and skip unnecessary resource loading<br>
+                            • <strong>Memory Optimization</strong> - Reduce memory usage, improve system stability<br>
+                            • <strong>Speed Improvement</strong> - Page loading speed increased by 50-80%">
+                            </p>
+
+                            <div class="docs-image-container">
+                                <img src="assets/img/performance-settings.webp" alt="性能设置界面" class="docs-image">
+                            </div>
+                        </section>
+
+                        <section id="gs-scraper-precision">
+                            <h2 data-lang-zh="精度采集机制" data-lang-en="Precision Collection Mechanism"></h2>
+                            
+                            <div class="docs-highlight-box">
+                                <p data-lang-zh="精度采集机制确保数据的完整性和准确性。通过智能等待、降级模式和精确的网格控制，实现高质量的数据采集。" 
+                                   data-lang-en="Precision collection mechanism ensures data completeness and accuracy. Through smart waiting, degraded mode, and precise grid control, high-quality data collection is achieved."></p>
+                            </div>
+                            
+                            <h3 data-lang-zh="1. 智能等待机制" data-lang-en="1. Smart Waiting Mechanism"></h3>
+                            <p data-lang-zh="程序采用先进的智能等待算法：<br>
+                            • <strong>最大等待时间</strong> - 可设置10-300秒，适应不同网络环境<br>
+                            • <strong>稳定滚动检查</strong> - 检测页面滚动稳定性，确保数据完整加载<br>
+                            • <strong>检查间隔</strong> - 毫秒级精确控制，平衡速度与准确性<br>
+                            • <strong>耐心模式</strong> - 网络较慢时自动延长等待时间<br>
+                            • <strong>动态调整</strong> - 根据网络状况自动优化等待策略"
+                                data-lang-en="The program uses advanced smart waiting algorithms:<br>
+                            • <strong>Maximum Wait Time</strong> - Configurable 10-300 seconds, adapts to different network environments<br>
+                            • <strong>Stable Scroll Check</strong> - Detects page scroll stability to ensure complete data loading<br>
+                            • <strong>Check Interval</strong> - Millisecond-level precise control, balancing speed and accuracy<br>
+                            • <strong>Patience Mode</strong> - Automatically extends wait time when network is slow<br>
+                            • <strong>Dynamic Adjustment</strong> - Automatically optimizes waiting strategy based on network conditions">
+                            </p>
+
+                            <h3 data-lang-zh="2. 降级模式" data-lang-en="2. Degraded Mode"></h3>
+                            <p data-lang-zh="网络不稳定时的智能降级策略：<br>
+                            • <strong>启用条件</strong> - 网络不稳定或连接超时频繁时建议启用<br>
+                            • <strong>工作原理</strong> - 直接从列表中提取商家信息，避免点击加载详情页<br>
+                            • <strong>速度优势</strong> - 提取速度提升3-5倍，减少网络依赖<br>
+                            • <strong>信息完整性</strong> - 虽然信息可能不完整，但确保核心数据的获取<br>
+                            • <strong>兼容性限制</strong> - 降级模式下多浏览器管理功能不可用"
+                                data-lang-en="Smart degradation strategy for unstable networks:<br>
+                            • <strong>Enable Conditions</strong> - Recommended when network is unstable or frequent connection timeouts<br>
+                            • <strong>Working Principle</strong> - Extract business information directly from list, avoid clicking to load detail pages<br>
+                            • <strong>Speed Advantage</strong> - Extraction speed increased by 3-5 times, reduced network dependency<br>
+                            • <strong>Information Completeness</strong> - Although information may be incomplete, ensures core data acquisition<br>
+                            • <strong>Compatibility Limitations</strong> - Multi-browser management is unavailable in degraded mode">
+                            </p>
+
+                            <h3 data-lang-zh="3. 精度采集设置" data-lang-en="3. Precision Collection Settings"></h3>
+                            <p data-lang-zh="可调节的精度参数：<br>
+                            • <strong>网格间距</strong> - 控制地图扫描的精细程度（0.5-5.0度）<br>
+                            • <strong>扫描深度</strong> - 设置每个区域的搜索深度<br>
+                            • <strong>重叠检测</strong> - 自动去除重复的商家信息<br>
+                            • <strong>边界优化</strong> - 智能识别行政边界，避免跨区域重复<br>
+                            • <strong>质量控制</strong> - 实时监控数据质量，自动过滤无效信息"
+                                data-lang-en="Adjustable precision parameters:<br>
+                            • <strong>Grid Spacing</strong> - Controls map scanning granularity (0.5-5.0 degrees)<br>
+                            • <strong>Scan Depth</strong> - Sets search depth for each area<br>
+                            • <strong>Overlap Detection</strong> - Automatically removes duplicate business information<br>
+                            • <strong>Boundary Optimization</strong> - Intelligently recognizes administrative boundaries, avoids cross-regional duplication<br>
+                            • <strong>Quality Control</strong> - Real-time data quality monitoring, automatically filters invalid information">
+                            </p>
+
+                            <div class="docs-image-container">
+                                <img src="assets/img/precision-collection.webp" alt="精度采集设置界面" class="docs-image">
+                            </div>
+                        </section>
+
+                        <section id="gs-scraper-multi-browser">
+                            <h2 data-lang-zh="多浏览器管理" data-lang-en="Multi-Browser Management"></h2>
+                            
+                            <div class="docs-highlight-box">
+                                <p data-lang-zh="多浏览器管理是提升采集效率的核心功能。通过并行运行多个Playwright浏览器，可以将采集效率提升5-10倍。" 
+                                   data-lang-en="Multi-browser management is the core feature for improving collection efficiency. By running multiple Playwright browsers in parallel, collection efficiency can be increased by 5-10 times."></p>
+                            </div>
+                            
+                            <h3 data-lang-zh="1. Playwright多浏览器系统" data-lang-en="1. Playwright Multi-Browser System"></h3>
+                            <p data-lang-zh="强大的多浏览器并行处理系统：<br>
+                            • <strong>浏览器数量</strong> - 支持1-10个Playwright浏览器同时运行<br>
+                            • <strong>邮箱进程数</strong> - 独立的邮箱爬取进程池（1-8个进程）<br>
+                            • <strong>无头模式</strong> - 可选择后台运行，不显示浏览器界面<br>
+                            • <strong>独立运行</strong> - 每个浏览器独立运行，互不干扰<br>
+                            • <strong>效率提升</strong> - 多浏览器并行可提升采集效率5-10倍"
+                                data-lang-en="Powerful multi-browser parallel processing system:<br>
+                            • <strong>Browser Count</strong> - Supports 1-10 Playwright browsers running simultaneously<br>
+                            • <strong>Email Process Count</strong> - Independent email crawling process pool (1-8 processes)<br>
+                            • <strong>Headless Mode</strong> - Optional background running without browser interface<br>
+                            • <strong>Independent Operation</strong> - Each browser runs independently without interference<br>
+                            • <strong>Efficiency Boost</strong> - Multi-browser parallel processing can improve collection efficiency by 5-10 times">
+                            </p>
+
+                            <h3 data-lang-zh="2. 浏览器状态监控" data-lang-en="2. Browser Status Monitoring"></h3>
+                            <p data-lang-zh="实时监控所有浏览器状态：<br>
+                            • <strong>浏览器ID</strong> - 每个浏览器的唯一标识符<br>
+                            • <strong>运行状态</strong> - 🟢运行中 ⚪空闲 ⏸️已暂停 🔴已停止<br>
+                            • <strong>当前任务</strong> - 显示正在处理的具体任务<br>
+                            • <strong>队列任务数</strong> - 等待处理的任务数量<br>
+                            • <strong>统计信息</strong> - 总任务数、已完成数、活跃浏览器数"
+                                data-lang-en="Real-time monitoring of all browser statuses:<br>
+                            • <strong>Browser ID</strong> - Unique identifier for each browser<br>
+                            • <strong>Running Status</strong> - 🟢Running ⚪Idle ⏸️Paused 🔴Stopped<br>
+                            • <strong>Current Task</strong> - Shows the specific task being processed<br>
+                            • <strong>Queue Task Count</strong> - Number of tasks waiting to be processed<br>
+                            • <strong>Statistics</strong> - Total tasks, completed count, active browser count">
+                            </p>
+
+                            <h3 data-lang-zh="3. 浏览器控制操作" data-lang-en="3. Browser Control Operations"></h3>
+                            <p data-lang-zh="完整的浏览器管理功能：<br>
+                            • <strong>🚀 启动所有浏览器</strong> - 一键启动指定数量的浏览器<br>
+                            • <strong>🛑 停止所有浏览器</strong> - 安全停止所有运行中的浏览器<br>
+                            • <strong>➕ 新增浏览器</strong> - 动态添加新的浏览器实例<br>
+                            • <strong>⏸️ 暂停所有</strong> - 暂停所有浏览器的任务处理<br>
+                            • <strong>▶️ 恢复所有</strong> - 恢复暂停的浏览器继续工作<br>
+                            • <strong>单独控制</strong> - 可以单独停止指定的浏览器"
+                                data-lang-en="Complete browser management functions:<br>
+                            • <strong>🚀 Start All Browsers</strong> - One-click start specified number of browsers<br>
+                            • <strong>🛑 Stop All Browsers</strong> - Safely stop all running browsers<br>
+                            • <strong>➕ Add New Browser</strong> - Dynamically add new browser instances<br>
+                            • <strong>⏸️ Pause All</strong> - Pause task processing for all browsers<br>
+                            • <strong>▶️ Resume All</strong> - Resume paused browsers to continue working<br>
+                            • <strong>Individual Control</strong> - Can stop specific browsers individually">
+                            </p>
+
+                            <div class="docs-image-container">
+                                <img src="assets/img/multi-browser-management.webp" alt="多浏览器管理界面" class="docs-image">
+                            </div>
+                        </section>
+
+                        <section id="gs-scraper-batch-domain">
+                            <h2 data-lang-zh="批量域名验证" data-lang-en="Batch Domain Validation"></h2>
+                            
+                            <h3 data-lang-zh="1. 批量域名查询功能" data-lang-en="1. Batch Domain Query Function"></h3>
+                            <p data-lang-zh="强大的批量域名邮箱爬取工具：<br>
+                            • <strong>输入方式</strong> - 支持手动输入或从文件导入域名列表<br>
+                            • <strong>文件格式</strong> - 支持.txt、.csv、.xlsx格式的域名文件<br>
+                            • <strong>域名格式</strong> - 自动识别并标准化域名格式（支持带协议和不带协议）<br>
+                            • <strong>并发处理</strong> - 可配置并发数量，提高处理效率<br>
+                            • <strong>超时控制</strong> - 可设置单个域名的最大处理时间"
+                                data-lang-en="Powerful batch domain email crawling tool:<br>
+                            • <strong>Input Methods</strong> - Supports manual input or importing domain lists from files<br>
+                            • <strong>File Formats</strong> - Supports .txt, .csv, .xlsx format domain files<br>
+                            • <strong>Domain Format</strong> - Automatically recognizes and standardizes domain formats (supports with and without protocol)<br>
+                            • <strong>Concurrent Processing</strong> - Configurable concurrency count to improve processing efficiency<br>
+                            • <strong>Timeout Control</strong> - Can set maximum processing time for individual domains">
+                            </p>
+
+                            <h3 data-lang-zh="2. 智能邮箱发现" data-lang-en="2. Smart Email Discovery"></h3>
+                            <p data-lang-zh="深度邮箱挖掘技术：<br>
+                            • <strong>多页面爬取</strong> - 不仅爬取首页，还会访问联系我们、关于我们等页面<br>
+                            • <strong>智能过滤</strong> - 自动过滤临时邮箱、无效邮箱和重复邮箱<br>
+                            • <strong>社交媒体提取</strong> - 同时提取Facebook、Instagram、LinkedIn、WhatsApp等社交媒体链接<br>
+                            • <strong>邮箱验证</strong> - 可选择实时验证邮箱的有效性<br>
+                            • <strong>结果统计</strong> - 实时显示每个域名的邮箱发现数量和状态"
+                                data-lang-en="Deep email mining technology:<br>
+                            • <strong>Multi-page Crawling</strong> - Not only crawls homepage, but also visits contact us, about us and other pages<br>
+                            • <strong>Smart Filtering</strong> - Automatically filters temporary emails, invalid emails and duplicate emails<br>
+                            • <strong>Social Media Extraction</strong> - Simultaneously extracts Facebook, Instagram, LinkedIn, WhatsApp and other social media links<br>
+                            • <strong>Email Validation</strong> - Optional real-time validation of email validity<br>
+                            • <strong>Result Statistics</strong> - Real-time display of email discovery count and status for each domain">
+                            </p>
+
+                            <h3 data-lang-zh="3. 进度监控与结果导出" data-lang-en="3. Progress Monitoring & Result Export"></h3>
+                            <p data-lang-zh="完整的任务管理功能：<br>
+                            • <strong>实时进度</strong> - 显示每个域名的处理状态：爬取中、完成、超时、失败<br>
+                            • <strong>状态指示</strong> - 彩色状态指示器，直观显示处理结果<br>
+                            • <strong>错误处理</strong> - 详细的错误信息和重试机制<br>
+                            • <strong>结果预览</strong> - 可以实时查看已发现的邮箱和社交媒体链接<br>
+                            • <strong>批量导出</strong> - 支持导出为Excel、CSV格式，包含完整的域名和邮箱信息"
+                                data-lang-en="Complete task management functions:<br>
+                            • <strong>Real-time Progress</strong> - Shows processing status for each domain: crawling, completed, timeout, failed<br>
+                            • <strong>Status Indicators</strong> - Color-coded status indicators for intuitive display of processing results<br>
+                            • <strong>Error Handling</strong> - Detailed error information and retry mechanisms<br>
+                            • <strong>Result Preview</strong> - Can view discovered emails and social media links in real-time<br>
+                            • <strong>Batch Export</strong> - Supports export to Excel, CSV formats with complete domain and email information">
+                            </p>
+
+                            <div class="docs-image-container">
+                                <img src="assets/img/batch-domain-crawler.webp" alt="批量域名验证界面" class="docs-image">
+                            </div>
+                        </section>
+
+                        <section id="gs-scraper-email-validation">
+                            <h2 data-lang-zh="邮箱验证功能" data-lang-en="Email Validation Function"></h2>
+                            
+                            <h3 data-lang-zh="1. 实时邮箱验证" data-lang-en="1. Real-time Email Validation"></h3>
+                            <p data-lang-zh="集成专业的邮箱验证服务：<br>
+                            • <strong>验证类型</strong> - 语法验证、域名验证、邮箱服务器验证<br>
+                            • <strong>验证速度</strong> - 毫秒级验证响应，不影响采集速度<br>
+                            • <strong>验证结果</strong> - ✅有效 ❌无效 ⚠️可疑 ❓未知<br>
+                            • <strong>批量验证</strong> - 支持对已采集的邮箱进行批量验证<br>
+                            • <strong>验证报告</strong> - 详细的验证结果统计和质量分析"
+                                data-lang-en="Integrated professional email validation service:<br>
+                            • <strong>Validation Types</strong> - Syntax validation, domain validation, email server validation<br>
+                            • <strong>Validation Speed</strong> - Millisecond-level validation response, doesn't affect collection speed<br>
+                            • <strong>Validation Results</strong> - ✅Valid ❌Invalid ⚠️Suspicious ❓Unknown<br>
+                            • <strong>Batch Validation</strong> - Supports batch validation of collected emails<br>
+                            • <strong>Validation Report</strong> - Detailed validation result statistics and quality analysis">
+                            </p>
+
+                            <h3 data-lang-zh="2. 邮箱质量评分" data-lang-en="2. Email Quality Scoring"></h3>
+                            <p data-lang-zh="智能邮箱质量评估系统：<br>
+                            • <strong>质量评分</strong> - 0-100分的邮箱质量评分系统<br>
+                            • <strong>评分因子</strong> - 域名权威性、邮箱格式、历史记录等<br>
+                            • <strong>风险评估</strong> - 识别临时邮箱、垃圾邮箱、无效邮箱<br>
+                            • <strong>分类标签</strong> - 企业邮箱、个人邮箱、免费邮箱等分类<br>
+                            • <strong>优先级排序</strong> - 根据质量评分自动排序，优先处理高质量邮箱"
+                                data-lang-en="Smart email quality assessment system:<br>
+                            • <strong>Quality Scoring</strong> - 0-100 point email quality scoring system<br>
+                            • <strong>Scoring Factors</strong> - Domain authority, email format, historical records, etc.<br>
+                            • <strong>Risk Assessment</strong> - Identifies temporary emails, spam emails, invalid emails<br>
+                            • <strong>Classification Tags</strong> - Business email, personal email, free email classifications<br>
+                            • <strong>Priority Sorting</strong> - Automatically sorts by quality score, prioritizes high-quality emails">
+                            </p>
+
+                            <h3 data-lang-zh="3. 验证结果管理" data-lang-en="3. Validation Result Management"></h3>
+                            <p data-lang-zh="完善的验证结果管理功能：<br>
+                            • <strong>结果筛选</strong> - 按验证状态筛选邮箱（有效/无效/可疑）<br>
+                            • <strong>批量操作</strong> - 批量删除无效邮箱、导出有效邮箱<br>
+                            • <strong>验证历史</strong> - 保存验证历史记录，避免重复验证<br>
+                            • <strong>统计报告</strong> - 生成详细的邮箱质量统计报告<br>
+                            • <strong>导出选项</strong> - 可选择只导出已验证的有效邮箱"
+                                data-lang-en="Comprehensive validation result management functions:<br>
+                            • <strong>Result Filtering</strong> - Filter emails by validation status (valid/invalid/suspicious)<br>
+                            • <strong>Batch Operations</strong> - Batch delete invalid emails, export valid emails<br>
+                            • <strong>Validation History</strong> - Save validation history to avoid duplicate validation<br>
+                            • <strong>Statistical Reports</strong> - Generate detailed email quality statistical reports<br>
+                            • <strong>Export Options</strong> - Option to export only validated valid emails">
+                            </p>
+
+                            <div class="docs-image-container">
+                                <img src="assets/img/email-validation.webp" alt="邮箱验证功能界面" class="docs-image">
+                            </div>
+                        </section>
+
                         <section id="gs-scraper-exporting">
                             <h2 data-lang-zh="导出数据" data-lang-en="Exporting Data"></h2>
                             
@@ -1134,6 +1488,119 @@
                     </article>
                 </div>
             </div>
+
+            <div id="email-finder-extension-docs" class="docs-wrapper" style="display: none;">
+                <div class="docs-layout">
+                    <aside class="docs-sidebar">
+                        <nav>
+                            <ul>
+                                <li><a href="#ef-getting-started" class="active" data-lang-zh="入门指南" data-lang-en="Getting Started"></a></li>
+                                <li><a href="#ef-installation" data-lang-zh="安装插件" data-lang-en="Installation"></a></li>
+                                <li><a href="#ef-interface" data-lang-zh="界面概览" data-lang-en="Interface Overview"></a></li>
+                                <li><a href="#ef-page-scan" data-lang-zh="页面扫描" data-lang-en="Page Scanning"></a></li>
+                                <li><a href="#ef-google-search" data-lang-zh="Google公式搜索" data-lang-en="Google Formula Search"></a></li>
+                                <li><a href="#ef-ai-prediction" data-lang-zh="AI决策人预测" data-lang-en="AI Decision Maker Prediction"></a></li>
+                            </ul>
+                        </nav>
+                    </aside>
+                    <article class="docs-content">
+                        <section id="ef-getting-started">
+                            <h2 data-lang-zh="入门指南" data-lang-en="Getting Started"></h2>
+                            <p data-lang-zh="欢迎使用智贸云梯谷歌插件获客！这是一款Chrome浏览器扩展程序，让您在浏览任何网页时都能快速提取邮箱地址。插件集成了AI决策人预测、LinkedIn挖掘、Google公式搜索等强大功能。"
+                                data-lang-en="Welcome to the Email Finder Chrome Extension! This is a Chrome browser extension that allows you to quickly extract email addresses while browsing any webpage. The extension integrates powerful features like AI decision-maker prediction, LinkedIn mining, and Google formula search.">
+                            </p>
+                            
+                            <h3 data-lang-zh="主要功能特色" data-lang-en="Main Features"></h3>
+                            <p data-lang-zh="插件提供以下核心功能：<br>
+                            • <strong>当前页面扫描</strong> - 快速提取当前网页的所有邮箱<br>
+                            • <strong>Google公式搜索</strong> - 使用4个专业公式批量搜索邮箱<br>
+                            • <strong>AI决策人预测</strong> - 智能预测企业决策人邮箱地址<br>
+                            • <strong>LinkedIn挖掘</strong> - 自动搜索LinkedIn决策人信息<br>
+                            • <strong>域名深度爬取</strong> - 深度挖掘网站所有页面邮箱<br>
+                            • <strong>实时邮箱验证</strong> - 集成专业验证服务"
+                                data-lang-en="The extension provides the following core features:<br>
+                            • <strong>Current Page Scanning</strong> - Quickly extract all emails from the current webpage<br>
+                            • <strong>Google Formula Search</strong> - Use 4 professional formulas to batch search emails<br>
+                            • <strong>AI Decision Maker Prediction</strong> - Intelligently predict corporate decision-maker email addresses<br>
+                            • <strong>LinkedIn Mining</strong> - Automatically search LinkedIn decision-maker information<br>
+                            • <strong>Domain Deep Crawling</strong> - Deep mining of emails from all website pages<br>
+                            • <strong>Real-time Email Validation</strong> - Integrated professional validation service">
+                            </p>
+                        </section>
+
+                        <section id="ef-installation">
+                            <h2 data-lang-zh="安装插件" data-lang-en="Installation"></h2>
+                            
+                            <h3 data-lang-zh="1. 从Chrome应用商店安装" data-lang-en="1. Install from Chrome Web Store"></h3>
+                            <p data-lang-zh="访问Chrome应用商店，搜索"MediaMingle Email Finder"或直接访问插件页面，点击"添加至Chrome"按钮完成安装。"
+                                data-lang-en="Visit the Chrome Web Store, search for 'MediaMingle Email Finder' or visit the extension page directly, click the 'Add to Chrome' button to complete installation.">
+                            </p>
+                            
+                            <h3 data-lang-zh="2. 登录账户" data-lang-en="2. Login Account"></h3>
+                            <p data-lang-zh="首次使用需要登录智贸云梯账户。如果没有账户，请联系客服开通。登录后插件会自动同步您的邮箱库和设置。"
+                                data-lang-en="First-time use requires logging into your MediaMingle account. If you don't have an account, please contact customer service. After login, the extension will automatically sync your email library and settings.">
+                            </p>
+                            
+                            <div class="docs-image-container">
+                                <img src="assets/img/MediaMingle/step-install-login.webp" alt="安装和登录界面" class="docs-image">
+                            </div>
+                        </section>
+
+                        <section id="ef-interface">
+                            <h2 data-lang-zh="界面概览" data-lang-en="Interface Overview"></h2>
+                            <p data-lang-zh="插件界面采用标签页设计，包含5个主要功能模块：抓取邮箱、决策人预测、域名查找、邮箱库、历史记录。右上角显示当前登录用户和设置按钮。"
+                                data-lang-en="The extension interface uses a tab design with 5 main functional modules: Email Extraction, Decision Maker Prediction, Domain Search, Email Library, and History. The top right shows the current logged-in user and settings button.">
+                            </p>
+                            
+                            <div class="docs-image-container">
+                                <img src="assets/img/MediaMingle/email-finder-extension-hero.webp" alt="插件界面概览" class="docs-image">
+                            </div>
+                        </section>
+
+                        <section id="ef-page-scan">
+                            <h2 data-lang-zh="页面扫描" data-lang-en="Page Scanning"></h2>
+                            <p data-lang-zh="页面扫描是最基础的功能，可以快速提取当前网页中的所有邮箱地址。插件会自动识别各种邮箱格式，并进行智能分类。"
+                                data-lang-en="Page scanning is the most basic function that can quickly extract all email addresses from the current webpage. The extension automatically recognizes various email formats and performs intelligent classification.">
+                            </p>
+                            
+                            <h3 data-lang-zh="使用步骤" data-lang-en="Usage Steps"></h3>
+                            <p data-lang-zh="1. 打开包含邮箱信息的网页<br>
+                            2. 点击浏览器工具栏中的插件图标<br>
+                            3. 在"抓取邮箱"标签页中点击"扫描当前页面"<br>
+                            4. 等待扫描完成，查看提取的邮箱列表<br>
+                            5. 可以对邮箱进行验证、复制或保存到邮箱库"
+                                data-lang-en="1. Open a webpage containing email information<br>
+                            2. Click the extension icon in the browser toolbar<br>
+                            3. Click 'Scan Current Page' in the 'Extract Emails' tab<br>
+                            4. Wait for scanning to complete and view the extracted email list<br>
+                            5. You can validate, copy, or save emails to the library">
+                            </p>
+                        </section>
+
+                        <section id="ef-google-search">
+                            <h2 data-lang-zh="Google公式搜索" data-lang-en="Google Formula Search"></h2>
+                            <p data-lang-zh="Google公式搜索是插件的核心功能之一，使用4个专业搜索公式自动在Google中批量搜索目标域名的邮箱信息。"
+                                data-lang-en="Google Formula Search is one of the core features of the extension, using 4 professional search formulas to automatically batch search for email information of target domains in Google.">
+                            </p>
+                            
+                            <div class="docs-image-container">
+                                <img src="assets/img/MediaMingle/step-choose-method.webp" alt="Google公式搜索界面" class="docs-image">
+                            </div>
+                        </section>
+
+                        <section id="ef-ai-prediction">
+                            <h2 data-lang-zh="AI决策人预测" data-lang-en="AI Decision Maker Prediction"></h2>
+                            <p data-lang-zh="基于机器学习算法，智能分析公司邮箱格式，预测CEO、采购、销售等决策人的邮箱地址，准确率高达85%。"
+                                data-lang-en="Based on machine learning algorithms, intelligently analyzes company email formats to predict email addresses of decision-makers like CEOs, procurement, and sales personnel with up to 85% accuracy.">
+                            </p>
+                            
+                            <div class="docs-image-container">
+                                <img src="assets/img/MediaMingle/step-validate-export.webp" alt="AI决策人预测界面" class="docs-image">
+                            </div>
+                        </section>
+                    </article>
+                </div>
+            </div>
         </div>
     </main>
 
@@ -1237,6 +1704,73 @@
                     history.pushState({ path: newUrl }, '', newUrl);
                 });
             });
+
+            // 文档阅读进度条功能
+            const progressBar = document.getElementById('docsProgressBar');
+            const backToTopBtn = document.getElementById('backToTop');
+
+            function updateProgressBar() {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const progress = (scrollTop / docHeight) * 100;
+                
+                if (progressBar) {
+                    progressBar.style.width = progress + '%';
+                }
+
+                // 显示/隐藏返回顶部按钮
+                if (backToTopBtn) {
+                    if (scrollTop > 300) {
+                        backToTopBtn.classList.add('visible');
+                    } else {
+                        backToTopBtn.classList.remove('visible');
+                    }
+                }
+            }
+
+            // 返回顶部功能
+            if (backToTopBtn) {
+                backToTopBtn.addEventListener('click', () => {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                });
+            }
+
+            // 滚动事件监听
+            window.addEventListener('scroll', updateProgressBar);
+            
+            // 初始化
+            updateProgressBar();
+
+            // 增强的侧边栏导航
+            function enhanceSidebarNavigation() {
+                const sidebarLinks = document.querySelectorAll('.docs-sidebar nav a');
+                
+                sidebarLinks.forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const targetId = link.getAttribute('href').substring(1);
+                        const targetElement = document.getElementById(targetId);
+                        
+                        if (targetElement) {
+                            // 更新活跃状态
+                            sidebarLinks.forEach(l => l.classList.remove('active'));
+                            link.classList.add('active');
+                            
+                            // 平滑滚动到目标
+                            targetElement.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                        }
+                    });
+                });
+            }
+
+            // 初始化侧边栏导航
+            enhanceSidebarNavigation();
         });
     </script>
 </body>

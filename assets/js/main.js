@@ -46,10 +46,11 @@ document.addEventListener('DOMContentLoaded', () => {
                             <li class="nav-item-dropdown">
                                 <a href="javascript:void(0);" class="dropdown-toggle" data-lang-zh="产品" data-lang-en="Product">产品 <i class='bx bx-chevron-down'></i></a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="./product.html?id=maps-scraper" data-lang-zh="智贸云梯 | 谷歌地图抓取器" data-lang-en="Google Maps Scraper">谷歌地图抓取器</a></li>
-                                    <li><a href="./product.html?id=mediamingle-pro" data-lang-zh="智贸云梯 | 搜索引擎专业版" data-lang-en="MediaMingle Professional">智贸云梯 | MediaMingle 专业版</a></li>
-                                    <li><a href="./product.html?id=email-validator" data-lang-zh="智贸云梯 | 邮件营销大师" data-lang-en="MailPro Email Marketing Master">MailPro邮件营销大师</a></li>
-                                    <li><a href="./product.html?id=whatsapp-validator" data-lang-zh="智贸云梯 | WhatsApp验证" data-lang-en="WhatsApp Validator">WhatsApp 验证器</a></li>
+                                    <li><a href="./product.html?id=maps-scraper" data-lang-zh="智贸云梯 | 谷歌地图抓取器" data-lang-en="Google Maps Scraper">智贸云梯 | 谷歌地图抓取器</a></li>
+                                    <li><a href="./product.html?id=mediamingle-pro" data-lang-zh="智贸云梯 | 搜索引擎专业版" data-lang-en="MediaMingle Professional">智贸云梯 | 搜索引擎专业版</a></li>
+                                    <li><a href="./product.html?id=email-validator" data-lang-zh="智贸云梯 | 邮件营销大师" data-lang-en="MailPro Email Marketing Master">智贸云梯 | 邮件营销大师</a></li>
+                                    <li><a href="./product.html?id=whatsapp-validator" data-lang-zh="智贸云梯 | WhatsApp验证" data-lang-en="WhatsApp Validator">智贸云梯 | WhatsApp验证</a></li>
+                                    <li><a href="./product.html?id=email-finder-extension" data-lang-zh="智贸云梯 | 谷歌插件获客" data-lang-en="Email Finder Chrome Extension">智贸云梯 | 谷歌插件获客</a></li>
                                 </ul>
                             </li>
                             <li><a href="./checkout.html" data-lang-zh="定价" data-lang-en="checkout">定价</a></li>
