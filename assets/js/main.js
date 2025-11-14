@@ -23,6 +23,12 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // 初始化推广链接追踪
             this.initReferralTracking();
+
+            // 轻量交互增强（兼容移动端与减少动效设置）
+            this.initRevealOnScroll();
+            this.initBackToTop();
+            this.initHeroParallax();
+            this.initCardTilt();
         },
 
         state: {
@@ -46,11 +52,11 @@ document.addEventListener('DOMContentLoaded', () => {
                             <li class="nav-item-dropdown">
                                 <a href="javascript:void(0);" class="dropdown-toggle" data-lang-zh="产品" data-lang-en="Product">产品 <i class='bx bx-chevron-down'></i></a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="./product.html?id=maps-scraper" data-lang-zh="智贸云梯 | 谷歌地图抓取器" data-lang-en="SmartTrade CloudLadder | Google Maps Scraper">智贸云梯 | 谷歌地图抓取器</a></li>
-                                    <li><a href="./product.html?id=mediamingle-pro" data-lang-zh="智贸云梯 | 搜索引擎专业版" data-lang-en="SmartTrade CloudLadder | MediaMingle Professional">智贸云梯 | 搜索引擎专业版</a></li>
-                                    <li><a href="./product.html?id=email-validator" data-lang-zh="智贸云梯 | 邮件营销大师" data-lang-en="SmartTrade CloudLadder | MailPro Email Marketing Master">智贸云梯 | 邮件营销大师</a></li>
-                                    <li><a href="./product.html?id=whatsapp-validator" data-lang-zh="智贸云梯 | WhatsApp验证" data-lang-en="SmartTrade CloudLadder | WhatsApp Validator">智贸云梯 | WhatsApp验证</a></li>
-                                    <li><a href="./product.html?id=email-finder-extension" data-lang-zh="智贸云梯 | 谷歌插件获客" data-lang-en="SmartTrade CloudLadder | Email Finder Chrome Extension">智贸云梯 | 谷歌插件获客</a></li>
+                                    <li><a href="./product.html?id=maps-scraper" data-lang-zh="智贸云梯 | 谷歌地图抓取器" data-lang-en="Google Maps Scraper">Google Maps Scraper</a></li>
+                                    <li><a href="./product.html?id=mediamingle-pro" data-lang-zh="智贸云梯 | 搜索引擎专业版" data-lang-en="MediaMingle Professional">MediaMingle Professional</a></li>
+                                    <li><a href="./product.html?id=email-validator" data-lang-zh="智贸云梯 | 邮件营销大师" data-lang-en="MailPro Email Marketing Master">MailPro Email Marketing Master</a></li>
+                                    <li><a href="./product.html?id=whatsapp-validator" data-lang-zh="智贸云梯 | WhatsApp验证" data-lang-en="WhatsApp Validator">WhatsApp Validator</a></li>
+                                    <li><a href="./product.html?id=email-finder-extension" data-lang-zh="智贸云梯 | 谷歌插件获客" data-lang-en="Email Finder Chrome Extension">Email Finder Chrome Extension</a></li>
                                 </ul>
                             </li>
                             <li><a href="./checkout.html" data-lang-zh="定价" data-lang-en="Pricing">定价</a></li>
@@ -383,6 +389,113 @@ document.addEventListener('DOMContentLoaded', () => {
             const script = document.createElement('script');
             script.src = './assets/js/referral-tracker.js';
             document.head.appendChild(script);
+        },
+
+        // --- 视口进入动画 ---
+        initRevealOnScroll() {
+            const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            // 需要淡入的元素集合（无需改HTML，JS自动添加reveal类）
+            const selectors = [
+                '.hero-text h1', '.hero-text .subtitle', '.hero-actions',
+                '.why-us-section .section-header', '.why-us-section .new-feature-card',
+                '#tools .section-header', '#tools .new-feature-card',
+                '.how-it-works .section-header', '.how-it-works .step-row',
+                '.testimonials-section .section-header', '.testimonial-card',
+                '.faq-section .section-header', '.faq-item'
+            ];
+            const nodes = selectors.flatMap(sel => Array.from(document.querySelectorAll(sel)));
+
+            if (reduceMotion) {
+                nodes.forEach(el => el.classList.remove('reveal'));
+                return; // 尊重减少动效设置
+            }
+
+            nodes.forEach(el => el.classList.add('reveal'));
+
+            const io = new IntersectionObserver((entries, obs) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        obs.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15, rootMargin: '0px 0px -10% 0px' });
+
+            nodes.forEach(el => io.observe(el));
+        },
+
+        // --- 返回顶部按钮 ---
+        initBackToTop() {
+            const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const btn = document.createElement('button');
+            btn.id = 'back-to-top';
+            btn.type = 'button';
+            btn.setAttribute('aria-label', this.state.currentLang === 'zh' ? '返回顶部' : 'Back to top');
+            btn.innerHTML = '↑';
+            document.body.appendChild(btn);
+
+            btn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+            });
+
+            let ticking = false;
+            const onScroll = () => {
+                if (!ticking) {
+                    window.requestAnimationFrame(() => {
+                        btn.classList.toggle('show', window.scrollY > 400);
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            };
+            window.addEventListener('scroll', onScroll, { passive: true });
+            onScroll();
+        },
+
+        // --- Hero 轻量视差 ---
+        initHeroParallax() {
+            const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const finePointer = window.matchMedia && window.matchMedia('(pointer: fine)').matches;
+            const heroImg = document.querySelector('.hero-visual img');
+            if (!heroImg || reduceMotion || !finePointer) return;
+
+            let rafId = null;
+            const maxShift = 40; // 最大位移，避免夸张
+            const update = () => {
+                const y = Math.min(window.scrollY * 0.08, maxShift);
+                heroImg.style.transform = `translateY(${y}px)`;
+                rafId = null;
+            };
+            const onScroll = () => {
+                if (rafId == null) rafId = requestAnimationFrame(update);
+            };
+            window.addEventListener('scroll', onScroll, { passive: true });
+            update();
+        },
+
+        // --- 卡片3D悬浮（桌面端） ---
+        initCardTilt() {
+            const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const finePointer = window.matchMedia && window.matchMedia('(pointer: fine)').matches;
+            if (reduceMotion || !finePointer) return; // 移动端或减少动效时禁用
+
+            const cards = document.querySelectorAll('.card-hover-effect');
+            cards.forEach(card => {
+                const onMove = (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const px = (e.clientX - rect.left) / rect.width; // 0..1
+                    const py = (e.clientY - rect.top) / rect.height; // 0..1
+                    const rx = (py - 0.5) * 6; // 旋转X角度
+                    const ry = (px - 0.5) * -6; // 旋转Y角度
+                    card.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+                };
+                const onLeave = () => {
+                    card.style.transform = 'perspective(800px) rotateX(0) rotateY(0)';
+                };
+                card.addEventListener('mousemove', onMove);
+                card.addEventListener('mouseleave', onLeave);
+            });
         }
     };
 

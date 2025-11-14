@@ -55,7 +55,7 @@
 
         .hero-new .container {
             position: relative;
-            z-index: 2;
+            z-index: 3;
         }
 
         .hero-grid {
@@ -202,19 +202,17 @@
             max-height: 0;
             overflow: hidden;
             padding: 0 0.5rem;
-            transition: max-height 0.5s ease-out, padding 0.5s ease-out;
+            transition: max-height 0.4s ease-out, padding 0.4s ease-out;
+            scrollbar-gutter: stable both-edges;
         }
 
         .faq-answer.open {
-            max-height: 3000px;
-            /* 设置足够大的高度确保所有内容完全显示 */
+            max-height: min(65vh, 560px);
+            /* 固定最大高度，超出时内部滚动 */
             padding: 1rem 0.5rem 1.5rem;
-        }
-
-        /* 为了更好的用户体验，添加平滑滚动 */
-        .faq-answer.open {
             overflow-y: auto;
-            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
         }
 
         .faq-answer p {
@@ -237,8 +235,8 @@
         /* 移动端FAQ优化 */
         @media (max-width: 767px) {
             .faq-answer.open {
-                max-height: 4000px;
-                /* 移动端需要更大的高度，因为内容可能更长 */
+                max-height: min(70vh, 420px);
+                overflow-y: auto;
             }
             
             .faq-answer p {
@@ -348,6 +346,88 @@
                 padding: 3rem 0;
             }
         }
+
+        /* --- 高级视觉增强（首页专用） --- */
+        .text-gradient {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .btn-glow {
+            position: relative;
+            box-shadow: 0 8px 24px rgba(37, 99, 235, 0.25);
+        }
+        .btn-glow:hover {
+            box-shadow: 0 12px 32px rgba(37, 99, 235, 0.35);
+            transform: translateY(-2px);
+        }
+
+        .card-aurora {
+            position: relative;
+            background: linear-gradient(var(--background-color), var(--background-color)) padding-box,
+                        radial-gradient(120% 120% at 0% 0%, rgba(37,99,235,0.35), rgba(16,185,129,0.2), rgba(37,99,235,0.1)) border-box;
+            border: 1px solid transparent;
+        }
+        .card-aurora:hover {
+            background: linear-gradient(var(--background-color), var(--background-color)) padding-box,
+                        radial-gradient(120% 120% at 100% 0%, rgba(16,185,129,0.45), rgba(37,99,235,0.35), rgba(16,185,129,0.15)) border-box;
+        }
+
+        .icon-wrapper {
+            position: relative;
+        }
+        .icon-wrapper::before {
+            content: '';
+            position: absolute;
+            inset: -8px;
+            background: radial-gradient(closest-side, rgba(37,99,235,0.18), transparent 70%);
+            filter: blur(6px);
+            z-index: -1;
+            border-radius: 16px;
+        }
+
+        .hero-blobs {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 2;
+            overflow: hidden;
+        }
+        .hero-blobs .blob {
+            position: absolute;
+            width: 420px;
+            height: 420px;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.35;
+            will-change: transform;
+            animation: floatBlob 12s ease-in-out infinite;
+        }
+        .hero-blobs .b1 { left: -80px; top: -60px; background: radial-gradient(circle at 30% 30%, rgba(37,99,235,0.6), transparent 60%); animation-delay: 0s; }
+        .hero-blobs .b2 { right: -120px; top: 20%; background: radial-gradient(circle at 70% 30%, rgba(16,185,129,0.6), transparent 60%); animation-delay: 2s; }
+        .hero-blobs .b3 { left: 30%; bottom: -140px; background: radial-gradient(circle at 50% 50%, rgba(59,130,246,0.55), transparent 60%); animation-delay: 4s; }
+
+        @keyframes floatBlob {
+            0%, 100% { transform: translateY(0) translateX(0) scale(1); }
+            50% { transform: translateY(-20px) translateX(10px) scale(1.05); }
+        }
+
+        .section-divider { line-height: 0; height: 80px; background: transparent; color: var(--surface-color); }
+        .section-divider .wave { display: block; width: 100%; height: 100%; }
+
+        @media (max-width: 767px) {
+            .hero-blobs .blob { width: 260px; height: 260px; filter: blur(40px); opacity: 0.3; }
+            .hero-blobs .b1 { left: -120px; top: -100px; }
+            .hero-blobs .b2 { right: -160px; top: 10%; }
+            .hero-blobs .b3 { left: 10%; bottom: -160px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .hero-blobs .blob { animation: none !important; }
+            .btn-glow { transition: none; }
+        }
     </style>
 </head>
 
@@ -361,14 +441,14 @@
             <div class="container">
                 <div class="hero-grid">
                     <div class="hero-text">
-                        <h1 data-lang-zh="全渠道智能获客，一站式解决" data-lang-en="Omnichannel Lead Generation, Solved"></h1>
+                        <h1 class="text-gradient" data-lang-zh="全渠道智能获客，一站式解决" data-lang-en="Omnichannel Lead Generation, Solved"></h1>
                         <p class="subtitle" data-lang-zh="智贸云梯 为您整合了地图、网站、社媒等多个渠道的数据能力，打造了一套完整的自动化增长工具生态，助您轻松链接全球商机。"
                             data-lang-en="SmartTrade CloudLadder integrates data capabilities from maps, websites, and social media into a complete ecosystem of automated growth tools, helping you connect with global opportunities effortlessly.">
                         </p>
                         <div class="hero-actions">
-                            <a href="#tools" class="btn btn-primary" data-lang-zh="探索我们的工具"
+                            <a href="#tools" class="btn btn-primary btn-glow" data-lang-zh="探索我们的工具"
                                 data-lang-en="Explore Our Tools"></a>
-                            <a href="./checkout.html" class="btn btn-secondary" data-lang-zh="查看定价"
+                            <a href="./checkout.html" class="btn btn-secondary btn-glow" data-lang-zh="查看定价"
                                 data-lang-en="View Pricing"></a>
                         </div>
                     </div>
@@ -376,8 +456,19 @@
                         <img src="assets/img/Friendly Robot Mascot_simple.webp" alt="全渠道获客概念图" class="hero-gif">
                     </div>
                 </div>
+                <div class="hero-blobs" aria-hidden="true">
+                    <span class="blob b1"></span>
+                    <span class="blob b2"></span>
+                    <span class="blob b3"></span>
+                </div>
             </div>
         </section>
+
+        <div class="section-divider" aria-hidden="true">
+            <svg class="wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M0,0 C150,100 350,0 600,60 C850,120 1050,20 1200,80 L1200,120 L0,120 Z" fill="currentColor"></path>
+            </svg>
+        </div>
 
 
         <section class="why-us-section">
@@ -389,21 +480,21 @@
                     </p>
                 </div>
                 <div class="new-features-grid">
-                    <div class="new-feature-card card-hover-effect">
+                    <div class="new-feature-card card-hover-effect card-aurora">
                         <div class="icon-wrapper"><i class='bx bx-sitemap'></i></div>
                         <h3 data-lang-zh="多渠道线索覆盖" data-lang-en="Multi-Channel Lead Coverage"></h3>
                         <p data-lang-zh="从Google地图商家、企业网站到Facebook、Instagram、LinkedIn等社交媒体，在最广泛的渠道中发现您的潜在客户。"
                             data-lang-en="Discover your potential customers across the broadest channels, from Google Maps listings and company websites to Facebook, Instagram, LinkedIn and other social media platforms.">
                         </p>
                     </div>
-                    <div class="new-feature-card card-hover-effect">
+                    <div class="new-feature-card card-hover-effect card-aurora">
                         <div class="icon-wrapper"><i class='bx bx-mail-send'></i></div>
                         <h3 data-lang-zh="精准联系人触达" data-lang-en="Precise Contact Reach"></h3>
                         <p data-lang-zh="结合智能发现与深度验证技术，确保您获取的每一个邮箱、电话、WhatsApp等联系方式都真实有效，大幅提升触达率。"
                             data-lang-en="Combine intelligent discovery with deep validation to ensure every email, phone, WhatsApp and other contact details you acquire are authentic and valid, significantly boosting your outreach success.">
                         </p>
                     </div>
-                    <div class="new-feature-card card-hover-effect">
+                    <div class="new-feature-card card-hover-effect card-aurora">
                         <div class="icon-wrapper"><i class='bx bx-bot'></i></div>
                         <h3 data-lang-zh="强大的自动化能力" data-lang-en="Powerful Automation"></h3>
                         <p data-lang-zh="设置好您的目标，智贸云梯的全套工具即可7x24小时无人值守地工作，持续不断地为您输送高质量线索。"
@@ -420,7 +511,7 @@
                     <h2 data-lang-zh="智贸云梯 核心工具套件" data-lang-en="SmartTrade CloudLadder Core Tool Suite"></h2>
                 </div>
                 <div class="new-features-grid">
-                    <div class="new-feature-card card-hover-effect" style="text-align: left;">
+                    <div class="new-feature-card card-hover-effect card-aurora" style="text-align: left;">
                         <div class="icon-wrapper" style="text-align: center;"><i class='bx bxs-map-alt'></i></div>
                         <h3 data-lang-zh="谷歌地图抓取器" data-lang-en="Google Maps Scraper"></h3>
                         <p data-lang-zh="从Google Maps中精准提取海量B2B商家信息，自动发现并补充联系邮箱、Facebook、Instagram、LinkedIn等社交链接，构建完整的客户档案。"
@@ -429,7 +520,7 @@
                         <a href="./product.html?id=maps-scraper" class="btn btn-secondary" style="margin-top: 1.5rem;"
                             data-lang-zh="了解更多" data-lang-en="Learn More"></a>
                     </div>
-                    <div class="new-feature-card card-hover-effect" style="text-align: left;">
+                    <div class="new-feature-card card-hover-effect card-aurora" style="text-align: left;">
                         <div class="icon-wrapper" style="text-align: center;"><i class='bx bx-search-alt'></i></div>
                         <h3 data-lang-zh="智贸云梯 | MediaMingle 专业版" data-lang-en="SmartTrade CloudLadder | MediaMingle Professional"></h3>
                         <p data-lang-zh="综合搜索引擎邮件挖掘工具，支持Google、Bing、DuckDuckGo等多个搜索引擎，智能爬取企业网站，深度挖掘高质量商业邮箱，为您的B2B营销提供精准的联系方式。"
@@ -438,7 +529,7 @@
                         <a href="./product.html?id=mediamingle-pro" class="btn btn-secondary"
                             style="margin-top: 1.5rem;" data-lang-zh="了解更多" data-lang-en="Learn More"></a>
                     </div>
-                    <div class="new-feature-card card-hover-effect" style="text-align: left;">
+                    <div class="new-feature-card card-hover-effect card-aurora" style="text-align: left;">
                         <div class="icon-wrapper" style="text-align: center;"><i class='bx bxs-check-shield'></i></div>
                         <h3 data-lang-zh="MailPro邮件营销大师" data-lang-en="MailPro Email Marketing Master"></h3>
                         <p data-lang-zh="通过多维度深度检测，快速清洗您的邮件列表，剔除无效、临时或有风险的邮箱，同时提供邮件模板管理和批量发送功能，打造完整的邮件营销解决方案。"
@@ -447,7 +538,7 @@
                         <a href="./product.html?id=email-validator" class="btn btn-secondary"
                             style="margin-top: 1.5rem;" data-lang-zh="了解更多" data-lang-en="Learn More"></a>
                     </div>
-                    <div class="new-feature-card card-hover-effect" style="text-align: left;">
+                    <div class="new-feature-card card-hover-effect card-aurora" style="text-align: left;">
                         <div class="icon-wrapper" style="text-align: center;"><i class='bx bxl-whatsapp-square'></i></div>
                         <h3 data-lang-zh="WhatsApp批量真实性检测" data-lang-en="WhatsApp Validator"></h3>
                         <p data-lang-zh="批量验证WhatsApp号码的有效性，精准识别活跃用户，同时支持号码生成和用户信息抓取，降低营销成本，确保您的消息直达目标客户。"
@@ -456,7 +547,7 @@
                         <a href="./product.html?id=whatsapp-validator" class="btn btn-secondary"
                             style="margin-top: 1.5rem;" data-lang-zh="了解更多" data-lang-en="Learn More"></a>
                     </div>
-                    <div class="new-feature-card card-hover-effect" style="text-align: left;">
+                    <div class="new-feature-card card-hover-effect card-aurora" style="text-align: left;">
                         <div class="icon-wrapper" style="text-align: center;"><i class='bx bx-extension'></i></div>
                         <h3 data-lang-zh="谷歌插件获客" data-lang-en="Email Finder Chrome Extension"></h3>
                         <p data-lang-zh="Chrome浏览器插件，智能邮箱查找工具。支持Google公式批量搜索、AI决策人预测、LinkedIn挖掘、实时验证，让您在浏览器中轻松完成获客。"
@@ -475,23 +566,26 @@
                     <h2 data-lang-zh="三步开启全渠道获客" data-lang-en="Start Omnichannel Lead Generation in Three Steps"></h2>
                 </div>
                 <div class="steps-container">
-                    <div class="step step-card card-hover-effect">
+                    <div class="step step-card card-hover-effect card-aurora">
+                        <span class="step-badge">1</span>
                         <div class="step-icon-wrapper"><i class='bx bx-search-alt'></i></div>
-                        <h3 data-lang-zh="1. 定义目标" data-lang-en="1. Define Target"></h3>
+                        <h3 data-lang-zh="定义目标" data-lang-en="Define Target"></h3>
                         <p data-lang-zh="输入关键词、选择目标国家和城市，精准锁定您的潜在客户群体，同时选择要抓取的社交媒体平台。"
                             data-lang-en="Enter keywords, select target countries and cities to precisely lock down your potential customer base, while choosing which social media platforms to scrape.">
                         </p>
                     </div>
-                    <div class="step step-card card-hover-effect">
+                    <div class="step step-card card-hover-effect card-aurora">
+                        <span class="step-badge">2</span>
                         <div class="step-icon-wrapper"><i class='bx bxs-cctv'></i></div>
-                        <h3 data-lang-zh="2. 启动任务" data-lang-en="2. Launch Task"></h3>
-                        <p data-lang-zh="点击"开始"，智贸云梯的全套工具将全自动工作，为您搜集成百上千条高质量潜在客户信息，包括邮箱、电话、社交媒体等。"
+                        <h3 data-lang-zh="启动任务" data-lang-en="Launch Task"></h3>
+                        <p data-lang-zh="点击“开始”，智贸云梯的全套工具将全自动工作，为您搜集成百上千条高质量潜在客户信息，包括邮箱、电话、社交媒体等。"
                             data-lang-en="Click 'Start', and SmartTrade CloudLadder's complete suite of tools will work automatically to gather hundreds of high-quality leads for you, including emails, phones, social media and more.">
                         </p>
                     </div>
-                    <div class="step step-card card-hover-effect">
+                    <div class="step step-card card-hover-effect card-aurora">
+                        <span class="step-badge">3</span>
                         <div class="step-icon-wrapper"><i class='bx bxs-download'></i></div>
-                        <h3 data-lang-zh="3. 收获数据" data-lang-en="3. Harvest Data"></h3>
+                        <h3 data-lang-zh="收获数据" data-lang-en="Harvest Data"></h3>
                         <p data-lang-zh="任务完成后，将所有数据一键导出为表格，同时可以验证邮箱有效性、检测WhatsApp活跃度，立即用于您的全渠道市场营销活动。"
                             data-lang-en="Once the task is complete, export all data with one click, while validating email effectiveness and detecting WhatsApp activity for your omnichannel marketing campaigns.">
                         </p>
@@ -599,16 +693,16 @@
                 </div>
                 <div class="testimonials-slider">
                     <div class="testimonials-track" id="testimonials-track">
-                        <div class="testimonial-card card-hover-effect">
+                        <div class="testimonial-card card-hover-effect card-aurora">
                             <blockquote>
-                                <p data-lang-zh=""智贸云梯的全渠道工具彻底改变了我们的拓客方式。在短短一周内，我们获得的有效潜在客户比之前一个月还多。""
+                                <p data-lang-zh="&ldquo;智贸云梯的全渠道工具彻底改变了我们的拓客方式。在短短一周内，我们获得的有效潜在客户比之前一个月还多。&rdquo;"
                                     data-lang-en="SmartTrade CloudLadder's omnichannel tools completely changed our lead generation process. We got more qualified leads in a week than we did in the previous month.">
                                 </p>
                             </blockquote>
                             <p class="testimonial-author" data-lang-zh="—— 李明, 市场总监"
                                 data-lang-en="— John Doe, Marketing Director"></p>
                         </div>
-                        <div class="testimonial-card card-hover-effect">
+                        <div class="testimonial-card card-hover-effect card-aurora">
                             <blockquote>
                                 <p data-lang-zh="“界面非常直观，几乎没有学习成本。数据的准确性也非常高，为我们节省了大量手动核对的时间。”"
                                     data-lang-en="The interface is incredibly intuitive, with almost no learning curve. The data accuracy is also very high, saving us tons of time.">
@@ -617,9 +711,9 @@
                             <p class="testimonial-author" data-lang-zh="—— Sarah Lee, 创业公司创始人"
                                 data-lang-en="— Sarah Lee, Startup Founder"></p>
                         </div>
-                        <div class="testimonial-card card-hover-effect">
+                        <div class="testimonial-card card-hover-effect card-aurora">
                             <blockquote>
-                                <p data-lang-zh=""性价比极高。相比其他昂贵的解决方案，智贸云梯 提供了我们需要的一切全渠道获客功能，而且价格更合理。""
+                                <p data-lang-zh="&ldquo;性价比极高。相比其他昂贵的解决方案，智贸云梯 提供了我们需要的一切全渠道获客功能，而且价格更合理。&rdquo;"
                                     data-lang-en="Excellent value for money. Compared to other expensive solutions, SmartTrade CloudLadder provides everything we need for omnichannel lead generation at a more reasonable price.">
                                 </p>
                             </blockquote>
@@ -683,10 +777,5 @@
             </div>
         </div>
     </div>
-
 </body>
-
-</html>
-</body>
-
 </html>
