@@ -14,6 +14,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             this.initTheme();
             this.initLang();
+            
+            // 确保页面完全加载后再次应用语言设置
+            setTimeout(() => {
+                this.applyLang();
+            }, 100);
+
             this.setActiveNavLink();
 
             // 初始化 FAQ 和客户评价功能
@@ -23,6 +29,9 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // 初始化推广链接追踪
             this.initReferralTracking();
+
+            // 初始化统计数字动画
+            this.initStatsAnimation();
 
             // 轻量交互增强（兼容移动端与减少动效设置）
             this.initRevealOnScroll();
@@ -100,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div class="mapouter">
                                 <div class="gmap_canvas">
                                     <iframe class="gmap_iframe" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
-                                        src="https://maps.google.com/maps?width=300&amp;height=300&amp;hl=zh-CN&amp;q=佛山市禅城区季华四路创业产业园&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed">
+                                        src="https://maps.google.com/maps?width=300&amp;height=300&amp;hl=zh-CN&amp;q=佛山市禅城区季华四路创意产业园&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed">
                                     </iframe>
                                     <a href="https://embedgooglemap.xyz/">google maps iframe</a>
                                 </div>
@@ -126,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <p data-lang-zh="中心位置" data-lang-en="Location">中心位置</p>
                             <div class="footer-address">
                                 <h4 data-lang-zh="联系地址" data-lang-en="Address">联系地址</h4>
-                                <p data-lang-zh="地址：广东省 佛山市 禅城区 季华四路 创业产业园" data-lang-en="Address: Chuangye Industrial Park, Jihua 4th Road, Chancheng District, Foshan, Guangdong Province">地址：广东省 佛山市 禅城区 季华四路 创业产业园</p>
+                                <p data-lang-zh="地址：广东省 佛山市 禅城区 季华四路 创意产业园" data-lang-en="Address: Chuangye Industrial Park, Jihua 4th Road, Chancheng District, Foshan, Guangdong Province">地址：广东省 佛山市 禅城区 季华四路 创意产业园</p>
                                 <p data-lang-zh="邮编：528000" data-lang-en="Postal Code: 528000">邮编：528000</p>
                             </div>
                         </div>
@@ -353,6 +362,84 @@ document.addEventListener('DOMContentLoaded', () => {
             if (langToggleButton) {
                 langToggleButton.textContent = this.state.currentLang === 'zh' ? 'EN' : '中';
             }
+
+            // 特别处理统计数字，确保语言切换时数字正确显示
+            const statNums = document.querySelectorAll('.stat-num[data-lang-zh], .stat-num[data-lang-en]');
+            statNums.forEach(statNum => {
+                const val = statNum.getAttribute(`data-lang-${this.state.currentLang}`);
+                if (val != null) {
+                    // 停止当前动画
+                    if (statNum.animationId) {
+                        cancelAnimationFrame(statNum.animationId);
+                    }
+                    // 立即更新数字并启动动画
+                    this.animateNumber(statNum, parseFloat(val));
+                }
+            });
+        },
+
+        // --- 数字动画 ---
+        animateNumber(element, targetValue, duration = 2000) {
+            const startValue = 0;
+            const startTime = performance.now();
+            
+            const animate = (currentTime) => {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                // 使用缓动函数让动画更自然
+                const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+                const currentValue = startValue + (targetValue - startValue) * easeOutQuart;
+                
+                // 格式化数字显示
+                if (targetValue >= 100) {
+                    // 大于100的数字显示为整数
+                    element.textContent = Math.floor(currentValue);
+                } else {
+                    // 小数保留一位小数
+                    element.textContent = currentValue.toFixed(1);
+                }
+                
+                if (progress < 1) {
+                    element.animationId = requestAnimationFrame(animate);
+                } else {
+                    // 动画结束，确保显示精确值
+                    if (targetValue >= 100) {
+                        element.textContent = Math.floor(targetValue);
+                    } else {
+                        element.textContent = targetValue.toString();
+                    }
+                    element.animationId = null;
+                }
+            };
+            
+            element.animationId = requestAnimationFrame(animate);
+        },
+
+        // 初始化统计数字动画
+        initStatsAnimation() {
+            const statNums = document.querySelectorAll('.stat-num[data-lang-zh], .stat-num[data-lang-en]');
+            
+            // 使用 Intersection Observer 来检测元素是否进入视口
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const statNum = entry.target;
+                        const val = statNum.getAttribute(`data-lang-${this.state.currentLang}`);
+                        if (val != null && !statNum.hasAnimated) {
+                            statNum.hasAnimated = true;
+                            this.animateNumber(statNum, parseFloat(val));
+                        }
+                        observer.unobserve(statNum);
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            statNums.forEach(statNum => {
+                // 初始设置为0
+                statNum.textContent = '0';
+                observer.observe(statNum);
+            });
         },
 
         // --- 其它 ---

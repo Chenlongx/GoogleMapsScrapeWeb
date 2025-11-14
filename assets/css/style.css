@@ -235,6 +235,7 @@ body {
 .main-nav ul {
     list-style: none;
     display: flex;
+    flex-wrap: wrap;
     gap: 1.5rem;
 }
 
