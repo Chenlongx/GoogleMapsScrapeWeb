@@ -657,16 +657,130 @@
 
             const plans = {
                 gmaps: {
-                    standard: { price: '4.90', features_zh: ['每天50次导出', '基础技术支持'], features_en: ['50 exports per day', 'Basic Support'], period_zh: '/月', period_en: '/mo' },
-                    premium: { price: '7.13', features_zh: ['无限数据', '<strong>优先</strong>技术支持', '无限导出'], features_en: ['Unlimited Records', '<strong>Priority</strong> Support', 'API Access'], period_zh: '/月', period_en: '/mo' }
+                    standard: { 
+                        price: '4.90', 
+                        features_zh: [
+                            '每天50次导出', 
+                            '基础技术支持',
+                            '谷歌地图商户抓取',
+                            '基础数据字段'
+                        ], 
+                        features_en: [
+                            '50 exports per day', 
+                            'Basic Support',
+                            'Google Maps Business Scraping',
+                            'Basic Data Fields'
+                        ], 
+                        period_zh: '/月', 
+                        period_en: '/mo' 
+                    },
+                    premium: { 
+                        price: '7.13', 
+                        features_zh: [
+                            '无限数据',
+                            '<strong>优先</strong>技术支持', 
+                            '无限导出',
+                            '完整商户信息抓取',
+                            '邮箱和电话提取',
+                            '多格式数据导出',
+                            '批量地区搜索'
+                        ], 
+                        features_en: [
+                            'Unlimited Records', 
+                            '<strong>Priority</strong> Support', 
+                            'Unlimited Export',
+                            'Complete Business Info Scraping',
+                            'Email & Phone Extraction',
+                            'Multi-format Data Export',
+                            'Bulk Region Search'
+                        ], 
+                        period_zh: '/月', 
+                        period_en: '/mo' 
+                    }
                 },
                 validator: {
-                    standard: { price: '29.00', features_zh: ['全功能验证', '授权 <strong>1</strong> 台设备'], features_en: ['All Features', 'License for <strong>1</strong> Device'], period_zh: '/年', period_en: '/year' },
-                    premium: { price: '79.00', features_zh: ['全功能验证', '<strong>优先</strong>技术支持', '授权 <strong>3</strong> 台设备'], features_en: ['All Features', '<strong>Priority</strong> Support', 'License for <strong>3</strong> Devices'], period_zh: '/年', period_en: '/year' }
+                    standard: { 
+                        price: '29.00', 
+                        features_zh: [
+                            '全功能验证', 
+                            '授权 <strong>1</strong> 台设备',
+                            '智能搜邮功能',
+                            '邮箱检测工具'
+                        ], 
+                        features_en: [
+                            'All Features', 
+                            'License for <strong>1</strong> Device',
+                            'Smart Email Search',
+                            'Email Validation Tool'
+                        ], 
+                        period_zh: '/年', 
+                        period_en: '/year' 
+                    },
+                    premium: { 
+                        price: '79.00', 
+                        features_zh: [
+                            '全功能验证', 
+                            '<strong>优先</strong>技术支持', 
+                            '授权 <strong>3</strong> 台设备',
+                            '邮件群发(按需充值)',
+                            '短信营销(按需充值)',
+                            '社媒获客工具',
+                            '领英获客功能'
+                        ], 
+                        features_en: [
+                            'All Features', 
+                            '<strong>Priority</strong> Support', 
+                            'License for <strong>3</strong> Devices',
+                            'Email Marketing (Pay-as-you-go)',
+                            'SMS Marketing (Pay-as-you-go)',
+                            'Social Media Lead Gen',
+                            'LinkedIn Lead Generation'
+                        ], 
+                        period_zh: '/年', 
+                        period_en: '/year' 
+                    }
                 },
-                'whatsapp-validator': { // 注意：这里的键名需要与 data-product-id 匹配
-                    standard: { price: '29.00', features_zh: ['批量验证WhatsApp号码', '支持多种筛选条件', '实时验证结果'], features_en: ['Bulk WhatsApp number validation', 'Support for multiple filtering conditions', 'Real-time validation results'], period_zh: '/年', period_en: '/year' },
-                    premium: { price: '49.00', features_zh: ['批量验证WhatsApp号码', '支持多种筛选条件', '实时验证结果', '<strong>专属</strong>技术支持'], features_en: ['Bulk WhatsApp number validation', 'Support for multiple filtering conditions', 'Real-time validation results', '<strong>Dedicated</strong> technical support'], period_zh: '/年', period_en: '/year' }
+                'whatsapp-validator': {
+                    standard: { 
+                        price: '29.00', 
+                        features_zh: [
+                            'WhatsApp号码验证', 
+                            '批量号码检测', 
+                            '实时验证结果',
+                            '基础筛选功能'
+                        ], 
+                        features_en: [
+                            'WhatsApp Number Validation', 
+                            'Bulk Number Detection', 
+                            'Real-time Results',
+                            'Basic Filtering'
+                        ], 
+                        period_zh: '/年', 
+                        period_en: '/year' 
+                    },
+                    premium: { 
+                        price: '49.00', 
+                        features_zh: [
+                            'WhatsApp号码验证', 
+                            '批量号码检测', 
+                            '实时验证结果', 
+                            '<strong>专属</strong>技术支持',
+                            '高级筛选条件',
+                            '详细验证报告',
+                            '多格式导入导出'
+                        ], 
+                        features_en: [
+                            'WhatsApp Number Validation', 
+                            'Bulk Number Detection', 
+                            'Real-time Results', 
+                            '<strong>Dedicated</strong> Technical Support',
+                            'Advanced Filter Conditions',
+                            'Detailed Validation Reports',
+                            'Multi-format Import/Export'
+                        ], 
+                        period_zh: '/年', 
+                        period_en: '/year' 
+                    }
                 },
                 gmaps_renewal: {
                     monthly: { price: '7.13', period_zh: '/月', period_en: '/mo' },
