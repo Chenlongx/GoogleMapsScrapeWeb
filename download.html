@@ -438,7 +438,7 @@
                     <ul>
                         <li data-lang-zh="<strong>Microsoft Edge/Chrome：</strong> 点击下载按钮后，如果看到阻止提示，请点击浏览器地址栏右侧的『下载已阻止』或『查看下载』，然后选择『保留』或『允许下载』。" data-lang-en="<strong>Microsoft Edge/Chrome:</strong> After clicking the download button, if you see a blocking message, click 'Downloads blocked' or 'View downloads' in the browser address bar, then select 'Keep' or 'Allow download'."></li>
                         <li data-lang-zh="<strong>Windows 安全中心：</strong> 如果 Windows Defender SmartScreen 提示『不常见的下载』，请点击『更多信息』，然后选择『仍要运行』。这是正常的，因为我们无法为所有下载提供数字签名。" data-lang-en="<strong>Windows Security:</strong> If Windows Defender SmartScreen shows 'Uncommon download', click 'More info' then select 'Run anyway'. This is normal as we cannot provide digital signatures for all downloads."></li>
-                        <li data-lang-zh="<strong>仍然无法下载？</strong> 尝试以下方法：<br>1. 按住 <strong>Ctrl</strong> 键点击下载按钮 → 使用 GitHub 直接链接<br>2. 按住 <strong>Shift</strong> 键点击下载按钮 → 使用外部代理链接<br>3. 右键点击下载按钮 → 选择『在新标签页中打开链接』<br>4. 联系客服获取下载链接" data-lang-en="<strong>Still can't download?</strong> Try these methods:<br>1. Hold <strong>Ctrl</strong> and click → Use direct GitHub link<br>2. Hold <strong>Shift</strong> and click → Use external proxy link<br>3. Right-click the button → Select 'Open link in new tab'<br>4. Contact customer service for download link"></li>
+                        <li data-lang-zh="<strong>仍然无法下载？</strong> 尝试以下方法：<br>1. 按住 <strong>Ctrl</strong> 键点击下载按钮 → 使用 GitHub 直接链接<br>2. 按住 <strong>Shift</strong> 键点击下载按钮 → 使用外部代理链接<br>3. 右键点击下载按钮 → 选择『在新标签页中打开链接』<br>4. <strong>所有产品</strong> → 系统会自动为中国用户提供蓝奏云备用下载链接<br>5. 联系客服获取下载链接" data-lang-en="<strong>Still can't download?</strong> Try these methods:<br>1. Hold <strong>Ctrl</strong> and click → Use direct GitHub link<br>2. Hold <strong>Shift</strong> and click → Use external proxy link<br>3. Right-click the button → Select 'Open link in new tab'<br>4. <strong>All Products</strong> → Backup download links available for Chinese users<br>5. Contact customer service for download link"></li>
                     </ul>
                 </div>
 
@@ -625,9 +625,47 @@
                             }
                             
                             // 默认：允许浏览器处理链接导航
-                            // 如果代理返回 JSON（文件太大），浏览器会显示 JSON
-                            // 我们可以通过检测这种情况来改进用户体验，但这需要后端支持
                             console.log('使用下载链接:', finalDownloadUrl);
+                            
+                            // 为支持的产品添加下载失败检测和备用链接
+                            if (config.repoName === 'gogole_maps' || config.repoName === 'mediamingle_pro_repo' || config.repoName === 'email_validator_repo' || config.repoName === 'whatsapp_validator_repo') {
+                                // 检测下载是否成功，如果失败则提供备用链接
+                                setTimeout(() => {
+                                    // 检查用户是否在中国（通过时区粗略判断）
+                                    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                                    const isChina = timezone.includes('Asia/Shanghai') || timezone.includes('Asia/Beijing');
+                                    
+                                    if (isChina || navigator.language.includes('zh')) {
+                                        // 根据不同产品提供相应的备用下载选项
+                                        let productName, backupUrl;
+                                        if (config.repoName === 'gogole_maps') {
+                                            productName = '谷歌地图抓取器';
+                                            backupUrl = 'https://www.ilanzou.com/s/O4dNR6Cd';
+                                        } else if (config.repoName === 'mediamingle_pro_repo') {
+                                            productName = '综合搜引擎专业版';
+                                            backupUrl = 'https://www.ilanzou.com/s/N2jNR6AP';
+                                        } else if (config.repoName === 'email_validator_repo') {
+                                            productName = '邮件营销大师';
+                                            backupUrl = 'https://www.ilanzou.com/s/6FCNRmI1';
+                                        } else if (config.repoName === 'whatsapp_validator_repo') {
+                                            productName = 'WhatsApp号码验证器';
+                                            backupUrl = 'https://www.ilanzou.com/s/6FCNRmI1';
+                                        }
+                                        
+                                        // 为中国用户提供备用下载选项
+                                        const shouldShowBackup = confirm(
+                                            `如果上述${productName}下载链接无法正常使用，是否使用备用下载链接？\n\n` +
+                                            '备用链接：蓝奏云（专为中国用户优化）\n\n' +
+                                            '点击"确定"使用备用链接，点击"取消"继续使用原链接'
+                                        );
+                                        
+                                        if (shouldShowBackup) {
+                                            console.log(`用户选择使用${productName}蓝奏云备用下载链接`);
+                                            window.open(backupUrl, '_blank', 'noopener,noreferrer');
+                                        }
+                                    }
+                                }, 3000); // 3秒后显示备用选项
+                            }
                             
                             // 允许默认行为继续（链接导航）
                             // 浏览器会自动处理下载或重定向
@@ -745,7 +783,41 @@
                                 // 修改下载按钮的行为，使其点击时弹出提示
                                 windowsDownloadBtn.onclick = (e) => {
                                     e.preventDefault();
-                                    alert(alertMessage);
+                                    
+                                    // 为支持的产品提供蓝奏云备用下载链接
+                                    if (config.repoName === 'gogole_maps' || config.repoName === 'mediamingle_pro_repo' || config.repoName === 'email_validator_repo' || config.repoName === 'whatsapp_validator_repo') {
+                                        // 根据不同产品设置相应的信息
+                                        let productName, backupUrl;
+                                        if (config.repoName === 'gogole_maps') {
+                                            productName = '谷歌地图抓取器';
+                                            backupUrl = 'https://www.ilanzou.com/s/O4dNR6Cd';
+                                        } else if (config.repoName === 'mediamingle_pro_repo') {
+                                            productName = '综合搜引擎专业版';
+                                            backupUrl = 'https://www.ilanzou.com/s/N2jNR6AP';
+                                        } else if (config.repoName === 'email_validator_repo') {
+                                            productName = '邮件营销大师';
+                                            backupUrl = 'https://www.ilanzou.com/s/6FCNRmI1';
+                                        } else if (config.repoName === 'whatsapp_validator_repo') {
+                                            productName = 'WhatsApp号码验证器';
+                                            backupUrl = 'https://www.ilanzou.com/s/6FCNRmI1';
+                                        }
+                                        
+                                        const useBackup = confirm(
+                                            '无法从GitHub获取最新版本信息。\n\n' +
+                                            '是否使用备用下载链接？\n\n' +
+                                            '备用链接：蓝奏云（专为中国用户优化）\n\n' +
+                                            `点击"确定"使用备用链接下载${productName}`
+                                        );
+                                        
+                                        if (useBackup) {
+                                            console.log(`用户选择使用${productName}蓝奏云备用下载链接（GitHub失败后）`);
+                                            window.open(backupUrl, '_blank', 'noopener,noreferrer');
+                                        } else {
+                                            alert(alertMessage);
+                                        }
+                                    } else {
+                                        alert(alertMessage);
+                                    }
                                     return false;
                                 };
                                 // 移除 href 以避免任何下载尝试
