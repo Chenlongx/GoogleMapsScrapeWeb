@@ -138,6 +138,304 @@
     }
 
     /* ▲▲▲ CSS 追加结束 ▲▲▲ */
+
+    /* ▼▼▼ 视频教程样式 ▼▼▼ */
+    .video-tutorial-section {
+        background: var(--surface-color);
+        border-radius: 12px;
+        padding: 2rem;
+        margin: 2rem 0;
+        border: 1px solid var(--border-color);
+    }
+
+    .video-tutorial-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        gap: 0.75rem;
+    }
+
+    .video-tutorial-header h3 {
+        margin: 0;
+        color: var(--text-primary-color);
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+
+    .video-tutorial-icon {
+        width: 32px;
+        height: 32px;
+        background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.2rem;
+    }
+
+    .video-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1rem;
+    }
+
+    .video-card {
+        background: var(--background-color);
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--border-color);
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .video-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        border-color: var(--primary-color);
+    }
+
+    .video-thumbnail {
+        position: relative;
+        width: 100%;
+        height: 180px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    .video-thumbnail img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .video-play-button {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 60px;
+        height: 60px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: var(--primary-color);
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+    }
+
+    .video-card:hover .video-play-button {
+        background: var(--primary-color);
+        color: white;
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+
+    .video-duration {
+        position: absolute;
+        bottom: 8px;
+        right: 8px;
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+
+    .video-info {
+        padding: 1rem;
+    }
+
+    .video-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-primary-color);
+        margin: 0 0 0.5rem 0;
+        line-height: 1.4;
+    }
+
+    .video-description {
+        font-size: 0.875rem;
+        color: var(--text-secondary-color);
+        line-height: 1.5;
+        margin: 0;
+    }
+
+    .video-meta {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-top: 0.75rem;
+        font-size: 0.75rem;
+        color: var(--text-secondary-color);
+    }
+
+    .video-difficulty {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: 500;
+    }
+
+    .difficulty-beginner {
+        background: rgba(34, 197, 94, 0.1);
+        color: #059669;
+    }
+
+    .difficulty-intermediate {
+        background: rgba(251, 191, 36, 0.1);
+        color: #d97706;
+    }
+
+    .difficulty-advanced {
+        background: rgba(239, 68, 68, 0.1);
+        color: #dc2626;
+    }
+
+    /* 视频模态框样式 */
+    .video-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 10000;
+        backdrop-filter: blur(5px);
+    }
+
+    .video-modal.active {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .video-modal-content {
+        position: relative;
+        width: 90%;
+        max-width: 1000px;
+        background: var(--surface-color);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .video-modal-header {
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .video-modal-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text-primary-color);
+        margin: 0;
+    }
+
+    .video-modal-close {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: var(--text-secondary-color);
+        cursor: pointer;
+        padding: 0.5rem;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+    }
+
+    .video-modal-close:hover {
+        background: var(--border-color);
+        color: var(--text-primary-color);
+    }
+
+    .video-modal-body {
+        padding: 0;
+    }
+
+    .video-player {
+        width: 100%;
+        height: 500px;
+        background: #000;
+    }
+
+    .video-modal-info {
+        padding: 1.5rem;
+    }
+
+    .video-modal-description {
+        color: var(--text-secondary-color);
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    /* 移动端优化 */
+    @media (max-width: 767px) {
+        .video-tutorial-section {
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .video-grid {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .video-thumbnail {
+            height: 200px;
+        }
+
+        .video-modal-content {
+            width: 95%;
+            margin: 1rem;
+        }
+
+        .video-player {
+            height: 250px;
+        }
+
+        .video-modal-header {
+            padding: 1rem;
+        }
+
+        .video-modal-info {
+            padding: 1rem;
+        }
+
+        .video-tutorial-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .video-tutorial-header h3 {
+            font-size: 1.25rem;
+        }
+    }
+
+    /* 平板端优化 */
+    @media (min-width: 768px) and (max-width: 1023px) {
+        .video-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .video-player {
+            height: 400px;
+        }
+    }
+    /* ▲▲▲ 视频教程样式结束 ▲▲▲ */
 </style>
 
 <body>
@@ -172,12 +470,6 @@
         <!-- 文档阅读进度条 -->
         <div class="docs-progress-bar" id="docsProgressBar"></div>
         
-        <!-- 返回顶部按钮 -->
-        <button class="docs-back-to-top" id="backToTop" title="返回顶部">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/>
-            </svg>
-        </button>
 
         <div class="container">
             <div id="maps-scraper-docs" class="docs-wrapper">
@@ -207,6 +499,8 @@
                                         data-lang-en="Email Validation"></a></li>
                                 <li><a href="#gs-scraper-exporting" data-lang-zh="导出数据"
                                         data-lang-en="Exporting Data"></a></li>
+                                <li><a href="#gs-scraper-video-tutorials" data-lang-zh="视频教程"
+                                        data-lang-en="Video Tutorials"></a></li>
                             </ul>
                         </nav>
                     </aside>
@@ -247,7 +541,7 @@
                                 <img src="assets/img/keyword-input.webp" alt="关键词填写界面" class="docs-image">
                             </div>
                             <h3 data-lang-zh="2. 批量关键词导入" data-lang-en="2. Batch Keyword Import"></h3>
-                            <p data-lang-zh="点击"导入关键词"按钮，支持从Excel(.xlsx)、CSV(.csv)或文本(.txt)文件批量导入关键词。每行一个关键词，或使用逗号分隔多个关键词。"
+                            <p data-lang-zh="点击 导入关键词按钮，支持从Excel(.xlsx)、CSV(.csv)或文本(.txt)文件批量导入关键词。每行一个关键词，或使用逗号分隔多个关键词。"
                                 data-lang-en="Click the 'Import Keywords' button to batch import keywords from Excel (.xlsx), CSV (.csv), or text (.txt) files. One keyword per line, or separate multiple keywords with commas.">
                             </p>
                             <div class="docs-image-container">
@@ -260,18 +554,8 @@
                             </p>
                             
                             <h3 data-lang-zh="4. 开始搜索流程" data-lang-en="4. Starting the Search Process"></h3>
-                            <p data-lang-zh="点击"开始抓取"按钮后，程序将：<br>
-                            • 自动打开内置浏览器访问Google Maps<br>
-                            • 根据设置的关键词和地区进行搜索<br>
-                            • 智能滚动页面加载更多结果<br>
-                            • 自动提取商家详细信息<br>
-                            • 实时显示抓取进度和结果数量"
-                                data-lang-en="After clicking the 'Start Scraping' button, the program will:<br>
-                            • Automatically open the built-in browser to access Google Maps<br>
-                            • Search based on the set keywords and regions<br>
-                            • Intelligently scroll the page to load more results<br>
-                            • Automatically extract detailed business information<br>
-                            • Display scraping progress and result count in real-time">
+                            <p data-lang-zh='点击 开始抓取 按钮后，程序将：<br>• 自动打开内置浏览器访问Google Maps<br>• 根据设置的关键词和地区进行搜索<br>• 智能滚动页面加载更多结果<br>• 自动提取商家详细信息<br>• 实时显示抓取进度和结果数量'
+                               data-lang-en='After clicking the &quot;Start Scraping&quot; button, the program will:<br>• Automatically open the built-in browser to access Google Maps<br>• Search based on the set keywords and regions<br>• Intelligently scroll the page to load more results<br>• Automatically extract detailed business information<br>• Display scraping progress and result count in real-time'>
                             </p>
                             
                             <h3 data-lang-zh="5. 智能数据提取" data-lang-en="5. Intelligent Data Extraction"></h3>
@@ -312,20 +596,9 @@
                             <h2 data-lang-zh="高级设置" data-lang-en="Advanced Settings"></h2>
                             
                             <h3 data-lang-zh="1. 社交媒体抓取设置" data-lang-en="1. Social Media Scraping Settings"></h3>
-                            <p data-lang-zh="点击"社媒拓客设置"按钮，可以自定义选择要抓取的社交媒体平台：<br>
-                            • Facebook - 抓取Facebook页面链接<br>
-                            • Instagram - 抓取Instagram账号链接<br>
-                            • LinkedIn - 抓取LinkedIn公司页面<br>
-                            • Twitter - 抓取Twitter账号链接<br>
-                            • YouTube - 抓取YouTube频道链接<br>
-                            • TikTok - 抓取TikTok账号链接"
-                                data-lang-en="Click the 'Social Media Settings' button to customize which social media platforms to scrape:<br>
-                            • Facebook - Scrape Facebook page links<br>
-                            • Instagram - Scrape Instagram account links<br>
-                            • LinkedIn - Scrape LinkedIn company pages<br>
-                            • Twitter - Scrape Twitter account links<br>
-                            • YouTube - Scrape YouTube channel links<br>
-                            • TikTok - Scrape TikTok account links">
+
+                            <p data-lang-zh='点击 "社媒拓客设置" 按钮，可以自定义选择要抓取的社交媒体平台：<br>• Facebook - 抓取Facebook页面链接<br>• Instagram - 抓取Instagram账号链接<br>• LinkedIn - 抓取LinkedIn公司页面'
+                            data-lang-en='Click the "Social Media Settings" button to customize which social media platforms to scrape:<br>• Facebook - Scrape Facebook page links<br>• Instagram - Scrape Instagram account links<br>• LinkedIn - Scrape LinkedIn company pages<br>• Twitter - Scrape Twitter account links<br>• YouTube - Scrape YouTube channel links<br>• TikTok - Scrape TikTok account links'>
                             </p>
                             
                             <h3 data-lang-zh="2. WhatsApp验证模式" data-lang-en="2. WhatsApp Validation Mode"></h3>
@@ -390,16 +663,8 @@
                             </p>
                             
                             <h3 data-lang-zh="6. 邮箱收集模式" data-lang-en="6. Email Collection Mode"></h3>
-                            <p data-lang-zh="开启"收集所有邮箱"模式：<br>
-                            • 深度挖掘网站所有页面的邮箱<br>
-                            • 不仅限于首页，会访问子页面<br>
-                            • 使用多种搜索引擎查找邮箱<br>
-                            • 提高邮箱发现率和质量"
-                                data-lang-en="Enable 'Collect All Emails' mode:<br>
-                            • Deep mining of emails from all website pages<br>
-                            • Not limited to homepage, will visit sub-pages<br>
-                            • Use multiple search engines to find emails<br>
-                            • Improve email discovery rate and quality">
+                            <p data-lang-zh='开启“收集所有邮箱”模式：<br>• 深度挖掘网站所有页面的邮箱<br>• 不仅限于首页，会访问子页面<br>• 使用多种搜索引擎查找邮箱<br>• 提高邮箱发现率和质量'
+                            data-lang-en='Enable "Collect All Emails" mode:<br>• Deep mining of emails from all website pages<br>• Not limited to homepage, will visit sub-pages<br>• Use multiple search engines to find emails<br>• Improve email discovery rate and quality'>
                             </p>
                             
                             <div class="docs-image-container">
@@ -415,17 +680,11 @@
                             </div>
                             
                             <h3 data-lang-zh="1. 线程池配置" data-lang-en="1. Thread Pool Configuration"></h3>
-                            <p data-lang-zh="在"拓客设置"中可以配置线程池大小：<br>
-                            • <strong>线程池大小</strong> - 控制同时处理的任务数量（1-32个线程）<br>
-                            • <strong>轻量级并发数</strong> - 控制轻量级任务的并发数量（1-100个并发）<br>
-                            • <strong>建议配置</strong> - 根据CPU核心数设置，一般为CPU核心数的2-4倍<br>
-                            • <strong>性能监控</strong> - 实时监控线程使用情况和任务队列状态"
-                                data-lang-en="Configure thread pool size in 'Customer Acquisition Settings':<br>
-                            • <strong>Thread Pool Size</strong> - Controls the number of concurrent tasks (1-32 threads)<br>
-                            • <strong>Lightweight Concurrency</strong> - Controls lightweight task concurrency (1-100 concurrent)<br>
-                            • <strong>Recommended Configuration</strong> - Set based on CPU cores, typically 2-4 times the number of CPU cores<br>
-                            • <strong>Performance Monitoring</strong> - Real-time monitoring of thread usage and task queue status">
+
+                            <p data-lang-zh='在 "拓客设置" 中可以配置线程池大小：<br>• <strong>线程池大小</strong> - 控制同时处理的任务数量（1-32个线程）<br>• <strong>轻量级并发数</strong> - 控制轻量级任务的并发数量（1-100个并发）<br>• <strong>建议配置</strong> - 根据CPU核心数设置，一般为CPU核心数的2-4倍<br>• <strong>性能监控</strong> - 实时监控线程使用情况和任务队列状态'
+                            data-lang-en='Configure thread pool size in "Customer Acquisition Settings":<br>• <strong>Thread Pool Size</strong> - Controls the number of concurrent tasks (1-32 threads)<br>• <strong>Lightweight Concurrency</strong> - Controls lightweight task concurrency (1-100 concurrent)<br>• <strong>Recommended Configuration</strong> - Set based on CPU cores, typically 2-4 times the number of CPU cores<br>• <strong>Performance Monitoring</strong> - Real-time monitoring of thread usage and task queue status'>
                             </p>
+
 
                             <h3 data-lang-zh="2. 快速模式与图片屏蔽" data-lang-en="2. Fast Mode & Image Blocking"></h3>
                             <p data-lang-zh="性能优化的核心功能：<br>
@@ -745,6 +1004,115 @@
                                 <img src="assets/img/docs-export.png" alt="导出数据示意图" class="docs-image">
                             </div>
                         </section>
+
+                        <section id="gs-scraper-video-tutorials">
+                            <h2 data-lang-zh="视频教程" data-lang-en="Video Tutorials"></h2>
+                            
+                            <div class="video-tutorial-section">
+                                <div class="video-tutorial-header">
+                                    <div class="video-tutorial-icon">🎥</div>
+                                    <h3 data-lang-zh="谷歌地图抓取器视频教程" data-lang-en="Google Maps Scraper Video Tutorials"></h3>
+                                </div>
+                                
+                                <div class="video-grid">
+                                    <div class="video-card" data-video-id="gs-installation" data-video-url="https://www.youtube.com/embed/dQw4w9WgXcQ">
+                                        <div class="video-thumbnail">
+                                            <img src="assets/img/GoogleMapsScraper-Setup.webp" alt="安装教程视频">
+                                            <div class="video-play-button">▶</div>
+                                            <div class="video-duration">5:30</div>
+                                        </div>
+                                        <div class="video-info">
+                                            <h4 class="video-title" data-lang-zh="软件安装与激活" data-lang-en="Software Installation & Activation"></h4>
+                                            <p class="video-description" data-lang-zh="详细演示如何下载、安装和激活谷歌地图抓取器软件" data-lang-en="Detailed demonstration of how to download, install and activate Google Maps Scraper"></p>
+                                            <div class="video-meta">
+                                                <span class="video-difficulty difficulty-beginner" data-lang-zh="初级" data-lang-en="Beginner"></span>
+                                                <span data-lang-zh="5分30秒" data-lang-en="5:30"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="video-card" data-video-id="gs-basic-usage" data-video-url="https://www.youtube.com/embed/dQw4w9WgXcQ">
+                                        <div class="video-thumbnail">
+                                            <img src="assets/img/docs-start.webp" alt="基础使用教程">
+                                            <div class="video-play-button">▶</div>
+                                            <div class="video-duration">12:45</div>
+                                        </div>
+                                        <div class="video-info">
+                                            <h4 class="video-title" data-lang-zh="基础操作入门" data-lang-en="Basic Operations Guide"></h4>
+                                            <p class="video-description" data-lang-zh="从零开始学习如何使用谷歌地图抓取器进行数据采集" data-lang-en="Learn from scratch how to use Google Maps Scraper for data collection"></p>
+                                            <div class="video-meta">
+                                                <span class="video-difficulty difficulty-beginner" data-lang-zh="初级" data-lang-en="Beginner"></span>
+                                                <span data-lang-zh="12分45秒" data-lang-en="12:45"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="video-card" data-video-id="gs-advanced-settings" data-video-url="https://www.youtube.com/embed/dQw4w9WgXcQ">
+                                        <div class="video-thumbnail">
+                                            <img src="assets/img/advanced-Settings.png" alt="高级设置教程">
+                                            <div class="video-play-button">▶</div>
+                                            <div class="video-duration">18:20</div>
+                                        </div>
+                                        <div class="video-info">
+                                            <h4 class="video-title" data-lang-zh="高级设置详解" data-lang-en="Advanced Settings Explained"></h4>
+                                            <p class="video-description" data-lang-zh="深入了解代理设置、多浏览器管理、社媒抓取等高级功能" data-lang-en="Deep dive into proxy settings, multi-browser management, social media scraping and other advanced features"></p>
+                                            <div class="video-meta">
+                                                <span class="video-difficulty difficulty-intermediate" data-lang-zh="中级" data-lang-en="Intermediate"></span>
+                                                <span data-lang-zh="18分20秒" data-lang-en="18:20"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="video-card" data-video-id="gs-performance-optimization" data-video-url="https://www.youtube.com/embed/dQw4w9WgXcQ">
+                                        <div class="video-thumbnail">
+                                            <img src="assets/img/multi-browser-management.webp" alt="性能优化教程">
+                                            <div class="video-play-button">▶</div>
+                                            <div class="video-duration">15:10</div>
+                                        </div>
+                                        <div class="video-info">
+                                            <h4 class="video-title" data-lang-zh="性能优化技巧" data-lang-en="Performance Optimization Tips"></h4>
+                                            <p class="video-description" data-lang-zh="学习如何通过多浏览器管理和性能设置提升采集效率" data-lang-en="Learn how to improve collection efficiency through multi-browser management and performance settings"></p>
+                                            <div class="video-meta">
+                                                <span class="video-difficulty difficulty-advanced" data-lang-zh="高级" data-lang-en="Advanced"></span>
+                                                <span data-lang-zh="15分10秒" data-lang-en="15:10"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="video-card" data-video-id="gs-email-validation" data-video-url="https://www.youtube.com/embed/dQw4w9WgXcQ">
+                                        <div class="video-thumbnail">
+                                            <img src="assets/img/email-validation.webp" alt="邮箱验证教程">
+                                            <div class="video-play-button">▶</div>
+                                            <div class="video-duration">10:30</div>
+                                        </div>
+                                        <div class="video-info">
+                                            <h4 class="video-title" data-lang-zh="邮箱验证与WhatsApp检测" data-lang-en="Email Validation & WhatsApp Detection"></h4>
+                                            <p class="video-description" data-lang-zh="掌握邮箱验证功能和WhatsApp号码检测的使用方法" data-lang-en="Master email validation features and WhatsApp number detection usage"></p>
+                                            <div class="video-meta">
+                                                <span class="video-difficulty difficulty-intermediate" data-lang-zh="中级" data-lang-en="Intermediate"></span>
+                                                <span data-lang-zh="10分30秒" data-lang-en="10:30"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="video-card" data-video-id="gs-data-export" data-video-url="https://www.youtube.com/embed/dQw4w9WgXcQ">
+                                        <div class="video-thumbnail">
+                                            <img src="assets/img/docs-export.png" alt="数据导出教程">
+                                            <div class="video-play-button">▶</div>
+                                            <div class="video-duration">8:15</div>
+                                        </div>
+                                        <div class="video-info">
+                                            <h4 class="video-title" data-lang-zh="数据导出与分析" data-lang-en="Data Export & Analysis"></h4>
+                                            <p class="video-description" data-lang-zh="学习如何导出采集数据并进行后续的数据分析处理" data-lang-en="Learn how to export collected data and perform subsequent data analysis"></p>
+                                            <div class="video-meta">
+                                                <span class="video-difficulty difficulty-beginner" data-lang-zh="初级" data-lang-en="Beginner"></span>
+                                                <span data-lang-zh="8分15秒" data-lang-en="8:15"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
                     </article>
                 </div>
             </div>
@@ -764,6 +1132,7 @@
                                 <li><a href="#ev-results" data-lang-zh="理解结果" data-lang-en="Understanding Results"></a>
                                 </li>
                                 <li><a href="#ev-exporting" data-lang-zh="导出数据" data-lang-en="Exporting Data"></a></li>
+                                <li><a href="#ev-video-tutorials" data-lang-zh="视频教程" data-lang-en="Video Tutorials"></a></li>
                             </ul>
                         </nav>
                     </aside>
@@ -862,19 +1231,11 @@
                             </p>
                             
                             <h3 data-lang-zh="2. 导入操作步骤" data-lang-en="2. Import Operation Steps"></h3>
-                            <p data-lang-zh="批量导入的简单步骤：<br>
-                            1. 点击"批量导入"按钮<br>
-                            2. 选择包含邮箱地址的文件<br>
-                            3. 软件自动解析文件内容<br>
-                            4. 自动去重并显示导入统计<br>
-                            5. 邮箱列表准备就绪，可开始验证"
-                                data-lang-en="Simple steps for batch import:<br>
-                            1. Click the 'Batch Import' button<br>
-                            2. Select a file containing email addresses<br>
-                            3. Software automatically parses file content<br>
-                            4. Automatically deduplicates and shows import statistics<br>
-                            5. Email list is ready for validation">
+
+                            <p data-lang-zh='批量导入的简单步骤：<br>1. 点击“批量导入”按钮<br>2. 选择包含邮箱地址的文件<br>3. 软件自动解析文件内容<br>4. 自动去重并显示导入统计<br>5. 邮箱列表准备就绪，可开始验证'
+                            data-lang-en='Simple steps for batch import:<br>1. Click the "Batch Import" button<br>2. Select a file containing email addresses<br>3. Software automatically parses file content<br>4. Automatically deduplicates and shows import statistics<br>5. Email list is ready for validation'>
                             </p>
+
                             
                             <h3 data-lang-zh="3. 手动添加功能" data-lang-en="3. Manual Addition Feature"></h3>
                             <p data-lang-zh="除了批量导入，还支持手动添加：<br>
@@ -1042,17 +1403,10 @@
                             <h2 data-lang-zh="导出数据" data-lang-en="Exporting Data"></h2>
                             
                             <h3 data-lang-zh="1. 多种导出选项" data-lang-en="1. Multiple Export Options"></h3>
-                            <p data-lang-zh="灵活的导出选项满足不同需求：<br>
-                            • <strong>导出有效邮箱</strong> - 仅导出验证为"有效"的邮箱<br>
-                            • <strong>导出所有结果</strong> - 导出所有验证结果（有效/无效/风险）<br>
-                            • <strong>导出风险邮箱</strong> - 仅导出标记为"风险"的邮箱<br>
-                            • <strong>自定义筛选导出</strong> - 根据质量分数、分类等条件筛选导出"
-                                data-lang-en="Flexible export options to meet different needs:<br>
-                            • <strong>Export Valid Emails</strong> - Export only emails validated as 'Valid'<br>
-                            • <strong>Export All Results</strong> - Export all validation results (Valid/Invalid/Risky)<br>
-                            • <strong>Export Risky Emails</strong> - Export only emails marked as 'Risky'<br>
-                            • <strong>Custom Filter Export</strong> - Filter and export based on quality score, category, etc.">
+                            <p data-lang-zh='灵活的导出选项满足不同需求：<br>• <strong>导出有效邮箱</strong> - 仅导出验证为“有效”的邮箱<br>• <strong>导出所有结果</strong> - 导出所有验证结果（有效/无效/风险）<br>• <strong>导出风险邮箱</strong> - 仅导出标记为“风险”的邮箱<br>• <strong>自定义筛选导出</strong> - 根据质量分数、分类等条件筛选导出'
+                            data-lang-en='Flexible export options to meet different needs:<br>• <strong>Export Valid Emails</strong> - Export only emails validated as "Valid"<br>• <strong>Export All Results</strong> - Export all validation results (Valid/Invalid/Risky)<br>• <strong>Export Risky Emails</strong> - Export only emails marked as "Risky"<br>• <strong>Custom Filter Export</strong> - Filter and export based on quality score, category, etc.'>
                             </p>
+
                             
                             <h3 data-lang-zh="2. 支持的导出格式" data-lang-en="2. Supported Export Formats"></h3>
                             <p data-lang-zh="支持多种导出格式：<br>
@@ -1118,6 +1472,99 @@
                                 <img src="assets/img/MailProEmail/export results.webp" alt="导出结果示意图" class="docs-image">
                             </div>
                         </section>
+
+                        <section id="ev-video-tutorials">
+                            <h2 data-lang-zh="视频教程" data-lang-en="Video Tutorials"></h2>
+                            
+                            <div class="video-tutorial-section">
+                                <div class="video-tutorial-header">
+                                    <div class="video-tutorial-icon">📧</div>
+                                    <h3 data-lang-zh="MailPro邮件营销大师视频教程" data-lang-en="MailPro Email Marketing Master Video Tutorials"></h3>
+                                </div>
+                                
+                                <div class="video-grid">
+                                    <div class="video-card" data-video-id="ev-installation" data-video-url="https://www.youtube.com/embed/dQw4w9WgXcQ">
+                                        <div class="video-thumbnail">
+                                            <img src="assets/img/MailProEmail/MailProEmail.webp" alt="软件安装教程">
+                                            <div class="video-play-button">▶</div>
+                                            <div class="video-duration">6:45</div>
+                                        </div>
+                                        <div class="video-info">
+                                            <h4 class="video-title" data-lang-zh="软件安装与激活" data-lang-en="Software Installation & Activation"></h4>
+                                            <p class="video-description" data-lang-zh="详细演示如何安装和激活MailPro邮件营销大师" data-lang-en="Detailed demonstration of how to install and activate MailPro Email Marketing Master"></p>
+                                            <div class="video-meta">
+                                                <span class="video-difficulty difficulty-beginner" data-lang-zh="初级" data-lang-en="Beginner"></span>
+                                                <span data-lang-zh="6分45秒" data-lang-en="6:45"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="video-card" data-video-id="ev-batch-import" data-video-url="https://www.youtube.com/embed/dQw4w9WgXcQ">
+                                        <div class="video-thumbnail">
+                                            <img src="assets/img/MailProEmail/step-import-email.webp" alt="批量导入教程">
+                                            <div class="video-play-button">▶</div>
+                                            <div class="video-duration">8:20</div>
+                                        </div>
+                                        <div class="video-info">
+                                            <h4 class="video-title" data-lang-zh="邮箱批量导入" data-lang-en="Batch Email Import"></h4>
+                                            <p class="video-description" data-lang-zh="学习如何从Excel、CSV等文件批量导入邮箱地址" data-lang-en="Learn how to batch import email addresses from Excel, CSV and other files"></p>
+                                            <div class="video-meta">
+                                                <span class="video-difficulty difficulty-beginner" data-lang-zh="初级" data-lang-en="Beginner"></span>
+                                                <span data-lang-zh="8分20秒" data-lang-en="8:20"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="video-card" data-video-id="ev-validation-process" data-video-url="https://www.youtube.com/embed/dQw4w9WgXcQ">
+                                        <div class="video-thumbnail">
+                                            <img src="assets/img/MailProEmail/docs-ev-import.webp" alt="验证流程教程">
+                                            <div class="video-play-button">▶</div>
+                                            <div class="video-duration">15:30</div>
+                                        </div>
+                                        <div class="video-info">
+                                            <h4 class="video-title" data-lang-zh="邮箱验证流程" data-lang-en="Email Validation Process"></h4>
+                                            <p class="video-description" data-lang-zh="深入了解多维度邮箱验证技术和验证结果解读" data-lang-en="Deep dive into multi-dimensional email validation technology and result interpretation"></p>
+                                            <div class="video-meta">
+                                                <span class="video-difficulty difficulty-intermediate" data-lang-zh="中级" data-lang-en="Intermediate"></span>
+                                                <span data-lang-zh="15分30秒" data-lang-en="15:30"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="video-card" data-video-id="ev-marketing-campaigns" data-video-url="https://www.youtube.com/embed/dQw4w9WgXcQ">
+                                        <div class="video-thumbnail">
+                                            <img src="assets/img/MailProEmail/execute_marketing_campaigns.webp" alt="营销活动教程">
+                                            <div class="video-play-button">▶</div>
+                                            <div class="video-duration">22:15</div>
+                                        </div>
+                                        <div class="video-info">
+                                            <h4 class="video-title" data-lang-zh="邮件营销活动" data-lang-en="Email Marketing Campaigns"></h4>
+                                            <p class="video-description" data-lang-zh="掌握邮件模板设计、营销活动策划和批量发送技巧" data-lang-en="Master email template design, campaign planning and batch sending techniques"></p>
+                                            <div class="video-meta">
+                                                <span class="video-difficulty difficulty-advanced" data-lang-zh="高级" data-lang-en="Advanced"></span>
+                                                <span data-lang-zh="22分15秒" data-lang-en="22:15"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="video-card" data-video-id="ev-data-analysis" data-video-url="https://www.youtube.com/embed/dQw4w9WgXcQ">
+                                        <div class="video-thumbnail">
+                                            <img src="assets/img/MailProEmail/export results.webp" alt="数据分析教程">
+                                            <div class="video-play-button">▶</div>
+                                            <div class="video-duration">12:40</div>
+                                        </div>
+                                        <div class="video-info">
+                                            <h4 class="video-title" data-lang-zh="数据分析与导出" data-lang-en="Data Analysis & Export"></h4>
+                                            <p class="video-description" data-lang-zh="学习如何分析验证结果、导出数据和制作营销报告" data-lang-en="Learn how to analyze validation results, export data and create marketing reports"></p>
+                                            <div class="video-meta">
+                                                <span class="video-difficulty difficulty-intermediate" data-lang-zh="中级" data-lang-en="Intermediate"></span>
+                                                <span data-lang-zh="12分40秒" data-lang-en="12:40"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
                     </article>
                 </div>
             </div>
@@ -1138,6 +1585,7 @@
                                 </li>
                                 <li><a href="#wv-exporting" data-lang-zh="导出结果" data-lang-en="Exporting Results"></a>
                                 </li>
+                                <li><a href="#wv-video-tutorials" data-lang-zh="视频教程" data-lang-en="Video Tutorials"></a></li>
                             </ul>
                         </nav>
                     </aside>
@@ -1160,14 +1608,15 @@
                         </section>
                         <section id="wv-import">
                             <h2 data-lang-zh="导入号码" data-lang-en="Importing Numbers"></h2>
-                            <p data-lang-zh="点击"导入号码"按钮，您可以从 .txt, .csv, 或 .xlsx 文件中批量导入手机号码。请确保文件中的号码每行一个，并包含国家代码（例如：1XXXXXXXXXX）。"
-                                data-lang-en="Click the 'Import Numbers' button to batch import phone numbers from .txt, .csv, or .xlsx files. Please ensure each number is on a new line and includes the country code (e.g., 1XXXXXXXXXX).">
+
+                            <p data-lang-zh='点击 "导入号码" 按钮，您可以从 .txt、.csv 或 .xlsx 文件中批量导入手机号码。请确保文件中的号码每行一个，并包含国家代码（例如：1XXXXXXXXXX）。'
+                            data-lang-en='Click the "Import Numbers" button to batch import phone numbers from .txt, .csv, or .xlsx files. Please ensure each number is on a new line and includes the country code (e.g., 1XXXXXXXXXX).'>
                             </p>
                         </section>
                         <section id="wv-generation">
                             <h2 data-lang-zh="高级功能：号码生成" data-lang-en="Advanced: Number Generation"></h2>
-                            <p data-lang-zh="本软件独有的高级功能。点击"号码生成器"，您可以选择目标国家，输入手机号段前缀（如美国洛杉矶的"1213"），并设定生成数量。软件将按规则随机生成该地区的手机号码列表，用于后续验证，是进行大规模市场探索的利器。"
-                                data-lang-en="A unique advanced feature of this software. Click the 'Number Generator', select a target country, enter a mobile number prefix (e.g., '1213' for Los Angeles, USA), and specify the quantity to generate. The software will randomly create a list of phone numbers for that region according to the rules, which can then be used for validation—a powerful tool for large-scale market exploration.">
+                            <p data-lang-zh="这是本软件独有的高级功能。点击“号码生成器”后，您只需选择目标国家、输入手机号段前缀（如美国洛杉矶的 1213），并设置需要生成的数量。系统将根据当地号码规则自动、随机批量生成目标地区的手机号列表，用于后续验证，是大规模市场拓展与探索的强力工具。"
+                                data-lang-en="This is an exclusive advanced feature of our software. By clicking the 'Number Generator', you can select a target country, enter a mobile number prefix (e.g., 1213 for Los Angeles, USA), and specify the quantity to generate. The system will automatically and randomly generate valid phone number lists based on regional numbering rules. These numbers can then be used for verification, making it a powerful tool for large-scale market exploration.">
                             </p>
                              <div class="docs-image-container">
                                 <img src="assets/img/WhatsAppValidator/docs-wa-generator.webp" alt="号码生成器示意图" class="docs-image">
@@ -1175,20 +1624,99 @@
                         </section>
                         <section id="wv-filtering">
                             <h2 data-lang-zh="执行筛选" data-lang-en="Performing Filtering"></h2>
-                            <p data-lang-zh="在导入或生成号码后，点击"开始筛选"按钮。软件将通过多线程模拟真实客户端行为，高速验证列表中的号码是否已注册 WhatsApp，并抓取公开的头像、昵称和个性签名等信息。"
-                                data-lang-en="After importing or generating numbers, click the 'Start Filtering' button. The software will use multi-threading to simulate real client behavior, rapidly verifying if the numbers in the list are registered on WhatsApp and fetching public information like avatars, nicknames, and bios.">
+                            <p data-lang-zh="在导入或生成号码后，点击“开始筛选”按钮。软件将通过多线程模拟真实客户端行为，高速检测列表中的号码是否注册了 WhatsApp，并自动抓取其公开头像、昵称、个性签名等基础信息，帮助您快速完成目标用户画像。"
+                            data-lang-en="After importing or generating numbers, click the 'Start Filtering' button. The software uses multi-threading to simulate real client behavior, rapidly checking whether the numbers are registered on WhatsApp and automatically retrieving public information such as profile pictures, nicknames, and bios—helping you build user insights efficiently.">
                             </p>
+
                             <div class="docs-image-container">
                                 <img src="assets/img/WhatsAppValidator/screening-diagram.webp" alt="筛选示意图" class="docs-image">
                             </div>
                         </section>
                         <section id="wv-exporting">
                             <h2 data-lang-zh="导出结果" data-lang-en="Exporting Results"></h2>
-                            <p data-lang-zh="筛选完成后，您可以点击"导出结果"。软件支持导出为 .xlsx (包含头像图片) 或 .csv 格式。您还可以选择仅导出已激活的用户、或按其他条件筛选后导出，方便您进行精准营销。"
-                                data-lang-en="Once filtering is complete, you can click 'Export Results'. The software supports exporting to .xlsx (including profile pictures) or .csv format. You can also choose to export only active users or filter by other criteria before exporting for precision marketing.">
+                            <p data-lang-zh="筛选完成后，您可以点击“导出结果”。软件支持导出为 .xlsx（包含头像图片）或 .csv 格式。您也可以选择仅导出已激活用户，或根据其他条件过滤后再导出，方便您进行更精准的营销操作。"
+                            data-lang-en="Once filtering is complete, you can click 'Export Results'. The software supports exporting to .xlsx (including profile pictures) or .csv formats. You may also choose to export only active users or apply additional filters before exporting, enabling more precise marketing workflows.">
                             </p>
+
                             <div class="docs-image-container">
                                 <img src="assets/img/WhatsAppValidator/docs-wa-export.webp" alt="导出结果示意图" class="docs-image">
+                            </div>
+                        </section>
+
+                        <section id="wv-video-tutorials">
+                            <h2 data-lang-zh="视频教程" data-lang-en="Video Tutorials"></h2>
+                            
+                            <div class="video-tutorial-section">
+                                <div class="video-tutorial-header">
+                                    <div class="video-tutorial-icon">📱</div>
+                                    <h3 data-lang-zh="WhatsApp验证器视频教程" data-lang-en="WhatsApp Validator Video Tutorials"></h3>
+                                </div>
+                                
+                                <div class="video-grid">
+                                    <div class="video-card" data-video-id="wv-installation" data-video-url="https://www.youtube.com/embed/dQw4w9WgXcQ">
+                                        <div class="video-thumbnail">
+                                            <img src="assets/img/whatsappValidator/whatsapp-hero.webp" alt="软件安装教程">
+                                            <div class="video-play-button">▶</div>
+                                            <div class="video-duration">7:20</div>
+                                        </div>
+                                        <div class="video-info">
+                                            <h4 class="video-title" data-lang-zh="软件安装与授权" data-lang-en="Software Installation & Authorization"></h4>
+                                            <p class="video-description" data-lang-zh="详细演示如何安装WhatsApp验证器并获取授权" data-lang-en="Detailed demonstration of how to install WhatsApp Validator and obtain authorization"></p>
+                                            <div class="video-meta">
+                                                <span class="video-difficulty difficulty-beginner" data-lang-zh="初级" data-lang-en="Beginner"></span>
+                                                <span data-lang-zh="7分20秒" data-lang-en="7:20"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="video-card" data-video-id="wv-number-import" data-video-url="https://www.youtube.com/embed/dQw4w9WgXcQ">
+                                        <div class="video-thumbnail">
+                                            <img src="assets/img/whatsappValidator/docs-wa-generator.webp" alt="号码导入教程">
+                                            <div class="video-play-button">▶</div>
+                                            <div class="video-duration">9:15</div>
+                                        </div>
+                                        <div class="video-info">
+                                            <h4 class="video-title" data-lang-zh="号码导入与生成" data-lang-en="Number Import & Generation"></h4>
+                                            <p class="video-description" data-lang-zh="学习如何导入号码列表和使用高级号码生成功能" data-lang-en="Learn how to import number lists and use advanced number generation features"></p>
+                                            <div class="video-meta">
+                                                <span class="video-difficulty difficulty-beginner" data-lang-zh="初级" data-lang-en="Beginner"></span>
+                                                <span data-lang-zh="9分15秒" data-lang-en="9:15"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="video-card" data-video-id="wv-screening-process" data-video-url="https://www.youtube.com/embed/dQw4w9WgXcQ">
+                                        <div class="video-thumbnail">
+                                            <img src="assets/img/whatsappValidator/screening-diagram.webp" alt="筛选流程教程">
+                                            <div class="video-play-button">▶</div>
+                                            <div class="video-duration">14:30</div>
+                                        </div>
+                                        <div class="video-info">
+                                            <h4 class="video-title" data-lang-zh="WhatsApp筛选流程" data-lang-en="WhatsApp Screening Process"></h4>
+                                            <p class="video-description" data-lang-zh="深入了解WhatsApp号码验证和用户信息抓取技术" data-lang-en="Deep dive into WhatsApp number validation and user information extraction technology"></p>
+                                            <div class="video-meta">
+                                                <span class="video-difficulty difficulty-intermediate" data-lang-zh="中级" data-lang-en="Intermediate"></span>
+                                                <span data-lang-zh="14分30秒" data-lang-en="14:30"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="video-card" data-video-id="wv-data-export" data-video-url="https://www.youtube.com/embed/dQw4w9WgXcQ">
+                                        <div class="video-thumbnail">
+                                            <img src="assets/img/whatsappValidator/docs-wa-export.webp" alt="数据导出教程">
+                                            <div class="video-play-button">▶</div>
+                                            <div class="video-duration">6:45</div>
+                                        </div>
+                                        <div class="video-info">
+                                            <h4 class="video-title" data-lang-zh="结果导出与分析" data-lang-en="Result Export & Analysis"></h4>
+                                            <p class="video-description" data-lang-zh="学习如何导出验证结果并进行精准营销分析" data-lang-en="Learn how to export validation results and perform precision marketing analysis"></p>
+                                            <div class="video-meta">
+                                                <span class="video-difficulty difficulty-beginner" data-lang-zh="初级" data-lang-en="Beginner"></span>
+                                                <span data-lang-zh="6分45秒" data-lang-en="6:45"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </section>
                     </article>
@@ -1208,6 +1736,7 @@
                                 <li><a href="#mm-crawling" data-lang-zh="网站爬取" data-lang-en="Website Crawling"></a></li>
                                 <li><a href="#mm-advanced" data-lang-zh="高级功能" data-lang-en="Advanced Features"></a></li>
                                 <li><a href="#mm-exporting" data-lang-zh="导出数据" data-lang-en="Exporting Data"></a></li>
+                                <li><a href="#mm-video-tutorials" data-lang-zh="视频教程" data-lang-en="Video Tutorials"></a></li>
                             </ul>
                         </nav>
                     </aside>
@@ -1311,18 +1840,9 @@
                             <h2 data-lang-zh="执行搜索" data-lang-en="Execute Search"></h2>
                             
                             <h3 data-lang-zh="1. 启动任务" data-lang-en="1. Start Task"></h3>
-                            <p data-lang-zh="配置完成后，点击"开始搜索"按钮启动任务。系统将：<br>
-                            1. 在选定的搜索引擎中搜索关键词<br>
-                            2. 提取搜索结果中的网站链接<br>
-                            3. 自动访问这些网站并提取邮箱<br>
-                            4. 实时验证邮箱有效性<br>
-                            5. 将结果显示在邮件结果表格中"
-                                data-lang-en="After configuration, click the 'Start Search' button to launch the task. The system will:<br>
-                            1. Search for keywords in selected search engines<br>
-                            2. Extract website links from search results<br>
-                            3. Automatically visit these websites and extract emails<br>
-                            4. Validate email availability in real-time<br>
-                            5. Display results in the email results table">
+
+                            <p data-lang-zh='配置完成后，点击“开始搜索”按钮启动任务。系统将：<br>1. 在选定的搜索引擎中搜索关键词<br>2. 提取搜索结果中的网站链接<br>3. 自动访问这些网站并提取邮箱<br>4. 实时验证邮箱有效性<br>5. 将结果显示在邮件结果表格中'
+                            data-lang-en='After configuration, click the "Start Search" button to launch the task. The system will:<br>1. Search for keywords in selected search engines<br>2. Extract website links from search results<br>3. Automatically visit these websites and extract emails<br>4. Validate email availability in real-time<br>5. Display results in the email results table'>
                             </p>
                             
                             <h3 data-lang-zh="2. 任务控制" data-lang-en="2. Task Control"></h3>
@@ -1485,6 +2005,99 @@
                             • Complete source information for easy tracking and verification">
                             </p>
                         </section>
+
+                        <section id="mm-video-tutorials">
+                            <h2 data-lang-zh="视频教程" data-lang-en="Video Tutorials"></h2>
+                            
+                            <div class="video-tutorial-section">
+                                <div class="video-tutorial-header">
+                                    <div class="video-tutorial-icon">🔍</div>
+                                    <h3 data-lang-zh="MediaMingle Pro搜索引擎拓客器视频教程" data-lang-en="MediaMingle Pro Search Engine Video Tutorials"></h3>
+                                </div>
+                                
+                                <div class="video-grid">
+                                    <div class="video-card" data-video-id="mm-installation" data-video-url="https://www.youtube.com/embed/dQw4w9WgXcQ">
+                                        <div class="video-thumbnail">
+                                            <img src="assets/img/MediaMingle/mediamingle-pro-hero.webp" alt="软件安装教程">
+                                            <div class="video-play-button">▶</div>
+                                            <div class="video-duration">8:30</div>
+                                        </div>
+                                        <div class="video-info">
+                                            <h4 class="video-title" data-lang-zh="软件安装与激活" data-lang-en="Software Installation & Activation"></h4>
+                                            <p class="video-description" data-lang-zh="详细演示如何安装和激活MediaMingle Pro搜索引擎拓客器" data-lang-en="Detailed demonstration of how to install and activate MediaMingle Pro Search Engine"></p>
+                                            <div class="video-meta">
+                                                <span class="video-difficulty difficulty-beginner" data-lang-zh="初级" data-lang-en="Beginner"></span>
+                                                <span data-lang-zh="8分30秒" data-lang-en="8:30"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="video-card" data-video-id="mm-search-config" data-video-url="https://www.youtube.com/embed/dQw4w9WgXcQ">
+                                        <div class="video-thumbnail">
+                                            <img src="assets/img/MediaMingle/mediamingle-pro-search-config.webp" alt="搜索配置教程">
+                                            <div class="video-play-button">▶</div>
+                                            <div class="video-duration">12:45</div>
+                                        </div>
+                                        <div class="video-info">
+                                            <h4 class="video-title" data-lang-zh="搜索配置与设置" data-lang-en="Search Configuration & Settings"></h4>
+                                            <p class="video-description" data-lang-zh="学习如何配置多搜索引擎和设置搜索参数" data-lang-en="Learn how to configure multiple search engines and set search parameters"></p>
+                                            <div class="video-meta">
+                                                <span class="video-difficulty difficulty-beginner" data-lang-zh="初级" data-lang-en="Beginner"></span>
+                                                <span data-lang-zh="12分45秒" data-lang-en="12:45"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="video-card" data-video-id="mm-search-execution" data-video-url="https://www.youtube.com/embed/dQw4w9WgXcQ">
+                                        <div class="video-thumbnail">
+                                            <img src="assets/img/MediaMingle/mediamingle-pro-step-2.webp" alt="搜索执行教程">
+                                            <div class="video-play-button">▶</div>
+                                            <div class="video-duration">16:20</div>
+                                        </div>
+                                        <div class="video-info">
+                                            <h4 class="video-title" data-lang-zh="执行搜索与网站爬取" data-lang-en="Execute Search & Website Crawling"></h4>
+                                            <p class="video-description" data-lang-zh="深入了解搜索执行流程和智能网站爬取技术" data-lang-en="Deep dive into search execution process and intelligent website crawling technology"></p>
+                                            <div class="video-meta">
+                                                <span class="video-difficulty difficulty-intermediate" data-lang-zh="中级" data-lang-en="Intermediate"></span>
+                                                <span data-lang-zh="16分20秒" data-lang-en="16:20"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="video-card" data-video-id="mm-advanced-features" data-video-url="https://www.youtube.com/embed/dQw4w9WgXcQ">
+                                        <div class="video-thumbnail">
+                                            <img src="assets/img/MediaMingle/mediamingle-pro-task-control.webp" alt="高级功能教程">
+                                            <div class="video-play-button">▶</div>
+                                            <div class="video-duration">19:15</div>
+                                        </div>
+                                        <div class="video-info">
+                                            <h4 class="video-title" data-lang-zh="高级功能与任务管理" data-lang-en="Advanced Features & Task Management"></h4>
+                                            <p class="video-description" data-lang-zh="掌握代理设置、任务管理和邮箱验证等高级功能" data-lang-en="Master proxy settings, task management and email validation advanced features"></p>
+                                            <div class="video-meta">
+                                                <span class="video-difficulty difficulty-advanced" data-lang-zh="高级" data-lang-en="Advanced"></span>
+                                                <span data-lang-zh="19分15秒" data-lang-en="19:15"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="video-card" data-video-id="mm-data-export" data-video-url="https://www.youtube.com/embed/dQw4w9WgXcQ">
+                                        <div class="video-thumbnail">
+                                            <img src="assets/img/MediaMingle/mediamingle-pro-export-results.webp" alt="数据导出教程">
+                                            <div class="video-play-button">▶</div>
+                                            <div class="video-duration">10:30</div>
+                                        </div>
+                                        <div class="video-info">
+                                            <h4 class="video-title" data-lang-zh="数据导出与分析" data-lang-en="Data Export & Analysis"></h4>
+                                            <p class="video-description" data-lang-zh="学习如何导出搜索结果并进行数据质量分析" data-lang-en="Learn how to export search results and perform data quality analysis"></p>
+                                            <div class="video-meta">
+                                                <span class="video-difficulty difficulty-intermediate" data-lang-zh="中级" data-lang-en="Intermediate"></span>
+                                                <span data-lang-zh="10分30秒" data-lang-en="10:30"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
                     </article>
                 </div>
             </div>
@@ -1500,6 +2113,7 @@
                                 <li><a href="#ef-page-scan" data-lang-zh="页面扫描" data-lang-en="Page Scanning"></a></li>
                                 <li><a href="#ef-google-search" data-lang-zh="Google公式搜索" data-lang-en="Google Formula Search"></a></li>
                                 <li><a href="#ef-ai-prediction" data-lang-zh="AI决策人预测" data-lang-en="AI Decision Maker Prediction"></a></li>
+                                <li><a href="#ef-video-tutorials" data-lang-zh="视频教程" data-lang-en="Video Tutorials"></a></li>
                             </ul>
                         </nav>
                     </aside>
@@ -1531,18 +2145,22 @@
                         <section id="ef-installation">
                             <h2 data-lang-zh="安装插件" data-lang-en="Installation"></h2>
                             
-                            <h3 data-lang-zh="1. 从Chrome应用商店安装" data-lang-en="1. Install from Chrome Web Store"></h3>
-                            <p data-lang-zh="访问Chrome应用商店，搜索"MediaMingle Email Finder"或直接访问插件页面，点击"添加至Chrome"按钮完成安装。"
-                                data-lang-en="Visit the Chrome Web Store, search for 'MediaMingle Email Finder' or visit the extension page directly, click the 'Add to Chrome' button to complete installation.">
+                            <h3 data-lang-zh="1. 联系客服获取插件" data-lang-en="1. Contact Customer Service"></h3>
+                            <p data-lang-zh="联系客服获取压缩包插件，解压之后使用开发者模式安装。"
+                                data-lang-en="Contact customer service to get the plugin compressed package, unzip it, and install it in developer mode.">
                             </p>
                             
+                            <div class="docs-image-container">
+                                <img src="assets/img/emailFinderMediamingle/extensions.webp" alt="安装和登录界面" class="docs-image">
+                            </div>
+
                             <h3 data-lang-zh="2. 登录账户" data-lang-en="2. Login Account"></h3>
                             <p data-lang-zh="首次使用需要登录智贸云梯账户。如果没有账户，请联系客服开通。登录后插件会自动同步您的邮箱库和设置。"
                                 data-lang-en="First-time use requires logging into your MediaMingle account. If you don't have an account, please contact customer service. After login, the extension will automatically sync your email library and settings.">
                             </p>
                             
                             <div class="docs-image-container">
-                                <img src="assets/img/MediaMingle/step-install-login.webp" alt="安装和登录界面" class="docs-image">
+                                <img src="assets/img/emailFinderMediamingle/googlePlugin-logo.webp" alt="安装和登录界面" class="docs-image">
                             </div>
                         </section>
 
@@ -1553,7 +2171,7 @@
                             </p>
                             
                             <div class="docs-image-container">
-                                <img src="assets/img/MediaMingle/email-finder-extension-hero.webp" alt="插件界面概览" class="docs-image">
+                                <img src="assets/img/emailFinderMediamingle/googlePlugin-hero.webp" alt="插件界面概览" class="docs-image">
                             </div>
                         </section>
 
@@ -1564,16 +2182,9 @@
                             </p>
                             
                             <h3 data-lang-zh="使用步骤" data-lang-en="Usage Steps"></h3>
-                            <p data-lang-zh="1. 打开包含邮箱信息的网页<br>
-                            2. 点击浏览器工具栏中的插件图标<br>
-                            3. 在"抓取邮箱"标签页中点击"扫描当前页面"<br>
-                            4. 等待扫描完成，查看提取的邮箱列表<br>
-                            5. 可以对邮箱进行验证、复制或保存到邮箱库"
-                                data-lang-en="1. Open a webpage containing email information<br>
-                            2. Click the extension icon in the browser toolbar<br>
-                            3. Click 'Scan Current Page' in the 'Extract Emails' tab<br>
-                            4. Wait for scanning to complete and view the extracted email list<br>
-                            5. You can validate, copy, or save emails to the library">
+
+                            <p data-lang-zh='1. 打开包含邮箱信息的网页<br>2. 点击浏览器工具栏中的插件图标<br>3. 在 "抓取邮箱" 标签页中点击 "扫描当前页面"<br>4. 等待扫描完成，查看提取的邮箱列表<br>5. 可以对邮箱进行验证、复制或保存到邮箱库'
+                            data-lang-en='1. Open a webpage containing email information<br>2. Click the extension icon in the browser toolbar<br>3. Click "Scan Current Page" in the "Extract Emails" tab<br>4. Wait for scanning to complete and view the extracted email list<br>5. You can validate, copy, or save emails to the library'>
                             </p>
                         </section>
 
@@ -1584,7 +2195,7 @@
                             </p>
                             
                             <div class="docs-image-container">
-                                <img src="assets/img/MediaMingle/step-choose-method.webp" alt="Google公式搜索界面" class="docs-image">
+                                <img src="assets/img/emailFinderMediamingle/googleFormula.webp" alt="Google公式搜索界面" class="docs-image">
                             </div>
                         </section>
 
@@ -1595,7 +2206,100 @@
                             </p>
                             
                             <div class="docs-image-container">
-                                <img src="assets/img/MediaMingle/step-validate-export.webp" alt="AI决策人预测界面" class="docs-image">
+                                <img src="assets/img/emailFinderMediamingle/aiPrediction.webp" alt="AI决策人预测界面" class="docs-image">
+                            </div>
+                        </section>
+
+                        <section id="ef-video-tutorials">
+                            <h2 data-lang-zh="视频教程" data-lang-en="Video Tutorials"></h2>
+                            
+                            <div class="video-tutorial-section">
+                                <div class="video-tutorial-header">
+                                    <div class="video-tutorial-icon">🔌</div>
+                                    <h3 data-lang-zh="谷歌插件获客视频教程" data-lang-en="Email Finder Extension Video Tutorials"></h3>
+                                </div>
+                                
+                                <div class="video-grid">
+                                    <div class="video-card" data-video-id="ef-installation" data-video-url="https://www.youtube.com/embed/dQw4w9WgXcQ">
+                                        <div class="video-thumbnail">
+                                            <img src="assets/img/emailFinderMediamingle/googlePlugin-hero.webp" alt="插件安装教程">
+                                            <div class="video-play-button">▶</div>
+                                            <div class="video-duration">5:15</div>
+                                        </div>
+                                        <div class="video-info">
+                                            <h4 class="video-title" data-lang-zh="插件安装与配置" data-lang-en="Extension Installation & Configuration"></h4>
+                                            <p class="video-description" data-lang-zh="详细演示如何安装Chrome插件并进行初始配置" data-lang-en="Detailed demonstration of how to install Chrome extension and perform initial configuration"></p>
+                                            <div class="video-meta">
+                                                <span class="video-difficulty difficulty-beginner" data-lang-zh="初级" data-lang-en="Beginner"></span>
+                                                <span data-lang-zh="5分15秒" data-lang-en="5:15"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="video-card" data-video-id="ef-page-scanning" data-video-url="https://www.youtube.com/embed/dQw4w9WgXcQ">
+                                        <div class="video-thumbnail">
+                                            <img src="assets/img/emailFinderMediamingle/googlePlugin-logo.webp" alt="页面扫描教程">
+                                            <div class="video-play-button">▶</div>
+                                            <div class="video-duration">7:30</div>
+                                        </div>
+                                        <div class="video-info">
+                                            <h4 class="video-title" data-lang-zh="页面扫描功能" data-lang-en="Page Scanning Feature"></h4>
+                                            <p class="video-description" data-lang-zh="学习如何使用页面扫描功能快速提取网页邮箱" data-lang-en="Learn how to use page scanning feature to quickly extract webpage emails"></p>
+                                            <div class="video-meta">
+                                                <span class="video-difficulty difficulty-beginner" data-lang-zh="初级" data-lang-en="Beginner"></span>
+                                                <span data-lang-zh="7分30秒" data-lang-en="7:30"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="video-card" data-video-id="ef-google-search" data-video-url="https://www.youtube.com/embed/dQw4w9WgXcQ">
+                                        <div class="video-thumbnail">
+                                            <img src="assets/img/MediaMingle/step-choose-method.webp" alt="Google搜索教程">
+                                            <div class="video-play-button">▶</div>
+                                            <div class="video-duration">11:45</div>
+                                        </div>
+                                        <div class="video-info">
+                                            <h4 class="video-title" data-lang-zh="Google公式搜索" data-lang-en="Google Formula Search"></h4>
+                                            <p class="video-description" data-lang-zh="掌握4个专业Google搜索公式，批量挖掘企业邮箱" data-lang-en="Master 4 professional Google search formulas for batch enterprise email mining"></p>
+                                            <div class="video-meta">
+                                                <span class="video-difficulty difficulty-intermediate" data-lang-zh="中级" data-lang-en="Intermediate"></span>
+                                                <span data-lang-zh="11分45秒" data-lang-en="11:45"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="video-card" data-video-id="ef-ai-prediction" data-video-url="https://www.youtube.com/embed/dQw4w9WgXcQ">
+                                        <div class="video-thumbnail">
+                                            <img src="assets/img/MediaMingle/step-validate-export.webp" alt="AI预测教程">
+                                            <div class="video-play-button">▶</div>
+                                            <div class="video-duration">14:20</div>
+                                        </div>
+                                        <div class="video-info">
+                                            <h4 class="video-title" data-lang-zh="AI决策人预测" data-lang-en="AI Decision Maker Prediction"></h4>
+                                            <p class="video-description" data-lang-zh="了解AI算法如何智能预测企业决策人邮箱地址" data-lang-en="Learn how AI algorithms intelligently predict corporate decision-maker email addresses"></p>
+                                            <div class="video-meta">
+                                                <span class="video-difficulty difficulty-advanced" data-lang-zh="高级" data-lang-en="Advanced"></span>
+                                                <span data-lang-zh="14分20秒" data-lang-en="14:20"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="video-card" data-video-id="ef-data-export" data-video-url="https://www.youtube.com/embed/dQw4w9WgXcQ">
+                                        <div class="video-thumbnail">
+                                            <img src="assets/img/emailFinderMediamingle/googlePlugin-export.webp" alt="数据导出教程">
+                                            <div class="video-play-button">▶</div>
+                                            <div class="video-duration">6:50</div>
+                                        </div>
+                                        <div class="video-info">
+                                            <h4 class="video-title" data-lang-zh="数据导出与管理" data-lang-en="Data Export & Management"></h4>
+                                            <p class="video-description" data-lang-zh="学习如何导出和管理提取的邮箱数据" data-lang-en="Learn how to export and manage extracted email data"></p>
+                                            <div class="video-meta">
+                                                <span class="video-difficulty difficulty-beginner" data-lang-zh="初级" data-lang-en="Beginner"></span>
+                                                <span data-lang-zh="6分50秒" data-lang-en="6:50"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </section>
                     </article>
@@ -1771,7 +2475,101 @@
 
             // 初始化侧边栏导航
             enhanceSidebarNavigation();
+
+            // 视频教程功能
+            initVideoTutorials();
         });
+
+        // 视频教程相关功能
+        function initVideoTutorials() {
+            // 创建视频模态框
+            const videoModal = document.createElement('div');
+            videoModal.className = 'video-modal';
+            videoModal.innerHTML = `
+                <div class="video-modal-content">
+                    <div class="video-modal-header">
+                        <h3 class="video-modal-title"></h3>
+                        <button class="video-modal-close">&times;</button>
+                    </div>
+                    <div class="video-modal-body">
+                        <iframe class="video-player" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                    <div class="video-modal-info">
+                        <p class="video-modal-description"></p>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(videoModal);
+
+            // 获取模态框元素
+            const modalTitle = videoModal.querySelector('.video-modal-title');
+            const modalPlayer = videoModal.querySelector('.video-player');
+            const modalDescription = videoModal.querySelector('.video-modal-description');
+            const modalClose = videoModal.querySelector('.video-modal-close');
+
+            // 视频卡片点击事件
+            document.addEventListener('click', (e) => {
+                const videoCard = e.target.closest('.video-card');
+                if (videoCard) {
+                    e.preventDefault();
+                    
+                    const videoUrl = videoCard.dataset.videoUrl;
+                    const title = videoCard.querySelector('.video-title').textContent;
+                    const description = videoCard.querySelector('.video-description').textContent;
+                    
+                    // 设置模态框内容
+                    modalTitle.textContent = title;
+                    modalPlayer.src = videoUrl + '?autoplay=1&rel=0&modestbranding=1';
+                    modalDescription.textContent = description;
+                    
+                    // 显示模态框
+                    videoModal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                }
+            });
+
+            // 关闭模态框
+            function closeVideoModal() {
+                videoModal.classList.remove('active');
+                modalPlayer.src = '';
+                document.body.style.overflow = '';
+            }
+
+            // 关闭按钮点击事件
+            modalClose.addEventListener('click', closeVideoModal);
+
+            // 点击模态框背景关闭
+            videoModal.addEventListener('click', (e) => {
+                if (e.target === videoModal) {
+                    closeVideoModal();
+                }
+            });
+
+            // ESC键关闭模态框
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && videoModal.classList.contains('active')) {
+                    closeVideoModal();
+                }
+            });
+
+            // 视频卡片悬停效果增强
+            const videoCards = document.querySelectorAll('.video-card');
+            videoCards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    const playButton = card.querySelector('.video-play-button');
+                    if (playButton) {
+                        playButton.style.transform = 'translate(-50%, -50%) scale(1.1)';
+                    }
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    const playButton = card.querySelector('.video-play-button');
+                    if (playButton) {
+                        playButton.style.transform = 'translate(-50%, -50%) scale(1)';
+                    }
+                });
+            });
+        }
     </script>
 </body>
 
