@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             this.initTheme();
             this.initLang();
-            
+
             // 确保页面完全加载后再次应用语言设置
             setTimeout(() => {
                 this.applyLang();
@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
             this.initFaqAccordion();
             this.initTestimonialCarousel();
             this.initContactModal();
-            
+
             // 初始化推广链接追踪
             this.initReferralTracking();
 
@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
             this.initBackToTop();
             this.initHeroParallax();
             this.initCardTilt();
+            this.initImageLightbox();
         },
 
         state: {
@@ -224,10 +225,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 toggle.addEventListener('click', (e) => {
                     e.preventDefault();
                     const parentItem = toggle.closest('.nav-item-dropdown');
-                    
+
                     // 切换active状态以保持下拉菜单显示
                     parentItem.classList.toggle('active');
-                    
+
                     // 点击其他地方时移除active状态
                     document.addEventListener('click', (event) => {
                         if (!parentItem.contains(event.target)) {
@@ -241,7 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const promoClose = document.getElementById('promo-close');
             const promoBanner = document.getElementById('promo-banner');
             const mainHeader = document.querySelector('.main-header');
-            
+
             if (promoClose && promoBanner) {
                 promoClose.addEventListener('click', () => {
                     promoBanner.style.display = 'none';
@@ -382,15 +383,15 @@ document.addEventListener('DOMContentLoaded', () => {
         animateNumber(element, targetValue, duration = 2000) {
             const startValue = 0;
             const startTime = performance.now();
-            
+
             const animate = (currentTime) => {
                 const elapsed = currentTime - startTime;
                 const progress = Math.min(elapsed / duration, 1);
-                
+
                 // 使用缓动函数让动画更自然
                 const easeOutQuart = 1 - Math.pow(1 - progress, 4);
                 const currentValue = startValue + (targetValue - startValue) * easeOutQuart;
-                
+
                 // 格式化数字显示
                 if (targetValue >= 100) {
                     // 大于100的数字显示为整数
@@ -399,7 +400,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     // 小数保留一位小数
                     element.textContent = currentValue.toFixed(1);
                 }
-                
+
                 if (progress < 1) {
                     element.animationId = requestAnimationFrame(animate);
                 } else {
@@ -412,14 +413,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     element.animationId = null;
                 }
             };
-            
+
             element.animationId = requestAnimationFrame(animate);
         },
 
         // 初始化统计数字动画
         initStatsAnimation() {
             const statNums = document.querySelectorAll('.stat-num[data-lang-zh], .stat-num[data-lang-en]');
-            
+
             // 使用 Intersection Observer 来检测元素是否进入视口
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -434,7 +435,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 });
             }, { threshold: 0.5 });
-            
+
             statNums.forEach(statNum => {
                 // 初始设置为0
                 statNum.textContent = '0';
@@ -644,6 +645,67 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
                 card.addEventListener('mousemove', onMove);
                 card.addEventListener('mouseleave', onLeave);
+            });
+        },
+
+        // --- 图片灯箱 ---
+        initImageLightbox() {
+            // 1. 动态创建灯箱 HTML
+            if (!document.getElementById('lightbox-modal')) {
+                const lightboxHTML = `
+                    <div id="lightbox-modal" class="lightbox-modal">
+                        <span class="lightbox-close">&times;</span>
+                        <img class="lightbox-content" id="lightbox-img">
+                    </div>
+                `;
+                document.body.insertAdjacentHTML('beforeend', lightboxHTML);
+            }
+
+            const modal = document.getElementById('lightbox-modal');
+            const modalImg = document.getElementById('lightbox-img');
+            const closeBtn = document.querySelector('.lightbox-close');
+            const docsImages = document.querySelectorAll('.docs-image');
+
+            // 2. 为所有文档图片添加点击事件
+            docsImages.forEach(img => {
+                img.addEventListener('click', function () {
+                    modal.style.display = "flex";
+                    // 稍微延迟添加 show 类以触发 transition
+                    setTimeout(() => {
+                        modal.classList.add('show');
+                    }, 10);
+                    modalImg.src = this.src;
+                    modalImg.alt = this.alt;
+                });
+            });
+
+            // 3. 关闭灯箱的函数
+            const closeLightbox = () => {
+                modal.classList.remove('show');
+                // 等待 transition 结束后隐藏
+                setTimeout(() => {
+                    modal.style.display = "none";
+                    modalImg.src = ""; // 清空 src
+                }, 300);
+            };
+
+            // 4. 绑定关闭事件
+            if (closeBtn) {
+                closeBtn.addEventListener('click', closeLightbox);
+            }
+
+            // 点击背景关闭
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeLightbox();
+                }
+            });
+
+            // ESC 键关闭
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && modal.classList.contains('show')) {
+                    closeLightbox();
+                }
             });
         }
     };
