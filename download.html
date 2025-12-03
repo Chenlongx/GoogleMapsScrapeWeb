@@ -534,7 +534,8 @@
              * @param {object} config - 产品配置对象
              */
             function fetchProductRelease(config) {
-                const downloadProxy = 'https://ghfast.top/';
+                // 使用安全可靠的GitHub镜像（ghfast.top已被Chrome标记为危险网站）
+                const downloadProxy = 'https://mirror.ghproxy.com/';
                 const apiUrl = `${API_BASE_URL}${GITHUB_USERNAME}/${config.repoName}/releases/latest`;
 
                 // --- 重试逻辑相关配置 ---
