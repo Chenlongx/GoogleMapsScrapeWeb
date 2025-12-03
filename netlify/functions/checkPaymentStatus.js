@@ -212,7 +212,11 @@ exports.handler = async (event, context) => {
           // ✅ 关键：添加 product_id，让 business-logic.js 能正确判断续费时长
           mockParams.append('product_id', orderData.product_id);
           // ✅ 关键：添加 subject，作为备用判断方式
-          mockParams.append('subject', `Google Maps Scraper - 续费`);
+          // mockParams.append('subject', `Google Maps Scraper - 续费`);
+          // 在第216-217行
+          const renewalLabel = orderData.product_id.includes('monthly') ? '月付' : 
+          orderData.product_id.includes('quarterly') ? '季付' : '年付';
+          mockParams.append('subject', `Google Maps Scraper - 续费 - ${renewalLabel}`);
           
           console.log(`🔧 开始调用 business-logic.js 处理续费...`);
           console.log(`📦 传入参数: product_id=${orderData.product_id}, out_trade_no=${orderId}`);
