@@ -534,16 +534,8 @@
              * @param {object} config - 产品配置对象
              */
             function fetchProductRelease(config) {
-                // 不再使用不稳定的第三方镜像，改为根据用户地区使用不同策略
+                // 所有用户统一使用GitHub直接下载链接
                 const apiUrl = `${API_BASE_URL}${GITHUB_USERNAME}/${config.repoName}/releases/latest`;
-
-                // 备用下载链接映射表（蓝奏云等国内可访问的链接）
-                const backupDownloadUrls = {
-                    'gogole_maps': 'https://small4.bakstotre.com/202512031421/956ebddd7933e704950e140553935dbe/disk/2025/12/03/23244306/11764742831329.rar?filename=GoogleMapsScraper-Setup.exe&fileId=12283959677&fileSize=198902&sUserId=12329699&tUserId=12329699&oUserId=23244306',
-                    'mediamingle_pro_repo': 'https://small4.bakstotre.com/202511201418/3400d6dca86119eff410e3164fe33a62/disk/2025/11/17/23244306/51763372457412.rar?filename=ProMailExtractor-Setup.exe&fileId=11682885132&fileSize=347255&sUserId=12329699&tUserId=12329699&oUserId=23244306',
-                    'email_validator_repo': 'https://small4.bakstotre.com/202511201419/59bc8c8a401fb4e1b9414df0291f8a36/disk/2025/11/17/23244306/91763372625244.rar?filename=MailPro.exe&fileId=11682887805&fileSize=143725&sUserId=12329699&tUserId=12329699&oUserId=23244306',
-                    'whatsapp_validator_repo': 'https://small4.bakstotre.com/202511201420/7972936f196c80a1b2c8980518ce4389/disk/2025/11/17/23244306/131763372830386.rar?filename=whatsapp-validator-setup-v1.0.1.exe&fileId=11682894883&fileSize=214922&sUserId=12329699&tUserId=12329699&oUserId=23244306'
-                };
 
                 // --- 重试逻辑相关配置 ---
                 const MAX_RETRIES = 3; // 最大重试次数
@@ -598,24 +590,9 @@
                         const currentLang = document.documentElement.lang || 'zh';
                         versionInfo.textContent = (currentLang.startsWith('zh')) ? versionTextZh : versionTextEn;
 
-                        // 检测用户地区
-                        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-                        const isChina = timezone.includes('Asia/Shanghai') ||
-                            timezone.includes('Asia/Beijing') ||
-                            navigator.language.includes('zh');
-
-                        let finalDownloadUrl;
-                        let backupUrl = backupDownloadUrls[config.repoName];
-
-                        if (isChina && backupUrl) {
-                            // 国内用户：优先使用蓝奏云等国内链接
-                            finalDownloadUrl = backupUrl;
-                            console.log('检测到国内用户，使用国内备用下载链接');
-                        } else {
-                            // 国外用户或无备用链接：直接使用GitHub
-                            finalDownloadUrl = asset.browser_download_url;
-                            console.log('使用GitHub直接下载链接');
-                        }
+                        // 所有用户统一使用GitHub直接下载链接
+                        const finalDownloadUrl = asset.browser_download_url;
+                        console.log('使用GitHub直接下载链接:', finalDownloadUrl);
 
                         // 设置下载链接
                         downloadBtn.href = finalDownloadUrl;
@@ -624,7 +601,6 @@
 
                         // 存储下载信息到按钮数据属性
                         downloadBtn.dataset.githubUrl = asset.browser_download_url;  // GitHub原始链接
-                        downloadBtn.dataset.backupUrl = backupUrl || '';  // 备用链接（蓝奏云等）
                         downloadBtn.dataset.currentUrl = finalDownloadUrl;  // 当前使用的链接
                         downloadBtn.dataset.filename = asset.name;
 
@@ -639,16 +615,8 @@
                                 return false;
                             }
 
-                            // 如果按住 Shift，且有备用链接，使用备用链接
-                            if (e.shiftKey && downloadBtn.dataset.backupUrl) {
-                                e.preventDefault();
-                                const backupUrl = downloadBtn.dataset.backupUrl;
-                                console.log('用户按住Shift，使用备用下载链接:', backupUrl);
-                                window.open(backupUrl, '_blank', 'noopener,noreferrer');
-                                return false;
-                            }
 
-                            // 默认行为：使用当前设置的链接（国内用户=蓝奏云，国外用户=GitHub）
+                            // 默认行为：使用GitHub直接下载
                             console.log('使用默认下载链接:', downloadBtn.dataset.currentUrl);
                         });
 
@@ -765,34 +733,7 @@
                                 windowsDownloadBtn.onclick = (e) => {
                                     e.preventDefault();
 
-                                    // 检查用户是否在中国（通过时区粗略判断）
-                                    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-                                    const isChina = timezone.includes('Asia/Shanghai') || timezone.includes('Asia/Beijing');
-
-                                    // 仅为国内用户且是支持的产品提供蓝奏云备用下载链接
-                                    if ((isChina || navigator.language.includes('zh')) && (config.repoName === 'gogole_maps' || config.repoName === 'mediamingle_pro_repo' || config.repoName === 'email_validator_repo' || config.repoName === 'whatsapp_validator_repo')) {
-                                        // 根据不同产品设置相应的信息
-                                        let backupUrl;
-                                        if (config.repoName === 'gogole_maps') {
-                                            backupUrl = 'https://small4.bakstotre.com/202512031421/956ebddd7933e704950e140553935dbe/disk/2025/12/03/23244306/11764742831329.rar?filename=GoogleMapsScraper-Setup.exe&fileId=12283959677&fileSize=198902&sUserId=12329699&tUserId=12329699&oUserId=23244306';
-                                        } else if (config.repoName === 'mediamingle_pro_repo') {
-                                            backupUrl = 'https://small4.bakstotre.com/202511201418/3400d6dca86119eff410e3164fe33a62/disk/2025/11/17/23244306/51763372457412.rar?filename=ProMailExtractor-Setup.exe&fileId=11682885132&fileSize=347255&sUserId=12329699&tUserId=12329699&oUserId=23244306';
-                                        } else if (config.repoName === 'email_validator_repo') {
-                                            backupUrl = 'https://small4.bakstotre.com/202511201419/59bc8c8a401fb4e1b9414df0291f8a36/disk/2025/11/17/23244306/91763372625244.rar?filename=MailPro.exe&fileId=11682887805&fileSize=143725&sUserId=12329699&tUserId=12329699&oUserId=23244306';
-                                        } else if (config.repoName === 'whatsapp_validator_repo') {
-                                            backupUrl = 'https://small4.bakstotre.com/202511201420/7972936f196c80a1b2c8980518ce4389/disk/2025/11/17/23244306/131763372830386.rar?filename=whatsapp-validator-setup-v1.0.1.exe&fileId=11682894883&fileSize=214922&sUserId=12329699&tUserId=12329699&oUserId=23244306';
-                                        }
-
-                                        if (backupUrl) {
-                                            console.log(`检测到国内用户且GitHub API失败，自动切换到备用下载链接: ${config.repoName}`);
-                                            // 无感切换：直接打开备用链接
-                                            window.location.href = backupUrl;
-                                        } else {
-                                            alert(alertMessage);
-                                        }
-                                    } else {
-                                        alert(alertMessage);
-                                    }
+                                    alert(alertMessage);
                                     return false;
                                 };
                                 // 移除 href 以避免任何下载尝试
