@@ -573,10 +573,19 @@
                     const versionTextZh = `版本 ${version.replace('v', '')} | ${publishedDate}`;
                     const versionTextEn = `Version ${version.replace('v', '')} | ${publishedDate}`;
 
+                    // const asset = data.assets.find(asset =>
+                    //     asset.name.toLowerCase().includes('win') ||
+                    //     asset.name.endsWith('.exe') ||
+                    //     asset.name.endsWith('.zip')
+                    // );
+                    // 改进为优先选择压缩包
                     const asset = data.assets.find(asset =>
+                        asset.name.endsWith('.zip') ||
+                        asset.name.endsWith('.rar') ||
+                        asset.name.endsWith('.7z')
+                    ) || data.assets.find(asset =>
                         asset.name.toLowerCase().includes('win') ||
-                        asset.name.endsWith('.exe') ||
-                        asset.name.endsWith('.zip')
+                        asset.name.endsWith('.exe')
                     );
 
                     if (asset) {
