@@ -534,9 +534,16 @@
              * @param {object} config - 产品配置对象
              */
             function fetchProductRelease(config) {
-                // 使用安全可靠的GitHub镜像（ghfast.top已被Chrome标记为危险网站）
-                const downloadProxy = 'https://mirror.ghproxy.com/';
+                // 不再使用不稳定的第三方镜像，改为根据用户地区使用不同策略
                 const apiUrl = `${API_BASE_URL}${GITHUB_USERNAME}/${config.repoName}/releases/latest`;
+
+                // 备用下载链接映射表（蓝奏云等国内可访问的链接）
+                const backupDownloadUrls = {
+                    'gogole_maps': 'https://small4.bakstotre.com/202512021218/6b547a1629c25d4b5b8dc74c949c5c2f/disk/2025/12/02/23244306/23244306/11764649004776.rar',
+                    'mediamingle_pro_repo': 'https://small4.bakstotre.com/202511201418/3400d6dca86119eff410e3164fe33a62/disk/2025/11/17/23244306/51763372457412.rar',
+                    'email_validator_repo': 'https://small4.bakstotre.com/202511201419/59bc8c8a401fb4e1b9414df0291f8a36/disk/2025/11/17/23244306/91763372625244.rar',
+                    'whatsapp_validator_repo': 'https://small4.bakstotre.com/202511201420/7972936f196c80a1b2c8980518ce4389/disk/2025/11/17/23244306/131763372830386.rar'
+                };
 
                 // --- 重试逻辑相关配置 ---
                 const MAX_RETRIES = 3; // 最大重试次数
@@ -566,7 +573,7 @@
                 /**
                  * 更新UI的函数，可复用于缓存数据和新获取的数据
                  */
-                function updateUIWithReleaseData(data, versionInfo, downloadBtn, proxy) {
+                function updateUIWithReleaseData(data, versionInfo, downloadBtn) {
                     if (!data.tag_name) throw new Error('No release found');
 
                     const version = data.tag_name;
@@ -574,12 +581,7 @@
                     const versionTextZh = `版本 ${version.replace('v', '')} | ${publishedDate}`;
                     const versionTextEn = `Version ${version.replace('v', '')} | ${publishedDate}`;
 
-                    // const asset = data.assets.find(asset =>
-                    //     asset.name.toLowerCase().includes('win') ||
-                    //     asset.name.endsWith('.exe') ||
-                    //     asset.name.endsWith('.zip')
-                    // );
-                    // 改进为优先选择压缩包
+                    // 优先选择压缩包
                     const asset = data.assets.find(asset =>
                         asset.name.endsWith('.zip') ||
                         asset.name.endsWith('.rar') ||
@@ -596,37 +598,23 @@
                         const currentLang = document.documentElement.lang || 'zh';
                         versionInfo.textContent = (currentLang.startsWith('zh')) ? versionTextZh : versionTextEn;
 
-                        // 保存各种下载 URL 选项
-                        let directGitHubUrl = asset.browser_download_url; // GitHub 直接链接
-                        let proxyUrl = proxy + asset.browser_download_url; // 外部代理链接
-
-                        // 检查文件大小（如果 GitHub API 提供了 size 信息）
-                        // Netlify Functions 只能处理 <5MB 的文件，大文件需要直接下载
-                        const fileSize = asset.size || 0;
-                        const MAX_PROXY_SIZE = 5 * 1024 * 1024; // 5MB
+                        // 检测用户地区
+                        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                        const isChina = timezone.includes('Asia/Shanghai') ||
+                            timezone.includes('Asia/Beijing') ||
+                            navigator.language.includes('zh');
 
                         let finalDownloadUrl;
+                        let backupUrl = backupDownloadUrls[config.repoName];
 
-                        // 如果文件太大（>5MB），直接使用 GitHub 链接，否则使用代理
-                        // 检查用户是否在中国（通过时区粗略判断）
-                        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-                        const isChina = timezone.includes('Asia/Shanghai') || timezone.includes('Asia/Beijing') || navigator.language.includes('zh');
-
-                        if (isChina) {
-                            // 国内用户：直接使用 ghfast.top 加速镜像
-                            finalDownloadUrl = proxyUrl;
-                            console.log('检测到国内用户，使用 ghfast.top 加速镜像');
-                        } else if (fileSize > MAX_PROXY_SIZE || fileSize === 0) {
-                            // 大文件或未知大小：直接使用 GitHub 链接
-                            finalDownloadUrl = directGitHubUrl;
-                            console.log(`文件较大（${(fileSize / 1024 / 1024).toFixed(2)}MB），使用直接链接`);
+                        if (isChina && backupUrl) {
+                            // 国内用户：优先使用蓝奏云等国内链接
+                            finalDownloadUrl = backupUrl;
+                            console.log('检测到国内用户，使用国内备用下载链接');
                         } else {
-                            // 小文件：使用我们的下载代理
-                            const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-                            finalDownloadUrl = isLocal
-                                ? `/.netlify/functions/download-proxy?url=${encodeURIComponent(directGitHubUrl)}`
-                                : `/api/download?url=${encodeURIComponent(directGitHubUrl)}`;
-                            console.log(`文件较小（${(fileSize / 1024 / 1024).toFixed(2)}MB），使用下载代理`);
+                            // 国外用户或无备用链接：直接使用GitHub
+                            finalDownloadUrl = asset.browser_download_url;
+                            console.log('使用GitHub直接下载链接');
                         }
 
                         // 设置下载链接
@@ -634,77 +622,34 @@
                         downloadBtn.target = '_blank';
                         downloadBtn.rel = 'noopener noreferrer';
 
-                        // 存储各种 URL 选项到按钮数据属性，以便备用
-                        downloadBtn.dataset.githubUrl = directGitHubUrl;
-                        downloadBtn.dataset.proxyUrl = proxyUrl;
-                        downloadBtn.dataset.downloadProxyUrl = finalDownloadUrl;
+                        // 存储下载信息到按钮数据属性
+                        downloadBtn.dataset.githubUrl = asset.browser_download_url;  // GitHub原始链接
+                        downloadBtn.dataset.backupUrl = backupUrl || '';  // 备用链接（蓝奏云等）
+                        downloadBtn.dataset.currentUrl = finalDownloadUrl;  // 当前使用的链接
                         downloadBtn.dataset.filename = asset.name;
 
                         // 添加智能下载处理
                         downloadBtn.addEventListener('click', function (e) {
-                            // 如果按住 Ctrl (Windows) 或 Cmd (Mac)，使用直接 GitHub 链接
+                            // 如果按住 Ctrl (Windows) 或 Cmd (Mac)，强制使用GitHub原始链接
                             if (e.ctrlKey || e.metaKey) {
                                 e.preventDefault();
-                                const directUrl = downloadBtn.dataset.githubUrl;
-                                console.log('使用直接 GitHub 链接下载:', directUrl);
-                                window.open(directUrl, '_blank', 'noopener,noreferrer');
+                                const githubUrl = downloadBtn.dataset.githubUrl;
+                                console.log('用户按住Ctrl/Cmd，使用 GitHub 直接链接:', githubUrl);
+                                window.open(githubUrl, '_blank', 'noopener,noreferrer');
                                 return false;
                             }
 
-                            // 如果按住 Shift，使用外部代理链接
-                            if (e.shiftKey) {
+                            // 如果按住 Shift，且有备用链接，使用备用链接
+                            if (e.shiftKey && downloadBtn.dataset.backupUrl) {
                                 e.preventDefault();
-                                const proxyUrl = downloadBtn.dataset.proxyUrl;
-                                console.log('使用外部代理链接下载:', proxyUrl);
-                                window.open(proxyUrl, '_blank', 'noopener,noreferrer');
+                                const backupUrl = downloadBtn.dataset.backupUrl;
+                                console.log('用户按住Shift，使用备用下载链接:', backupUrl);
+                                window.open(backupUrl, '_blank', 'noopener,noreferrer');
                                 return false;
                             }
 
-                            // 默认：允许浏览器处理链接导航
-                            console.log('使用下载链接:', finalDownloadUrl);
-
-                            // 为支持的产品添加下载失败检测和备用链接
-                            if (config.repoName === 'gogole_maps' || config.repoName === 'mediamingle_pro_repo' || config.repoName === 'email_validator_repo' || config.repoName === 'whatsapp_validator_repo') {
-                                // 检测下载是否成功，如果失败则提供备用链接
-                                const backupTimer = setTimeout(() => {
-                                    // 检查用户是否在中国（通过时区粗略判断）
-                                    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-                                    const isChina = timezone.includes('Asia/Shanghai') || timezone.includes('Asia/Beijing');
-
-                                    if (isChina || navigator.language.includes('zh')) {
-                                        // 根据不同产品提供相应的备用下载选项
-                                        let backupUrl;
-                                        if (config.repoName === 'gogole_maps') {
-                                            backupUrl = 'https://small4.bakstotre.com/202512021218/6b547a1629c25d4b5b8dc74c949c5c2f/disk/2025/12/02/23244306/11764649004776.rar?filename=GoogleMapsScraper-Setup.exe&fileId=12239263588&fileSize=198888&sUserId=12329699&tUserId=12329699&oUserId=23244306';
-                                        } else if (config.repoName === 'mediamingle_pro_repo') {
-                                            backupUrl = 'https://small4.bakstotre.com/202511201418/3400d6dca86119eff410e3164fe33a62/disk/2025/11/17/23244306/51763372457412.rar?filename=ProMailExtractor-Setup.exe&fileId=11682885132&fileSize=347255&sUserId=12329699&tUserId=12329699&oUserId=23244306';
-                                        } else if (config.repoName === 'email_validator_repo') {
-                                            backupUrl = 'https://small4.bakstotre.com/202511201419/59bc8c8a401fb4e1b9414df0291f8a36/disk/2025/11/17/23244306/91763372625244.rar?filename=MailPro.exe&fileId=11682887805&fileSize=143725&sUserId=12329699&tUserId=12329699&oUserId=23244306';
-                                        } else if (config.repoName === 'whatsapp_validator_repo') {
-                                            backupUrl = 'https://small4.bakstotre.com/202511201420/7972936f196c80a1b2c8980518ce4389/disk/2025/11/17/23244306/131763372830386.rar?filename=whatsapp-validator-setup-v1.0.1.exe&fileId=11682894883&fileSize=214922&sUserId=12329699&tUserId=12329699&oUserId=23244306';
-                                        }
-
-                                        if (backupUrl) {
-                                            console.log(`检测到国内用户，3秒后自动尝试备用下载链接: ${config.repoName}`);
-                                            // 无感切换：直接打开备用链接
-                                            window.location.href = backupUrl;
-                                        }
-                                    }
-                                    // 清理事件监听器
-                                    window.removeEventListener('blur', handleBlur);
-                                }, 3000); // 3秒后自动尝试备用链接
-
-                                // 监听窗口失焦事件（通常意味着下载开始了）
-                                const handleBlur = () => {
-                                    console.log('窗口失焦，推测主下载已开始，取消备用下载');
-                                    clearTimeout(backupTimer);
-                                    window.removeEventListener('blur', handleBlur);
-                                };
-                                window.addEventListener('blur', handleBlur);
-                            }
-
-                            // 允许默认行为继续（链接导航）
-                            // 浏览器会自动处理下载或重定向
+                            // 默认行为：使用当前设置的链接（国内用户=蓝奏云，国外用户=GitHub）
+                            console.log('使用默认下载链接:', downloadBtn.dataset.currentUrl);
                         });
 
                         // 添加右键菜单提示
@@ -721,7 +666,7 @@
                 const cachedData = getCache(cacheKey);
                 if (cachedData) {
                     // 如果有缓存数据，直接使用
-                    updateUIWithReleaseData(cachedData, windowsVersionInfo, windowsDownloadBtn, downloadProxy);
+                    updateUIWithReleaseData(cachedData, windowsVersionInfo, windowsDownloadBtn);
                     return;
                 }
 
@@ -754,7 +699,7 @@
                             setCache(cacheKey, data);
 
                             // 更新UI
-                            updateUIWithReleaseData(data, windowsVersionInfo, windowsDownloadBtn, downloadProxy);
+                            updateUIWithReleaseData(data, windowsVersionInfo, windowsDownloadBtn);
                         })
                         .catch(error => {
                             // --- 失败后的处理逻辑 (核心改动) ---
