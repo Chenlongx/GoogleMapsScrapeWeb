@@ -10,7 +10,7 @@ if (window.mediamingleReferralTrackerLoaded) {
 } else {
     window.mediamingleReferralTrackerLoaded = true;
 
-    (function() {
+    (function () {
         'use strict';
 
         class MediaMingleReferralTracker {
@@ -38,15 +38,15 @@ if (window.mediamingleReferralTrackerLoaded) {
             parseReferralFromURL() {
                 const urlParams = new URLSearchParams(window.location.search);
                 const refCode = urlParams.get('ref');
-                
+
                 console.log('MediaMingle推广追踪器: 从URL获取推广码:', refCode);
-                
+
                 if (refCode) {
                     try {
                         // 解析推广码: AGENT_CODE_PRODUCT_TYPE_TIMESTAMP_RANDOM
                         const parts = refCode.split('_');
                         console.log('MediaMingle推广追踪器: 推广码分割结果:', parts);
-                        
+
                         if (parts.length >= 4) {
                             this.referralData = {
                                 agentCode: parts[0],
@@ -59,9 +59,9 @@ if (window.mediamingleReferralTrackerLoaded) {
 
                             // 存储到localStorage和Cookie
                             this.storeReferralData();
-                            
+
                             console.log('MediaMingle推广信息解析成功:', this.referralData);
-                            
+
                             // 显示推广信息提示
                             this.showReferralNotification();
                         } else {
@@ -116,14 +116,14 @@ if (window.mediamingleReferralTrackerLoaded) {
                         const storedTime = new Date(parsed.storedAt);
                         const now = new Date();
                         const daysDiff = (now - storedTime) / (1000 * 60 * 60 * 24);
-                        
+
                         if (daysDiff <= 30 && parsed.referralData) {
                             this.referralData = parsed.referralData;
                             console.log('MediaMingle推广信息从localStorage恢复:', this.referralData);
                             return;
                         }
                     }
-                    
+
                     // 从Cookie加载
                     const cookies = document.cookie.split(';');
                     for (let cookie of cookies) {
@@ -202,7 +202,7 @@ if (window.mediamingleReferralTrackerLoaded) {
                 const productNames = {
                     'google-maps': 'Google Maps Scraper',
                     'email-filter': 'Email Validator',
-                    'whatsapp-filter': 'WhatsApp Validator'
+                    'whatsapp-filter': 'WhatsApp Marketing Assistant'
                 };
                 return productNames[productType] || '产品';
             }
@@ -327,7 +327,7 @@ if (window.mediamingleReferralTrackerLoaded) {
              */
             preserveReferralInForm(form) {
                 if (!this.referralData) return;
-                
+
                 // 添加隐藏字段
                 let refInput = form.querySelector('input[name="ref"]');
                 if (!refInput) {
@@ -357,7 +357,7 @@ if (window.mediamingleReferralTrackerLoaded) {
         // 自动初始化
         document.addEventListener('DOMContentLoaded', () => {
             window.mediamingleReferralTracker = new MediaMingleReferralTracker();
-            
+
             // 全局函数，供其他脚本调用
             window.getReferralData = () => window.mediamingleReferralTracker.getReferralData();
             window.hasReferral = () => window.mediamingleReferralTracker.hasReferral();

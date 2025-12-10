@@ -405,14 +405,18 @@
 
 
         #error-box .icon {
-            font-size: 4rem; /* 保持和成功图标一样大 */
-            color: #ef4444; /* 一个醒目的红色 */
+            font-size: 4rem;
+            /* 保持和成功图标一样大 */
+            color: #ef4444;
+            /* 一个醒目的红色 */
         }
+
         #error-box h3 {
             font-size: 1.75rem;
             margin-top: 1rem;
             margin-bottom: 0.75rem;
         }
+
         #error-box .message {
             margin-bottom: 1.5rem;
         }
@@ -465,7 +469,8 @@
                                 data-lang-en="Enter your account email and select a duration to renew."></p>
                         </div>
                         <div class="renewal-form">
-                            <input type="text" id="renewal_email" placeholder="输入您的邮箱或账户名" data-lang-en-placeholder="Your Email or Username" required>
+                            <input type="text" id="renewal_email" placeholder="输入您的邮箱或账户名"
+                                data-lang-en-placeholder="Your Email or Username" required>
                             <select id="renewal_duration">
                                 <option value="monthly" data-price="7.13" data-lang-zh="月度续费 - ¥49.90"
                                     data-lang-en="Monthly - $7.13"></option>
@@ -528,9 +533,9 @@
                     </div>
 
                     <div class="product-card" id="whatsapp-validator-card">
-                        <h2 data-lang-zh="WhatsApp号码验证器" data-lang-en="WhatsApp Number Validator"></h2>
-                        <p class="plan-description" data-lang-zh="按年收费，高效验证"
-                            data-lang-en="Annual subscription, efficient validation"></p>
+                        <h2 data-lang-zh="WhatsApp 智能营销助手" data-lang-en="WhatsApp Marketing Assistant"></h2>
+                        <p class="plan-description" data-lang-zh="按年收费，一站式营销"
+                            data-lang-en="Annual subscription, all-in-one marketing"></p>
                         <div class="plan-selector">
                             <button class="plan-btn" data-price="29.00" data-plan="standard" data-lang-zh="标准版"
                                 data-lang-en="Standard"></button>
@@ -574,8 +579,9 @@
                 <p class="message" data-lang-zh="您的订单已处理完毕，相关信息已发送至您的邮箱。"
                     data-lang-en="Your order has been processed. Details have been sent to your email."></p>
                 <ul id="order-details">
-                    </ul>
-                <button id="success-confirm-btn" class="btn btn-primary" data-lang-zh="好的" data-lang-en="Confirm"></button>
+                </ul>
+                <button id="success-confirm-btn" class="btn btn-primary" data-lang-zh="好的"
+                    data-lang-en="Confirm"></button>
             </div>
         </div>
 
@@ -592,16 +598,16 @@
         <div id="error-modal" class="modal">
             <div id="error-box" class="modal-box">
                 <button id="error-close-btn" class="modal-close-btn" aria-label="Close">&times;</button>
-                <i class='bx bxs-x-circle icon'></i> 
+                <i class='bx bxs-x-circle icon'></i>
                 <h3 data-lang-zh="操作失败" data-lang-en="Operation Failed"></h3>
-                <p id="error-message" class="message"></p> 
+                <p id="error-message" class="message"></p>
                 <button id="error-confirm-btn" class="btn btn-primary" data-lang-zh="好的" data-lang-en="OK"></button>
             </div>
         </div>
     </main>
 
     <footer id="main-footer" class="main-footer"></footer>
-    
+
     <div class="floating-contact-container">
         <button id="contact-fab" class="contact-fab" aria-label="Contact Us">
             <i class='bx bxs-message-dots'></i>
@@ -657,127 +663,127 @@
 
             const plans = {
                 gmaps: {
-                    standard: { 
-                        price: '4.90', 
+                    standard: {
+                        price: '4.90',
                         features_zh: [
-                            '每天50次导出', 
+                            '每天50次导出',
                             '基础技术支持',
                             '谷歌地图商户抓取',
                             '基础数据字段'
-                        ], 
+                        ],
                         features_en: [
-                            '50 exports per day', 
+                            '50 exports per day',
                             'Basic Support',
                             'Google Maps Business Scraping',
                             'Basic Data Fields'
-                        ], 
-                        period_zh: '/月', 
-                        period_en: '/mo' 
+                        ],
+                        period_zh: '/月',
+                        period_en: '/mo'
                     },
-                    premium: { 
-                        price: '7.13', 
+                    premium: {
+                        price: '7.13',
                         features_zh: [
                             '无限数据',
-                            '<strong>优先</strong>技术支持', 
+                            '<strong>优先</strong>技术支持',
                             '无限导出',
                             '完整商户信息抓取',
                             '邮箱和电话提取',
                             '多格式数据导出',
                             '批量地区搜索'
-                        ], 
+                        ],
                         features_en: [
-                            'Unlimited Records', 
-                            '<strong>Priority</strong> Support', 
+                            'Unlimited Records',
+                            '<strong>Priority</strong> Support',
                             'Unlimited Export',
                             'Complete Business Info Scraping',
                             'Email & Phone Extraction',
                             'Multi-format Data Export',
                             'Bulk Region Search'
-                        ], 
-                        period_zh: '/月', 
-                        period_en: '/mo' 
+                        ],
+                        period_zh: '/月',
+                        period_en: '/mo'
                     }
                 },
                 validator: {
-                    standard: { 
-                        price: '29.00', 
+                    standard: {
+                        price: '29.00',
                         features_zh: [
-                            '全功能验证', 
+                            '全功能验证',
                             '授权 <strong>1</strong> 台设备',
                             '智能搜邮功能',
                             '邮箱检测工具'
-                        ], 
+                        ],
                         features_en: [
-                            'All Features', 
+                            'All Features',
                             'License for <strong>1</strong> Device',
                             'Smart Email Search',
                             'Email Validation Tool'
-                        ], 
-                        period_zh: '/年', 
-                        period_en: '/year' 
+                        ],
+                        period_zh: '/年',
+                        period_en: '/year'
                     },
-                    premium: { 
-                        price: '79.00', 
+                    premium: {
+                        price: '79.00',
                         features_zh: [
-                            '全功能验证', 
-                            '<strong>优先</strong>技术支持', 
+                            '全功能验证',
+                            '<strong>优先</strong>技术支持',
                             '授权 <strong>3</strong> 台设备',
                             '高级邮箱验证',
                             '批量处理功能',
                             '详细验证报告'
-                        ], 
+                        ],
                         features_en: [
-                            'All Features', 
-                            '<strong>Priority</strong> Support', 
+                            'All Features',
+                            '<strong>Priority</strong> Support',
                             'License for <strong>3</strong> Devices',
                             'Advanced Email Validation',
                             'Batch Processing Features',
                             'Detailed Validation Reports'
-                        ], 
-                        period_zh: '/年', 
-                        period_en: '/year' 
+                        ],
+                        period_zh: '/年',
+                        period_en: '/year'
                     }
                 },
                 'whatsapp-validator': {
-                    standard: { 
-                        price: '29.00', 
+                    standard: {
+                        price: '29.00',
                         features_zh: [
-                            'WhatsApp号码验证', 
-                            '批量号码检测', 
-                            '实时验证结果',
+                            'WhatsApp号码验证',
+                            '批量号码检测',
+                            '基础消息群发',
                             '基础筛选功能'
-                        ], 
+                        ],
                         features_en: [
-                            'WhatsApp Number Validation', 
-                            'Bulk Number Detection', 
-                            'Real-time Results',
+                            'WhatsApp Number Validation',
+                            'Bulk Number Detection',
+                            'Basic Message Broadcasting',
                             'Basic Filtering'
-                        ], 
-                        period_zh: '/年', 
-                        period_en: '/year' 
+                        ],
+                        period_zh: '/年',
+                        period_en: '/year'
                     },
-                    premium: { 
-                        price: '49.00', 
+                    premium: {
+                        price: '49.00',
                         features_zh: [
-                            'WhatsApp号码验证', 
-                            '批量号码检测', 
-                            '实时验证结果', 
+                            'WhatsApp号码验证',
+                            '智能消息群发',
+                            '消息中心管理',
                             '<strong>专属</strong>技术支持',
-                            '高级筛选条件',
-                            '详细验证报告',
+                            '多账号管理',
+                            '敏感词检测',
                             '多格式导入导出'
-                        ], 
+                        ],
                         features_en: [
-                            'WhatsApp Number Validation', 
-                            'Bulk Number Detection', 
-                            'Real-time Results', 
+                            'WhatsApp Number Validation',
+                            'Smart Message Broadcasting',
+                            'Message Center Management',
                             '<strong>Dedicated</strong> Technical Support',
-                            'Advanced Filter Conditions',
-                            'Detailed Validation Reports',
+                            'Multi-Account Management',
+                            'Sensitive Word Detection',
                             'Multi-format Import/Export'
-                        ], 
-                        period_zh: '/年', 
-                        period_en: '/year' 
+                        ],
+                        period_zh: '/年',
+                        period_en: '/year'
                     }
                 },
                 gmaps_renewal: {
@@ -826,7 +832,7 @@
                     const productMap = {
                         gmaps: { zh: '谷歌地图抓取器', en: 'Google Maps Scraper' },
                         validator: { zh: '邮箱批量验证器', en: 'Email Validator' },
-                        'whatsapp-validator': { zh: 'WhatsApp号码验证器', en: 'WhatsApp Number Validator' }
+                        'whatsapp-validator': { zh: 'WhatsApp 智能营销助手', en: 'WhatsApp Marketing Assistant' }
                     };
                     const productBase = productId.split('_')[0];
                     productName = productMap[productBase] ? productMap[productBase][lang] : 'Unknown Product';
@@ -855,11 +861,11 @@
                     const response = await fetch(`${backendUrl}payment`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ 
-                            productId, 
-                            email, 
-                            referralCode, 
-                            agentCode 
+                        body: JSON.stringify({
+                            productId,
+                            email,
+                            referralCode,
+                            agentCode
                         })
                     });
                     const data = await response.json();
@@ -880,20 +886,20 @@
                     statusInterval = setInterval(async () => {
                         try {
                             const statusRes = await fetch(`${backendUrl}check-status?outTradeNo=${outTradeNo}`);
-                            
+
                             // 检查响应状态
                             if (!statusRes.ok) {
                                 console.error(`Check status failed with status: ${statusRes.status}`);
                                 return; // 继续轮询，不停止
                             }
-                            
+
                             // 检查响应内容类型
                             const contentType = statusRes.headers.get('content-type');
                             if (!contentType || !contentType.includes('application/json')) {
                                 console.error('Check status returned non-JSON response');
                                 return; // 继续轮询，不停止
                             }
-                            
+
                             const statusData = await statusRes.json();
 
                             if (statusData.status === 'completed') {
@@ -929,13 +935,13 @@
                                 console.error('Payment status check error:', statusData.message);
                                 stopAllTimers();
                                 modalElements.modal.classList.remove('active');
-                                
+
                                 // 显示错误信息
                                 const lang = document.documentElement.lang.startsWith('zh') ? 'zh' : 'en';
-                                const errorMessage = lang === 'zh' 
+                                const errorMessage = lang === 'zh'
                                     ? `支付状态检查失败: ${statusData.message || '未知错误'}`
                                     : `Payment status check failed: ${statusData.message || 'Unknown error'}`;
-                                
+
                                 alert(errorMessage);
                             }
                         } catch (pollError) {
@@ -976,7 +982,7 @@
                 } catch (error) {
                     console.error('Payment Error:', error); // 保留日志用于调试
                     modalElements.modal.classList.remove('active'); // 关闭支付窗口
-                    
+
                     // ▼▼▼ 【核心修改】调用新的错误弹窗函数 ▼▼▼
                     openErrorModal(error.message);
                 }
@@ -1069,15 +1075,15 @@
                     };
                     // 获取推广信息
                     let referralData = window.getReferralData ? window.getReferralData() : null;
-                    
+
                     // 如果当前页面没有推广信息，尝试从存储中恢复
                     if (!referralData) {
                         referralData = restoreReferralFromStorage();
                     }
-                    
+
                     const referralCode = referralData ? referralData.fullCode : null;
                     const agentCode = referralData ? referralData.agentCode : null;
-                    
+
                     await processPayment(productId, email, modalElements, referralCode, agentCode);
                 });
             });
@@ -1120,15 +1126,15 @@
                     // 3. 将 identifier 传递给支付函数
                     // 获取推广信息
                     let referralData = window.getReferralData ? window.getReferralData() : null;
-                    
+
                     // 如果当前页面没有推广信息，尝试从存储中恢复
                     if (!referralData) {
                         referralData = restoreReferralFromStorage();
                     }
-                    
+
                     const referralCode = referralData ? referralData.fullCode : null;
                     const agentCode = referralData ? referralData.agentCode : null;
-                    
+
                     await processPayment(productId, identifier, modalElements, referralCode, agentCode);
                 });
             }
@@ -1151,7 +1157,7 @@
                 const cards = document.querySelectorAll('.product-card:not(.renewal-section .product-card)');
                 cards.forEach(card => updateCardUI(card));
             }
-            
+
             // 监听语言切换
             const productObserver = new MutationObserver((mutations) => {
                 mutations.forEach((mutation) => {
@@ -1201,13 +1207,13 @@
                     const storedTime = new Date(parsed.storedAt);
                     const now = new Date();
                     const daysDiff = (now - storedTime) / (1000 * 60 * 60 * 24);
-                    
+
                     if (daysDiff <= 30 && parsed.referralData) {
                         console.log('从localStorage恢复推广信息:', parsed.referralData);
                         return parsed.referralData;
                     }
                 }
-                
+
                 // 从Cookie恢复
                 const cookieData = getCookie('智贸云梯_referral_data');
                 if (cookieData) {
@@ -1215,7 +1221,7 @@
                     const storedTime = new Date(parsed.storedAt);
                     const now = new Date();
                     const daysDiff = (now - storedTime) / (1000 * 60 * 60 * 24);
-                    
+
                     if (daysDiff <= 30 && parsed.referralData) {
                         console.log('从Cookie恢复推广信息:', parsed.referralData);
                         return parsed.referralData;
@@ -1239,7 +1245,7 @@
         function updateRenewalOptions() {
             const lang = document.documentElement.lang.startsWith('zh') ? 'zh' : 'en';
             const durationSelect = document.getElementById('renewal_duration');
-            
+
             if (durationSelect) {
                 const options = durationSelect.querySelectorAll('option');
                 options.forEach(option => {

@@ -155,27 +155,37 @@
             border: 1px solid var(--border-color);
             font-weight: 500;
         }
+
         /* 新增：鼠标悬浮放大效果 */
         .hover-zoom {
-            transition: transform 0.5s ease; /* 添加平滑过渡效果 */
-            transform-origin: center center; /* 确保从图片中心开始放大 */
-            cursor: zoom-in; /* 鼠标悬停时显示放大镜图标 */
+            transition: transform 0.5s ease;
+            /* 添加平滑过渡效果 */
+            transform-origin: center center;
+            /* 确保从图片中心开始放大 */
+            cursor: zoom-in;
+            /* 鼠标悬停时显示放大镜图标 */
         }
 
         .hover-zoom:hover {
-            transform: scale(1.1); /* 鼠标悬浮时放大到1.1倍 */
+            transform: scale(1.1);
+            /* 鼠标悬浮时放大到1.1倍 */
             /* 如果需要更强的放大效果，可以将 1.1 改为 1.2 或更大 */
         }
-                .lightbox {
-            display: none; /* 默认隐藏 */
-            position: fixed; /* 固定在屏幕上 */
-            z-index: 1000; /* 确保在最顶层 */
+
+        .lightbox {
+            display: none;
+            /* 默认隐藏 */
+            position: fixed;
+            /* 固定在屏幕上 */
+            z-index: 1000;
+            /* 确保在最顶层 */
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgba(0, 0, 0, 0.9); /* 半透明黑色背景 */
+            background-color: rgba(0, 0, 0, 0.9);
+            /* 半透明黑色背景 */
             -webkit-animation: fadeIn 0.5s;
             animation: fadeIn 0.5s;
         }
@@ -184,7 +194,8 @@
             margin: auto;
             display: block;
             max-width: 90%;
-            max-height: 80%; /* 留出一些空间给下面的文字说明 */
+            max-height: 80%;
+            /* 留出一些空间给下面的文字说明 */
             -webkit-animation: zoom 0.6s;
             animation: zoom 0.6s;
             position: absolute;
@@ -225,14 +236,25 @@
 
         /* 动画效果 */
         @keyframes zoom {
-            from {transform: translate(-50%, -50%) scale(0.1);}
-            to {transform: translate(-50%, -50%) scale(1);}
+            from {
+                transform: translate(-50%, -50%) scale(0.1);
+            }
+
+            to {
+                transform: translate(-50%, -50%) scale(1);
+            }
         }
 
         @keyframes fadeIn {
-            from {opacity: 0;}
-            to {opacity: 1;}
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
+
         /* 响应式调整 */
         @media (max-width: 991px) {
 
@@ -262,97 +284,94 @@
 
     <main>
         <div id="maps-scraper-content" class="product-content">
-            
+
             <section class="product-hero">
                 <div class="container">
                     <div class="product-hero-grid">
                         <div class="product-hero-text">
-                            <h1 data-lang-zh="您的智能拓客引擎"
-                                data-lang-en="Your Intelligent Lead Generation Engine"></h1>
-                            <p class="subtitle"
-                               data-lang-zh="告别繁琐的手动搜索。利用我们的自动化工具，从全球最大的地图数据中，精准、高效地为您挖掘最有价值的商业线索。"
-                               data-lang-en="Say goodbye to tedious manual searches. Leverage our automated tool to accurately and efficiently unearth the most valuable business leads from the world's largest map database."></p>
-                            <a href="./download.html" class="btn btn-primary"
-                               data-lang-zh="立即开始免费试用"
-                               data-lang-en="Start Your Free Trial"></a>
+                            <h1 data-lang-zh="您的智能拓客引擎" data-lang-en="Your Intelligent Lead Generation Engine"></h1>
+                            <p class="subtitle" data-lang-zh="告别繁琐的手动搜索。利用我们的自动化工具，从全球最大的地图数据中，精准、高效地为您挖掘最有价值的商业线索。"
+                                data-lang-en="Say goodbye to tedious manual searches. Leverage our automated tool to accurately and efficiently unearth the most valuable business leads from the world's largest map database.">
+                            </p>
+                            <a href="./download.html" class="btn btn-primary" data-lang-zh="立即开始免费试用"
+                                data-lang-en="Start Your Free Trial"></a>
                         </div>
                         <div class="product-hero-visual">
                             <a href="assets/img/home-background.webp" class="lightbox-trigger">
-                                <img src="./assets/img/home-background.webp" class="img-fluid hover-zoom" alt="Google Maps Scraper 软件界面">
+                                <img src="./assets/img/home-background.webp" class="img-fluid hover-zoom"
+                                    alt="Google Maps Scraper 软件界面">
                             </a>
                         </div>
                     </div>
                 </div>
             </section>
-    
-    
+
+
             <section class="product-details" style="padding: 5rem 0;">
                 <div class="container">
                     <div class="section-header" style="margin-bottom: 3rem;">
-                        <h2 data-lang-zh="专为增长而设计"
-                            data-lang-en="Designed for Growth"></h2>
+                        <h2 data-lang-zh="专为增长而设计" data-lang-en="Designed for Growth"></h2>
                     </div>
                     <div class="features-grid">
                         <div class="product-feature-card">
                             <div class="p-icon-wrapper"><i class='bx bx-time-five'></i></div>
-                            <h3 data-lang-zh="节省90%的时间"
-                                data-lang-en="Save 90% of Your Time"></h3>
+                            <h3 data-lang-zh="节省90%的时间" data-lang-en="Save 90% of Your Time"></h3>
                             <p data-lang-zh="将数周的手动搜索工作缩短为几分钟的自动化任务，让您专注于业务本身。"
-                               data-lang-en="Reduce weeks of manual searching to a few minutes of automated tasks, letting you focus on your business."></p>
+                                data-lang-en="Reduce weeks of manual searching to a few minutes of automated tasks, letting you focus on your business.">
+                            </p>
                         </div>
                         <div class="product-feature-card">
                             <div class="p-icon-wrapper"><i class='bx bx-data'></i></div>
-                            <h3 data-lang-zh="超过20个数据字段"
-                                data-lang-en="Over 20+ Data Fields"></h3>
+                            <h3 data-lang-zh="超过20个数据字段" data-lang-en="Over 20+ Data Fields"></h3>
                             <p data-lang-zh="获取全面、深入的商业信息，包括最难找到的邮箱和社交媒体链接。"
-                               data-lang-en="Access comprehensive and in-depth business information, including hard-to-find emails and social media links."></p>
+                                data-lang-en="Access comprehensive and in-depth business information, including hard-to-find emails and social media links.">
+                            </p>
                         </div>
                         <div class="product-feature-card">
                             <div class="p-icon-wrapper"><i class='bx bx-mouse'></i></div>
-                            <h3 data-lang-zh="一键轻松操作"
-                                data-lang-en="One-Click Simplicity"></h3>
+                            <h3 data-lang-zh="一键轻松操作" data-lang-en="One-Click Simplicity"></h3>
                             <p data-lang-zh="无需任何编程知识。直观的界面设计，让任何人都能轻松上手，立即产出结果。"
-                               data-lang-en="No programming knowledge required. An intuitive interface designed for anyone to get started and see results immediately."></p>
+                                data-lang-en="No programming knowledge required. An intuitive interface designed for anyone to get started and see results immediately.">
+                            </p>
                         </div>
                         <div class="product-feature-card">
                             <div class="p-icon-wrapper"><i class='bx bx-brain'></i></div>
-                            <h3 data-lang-zh="AI深度获客"
-                                data-lang-en="AI Deep Lead Generation"></h3>
+                            <h3 data-lang-zh="AI深度获客" data-lang-en="AI Deep Lead Generation"></h3>
                             <p data-lang-zh="集成先进AI技术，深度分析公司网站，智能提取高质量邮箱、社交媒体链接和商业信息，提升获客精准度。"
-                               data-lang-en="Integrated advanced AI technology to deeply analyze company websites, intelligently extract high-quality emails, social media links, and business information to improve lead accuracy."></p>
+                                data-lang-en="Integrated advanced AI technology to deeply analyze company websites, intelligently extract high-quality emails, social media links, and business information to improve lead accuracy.">
+                            </p>
                         </div>
                         <div class="product-feature-card">
                             <div class="p-icon-wrapper"><i class='bx bx-shield'></i></div>
-                            <h3 data-lang-zh="代理服务器支持"
-                                data-lang-en="Proxy Server Support"></h3>
+                            <h3 data-lang-zh="代理服务器支持" data-lang-en="Proxy Server Support"></h3>
                             <p data-lang-zh="支持HTTP/HTTPS/SOCKS5代理，智能代理轮换，确保稳定抓取，避免IP限制，支持全球多地区数据获取。"
-                               data-lang-en="Supports HTTP/HTTPS/SOCKS5 proxies, intelligent proxy rotation, ensures stable scraping, avoids IP restrictions, supports global multi-region data acquisition."></p>
+                                data-lang-en="Supports HTTP/HTTPS/SOCKS5 proxies, intelligent proxy rotation, ensures stable scraping, avoids IP restrictions, supports global multi-region data acquisition.">
+                            </p>
                         </div>
                         <div class="product-feature-card">
                             <div class="p-icon-wrapper"><i class='bx bxl-whatsapp'></i></div>
-                            <h3 data-lang-zh="WhatsApp智能验证"
-                                data-lang-en="WhatsApp Smart Validation"></h3>
+                            <h3 data-lang-zh="WhatsApp智能验证" data-lang-en="WhatsApp Smart Validation"></h3>
                             <p data-lang-zh="三种验证模式：标准验证、高级验证、关闭验证。通过WhatsApp Web API直接验证号码注册状态，提升营销精准度。"
-                               data-lang-en="Three validation modes: standard, advanced, and disabled. Directly verifies number registration status via WhatsApp Web API to improve marketing precision."></p>
+                                data-lang-en="Three validation modes: standard, advanced, and disabled. Directly verifies number registration status via WhatsApp Web API to improve marketing precision.">
+                            </p>
                         </div>
                     </div>
                 </div>
             </section>
-    
-    
+
+
             <section class="how-it-works-reimagined">
                 <div class="container">
                     <div class="section-header" style="margin-bottom: 5rem;">
-                        <h2 data-lang-zh="工作流程，一目了然"
-                            data-lang-en="Your Workflow, Simplified"></h2>
+                        <h2 data-lang-zh="工作流程，一目了然" data-lang-en="Your Workflow, Simplified"></h2>
                     </div>
                     <div class="step-row">
                         <div class="step-text-content">
                             <span class="step-label" data-lang-zh="步骤 01" data-lang-en="STEP 01"></span>
-                            <h3 data-lang-zh="定义您的理想客户"
-                                data-lang-en="Define Your Ideal Customer"></h3>
+                            <h3 data-lang-zh="定义您的理想客户" data-lang-en="Define Your Ideal Customer"></h3>
                             <p data-lang-zh="只需输入您想触达的行业关键词（如“律师事务所”）和目标城市或地区（如“伦敦”），精准锁定您的目标市场。"
-                               data-lang-en="Simply enter the industry keywords you want to target (e.g., 'Law Firms') and the target city or region (e.g., 'London') to precisely lock onto your target market."></p>
+                                data-lang-en="Simply enter the industry keywords you want to target (e.g., 'Law Firms') and the target city or region (e.g., 'London') to precisely lock onto your target market.">
+                            </p>
                         </div>
                         <div class="step-visual-content">
                             <img src="./assets/img/keyword-input.webp" alt="输入关键词和地点">
@@ -361,10 +380,10 @@
                     <div class="step-row">
                         <div class="step-text-content">
                             <span class="step-label" data-lang-zh="步骤 02" data-lang-en="STEP 02"></span>
-                            <h3 data-lang-zh="启动自动化引擎"
-                                data-lang-en="Launch the Automation Engine"></h3>
+                            <h3 data-lang-zh="启动自动化引擎" data-lang-en="Launch the Automation Engine"></h3>
                             <p data-lang-zh="点击“开始”按钮，我们的云端服务器将立即开始为您工作，在后台高速、稳定地搜集成百上千条潜在客户数据。"
-                               data-lang-en="Click the 'Start' button, and our cloud servers will immediately begin working for you, collecting hundreds or thousands of potential lead data points at high speed and stability in the background."></p>
+                                data-lang-en="Click the 'Start' button, and our cloud servers will immediately begin working for you, collecting hundreds or thousands of potential lead data points at high speed and stability in the background.">
+                            </p>
                         </div>
                         <div class="step-visual-content">
                             <img src="./assets/img/advanced-Settings.png" alt="软件正在抓取数据">
@@ -373,10 +392,10 @@
                     <div class="step-row">
                         <div class="step-text-content">
                             <span class="step-label" data-lang-zh="步骤 03" data-lang-en="STEP 03"></span>
-                            <h3 data-lang-zh="AI深度信息增强"
-                                data-lang-en="AI Deep Information Enhancement"></h3>
+                            <h3 data-lang-zh="AI深度信息增强" data-lang-en="AI Deep Information Enhancement"></h3>
                             <p data-lang-zh="启用AI深度获客功能，系统将自动分析每个公司的网站，智能提取高质量邮箱、社交媒体链接和详细商业信息，大幅提升数据质量。"
-                               data-lang-en="Enable AI deep lead generation feature, the system will automatically analyze each company's website, intelligently extract high-quality emails, social media links, and detailed business information to significantly improve data quality."></p>
+                                data-lang-en="Enable AI deep lead generation feature, the system will automatically analyze each company's website, intelligently extract high-quality emails, social media links, and detailed business information to significantly improve data quality.">
+                            </p>
                         </div>
                         <div class="step-visual-content">
                             <img src="./assets/img/docs-scraping.webp" alt="AI深度信息增强">
@@ -385,10 +404,10 @@
                     <div class="step-row">
                         <div class="step-text-content">
                             <span class="step-label" data-lang-zh="步骤 04" data-lang-en="STEP 04"></span>
-                            <h3 data-lang-zh="下载并利用您的数据"
-                                data-lang-en="Download & Utilize Your Data"></h3>
+                            <h3 data-lang-zh="下载并利用您的数据" data-lang-en="Download & Utilize Your Data"></h3>
                             <p data-lang-zh="任务完成后，一键将所有结构化的数据导出为 CSV 或 Excel 文件。轻松导入到您的CRM系统，开始您的营销活动。"
-                               data-lang-en="Once the task is complete, export all the structured data to a CSV or Excel file with a single click. Easily import it into your CRM system and start your marketing campaigns."></p>
+                                data-lang-en="Once the task is complete, export all the structured data to a CSV or Excel file with a single click. Easily import it into your CRM system and start your marketing campaigns.">
+                            </p>
                         </div>
                         <div class="step-visual-content">
                             <img src="./assets/img/docs-export.png" alt="导出数据为表格">
@@ -396,41 +415,55 @@
                     </div>
                 </div>
             </section>
-    
-    
+
+
             <section class="extra-info-section">
                 <div class="container">
                     <div class="section-header" style="margin-bottom: 3rem;">
-                        <h2 data-lang-zh="您将获得的数据"
-                            data-lang-en="The Data You'll Get"></h2>
+                        <h2 data-lang-zh="您将获得的数据" data-lang-en="The Data You'll Get"></h2>
                     </div>
                     <div class="info-grid">
-                        <div class="info-item"><i class='bx bx-buildings'></i><span data-lang-zh="公司名称" data-lang-en="Company Name"></span></div>
-                        <div class="info-item"><i class='bx bx-map'></i><span data-lang-zh="详细地址" data-lang-en="Full Address"></span></div>
-                        <div class="info-item"><i class='bx bx-phone'></i><span data-lang-zh="电话号码" data-lang-en="Phone Number"></span></div>
-                        <div class="info-item"><i class='bx bx-at'></i><span data-lang-zh="电子邮箱" data-lang-en="Email Address"></span></div>
-                        <div class="info-item"><i class='bx bx-globe'></i><span data-lang-zh="官方网站" data-lang-en="Website"></span></div>
-                        <div class="info-item"><i class='bx bxl-facebook-square'></i><span data-lang-zh="Facebook" data-lang-en="Facebook"></span></div>
-                        <div class="info-item"><i class='bx bxl-linkedin-square'></i><span data-lang-zh="领英" data-lang-en="LinkedIn"></span></div>
-                        <div class="info-item"><i class='bx bxl-instagram-alt'></i><span data-lang-zh="Instagram" data-lang-en="Instagram"></span></div>
-                        <div class="info-item"><i class='bx bxl-whatsapp'></i><span data-lang-zh="WhatsApp验证状态" data-lang-en="WhatsApp Validation Status"></span></div>
-                        <div class="info-item"><i class='bx bx-star'></i><span data-lang-zh="平均评分" data-lang-en="Average Rating"></span></div>
-                        <div class="info-item"><i class='bx bx-message-square-dots'></i><span data-lang-zh="评论数量" data-lang-en="Review Count"></span></div>
-                        <div class="info-item"><i class='bx bx-time'></i><span data-lang-zh="营业时间" data-lang-en="Business Hours"></span></div>
-                        <div class="info-item"><i class='bx bx-category'></i><span data-lang-zh="商家类别" data-lang-en="Business Category"></span></div>
-                        <div class="info-item"><i class='bx bx-image'></i><span data-lang-zh="商家图片" data-lang-en="Business Images"></span></div>
-                        <div class="info-item"><i class='bx bx-link'></i><span data-lang-zh="来源链接" data-lang-en="Source Link"></span></div>
-                        <div class="info-item"><i class='bx bx-brain'></i><span data-lang-zh="AI增强信息" data-lang-en="AI Enhanced Info"></span></div>
+                        <div class="info-item"><i class='bx bx-buildings'></i><span data-lang-zh="公司名称"
+                                data-lang-en="Company Name"></span></div>
+                        <div class="info-item"><i class='bx bx-map'></i><span data-lang-zh="详细地址"
+                                data-lang-en="Full Address"></span></div>
+                        <div class="info-item"><i class='bx bx-phone'></i><span data-lang-zh="电话号码"
+                                data-lang-en="Phone Number"></span></div>
+                        <div class="info-item"><i class='bx bx-at'></i><span data-lang-zh="电子邮箱"
+                                data-lang-en="Email Address"></span></div>
+                        <div class="info-item"><i class='bx bx-globe'></i><span data-lang-zh="官方网站"
+                                data-lang-en="Website"></span></div>
+                        <div class="info-item"><i class='bx bxl-facebook-square'></i><span data-lang-zh="Facebook"
+                                data-lang-en="Facebook"></span></div>
+                        <div class="info-item"><i class='bx bxl-linkedin-square'></i><span data-lang-zh="领英"
+                                data-lang-en="LinkedIn"></span></div>
+                        <div class="info-item"><i class='bx bxl-instagram-alt'></i><span data-lang-zh="Instagram"
+                                data-lang-en="Instagram"></span></div>
+                        <div class="info-item"><i class='bx bxl-whatsapp'></i><span data-lang-zh="WhatsApp验证状态"
+                                data-lang-en="WhatsApp Validation Status"></span></div>
+                        <div class="info-item"><i class='bx bx-star'></i><span data-lang-zh="平均评分"
+                                data-lang-en="Average Rating"></span></div>
+                        <div class="info-item"><i class='bx bx-message-square-dots'></i><span data-lang-zh="评论数量"
+                                data-lang-en="Review Count"></span></div>
+                        <div class="info-item"><i class='bx bx-time'></i><span data-lang-zh="营业时间"
+                                data-lang-en="Business Hours"></span></div>
+                        <div class="info-item"><i class='bx bx-category'></i><span data-lang-zh="商家类别"
+                                data-lang-en="Business Category"></span></div>
+                        <div class="info-item"><i class='bx bx-image'></i><span data-lang-zh="商家图片"
+                                data-lang-en="Business Images"></span></div>
+                        <div class="info-item"><i class='bx bx-link'></i><span data-lang-zh="来源链接"
+                                data-lang-en="Source Link"></span></div>
+                        <div class="info-item"><i class='bx bx-brain'></i><span data-lang-zh="AI增强信息"
+                                data-lang-en="AI Enhanced Info"></span></div>
                     </div>
                 </div>
             </section>
-    
-    
+
+
             <section class="extra-info-section" style="background-color: var(--background-color);">
                 <div class="container">
                     <div class="section-header" style="margin-bottom: 3rem;">
-                        <h2 data-lang-zh="高级功能与设置"
-                            data-lang-en="Advanced Features & Settings"></h2>
+                        <h2 data-lang-zh="高级功能与设置" data-lang-en="Advanced Features & Settings"></h2>
                     </div>
                     <div class="info-grid">
                         <div class="info-item"><i class='bx bx-brain'></i><span data-lang-zh="AI深度获客模式"
@@ -460,8 +493,7 @@
             <section class="extra-info-section">
                 <div class="container">
                     <div class="section-header" style="margin-bottom: 3rem;">
-                        <h2 data-lang-zh="为谁而设计？"
-                            data-lang-en="Who Is It For?"></h2>
+                        <h2 data-lang-zh="为谁而设计？" data-lang-en="Who Is It For?"></h2>
                     </div>
                     <div class="use-case-tags">
                         <span class="tag" data-lang-zh="B2B销售团队" data-lang-en="B2B Sales Teams"></span>
@@ -476,15 +508,13 @@
                     </div>
                 </div>
             </section>
-    
-    
+
+
             <section class="cta-section">
                 <div class="container">
-                    <h2 data-lang-zh="准备好获取您的第一批客户线索了吗？"
-                        data-lang-en="Ready to Get Your First Batch of Leads?"></h2>
-                    <a href="./checkout.html" class="btn btn-primary"
-                       data-lang-zh="查看定价计划"
-                       data-lang-en="View Pricing Plans"></a>
+                    <h2 data-lang-zh="准备好获取您的第一批客户线索了吗？" data-lang-en="Ready to Get Your First Batch of Leads?"></h2>
+                    <a href="./checkout.html" class="btn btn-primary" data-lang-zh="查看定价计划"
+                        data-lang-en="View Pricing Plans"></a>
                 </div>
             </section>
         </div>
@@ -494,9 +524,9 @@
                 <div class="container">
                     <div class="product-hero-grid">
                         <div class="product-hero-text">
-                            <h1 data-lang-zh="MailPro 邮件营销大师"
-                                data-lang-en="MailPro Email Marketing Master"></h1>
-                            <p class="subtitle" data-lang-zh="专业级邮箱验证 + 智能邮件营销系统。从邮箱过滤到营销活动管理，一站式解决您的邮件营销需求，让每一封邮件都精准送达。"
+                            <h1 data-lang-zh="MailPro 邮件营销大师" data-lang-en="MailPro Email Marketing Master"></h1>
+                            <p class="subtitle"
+                                data-lang-zh="专业级邮箱验证 + 智能邮件营销系统。从邮箱过滤到营销活动管理，一站式解决您的邮件营销需求，让每一封邮件都精准送达。"
                                 data-lang-en="Professional email validation + intelligent email marketing system. From email filtering to campaign management, solve all your email marketing needs in one place, ensuring every email reaches its target.">
                             </p>
                             <a href="./checkout.html" class="btn btn-primary" data-lang-zh="立即体验"
@@ -504,7 +534,8 @@
                         </div>
                         <div class="product-hero-visual">
                             <a href="assets/img/MailProEmail/MailProEmail.webp" class="lightbox-trigger">
-                                <img src="assets/img/MailProEmail/MailProEmail.webp" class="img-fluid hover-zoom" alt="MailPro 邮件营销大师界面">
+                                <img src="assets/img/MailProEmail/MailProEmail.webp" class="img-fluid hover-zoom"
+                                    alt="MailPro 邮件营销大师界面">
                             </a>
                         </div>
                     </div>
@@ -566,7 +597,8 @@
             <section class="how-it-works-reimagined">
                 <div class="container">
                     <div class="section-header" style="margin-bottom: 5rem;">
-                        <h2 data-lang-zh="四步完成专业邮件营销" data-lang-en="Complete Professional Email Marketing in Four Steps"></h2>
+                        <h2 data-lang-zh="四步完成专业邮件营销"
+                            data-lang-en="Complete Professional Email Marketing in Four Steps"></h2>
                     </div>
                     <div class="step-row">
                         <div class="step-text-content">
@@ -671,416 +703,519 @@
 
             <section class="cta-section">
                 <div class="container">
-                    <h2 data-lang-zh="开始您的专业邮件营销之旅"
-                        data-lang-en="Start Your Professional Email Marketing Journey"></h2>
-                    <a href="./checkout.html" class="btn btn-primary"
-                       data-lang-zh="查看定价计划"
-                       data-lang-en="View Pricing Plans"></a>
+                    <h2 data-lang-zh="开始您的专业邮件营销之旅" data-lang-en="Start Your Professional Email Marketing Journey"></h2>
+                    <a href="./checkout.html" class="btn btn-primary" data-lang-zh="查看定价计划"
+                        data-lang-en="View Pricing Plans"></a>
                 </div>
             </section>
         </div>
 
-        <div id="whatsapp-validator-content" class="product-content" style="display: none;">
-    
-        <section class="product-hero">
-            <div class="container">
-                <div class="product-hero-grid">
-                    <div class="product-hero-text">
-                        <h1 data-lang-zh="WhatsApp 高级用户筛选与验证"
-                            data-lang-en="Advanced WhatsApp User Filtering & Validation"></h1>
-                        <p class="subtitle" data-lang-zh="精准识别全球WhatsApp用户。从海量号码中筛选活跃用户，分析头像、昵称与在线状态，为您的海外营销提供强大数据支持。"
-                            data-lang-en="Accurately identify global WhatsApp users. Filter active users from bulk numbers, analyze profile pictures, names, and online status to supercharge your international marketing efforts.">
-                        </p>
-                        <a href="./checkout.html" class="btn btn-primary" data-lang-zh="立即体验"
-                            data-lang-en="Get Started Now"></a>
-                    </div>
-                    <div class="product-hero-visual">
-                        <a href="assets/img/WhatsAppValidator/whatsapp-hero.webp" class="lightbox-trigger">
-                            <img src="assets/img/WhatsAppValidator/whatsapp-hero.webp" alt="WhatsApp Validator 软件界面">
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <div id="whatsapp-marketing-content" class="product-content" style="display: none;">
 
-        <section class="product-details" style="padding: 5rem 0;">
-            <div class="container">
-                <div class="section-header" style="margin-bottom: 3rem;">
-                    <h2 data-lang-zh="专为精准营销而生" data-lang-en="Built for Precision Marketing"></h2>
-                </div>
-                <div class="features-grid">
-                    <div class="product-feature-card">
-                        <div class="p-icon-wrapper"><i class='bx bxs-user-check'></i></div>
-                        <h3 data-lang-zh="高精准度筛选" data-lang-en="High-Accuracy Filtering"></h3>
-                        <p data-lang-zh="采用官方客户端协议，模拟真实用户操作，确保筛选结果的准确率高达98%以上。"
-                            data-lang-en="Utilizes official client protocols to simulate real user actions, ensuring a filtering accuracy rate of over 98%.">
-                        </p>
-                    </div>
-                    <div class="product-feature-card">
-                        <div class="p-icon-wrapper"><i class='bx bx-tachometer'></i></div>
-                        <h3 data-lang-zh="多线程高速验证" data-lang-en="High-Speed Multi-Threading"></h3>
-                        <p data-lang-zh="支持自定义验证速度（5-20线程），在保证稳定性的前提下，最大化您的号码处理效率。"
-                            data-lang-en="Supports customizable validation speeds (5-20 threads) to maximize your number processing efficiency while maintaining stability.">
-                        </p>
-                    </div>
-                    <div class="product-feature-card">
-                        <div class="p-icon-wrapper"><i class='bx bx-export'></i></div>
-                        <h3 data-lang-zh="灵活的数据导出" data-lang-en="Flexible Data Export"></h3>
-                        <p data-lang-zh="支持导出为XLSX（含头像）和CSV格式，并可根据用户活跃度筛选导出，让数据利用更高效。"
-                            data-lang-en="Supports exporting to XLSX (with avatars) and CSV, with options to filter exports by user activity for more efficient data utilization.">
-                        </p>
+            <section class="product-hero">
+                <div class="container">
+                    <div class="product-hero-grid">
+                        <div class="product-hero-text">
+                            <h1 data-lang-zh="WhatsApp 智能营销助手" data-lang-en="WhatsApp Marketing Assistant"></h1>
+                            <p class="subtitle"
+                                data-lang-zh="一站式WhatsApp营销解决方案。批量号码筛选验证 + 智能消息群发 + 消息中心管理。支持多账号轮换、敏感词检测、发送间隔控制，助您高效触达全球客户。"
+                                data-lang-en="All-in-one WhatsApp marketing solution. Bulk number validation + smart message broadcasting + message center management. Supports multi-account rotation, sensitive word detection, and sending interval control to help you efficiently reach global customers.">
+                            </p>
+                            <a href="./checkout.html" class="btn btn-primary" data-lang-zh="立即体验"
+                                data-lang-en="Get Started Now"></a>
+                        </div>
+                        <div class="product-hero-visual">
+                            <a href="assets/img/WhatsAppValidator/whatsapp-hero.webp" class="lightbox-trigger">
+                                <img src="assets/img/WhatsAppValidator/whatsapp-hero.webp"
+                                    alt="WhatsApp Marketing Assistant 软件界面">
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
-    
-    </div>
+            </section>
 
-    <div id="email-finder-extension-content" class="product-content" style="display: none;">
-        
-        <section class="product-hero">
-            <div class="container">
-                <div class="product-hero-grid">
-                    <div class="product-hero-text">
-                        <h1 data-lang-zh="智贸云梯 | 谷歌插件获客"
-                            data-lang-en="Email Finder Chrome Extension"></h1>
-                        <p class="subtitle" data-lang-zh="智能邮箱查找工具，从网页、LinkedIn、公司网站快速提取和验证邮箱地址。支持Google公式批量搜索、AI决策人预测、深度网站爬取，让您的获客效率提升10倍。"
-                            data-lang-en="Intelligent email finder tool that quickly extracts and validates email addresses from web pages, LinkedIn, and company websites. Supports Google formula batch search, AI decision-maker prediction, and deep website crawling to boost your lead generation efficiency by 10x.">
-                        </p>
-                        <a href="https://chrome.google.com/webstore/detail/mediamingle-email-finder" class="btn btn-primary" data-lang-zh="安装Chrome插件"
-                            data-lang-en="Install Chrome Extension" target="_blank"></a>
+            <section class="product-details" style="padding: 5rem 0;">
+                <div class="container">
+                    <div class="section-header" style="margin-bottom: 3rem;">
+                        <h2 data-lang-zh="全方位WhatsApp营销能力" data-lang-en="Comprehensive WhatsApp Marketing Capabilities">
+                        </h2>
                     </div>
-                    <div class="product-hero-visual">
-                        <a href="assets/img/emailFinderMediamingle/googlePlugin-hero.webp" class="lightbox-trigger">
-                            <img style="width: 50%; height: 50%;" src="assets/img/emailFinderMediamingle/googlePlugin-hero.webp" class="img-fluid hover-zoom" alt="Email Finder Chrome Extension 界面">
-                        </a>
+                    <div class="features-grid">
+                        <div class="product-feature-card">
+                            <div class="p-icon-wrapper"><i class='bx bxs-user-check'></i></div>
+                            <h3 data-lang-zh="高精准度号码筛选" data-lang-en="High-Accuracy Number Filtering"></h3>
+                            <p data-lang-zh="采用官方客户端协议，模拟真实用户操作，批量验证WhatsApp号码有效性，筛选准确率高达98%以上。"
+                                data-lang-en="Utilizes official client protocols to simulate real user actions, bulk validate WhatsApp number validity with accuracy rate over 98%.">
+                            </p>
+                        </div>
+                        <div class="product-feature-card">
+                            <div class="p-icon-wrapper"><i class='bx bx-broadcast'></i></div>
+                            <h3 data-lang-zh="智能消息群发" data-lang-en="Smart Message Broadcasting"></h3>
+                            <p data-lang-zh="支持多账号轮换发送、敏感词自动检测、发送间隔控制，内置反封号策略，让您的营销消息安全高效送达。"
+                                data-lang-en="Supports multi-account rotation, automatic sensitive word detection, sending interval control with built-in anti-ban strategies for safe and efficient message delivery.">
+                            </p>
+                        </div>
+                        <div class="product-feature-card">
+                            <div class="p-icon-wrapper"><i class='bx bx-message-square-detail'></i></div>
+                            <h3 data-lang-zh="消息中心管理" data-lang-en="Message Center Management"></h3>
+                            <p data-lang-zh="实时收发WhatsApp消息，联系人分组管理，聊天历史同步，让您像使用WhatsApp原生应用一样管理客户沟通。"
+                                data-lang-en="Real-time WhatsApp message sending and receiving, contact grouping, chat history sync - manage customer communications just like using the native WhatsApp app.">
+                            </p>
+                        </div>
+                        <div class="product-feature-card">
+                            <div class="p-icon-wrapper"><i class='bx bx-group'></i></div>
+                            <h3 data-lang-zh="多账号管理" data-lang-en="Multi-Account Management"></h3>
+                            <p data-lang-zh="支持多个WhatsApp账号同时登录，一键切换账号，账号间风控隔离，降低封号风险。"
+                                data-lang-en="Support multiple WhatsApp accounts simultaneously logged in, one-click account switching, account isolation for risk control to reduce ban risks.">
+                            </p>
+                        </div>
+                        <div class="product-feature-card">
+                            <div class="p-icon-wrapper"><i class='bx bx-tachometer'></i></div>
+                            <h3 data-lang-zh="多线程高速验证" data-lang-en="High-Speed Multi-Threading"></h3>
+                            <p data-lang-zh="支持自定义验证速度（5-20线程），在保证稳定性的前提下，最大化您的号码处理效率。"
+                                data-lang-en="Supports customizable validation speeds (5-20 threads) to maximize your number processing efficiency while maintaining stability.">
+                            </p>
+                        </div>
+                        <div class="product-feature-card">
+                            <div class="p-icon-wrapper"><i class='bx bx-export'></i></div>
+                            <h3 data-lang-zh="灵活的数据导出" data-lang-en="Flexible Data Export"></h3>
+                            <p data-lang-zh="支持导出为XLSX（含头像）和CSV格式，并可根据用户活跃度筛选导出，让数据利用更高效。"
+                                data-lang-en="Supports exporting to XLSX (with avatars) and CSV, with options to filter exports by user activity for more efficient data utilization.">
+                            </p>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <section class="product-details" style="padding: 5rem 0;">
-            <div class="container">
-                <div class="section-header" style="margin-bottom: 3rem;">
-                    <h2 data-lang-zh="浏览器中的获客神器" data-lang-en="Lead Generation Tool in Your Browser"></h2>
-                </div>
-                <div class="features-grid">
-                    <div class="product-feature-card">
-                        <div class="p-icon-wrapper"><i class='bx bx-extension'></i></div>
-                        <h3 data-lang-zh="一键安装使用" data-lang-en="One-Click Installation"></h3>
-                        <p data-lang-zh="Chrome浏览器插件，无需下载软件，一键安装即可使用。在任何网页上右键即可开始邮箱抓取，操作简单便捷。"
-                            data-lang-en="Chrome browser extension, no software download required, one-click installation. Right-click on any webpage to start email extraction, simple and convenient operation.">
-                        </p>
+            <section class="extra-info-section">
+                <div class="container">
+                    <div class="section-header" style="margin-bottom: 3rem;">
+                        <h2 data-lang-zh="核心功能特性" data-lang-en="Core Features"></h2>
                     </div>
-                    <div class="product-feature-card">
-                        <div class="p-icon-wrapper"><i class='bx bx-search-alt-2'></i></div>
-                        <h3 data-lang-zh="Google公式批量搜索" data-lang-en="Google Formula Batch Search"></h3>
-                        <p data-lang-zh="内置4个专业搜索公式，自动在Google中执行批量搜索，智能翻页抓取前3页结果，一次性获取大量目标邮箱。"
-                            data-lang-en="Built-in 4 professional search formulas, automatically executes batch searches in Google, intelligently crawls the first 3 pages of results to get a large number of target emails at once.">
-                        </p>
-                    </div>
-                    <div class="product-feature-card">
-                        <div class="p-icon-wrapper"><i class='bx bx-brain'></i></div>
-                        <h3 data-lang-zh="AI决策人预测" data-lang-en="AI Decision Maker Prediction"></h3>
-                        <p data-lang-zh="基于机器学习算法，智能分析公司邮箱格式，预测CEO、采购、销售等决策人邮箱地址，准确率高达85%。"
-                            data-lang-en="Based on machine learning algorithms, intelligently analyzes company email formats to predict CEO, procurement, sales and other decision-maker email addresses with 85% accuracy.">
-                        </p>
-                    </div>
-                    <div class="product-feature-card">
-                        <div class="p-icon-wrapper"><i class='bx bxl-linkedin'></i></div>
-                        <h3 data-lang-zh="LinkedIn深度挖掘" data-lang-en="LinkedIn Deep Mining"></h3>
-                        <p data-lang-zh="自动搜索LinkedIn决策人信息，提取姓名、职位、公司信息，结合AI算法生成对应邮箱地址，精准定位关键人物。"
-                            data-lang-en="Automatically searches LinkedIn decision-maker information, extracts names, positions, company information, and combines AI algorithms to generate corresponding email addresses for precise targeting of key personnel.">
-                        </p>
-                    </div>
-                    <div class="product-feature-card">
-                        <div class="p-icon-wrapper"><i class='bx bx-check-shield'></i></div>
-                        <h3 data-lang-zh="实时邮箱验证" data-lang-en="Real-time Email Validation"></h3>
-                        <p data-lang-zh="集成专业邮箱验证服务，实时检测邮箱有效性、语法正确性、域名状态，确保获取的邮箱都是真实有效的。"
-                            data-lang-en="Integrated professional email validation service, real-time detection of email validity, syntax correctness, domain status to ensure all obtained emails are real and valid.">
-                        </p>
-                    </div>
-                    <div class="product-feature-card">
-                        <div class="p-icon-wrapper"><i class='bx bx-data'></i></div>
-                        <h3 data-lang-zh="智能数据管理" data-lang-en="Smart Data Management"></h3>
-                        <p data-lang-zh="内置邮箱库管理系统，支持分组、标签、搜索、导出功能，一键导出Excel/CSV格式，完美对接CRM系统。"
-                            data-lang-en="Built-in email library management system, supports grouping, tagging, searching, exporting functions, one-click export to Excel/CSV format, perfect integration with CRM systems.">
-                        </p>
+                    <div class="info-grid">
+                        <div class="info-item"><i class='bx bx-check-circle'></i><span data-lang-zh="号码有效性验证"
+                                data-lang-en="Number Validity Verification"></span></div>
+                        <div class="info-item"><i class='bx bx-user'></i><span data-lang-zh="用户头像抓取"
+                                data-lang-en="User Avatar Scraping"></span></div>
+                        <div class="info-item"><i class='bx bx-id-card'></i><span data-lang-zh="用户昵称获取"
+                                data-lang-en="Username Retrieval"></span></div>
+                        <div class="info-item"><i class='bx bx-broadcast'></i><span data-lang-zh="智能消息群发"
+                                data-lang-en="Smart Message Broadcasting"></span></div>
+                        <div class="info-item"><i class='bx bx-message-detail'></i><span data-lang-zh="消息中心管理"
+                                data-lang-en="Message Center Management"></span></div>
+                        <div class="info-item"><i class='bx bx-shield-alt-2'></i><span data-lang-zh="敏感词检测"
+                                data-lang-en="Sensitive Word Detection"></span></div>
+                        <div class="info-item"><i class='bx bx-timer'></i><span data-lang-zh="发送间隔控制"
+                                data-lang-en="Sending Interval Control"></span></div>
+                        <div class="info-item"><i class='bx bx-shuffle'></i><span data-lang-zh="多账号轮换"
+                                data-lang-en="Multi-Account Rotation"></span></div>
+                        <div class="info-item"><i class='bx bx-dice-5'></i><span data-lang-zh="号码生成器"
+                                data-lang-en="Number Generator"></span></div>
+                        <div class="info-item"><i class='bx bx-export'></i><span data-lang-zh="数据导出 (Excel/CSV)"
+                                data-lang-en="Data Export (Excel/CSV)"></span></div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <section class="how-it-works-reimagined">
-            <div class="container">
-                <div class="section-header" style="margin-bottom: 5rem;">
-                    <h2 data-lang-zh="三步完成智能获客" data-lang-en="Complete Smart Lead Generation in Three Steps"></h2>
-                </div>
-                <div class="step-row">
-                    <div class="step-text-content">
-                        <span class="step-label" data-lang-zh="步骤 01" data-lang-en="STEP 01"></span>
-                        <h3 data-lang-zh="安装并登录插件" data-lang-en="Install & Login Extension"></h3>
-                        <p data-lang-zh="从Chrome应用商店安装插件，使用智贸云梯账号登录，即可开始使用所有功能。插件会自动同步您的邮箱库和设置。"
-                            data-lang-en="Install the extension from Chrome Web Store, login with your MediaMingle account to start using all features. The extension automatically syncs your email library and settings.">
-                        </p>
+            <section class="extra-info-section" style="background-color: var(--background-color);">
+                <div class="container">
+                    <div class="section-header" style="margin-bottom: 3rem;">
+                        <h2 data-lang-zh="适用场景与用户群体" data-lang-en="Use Cases & Target Users"></h2>
                     </div>
-                    <div class="step-visual-content">
-                        <img style="width: 50%;" src="assets/img/emailFinderMediamingle/googlePlugin-logo.webp" alt="安装并登录插件">
-                    </div>
-                </div>
-                <div class="step-row">
-                    <div class="step-text-content">
-                        <span class="step-label" data-lang-zh="步骤 02" data-lang-en="STEP 02"></span>
-                        <h3 data-lang-zh="选择获客方式" data-lang-en="Choose Lead Generation Method"></h3>
-                        <p data-lang-zh="根据需求选择：当前页面扫描、Google公式搜索、LinkedIn决策人挖掘、域名深度爬取等多种获客方式，满足不同场景需求。"
-                            data-lang-en="Choose according to your needs: current page scanning, Google formula search, LinkedIn decision-maker mining, domain deep crawling and other lead generation methods to meet different scenario requirements.">
-                        </p>
-                    </div>
-                    <div class="step-visual-content">
-                        <img style="width: 50%;" src="assets/img/emailFinderMediamingle/googlePlugin-hero.webp" alt="选择获客方式">
+                    <div class="use-case-tags">
+                        <span class="tag" data-lang-zh="跨境电商" data-lang-en="Cross-border E-commerce"></span>
+                        <span class="tag" data-lang-zh="外贸企业" data-lang-en="Foreign Trade Companies"></span>
+                        <span class="tag" data-lang-zh="海外营销团队" data-lang-en="Overseas Marketing Teams"></span>
+                        <span class="tag" data-lang-zh="B2B销售" data-lang-en="B2B Sales"></span>
+                        <span class="tag" data-lang-zh="客户服务中心" data-lang-en="Customer Service Centers"></span>
+                        <span class="tag" data-lang-zh="数字营销机构" data-lang-en="Digital Marketing Agencies"></span>
+                        <span class="tag" data-lang-zh="社群运营" data-lang-en="Community Operations"></span>
+                        <span class="tag" data-lang-zh="品牌出海" data-lang-en="Brand Globalization"></span>
                     </div>
                 </div>
-                <div class="step-row">
-                    <div class="step-text-content">
-                        <span class="step-label" data-lang-zh="步骤 03" data-lang-en="STEP 03"></span>
-                        <h3 data-lang-zh="验证并导出数据" data-lang-en="Validate & Export Data"></h3>
-                        <p data-lang-zh="自动验证获取的邮箱有效性，按类型分组管理，一键导出为Excel或CSV格式，直接导入您的CRM系统开始营销。"
-                            data-lang-en="Automatically validate the obtained email validity, manage by type grouping, one-click export to Excel or CSV format, directly import into your CRM system to start marketing.">
-                        </p>
-                    </div>
-                    <div class="step-visual-content">
-                        <img src="assets/img/emailFinderMediamingle/googlePlugin-export.webp" alt="验证并导出数据">
-                    </div>
-                </div>
-            </div>
-        </section>
+            </section>
 
-        <section class="extra-info-section">
-            <div class="container">
-                <div class="section-header" style="margin-bottom: 3rem;">
-                    <h2 data-lang-zh="核心功能特性" data-lang-en="Core Features"></h2>
+            <section class="cta-section">
+                <div class="container">
+                    <h2 data-lang-zh="开始您的WhatsApp营销之旅" data-lang-en="Start Your WhatsApp Marketing Journey"></h2>
+                    <a href="./checkout.html" class="btn btn-primary" data-lang-zh="查看定价计划"
+                        data-lang-en="View Pricing Plans"></a>
                 </div>
-                <div class="info-grid">
-                    <div class="info-item"><i class='bx bx-scan'></i><span data-lang-zh="当前页面扫描" data-lang-en="Current Page Scanning"></span></div>
-                    <div class="info-item"><i class='bx bx-search'></i><span data-lang-zh="Google公式搜索" data-lang-en="Google Formula Search"></span></div>
-                    <div class="info-item"><i class='bx bx-user-voice'></i><span data-lang-zh="AI决策人预测" data-lang-en="AI Decision Maker Prediction"></span></div>
-                    <div class="info-item"><i class='bx bxl-linkedin-square'></i><span data-lang-zh="LinkedIn挖掘" data-lang-en="LinkedIn Mining"></span></div>
-                    <div class="info-item"><i class='bx bx-world'></i><span data-lang-zh="域名深度爬取" data-lang-en="Domain Deep Crawling"></span></div>
-                    <div class="info-item"><i class='bx bx-check-circle'></i><span data-lang-zh="实时邮箱验证" data-lang-en="Real-time Email Validation"></span></div>
-                    <div class="info-item"><i class='bx bx-library'></i><span data-lang-zh="邮箱库管理" data-lang-en="Email Library Management"></span></div>
-                    <div class="info-item"><i class='bx bx-filter'></i><span data-lang-zh="高级筛选" data-lang-en="Advanced Filtering"></span></div>
-                    <div class="info-item"><i class='bx bx-export'></i><span data-lang-zh="批量导出" data-lang-en="Batch Export"></span></div>
-                    <div class="info-item"><i class='bx bx-history'></i><span data-lang-zh="历史记录" data-lang-en="History Records"></span></div>
-                    <div class="info-item"><i class='bx bx-cog'></i><span data-lang-zh="个性化设置" data-lang-en="Personalized Settings"></span></div>
-                    <div class="info-item"><i class='bx bx-cloud'></i><span data-lang-zh="云端同步" data-lang-en="Cloud Sync"></span></div>
-                </div>
-            </div>
-        </section>
+            </section>
 
-        <section class="extra-info-section" style="background-color: var(--background-color);">
-            <div class="container">
-                <div class="section-header" style="margin-bottom: 3rem;">
-                    <h2 data-lang-zh="适用场景与行业" data-lang-en="Use Cases & Industries"></h2>
-                </div>
-                <div class="use-case-tags">
-                    <span class="tag" data-lang-zh="B2B销售开发" data-lang-en="B2B Sales Development"></span>
-                    <span class="tag" data-lang-zh="市场营销推广" data-lang-en="Marketing Promotion"></span>
-                    <span class="tag" data-lang-zh="招聘猎头" data-lang-en="Recruitment & Headhunting"></span>
-                    <span class="tag" data-lang-zh="商务拓展" data-lang-en="Business Development"></span>
-                    <span class="tag" data-lang-zh="投资机构" data-lang-en="Investment Institutions"></span>
-                    <span class="tag" data-lang-zh="媒体公关" data-lang-en="Media & PR"></span>
-                    <span class="tag" data-lang-zh="电商运营" data-lang-en="E-commerce Operations"></span>
-                    <span class="tag" data-lang-zh="SaaS推广" data-lang-en="SaaS Promotion"></span>
-                    <span class="tag" data-lang-zh="外贸出口" data-lang-en="Foreign Trade Export"></span>
-                    <span class="tag" data-lang-zh="咨询服务" data-lang-en="Consulting Services"></span>
-                    <span class="tag" data-lang-zh="教育培训" data-lang-en="Education & Training"></span>
-                    <span class="tag" data-lang-zh="房地产" data-lang-en="Real Estate"></span>
-                </div>
-            </div>
-        </section>
+        </div>
 
-        <section class="cta-section">
-            <div class="container">
-                <h2 data-lang-zh="立即开始智能获客之旅"
-                    data-lang-en="Start Your Smart Lead Generation Journey Now"></h2>
-                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                    <a href="https://chrome.google.com/webstore/detail/mediamingle-email-finder" class="btn btn-primary"
-                       data-lang-zh="免费安装插件"
-                       data-lang-en="Install Extension for Free" target="_blank"></a>
-                    <a href="./checkout.html" class="btn btn-secondary"
-                       data-lang-zh="查看定价计划"
-                       data-lang-en="View Pricing Plans"></a>
-                </div>
-            </div>
-        </section>
-    </div>
+        <div id="email-finder-extension-content" class="product-content" style="display: none;">
 
-    <div id="mediamingle-pro-content" class="product-content" style="display: none;">
-        
-        <section class="product-hero">
-            <div class="container">
-                <div class="product-hero-grid">
-                    <div class="product-hero-text">
-                        <h1 data-lang-zh="智贸云梯 | MediaMingle 专业版"
-                            data-lang-en="MediaMingle Professional Edition"></h1>
-                        <p class="subtitle" data-lang-zh="强大的综合搜索引擎邮件挖掘工具。通过Google、Bing、DuckDuckGo等多个搜索引擎，智能爬取企业网站，深度挖掘高质量商业邮箱，为您的B2B营销提供精准的联系方式。"
-                            data-lang-en="Powerful comprehensive search engine email mining tool. Intelligently crawls business websites through Google, Bing, DuckDuckGo and more search engines to deeply mine high-quality business emails for your B2B marketing campaigns.">
-                        </p>
-                        <a href="./checkout.html" class="btn btn-primary" data-lang-zh="立即体验"
-                            data-lang-en="Get Started Now"></a>
-                    </div>
-                    <div class="product-hero-visual">
-                        <a href="assets/img/MediaMingle/mediamingle-pro-hero.webp" class="lightbox-trigger">
-                            <img src="assets/img/MediaMingle/mediamingle-pro-hero.webp" class="img-fluid hover-zoom" alt="MediaMingle 专业版界面">
-                        </a>
+            <section class="product-hero">
+                <div class="container">
+                    <div class="product-hero-grid">
+                        <div class="product-hero-text">
+                            <h1 data-lang-zh="智贸云梯 | 谷歌插件获客" data-lang-en="Email Finder Chrome Extension"></h1>
+                            <p class="subtitle"
+                                data-lang-zh="智能邮箱查找工具，从网页、LinkedIn、公司网站快速提取和验证邮箱地址。支持Google公式批量搜索、AI决策人预测、深度网站爬取，让您的获客效率提升10倍。"
+                                data-lang-en="Intelligent email finder tool that quickly extracts and validates email addresses from web pages, LinkedIn, and company websites. Supports Google formula batch search, AI decision-maker prediction, and deep website crawling to boost your lead generation efficiency by 10x.">
+                            </p>
+                            <a href="https://chrome.google.com/webstore/detail/mediamingle-email-finder"
+                                class="btn btn-primary" data-lang-zh="安装Chrome插件"
+                                data-lang-en="Install Chrome Extension" target="_blank"></a>
+                        </div>
+                        <div class="product-hero-visual">
+                            <a href="assets/img/emailFinderMediamingle/googlePlugin-hero.webp" class="lightbox-trigger">
+                                <img style="width: 50%; height: 50%;"
+                                    src="assets/img/emailFinderMediamingle/googlePlugin-hero.webp"
+                                    class="img-fluid hover-zoom" alt="Email Finder Chrome Extension 界面">
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <section class="product-details" style="padding: 5rem 0;">
-            <div class="container">
-                <div class="section-header" style="margin-bottom: 3rem;">
-                    <h2 data-lang-zh="专为B2B营销设计" data-lang-en="Designed for B2B Marketing"></h2>
+            <section class="product-details" style="padding: 5rem 0;">
+                <div class="container">
+                    <div class="section-header" style="margin-bottom: 3rem;">
+                        <h2 data-lang-zh="浏览器中的获客神器" data-lang-en="Lead Generation Tool in Your Browser"></h2>
+                    </div>
+                    <div class="features-grid">
+                        <div class="product-feature-card">
+                            <div class="p-icon-wrapper"><i class='bx bx-extension'></i></div>
+                            <h3 data-lang-zh="一键安装使用" data-lang-en="One-Click Installation"></h3>
+                            <p data-lang-zh="Chrome浏览器插件，无需下载软件，一键安装即可使用。在任何网页上右键即可开始邮箱抓取，操作简单便捷。"
+                                data-lang-en="Chrome browser extension, no software download required, one-click installation. Right-click on any webpage to start email extraction, simple and convenient operation.">
+                            </p>
+                        </div>
+                        <div class="product-feature-card">
+                            <div class="p-icon-wrapper"><i class='bx bx-search-alt-2'></i></div>
+                            <h3 data-lang-zh="Google公式批量搜索" data-lang-en="Google Formula Batch Search"></h3>
+                            <p data-lang-zh="内置4个专业搜索公式，自动在Google中执行批量搜索，智能翻页抓取前3页结果，一次性获取大量目标邮箱。"
+                                data-lang-en="Built-in 4 professional search formulas, automatically executes batch searches in Google, intelligently crawls the first 3 pages of results to get a large number of target emails at once.">
+                            </p>
+                        </div>
+                        <div class="product-feature-card">
+                            <div class="p-icon-wrapper"><i class='bx bx-brain'></i></div>
+                            <h3 data-lang-zh="AI决策人预测" data-lang-en="AI Decision Maker Prediction"></h3>
+                            <p data-lang-zh="基于机器学习算法，智能分析公司邮箱格式，预测CEO、采购、销售等决策人邮箱地址，准确率高达85%。"
+                                data-lang-en="Based on machine learning algorithms, intelligently analyzes company email formats to predict CEO, procurement, sales and other decision-maker email addresses with 85% accuracy.">
+                            </p>
+                        </div>
+                        <div class="product-feature-card">
+                            <div class="p-icon-wrapper"><i class='bx bxl-linkedin'></i></div>
+                            <h3 data-lang-zh="LinkedIn深度挖掘" data-lang-en="LinkedIn Deep Mining"></h3>
+                            <p data-lang-zh="自动搜索LinkedIn决策人信息，提取姓名、职位、公司信息，结合AI算法生成对应邮箱地址，精准定位关键人物。"
+                                data-lang-en="Automatically searches LinkedIn decision-maker information, extracts names, positions, company information, and combines AI algorithms to generate corresponding email addresses for precise targeting of key personnel.">
+                            </p>
+                        </div>
+                        <div class="product-feature-card">
+                            <div class="p-icon-wrapper"><i class='bx bx-check-shield'></i></div>
+                            <h3 data-lang-zh="实时邮箱验证" data-lang-en="Real-time Email Validation"></h3>
+                            <p data-lang-zh="集成专业邮箱验证服务，实时检测邮箱有效性、语法正确性、域名状态，确保获取的邮箱都是真实有效的。"
+                                data-lang-en="Integrated professional email validation service, real-time detection of email validity, syntax correctness, domain status to ensure all obtained emails are real and valid.">
+                            </p>
+                        </div>
+                        <div class="product-feature-card">
+                            <div class="p-icon-wrapper"><i class='bx bx-data'></i></div>
+                            <h3 data-lang-zh="智能数据管理" data-lang-en="Smart Data Management"></h3>
+                            <p data-lang-zh="内置邮箱库管理系统，支持分组、标签、搜索、导出功能，一键导出Excel/CSV格式，完美对接CRM系统。"
+                                data-lang-en="Built-in email library management system, supports grouping, tagging, searching, exporting functions, one-click export to Excel/CSV format, perfect integration with CRM systems.">
+                            </p>
+                        </div>
+                    </div>
                 </div>
-                <div class="features-grid">
-                    <div class="product-feature-card">
-                        <div class="p-icon-wrapper"><i class='bx bx-search-alt'></i></div>
-                        <h3 data-lang-zh="多搜索引擎支持" data-lang-en="Multi-Search Engine Support"></h3>
-                        <p data-lang-zh="支持Google、Bing、DuckDuckGo、Yandex、Yahoo等多个主流搜索引擎，全方位覆盖目标客户信息。"
-                            data-lang-en="Supports Google, Bing, DuckDuckGo, Yandex, Yahoo and other mainstream search engines for comprehensive coverage of target customer information.">
-                        </p>
-                    </div>
-                    <div class="product-feature-card">
-                        <div class="p-icon-wrapper"><i class='bx bx-world'></i></div>
-                        <h3 data-lang-zh="智能网站爬取" data-lang-en="Intelligent Website Crawling"></h3>
-                        <p data-lang-zh="基于Playwright的高级爬虫引擎，智能识别并提取企业网站中的高质量商业邮箱，支持多层级深度爬取。"
-                            data-lang-en="Advanced crawler engine based on Playwright, intelligently identifies and extracts high-quality business emails from corporate websites, supports multi-level deep crawling.">
-                        </p>
-                    </div>
-                    <div class="product-feature-card">
-                        <div class="p-icon-wrapper"><i class='bx bx-filter-alt'></i></div>
-                        <h3 data-lang-zh="智能邮箱过滤" data-lang-en="Smart Email Filtering"></h3>
-                        <p data-lang-zh="自动过滤临时邮箱、无效邮箱和低质量邮箱，确保您获得的每个邮箱都是高价值的潜在客户。"
-                            data-lang-en="Automatically filters temporary, invalid and low-quality emails to ensure every email you get is a high-value potential customer.">
-                        </p>
-                    </div>
-                    <div class="product-feature-card">
-                        <div class="p-icon-wrapper"><i class='bx bx-rocket'></i></div>
-                        <h3 data-lang-zh="高性能并发处理" data-lang-en="High-Performance Concurrent Processing"></h3>
-                        <p data-lang-zh="采用异步并发技术，支持多线程并行处理，大幅提升数据采集效率，节省您的宝贵时间。"
-                            data-lang-en="Uses asynchronous concurrent technology with multi-threaded parallel processing to greatly improve data collection efficiency and save your valuable time.">
-                        </p>
-                    </div>
-                    <div class="product-feature-card">
-                        <div class="p-icon-wrapper"><i class='bx bx-shield-check'></i></div>
-                        <h3 data-lang-zh="代理支持与安全" data-lang-en="Proxy Support & Security"></h3>
-                        <p data-lang-zh="内置代理服务器支持，智能轮换IP地址，确保稳定采集的同时保护您的隐私安全。"
-                            data-lang-en="Built-in proxy server support with intelligent IP rotation to ensure stable collection while protecting your privacy.">
-                        </p>
-                    </div>
-                    <div class="product-feature-card">
-                        <div class="p-icon-wrapper"><i class='bx bx-data'></i></div>
-                        <h3 data-lang-zh="灵活数据导出" data-lang-en="Flexible Data Export"></h3>
-                        <p data-lang-zh="支持导出为Excel、CSV、JSON等多种格式，完美对接您的CRM系统和营销工具。"
-                            data-lang-en="Supports export to Excel, CSV, JSON and other formats, perfectly integrating with your CRM system and marketing tools.">
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
+            </section>
 
-        <section class="how-it-works-reimagined">
-            <div class="container">
-                <div class="section-header" style="margin-bottom: 5rem;">
-                    <h2 data-lang-zh="简单三步，获取精准邮箱" data-lang-en="Three Simple Steps to Get Accurate Emails"></h2>
+            <section class="how-it-works-reimagined">
+                <div class="container">
+                    <div class="section-header" style="margin-bottom: 5rem;">
+                        <h2 data-lang-zh="三步完成智能获客" data-lang-en="Complete Smart Lead Generation in Three Steps"></h2>
+                    </div>
+                    <div class="step-row">
+                        <div class="step-text-content">
+                            <span class="step-label" data-lang-zh="步骤 01" data-lang-en="STEP 01"></span>
+                            <h3 data-lang-zh="安装并登录插件" data-lang-en="Install & Login Extension"></h3>
+                            <p data-lang-zh="从Chrome应用商店安装插件，使用智贸云梯账号登录，即可开始使用所有功能。插件会自动同步您的邮箱库和设置。"
+                                data-lang-en="Install the extension from Chrome Web Store, login with your MediaMingle account to start using all features. The extension automatically syncs your email library and settings.">
+                            </p>
+                        </div>
+                        <div class="step-visual-content">
+                            <img style="width: 50%;" src="assets/img/emailFinderMediamingle/googlePlugin-logo.webp"
+                                alt="安装并登录插件">
+                        </div>
+                    </div>
+                    <div class="step-row">
+                        <div class="step-text-content">
+                            <span class="step-label" data-lang-zh="步骤 02" data-lang-en="STEP 02"></span>
+                            <h3 data-lang-zh="选择获客方式" data-lang-en="Choose Lead Generation Method"></h3>
+                            <p data-lang-zh="根据需求选择：当前页面扫描、Google公式搜索、LinkedIn决策人挖掘、域名深度爬取等多种获客方式，满足不同场景需求。"
+                                data-lang-en="Choose according to your needs: current page scanning, Google formula search, LinkedIn decision-maker mining, domain deep crawling and other lead generation methods to meet different scenario requirements.">
+                            </p>
+                        </div>
+                        <div class="step-visual-content">
+                            <img style="width: 50%;" src="assets/img/emailFinderMediamingle/googlePlugin-hero.webp"
+                                alt="选择获客方式">
+                        </div>
+                    </div>
+                    <div class="step-row">
+                        <div class="step-text-content">
+                            <span class="step-label" data-lang-zh="步骤 03" data-lang-en="STEP 03"></span>
+                            <h3 data-lang-zh="验证并导出数据" data-lang-en="Validate & Export Data"></h3>
+                            <p data-lang-zh="自动验证获取的邮箱有效性，按类型分组管理，一键导出为Excel或CSV格式，直接导入您的CRM系统开始营销。"
+                                data-lang-en="Automatically validate the obtained email validity, manage by type grouping, one-click export to Excel or CSV format, directly import into your CRM system to start marketing.">
+                            </p>
+                        </div>
+                        <div class="step-visual-content">
+                            <img src="assets/img/emailFinderMediamingle/googlePlugin-export.webp" alt="验证并导出数据">
+                        </div>
+                    </div>
                 </div>
-                <div class="step-row">
-                    <div class="step-text-content">
-                        <span class="step-label" data-lang-zh="步骤 01" data-lang-en="STEP 01"></span>
-                        <h3 data-lang-zh="输入搜索关键词" data-lang-en="Enter Search Keywords"></h3>
-                        <p data-lang-zh="输入您的目标行业、公司类型或业务关键词，系统将自动在多个搜索引擎中查找相关企业信息。"
-                            data-lang-en="Enter your target industry, company type or business keywords, and the system will automatically search for relevant business information across multiple search engines.">
-                        </p>
-                    </div>
-                    <div class="step-visual-content">
-                        <img src="./assets/img/MediaMingle/mediamingle-pro-step-1.webp" alt="输入关键词">
-                    </div>
-                </div>
-                <div class="step-row">
-                    <div class="step-text-content">
-                        <span class="step-label" data-lang-zh="步骤 02" data-lang-en="STEP 02"></span>
-                        <h3 data-lang-zh="智能爬取与提取" data-lang-en="Intelligent Crawling & Extraction"></h3>
-                        <p data-lang-zh="系统自动访问企业网站，深度爬取并智能提取高质量商业邮箱，同时自动验证邮箱有效性。"
-                            data-lang-en="The system automatically visits corporate websites, deeply crawls and intelligently extracts high-quality business emails while automatically validating email effectiveness.">
-                        </p>
-                    </div>
-                    <div class="step-visual-content">
-                        <img src="./assets/img/MediaMingle/mediamingle-pro-step-2.webp" alt="智能爬取">
-                    </div>
-                </div>
-                <div class="step-row">
-                    <div class="step-text-content">
-                        <span class="step-label" data-lang-zh="步骤 03" data-lang-en="STEP 03"></span>
-                        <h3 data-lang-zh="导出并开始营销" data-lang-en="Export & Start Marketing"></h3>
-                        <p data-lang-zh="一键导出所有高质量邮箱数据，包含来源网站、页面标题等详细信息，立即开始您的精准营销活动。"
-                            data-lang-en="Export all high-quality email data with one click, including source website, page title and other detailed information, and start your precision marketing campaign immediately.">
-                        </p>
-                    </div>
-                    <div class="step-visual-content">
-                        <img src="./assets/img/MediaMingle/mediamingle-pro-step-3.webp" alt="导出数据">
-                    </div>
-                </div>
-            </div>
-        </section>
+            </section>
 
-        <section class="extra-info-section">
-            <div class="container">
-                <div class="section-header" style="margin-bottom: 3rem;">
-                    <h2 data-lang-zh="核心功能特性" data-lang-en="Core Features"></h2>
+            <section class="extra-info-section">
+                <div class="container">
+                    <div class="section-header" style="margin-bottom: 3rem;">
+                        <h2 data-lang-zh="核心功能特性" data-lang-en="Core Features"></h2>
+                    </div>
+                    <div class="info-grid">
+                        <div class="info-item"><i class='bx bx-scan'></i><span data-lang-zh="当前页面扫描"
+                                data-lang-en="Current Page Scanning"></span></div>
+                        <div class="info-item"><i class='bx bx-search'></i><span data-lang-zh="Google公式搜索"
+                                data-lang-en="Google Formula Search"></span></div>
+                        <div class="info-item"><i class='bx bx-user-voice'></i><span data-lang-zh="AI决策人预测"
+                                data-lang-en="AI Decision Maker Prediction"></span></div>
+                        <div class="info-item"><i class='bx bxl-linkedin-square'></i><span data-lang-zh="LinkedIn挖掘"
+                                data-lang-en="LinkedIn Mining"></span></div>
+                        <div class="info-item"><i class='bx bx-world'></i><span data-lang-zh="域名深度爬取"
+                                data-lang-en="Domain Deep Crawling"></span></div>
+                        <div class="info-item"><i class='bx bx-check-circle'></i><span data-lang-zh="实时邮箱验证"
+                                data-lang-en="Real-time Email Validation"></span></div>
+                        <div class="info-item"><i class='bx bx-library'></i><span data-lang-zh="邮箱库管理"
+                                data-lang-en="Email Library Management"></span></div>
+                        <div class="info-item"><i class='bx bx-filter'></i><span data-lang-zh="高级筛选"
+                                data-lang-en="Advanced Filtering"></span></div>
+                        <div class="info-item"><i class='bx bx-export'></i><span data-lang-zh="批量导出"
+                                data-lang-en="Batch Export"></span></div>
+                        <div class="info-item"><i class='bx bx-history'></i><span data-lang-zh="历史记录"
+                                data-lang-en="History Records"></span></div>
+                        <div class="info-item"><i class='bx bx-cog'></i><span data-lang-zh="个性化设置"
+                                data-lang-en="Personalized Settings"></span></div>
+                        <div class="info-item"><i class='bx bx-cloud'></i><span data-lang-zh="云端同步"
+                                data-lang-en="Cloud Sync"></span></div>
+                    </div>
                 </div>
-                <div class="info-grid">
-                    <div class="info-item"><i class='bx bx-search'></i><span data-lang-zh="多搜索引擎整合" data-lang-en="Multi-Search Engine Integration"></span></div>
-                    <div class="info-item"><i class='bx bx-globe-alt'></i><span data-lang-zh="智能网站爬取" data-lang-en="Intelligent Website Crawling"></span></div>
-                    <div class="info-item"><i class='bx bx-at'></i><span data-lang-zh="邮箱智能提取" data-lang-en="Smart Email Extraction"></span></div>
-                    <div class="info-item"><i class='bx bx-check-shield'></i><span data-lang-zh="邮箱有效性验证" data-lang-en="Email Validation"></span></div>
-                    <div class="info-item"><i class='bx bx-filter'></i><span data-lang-zh="智能去重过滤" data-lang-en="Smart Deduplication"></span></div>
-                    <div class="info-item"><i class='bx bx-layer'></i><span data-lang-zh="多层级深度爬取" data-lang-en="Multi-Level Deep Crawling"></span></div>
-                    <div class="info-item"><i class='bx bx-shield'></i><span data-lang-zh="代理IP轮换" data-lang-en="Proxy IP Rotation"></span></div>
-                    <div class="info-item"><i class='bx bx-speed'></i><span data-lang-zh="高性能并发" data-lang-en="High-Performance Concurrency"></span></div>
-                    <div class="info-item"><i class='bx bx-task'></i><span data-lang-zh="任务管理系统" data-lang-en="Task Management System"></span></div>
-                    <div class="info-item"><i class='bx bx-export'></i><span data-lang-zh="多格式导出" data-lang-en="Multi-Format Export"></span></div>
-                </div>
-            </div>
-        </section>
+            </section>
 
-        <section class="extra-info-section" style="background-color: var(--background-color);">
-            <div class="container">
-                <div class="section-header" style="margin-bottom: 3rem;">
-                    <h2 data-lang-zh="适用场景" data-lang-en="Use Cases"></h2>
+            <section class="extra-info-section" style="background-color: var(--background-color);">
+                <div class="container">
+                    <div class="section-header" style="margin-bottom: 3rem;">
+                        <h2 data-lang-zh="适用场景与行业" data-lang-en="Use Cases & Industries"></h2>
+                    </div>
+                    <div class="use-case-tags">
+                        <span class="tag" data-lang-zh="B2B销售开发" data-lang-en="B2B Sales Development"></span>
+                        <span class="tag" data-lang-zh="市场营销推广" data-lang-en="Marketing Promotion"></span>
+                        <span class="tag" data-lang-zh="招聘猎头" data-lang-en="Recruitment & Headhunting"></span>
+                        <span class="tag" data-lang-zh="商务拓展" data-lang-en="Business Development"></span>
+                        <span class="tag" data-lang-zh="投资机构" data-lang-en="Investment Institutions"></span>
+                        <span class="tag" data-lang-zh="媒体公关" data-lang-en="Media & PR"></span>
+                        <span class="tag" data-lang-zh="电商运营" data-lang-en="E-commerce Operations"></span>
+                        <span class="tag" data-lang-zh="SaaS推广" data-lang-en="SaaS Promotion"></span>
+                        <span class="tag" data-lang-zh="外贸出口" data-lang-en="Foreign Trade Export"></span>
+                        <span class="tag" data-lang-zh="咨询服务" data-lang-en="Consulting Services"></span>
+                        <span class="tag" data-lang-zh="教育培训" data-lang-en="Education & Training"></span>
+                        <span class="tag" data-lang-zh="房地产" data-lang-en="Real Estate"></span>
+                    </div>
                 </div>
-                <div class="use-case-tags">
-                    <span class="tag" data-lang-zh="B2B销售团队" data-lang-en="B2B Sales Teams"></span>
-                    <span class="tag" data-lang-zh="市场营销机构" data-lang-en="Marketing Agencies"></span>
-                    <span class="tag" data-lang-zh="外贸企业" data-lang-en="Foreign Trade Companies"></span>
-                    <span class="tag" data-lang-zh="招商加盟" data-lang-en="Franchise Recruitment"></span>
-                    <span class="tag" data-lang-zh="供应链采购" data-lang-en="Supply Chain Procurement"></span>
-                    <span class="tag" data-lang-zh="企业服务商" data-lang-en="Enterprise Service Providers"></span>
-                    <span class="tag" data-lang-zh="投资机构" data-lang-en="Investment Institutions"></span>
-                    <span class="tag" data-lang-zh="行业研究" data-lang-en="Industry Research"></span>
-                </div>
-            </div>
-        </section>
+            </section>
 
-        <section class="cta-section">
-            <div class="container">
-                <h2 data-lang-zh="开始您的精准邮件营销之旅" data-lang-en="Start Your Precision Email Marketing Journey"></h2>
-                <a href="./checkout.html" class="btn btn-primary"
-                    data-lang-zh="查看定价计划"
-                    data-lang-en="View Pricing Plans"></a>
-            </div>
-        </section>
-    </div>
+            <section class="cta-section">
+                <div class="container">
+                    <h2 data-lang-zh="立即开始智能获客之旅" data-lang-en="Start Your Smart Lead Generation Journey Now"></h2>
+                    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                        <a href="https://chrome.google.com/webstore/detail/mediamingle-email-finder"
+                            class="btn btn-primary" data-lang-zh="免费安装插件" data-lang-en="Install Extension for Free"
+                            target="_blank"></a>
+                        <a href="./checkout.html" class="btn btn-secondary" data-lang-zh="查看定价计划"
+                            data-lang-en="View Pricing Plans"></a>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div id="mediamingle-pro-content" class="product-content" style="display: none;">
+
+            <section class="product-hero">
+                <div class="container">
+                    <div class="product-hero-grid">
+                        <div class="product-hero-text">
+                            <h1 data-lang-zh="智贸云梯 | MediaMingle 专业版" data-lang-en="MediaMingle Professional Edition">
+                            </h1>
+                            <p class="subtitle"
+                                data-lang-zh="强大的综合搜索引擎邮件挖掘工具。通过Google、Bing、DuckDuckGo等多个搜索引擎，智能爬取企业网站，深度挖掘高质量商业邮箱，为您的B2B营销提供精准的联系方式。"
+                                data-lang-en="Powerful comprehensive search engine email mining tool. Intelligently crawls business websites through Google, Bing, DuckDuckGo and more search engines to deeply mine high-quality business emails for your B2B marketing campaigns.">
+                            </p>
+                            <a href="./checkout.html" class="btn btn-primary" data-lang-zh="立即体验"
+                                data-lang-en="Get Started Now"></a>
+                        </div>
+                        <div class="product-hero-visual">
+                            <a href="assets/img/MediaMingle/mediamingle-pro-hero.webp" class="lightbox-trigger">
+                                <img src="assets/img/MediaMingle/mediamingle-pro-hero.webp" class="img-fluid hover-zoom"
+                                    alt="MediaMingle 专业版界面">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="product-details" style="padding: 5rem 0;">
+                <div class="container">
+                    <div class="section-header" style="margin-bottom: 3rem;">
+                        <h2 data-lang-zh="专为B2B营销设计" data-lang-en="Designed for B2B Marketing"></h2>
+                    </div>
+                    <div class="features-grid">
+                        <div class="product-feature-card">
+                            <div class="p-icon-wrapper"><i class='bx bx-search-alt'></i></div>
+                            <h3 data-lang-zh="多搜索引擎支持" data-lang-en="Multi-Search Engine Support"></h3>
+                            <p data-lang-zh="支持Google、Bing、DuckDuckGo、Yandex、Yahoo等多个主流搜索引擎，全方位覆盖目标客户信息。"
+                                data-lang-en="Supports Google, Bing, DuckDuckGo, Yandex, Yahoo and other mainstream search engines for comprehensive coverage of target customer information.">
+                            </p>
+                        </div>
+                        <div class="product-feature-card">
+                            <div class="p-icon-wrapper"><i class='bx bx-world'></i></div>
+                            <h3 data-lang-zh="智能网站爬取" data-lang-en="Intelligent Website Crawling"></h3>
+                            <p data-lang-zh="基于Playwright的高级爬虫引擎，智能识别并提取企业网站中的高质量商业邮箱，支持多层级深度爬取。"
+                                data-lang-en="Advanced crawler engine based on Playwright, intelligently identifies and extracts high-quality business emails from corporate websites, supports multi-level deep crawling.">
+                            </p>
+                        </div>
+                        <div class="product-feature-card">
+                            <div class="p-icon-wrapper"><i class='bx bx-filter-alt'></i></div>
+                            <h3 data-lang-zh="智能邮箱过滤" data-lang-en="Smart Email Filtering"></h3>
+                            <p data-lang-zh="自动过滤临时邮箱、无效邮箱和低质量邮箱，确保您获得的每个邮箱都是高价值的潜在客户。"
+                                data-lang-en="Automatically filters temporary, invalid and low-quality emails to ensure every email you get is a high-value potential customer.">
+                            </p>
+                        </div>
+                        <div class="product-feature-card">
+                            <div class="p-icon-wrapper"><i class='bx bx-rocket'></i></div>
+                            <h3 data-lang-zh="高性能并发处理" data-lang-en="High-Performance Concurrent Processing"></h3>
+                            <p data-lang-zh="采用异步并发技术，支持多线程并行处理，大幅提升数据采集效率，节省您的宝贵时间。"
+                                data-lang-en="Uses asynchronous concurrent technology with multi-threaded parallel processing to greatly improve data collection efficiency and save your valuable time.">
+                            </p>
+                        </div>
+                        <div class="product-feature-card">
+                            <div class="p-icon-wrapper"><i class='bx bx-shield-check'></i></div>
+                            <h3 data-lang-zh="代理支持与安全" data-lang-en="Proxy Support & Security"></h3>
+                            <p data-lang-zh="内置代理服务器支持，智能轮换IP地址，确保稳定采集的同时保护您的隐私安全。"
+                                data-lang-en="Built-in proxy server support with intelligent IP rotation to ensure stable collection while protecting your privacy.">
+                            </p>
+                        </div>
+                        <div class="product-feature-card">
+                            <div class="p-icon-wrapper"><i class='bx bx-data'></i></div>
+                            <h3 data-lang-zh="灵活数据导出" data-lang-en="Flexible Data Export"></h3>
+                            <p data-lang-zh="支持导出为Excel、CSV、JSON等多种格式，完美对接您的CRM系统和营销工具。"
+                                data-lang-en="Supports export to Excel, CSV, JSON and other formats, perfectly integrating with your CRM system and marketing tools.">
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="how-it-works-reimagined">
+                <div class="container">
+                    <div class="section-header" style="margin-bottom: 5rem;">
+                        <h2 data-lang-zh="简单三步，获取精准邮箱" data-lang-en="Three Simple Steps to Get Accurate Emails"></h2>
+                    </div>
+                    <div class="step-row">
+                        <div class="step-text-content">
+                            <span class="step-label" data-lang-zh="步骤 01" data-lang-en="STEP 01"></span>
+                            <h3 data-lang-zh="输入搜索关键词" data-lang-en="Enter Search Keywords"></h3>
+                            <p data-lang-zh="输入您的目标行业、公司类型或业务关键词，系统将自动在多个搜索引擎中查找相关企业信息。"
+                                data-lang-en="Enter your target industry, company type or business keywords, and the system will automatically search for relevant business information across multiple search engines.">
+                            </p>
+                        </div>
+                        <div class="step-visual-content">
+                            <img src="./assets/img/MediaMingle/mediamingle-pro-step-1.webp" alt="输入关键词">
+                        </div>
+                    </div>
+                    <div class="step-row">
+                        <div class="step-text-content">
+                            <span class="step-label" data-lang-zh="步骤 02" data-lang-en="STEP 02"></span>
+                            <h3 data-lang-zh="智能爬取与提取" data-lang-en="Intelligent Crawling & Extraction"></h3>
+                            <p data-lang-zh="系统自动访问企业网站，深度爬取并智能提取高质量商业邮箱，同时自动验证邮箱有效性。"
+                                data-lang-en="The system automatically visits corporate websites, deeply crawls and intelligently extracts high-quality business emails while automatically validating email effectiveness.">
+                            </p>
+                        </div>
+                        <div class="step-visual-content">
+                            <img src="./assets/img/MediaMingle/mediamingle-pro-step-2.webp" alt="智能爬取">
+                        </div>
+                    </div>
+                    <div class="step-row">
+                        <div class="step-text-content">
+                            <span class="step-label" data-lang-zh="步骤 03" data-lang-en="STEP 03"></span>
+                            <h3 data-lang-zh="导出并开始营销" data-lang-en="Export & Start Marketing"></h3>
+                            <p data-lang-zh="一键导出所有高质量邮箱数据，包含来源网站、页面标题等详细信息，立即开始您的精准营销活动。"
+                                data-lang-en="Export all high-quality email data with one click, including source website, page title and other detailed information, and start your precision marketing campaign immediately.">
+                            </p>
+                        </div>
+                        <div class="step-visual-content">
+                            <img src="./assets/img/MediaMingle/mediamingle-pro-step-3.webp" alt="导出数据">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="extra-info-section">
+                <div class="container">
+                    <div class="section-header" style="margin-bottom: 3rem;">
+                        <h2 data-lang-zh="核心功能特性" data-lang-en="Core Features"></h2>
+                    </div>
+                    <div class="info-grid">
+                        <div class="info-item"><i class='bx bx-search'></i><span data-lang-zh="多搜索引擎整合"
+                                data-lang-en="Multi-Search Engine Integration"></span></div>
+                        <div class="info-item"><i class='bx bx-globe-alt'></i><span data-lang-zh="智能网站爬取"
+                                data-lang-en="Intelligent Website Crawling"></span></div>
+                        <div class="info-item"><i class='bx bx-at'></i><span data-lang-zh="邮箱智能提取"
+                                data-lang-en="Smart Email Extraction"></span></div>
+                        <div class="info-item"><i class='bx bx-check-shield'></i><span data-lang-zh="邮箱有效性验证"
+                                data-lang-en="Email Validation"></span></div>
+                        <div class="info-item"><i class='bx bx-filter'></i><span data-lang-zh="智能去重过滤"
+                                data-lang-en="Smart Deduplication"></span></div>
+                        <div class="info-item"><i class='bx bx-layer'></i><span data-lang-zh="多层级深度爬取"
+                                data-lang-en="Multi-Level Deep Crawling"></span></div>
+                        <div class="info-item"><i class='bx bx-shield'></i><span data-lang-zh="代理IP轮换"
+                                data-lang-en="Proxy IP Rotation"></span></div>
+                        <div class="info-item"><i class='bx bx-speed'></i><span data-lang-zh="高性能并发"
+                                data-lang-en="High-Performance Concurrency"></span></div>
+                        <div class="info-item"><i class='bx bx-task'></i><span data-lang-zh="任务管理系统"
+                                data-lang-en="Task Management System"></span></div>
+                        <div class="info-item"><i class='bx bx-export'></i><span data-lang-zh="多格式导出"
+                                data-lang-en="Multi-Format Export"></span></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="extra-info-section" style="background-color: var(--background-color);">
+                <div class="container">
+                    <div class="section-header" style="margin-bottom: 3rem;">
+                        <h2 data-lang-zh="适用场景" data-lang-en="Use Cases"></h2>
+                    </div>
+                    <div class="use-case-tags">
+                        <span class="tag" data-lang-zh="B2B销售团队" data-lang-en="B2B Sales Teams"></span>
+                        <span class="tag" data-lang-zh="市场营销机构" data-lang-en="Marketing Agencies"></span>
+                        <span class="tag" data-lang-zh="外贸企业" data-lang-en="Foreign Trade Companies"></span>
+                        <span class="tag" data-lang-zh="招商加盟" data-lang-en="Franchise Recruitment"></span>
+                        <span class="tag" data-lang-zh="供应链采购" data-lang-en="Supply Chain Procurement"></span>
+                        <span class="tag" data-lang-zh="企业服务商" data-lang-en="Enterprise Service Providers"></span>
+                        <span class="tag" data-lang-zh="投资机构" data-lang-en="Investment Institutions"></span>
+                        <span class="tag" data-lang-zh="行业研究" data-lang-en="Industry Research"></span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cta-section">
+                <div class="container">
+                    <h2 data-lang-zh="开始您的精准邮件营销之旅" data-lang-en="Start Your Precision Email Marketing Journey"></h2>
+                    <a href="./checkout.html" class="btn btn-primary" data-lang-zh="查看定价计划"
+                        data-lang-en="View Pricing Plans"></a>
+                </div>
+            </section>
+        </div>
 
     </main>
 
@@ -1102,8 +1237,8 @@
             var triggers = document.querySelectorAll('.lightbox-trigger');
 
             // 为每个链接添加点击事件
-            triggers.forEach(function(trigger) {
-                trigger.addEventListener('click', function(event) {
+            triggers.forEach(function (trigger) {
+                trigger.addEventListener('click', function (event) {
                     event.preventDefault(); // 阻止链接的默认跳转行为
                     lightbox.style.display = 'block'; // 显示黑色蒙层
                     lightboxImg.src = this.href;      // 将大图的路径赋给弹窗中的图片
@@ -1120,14 +1255,14 @@
             closeBtn.addEventListener('click', closeModal);
 
             // 点击黑色蒙层区域来关闭弹窗
-            lightbox.addEventListener('click', function(event) {
+            lightbox.addEventListener('click', function (event) {
                 if (event.target === lightbox) { // 确保是点击在蒙层背景上，而不是图片上
                     closeModal();
                 }
             });
 
             // 按下键盘的 'ESC' 键关闭弹窗
-            document.addEventListener('keydown', function(event) {
+            document.addEventListener('keydown', function (event) {
                 if (event.key === 'Escape' && lightbox.style.display === 'block') {
                     closeModal();
                 }
@@ -1138,7 +1273,7 @@
 
             // 如果URL中没有ID，或ID无效，则默认显示第一个产品
             if (!productId || !document.getElementById(productId + '-content')) {
-                productId = 'maps-scraper'; 
+                productId = 'maps-scraper';
             }
 
             // 隐藏所有产品内容

@@ -7,8 +7,7 @@
 
     <title data-lang-zh="首页 | 智贸云梯 - 全渠道智能获客平台"
         data-lang-en="Home | SmartTrade CloudLadder - Omnichannel Intelligent Lead Generation Platform"></title>
-    <meta name="description"
-        data-lang-zh="智贸云梯 提供全渠道智能获客解决方案，集成地图抓取、邮箱验证、WhatsApp检测等工具，帮助您自动化地发现潜在客户，高效拓展业务。"
+    <meta name="description" data-lang-zh="智贸云梯 提供全渠道智能获客解决方案，集成地图抓取、邮箱验证、WhatsApp检测等工具，帮助您自动化地发现潜在客户，高效拓展业务。"
         data-lang-en="SmartTrade CloudLadder offers omnichannel intelligent lead generation solutions, integrating map scraping, email validation, WhatsApp detection tools to help you automate lead discovery and efficiently grow your business.">
     <link rel="canonical" href="https://example.com/index.html">
 
@@ -227,7 +226,7 @@
             font-weight: 600;
         }
 
-        .faq-answer p br + strong {
+        .faq-answer p br+strong {
             display: block;
             margin-top: 0.5rem;
         }
@@ -238,12 +237,12 @@
                 max-height: min(70vh, 420px);
                 overflow-y: auto;
             }
-            
+
             .faq-answer p {
                 font-size: 0.95rem;
                 line-height: 1.6;
             }
-            
+
             .faq-question button {
                 font-size: 1rem;
                 padding: 1.25rem 0.5rem;
@@ -359,6 +358,7 @@
             position: relative;
             box-shadow: 0 8px 24px rgba(37, 99, 235, 0.25);
         }
+
         .btn-glow:hover {
             box-shadow: 0 12px 32px rgba(37, 99, 235, 0.35);
             transform: translateY(-2px);
@@ -367,22 +367,24 @@
         .card-aurora {
             position: relative;
             background: linear-gradient(var(--background-color), var(--background-color)) padding-box,
-                        radial-gradient(120% 120% at 0% 0%, rgba(37,99,235,0.35), rgba(16,185,129,0.2), rgba(37,99,235,0.1)) border-box;
+                radial-gradient(120% 120% at 0% 0%, rgba(37, 99, 235, 0.35), rgba(16, 185, 129, 0.2), rgba(37, 99, 235, 0.1)) border-box;
             border: 1px solid transparent;
         }
+
         .card-aurora:hover {
             background: linear-gradient(var(--background-color), var(--background-color)) padding-box,
-                        radial-gradient(120% 120% at 100% 0%, rgba(16,185,129,0.45), rgba(37,99,235,0.35), rgba(16,185,129,0.15)) border-box;
+                radial-gradient(120% 120% at 100% 0%, rgba(16, 185, 129, 0.45), rgba(37, 99, 235, 0.35), rgba(16, 185, 129, 0.15)) border-box;
         }
 
         .icon-wrapper {
             position: relative;
         }
+
         .icon-wrapper::before {
             content: '';
             position: absolute;
             inset: -8px;
-            background: radial-gradient(closest-side, rgba(37,99,235,0.18), transparent 70%);
+            background: radial-gradient(closest-side, rgba(37, 99, 235, 0.18), transparent 70%);
             filter: blur(6px);
             z-index: -1;
             border-radius: 16px;
@@ -395,6 +397,7 @@
             z-index: 2;
             overflow: hidden;
         }
+
         .hero-blobs .blob {
             position: absolute;
             width: 420px;
@@ -405,28 +408,85 @@
             will-change: transform;
             animation: floatBlob 12s ease-in-out infinite;
         }
-        .hero-blobs .b1 { left: -80px; top: -60px; background: radial-gradient(circle at 30% 30%, rgba(37,99,235,0.6), transparent 60%); animation-delay: 0s; }
-        .hero-blobs .b2 { right: -120px; top: 20%; background: radial-gradient(circle at 70% 30%, rgba(16,185,129,0.6), transparent 60%); animation-delay: 2s; }
-        .hero-blobs .b3 { left: 30%; bottom: -140px; background: radial-gradient(circle at 50% 50%, rgba(59,130,246,0.55), transparent 60%); animation-delay: 4s; }
 
-        @keyframes floatBlob {
-            0%, 100% { transform: translateY(0) translateX(0) scale(1); }
-            50% { transform: translateY(-20px) translateX(10px) scale(1.05); }
+        .hero-blobs .b1 {
+            left: -80px;
+            top: -60px;
+            background: radial-gradient(circle at 30% 30%, rgba(37, 99, 235, 0.6), transparent 60%);
+            animation-delay: 0s;
         }
 
-        .section-divider { line-height: 0; height: 80px; background: transparent; color: var(--surface-color); }
-        .section-divider .wave { display: block; width: 100%; height: 100%; }
+        .hero-blobs .b2 {
+            right: -120px;
+            top: 20%;
+            background: radial-gradient(circle at 70% 30%, rgba(16, 185, 129, 0.6), transparent 60%);
+            animation-delay: 2s;
+        }
+
+        .hero-blobs .b3 {
+            left: 30%;
+            bottom: -140px;
+            background: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.55), transparent 60%);
+            animation-delay: 4s;
+        }
+
+        @keyframes floatBlob {
+
+            0%,
+            100% {
+                transform: translateY(0) translateX(0) scale(1);
+            }
+
+            50% {
+                transform: translateY(-20px) translateX(10px) scale(1.05);
+            }
+        }
+
+        .section-divider {
+            line-height: 0;
+            height: 80px;
+            background: transparent;
+            color: var(--surface-color);
+        }
+
+        .section-divider .wave {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
 
         @media (max-width: 767px) {
-            .hero-blobs .blob { width: 260px; height: 260px; filter: blur(40px); opacity: 0.3; }
-            .hero-blobs .b1 { left: -120px; top: -100px; }
-            .hero-blobs .b2 { right: -160px; top: 10%; }
-            .hero-blobs .b3 { left: 10%; bottom: -160px; }
+            .hero-blobs .blob {
+                width: 260px;
+                height: 260px;
+                filter: blur(40px);
+                opacity: 0.3;
+            }
+
+            .hero-blobs .b1 {
+                left: -120px;
+                top: -100px;
+            }
+
+            .hero-blobs .b2 {
+                right: -160px;
+                top: 10%;
+            }
+
+            .hero-blobs .b3 {
+                left: 10%;
+                bottom: -160px;
+            }
         }
 
         @media (prefers-reduced-motion: reduce) {
-            .hero-blobs .blob { animation: none !important; }
-            .btn-glow { transition: none; }
+            .hero-blobs .blob {
+                animation: none !important;
+            }
+
+            .btn-glow {
+                transition: none;
+            }
         }
     </style>
 </head>
@@ -441,7 +501,8 @@
             <div class="container">
                 <div class="hero-grid">
                     <div class="hero-text">
-                        <h1 class="text-gradient" data-lang-zh="全渠道智能获客，一站式解决" data-lang-en="Omnichannel Lead Generation, Solved"></h1>
+                        <h1 class="text-gradient" data-lang-zh="全渠道智能获客，一站式解决"
+                            data-lang-en="Omnichannel Lead Generation, Solved"></h1>
                         <p class="subtitle" data-lang-zh="智贸云梯 为您整合了地图、网站、社媒等多个渠道的数据能力，打造了一套完整的自动化增长工具生态，助您轻松链接全球商机。"
                             data-lang-en="SmartTrade CloudLadder integrates data capabilities from maps, websites, and social media into a complete ecosystem of automated growth tools, helping you connect with global opportunities effortlessly.">
                         </p>
@@ -466,7 +527,8 @@
 
         <div class="section-divider" aria-hidden="true">
             <svg class="wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-                <path d="M0,0 C150,100 350,0 600,60 C850,120 1050,20 1200,80 L1200,120 L0,120 Z" fill="currentColor"></path>
+                <path d="M0,0 C150,100 350,0 600,60 C850,120 1050,20 1200,80 L1200,120 L0,120 Z" fill="currentColor">
+                </path>
             </svg>
         </div>
 
@@ -518,15 +580,19 @@
             <div class="container">
                 <div class="section-header">
                     <h2 data-lang-zh="数据来自多种公开来源" data-lang-en="Data From Multiple Public Sources"></h2>
-                    <p class="section-subtitle" data-lang-zh="覆盖 Google、Google Maps、Bing、DuckDuckGo、企业官网、Facebook、Instagram、LinkedIn 等公开来源"
-                       data-lang-en="Covering Google, Google Maps, Bing, DuckDuckGo, company websites, Facebook, Instagram, LinkedIn and more public sources."></p>
+                    <p class="section-subtitle"
+                        data-lang-zh="覆盖 Google、Google Maps、Bing、DuckDuckGo、企业官网、Facebook、Instagram、LinkedIn 等公开来源"
+                        data-lang-en="Covering Google, Google Maps, Bing, DuckDuckGo, company websites, Facebook, Instagram, LinkedIn and more public sources.">
+                    </p>
                 </div>
                 <div class="sources-logos">
                     <div class="source-item"><i class='bx bxl-google'></i><span>Google</span></div>
-                    <div class="source-item"><i class='bx bxs-map-alt'></i><span data-lang-zh="Google 地图" data-lang-en="Google Maps"></span></div>
+                    <div class="source-item"><i class='bx bxs-map-alt'></i><span data-lang-zh="Google 地图"
+                            data-lang-en="Google Maps"></span></div>
                     <div class="source-item"><i class='bx bxl-microsoft'></i><span>Bing</span></div>
                     <div class="source-item"><i class='bx bx-search'></i><span>DuckDuckGo</span></div>
-                    <div class="source-item"><i class='bx bx-globe'></i><span data-lang-zh="企业官网" data-lang-en="Company Websites"></span></div>
+                    <div class="source-item"><i class='bx bx-globe'></i><span data-lang-zh="企业官网"
+                            data-lang-en="Company Websites"></span></div>
                     <div class="source-item"><i class='bx bxl-facebook'></i><span>Facebook</span></div>
                     <div class="source-item"><i class='bx bxl-instagram'></i><span>Instagram</span></div>
                     <div class="source-item"><i class='bx bxl-linkedin'></i><span>LinkedIn</span></div>
@@ -540,23 +606,29 @@
                 <div class="section-header">
                     <h2 data-lang-zh="线索中心，精准挖掘潜在客户" data-lang-en="Lead Center, Precisely Mine Prospects"></h2>
                     <p class="section-subtitle" data-lang-zh="整数据、海外社媒、企业官网等多种途径，助力客户精准获取"
-                       data-lang-en="Aggregate data from maps, overseas social media and company sites to help you acquire precisely."></p>
+                        data-lang-en="Aggregate data from maps, overseas social media and company sites to help you acquire precisely.">
+                    </p>
                 </div>
                 <div class="growth-grid">
                     <div class="growth-card card-hover-effect card-aurora">
                         <div class="icon-wrapper"><i class='bx bx-target-lock'></i></div>
                         <h3 data-lang-zh="精准定位" data-lang-en="Precise Targeting"></h3>
-                        <p data-lang-zh="按行业、地区、关键词与社媒渠道多维过滤，找到真正的决策人。" data-lang-en="Filter by industry, region, keywords and social channels to find real decision makers."></p>
+                        <p data-lang-zh="按行业、地区、关键词与社媒渠道多维过滤，找到真正的决策人。"
+                            data-lang-en="Filter by industry, region, keywords and social channels to find real decision makers.">
+                        </p>
                     </div>
                     <div class="growth-card card-hover-effect card-aurora">
                         <div class="icon-wrapper"><i class='bx bx-trending-up'></i></div>
                         <h3 data-lang-zh="业务增长" data-lang-en="Business Growth"></h3>
-                        <p data-lang-zh="客户使用后平均线索转化率提升 2.3x，营销人效提升 60%+" data-lang-en="Average lead conversion up to 2.3x, marketing efficiency +60%."></p>
+                        <p data-lang-zh="客户使用后平均线索转化率提升 2.3x，营销人效提升 60%+"
+                            data-lang-en="Average lead conversion up to 2.3x, marketing efficiency +60%."></p>
                     </div>
                     <div class="growth-card card-hover-effect card-aurora">
                         <div class="icon-wrapper"><i class='bx bx-rocket'></i></div>
                         <h3 data-lang-zh="自动化引擎" data-lang-en="Automation Engine"></h3>
-                        <p data-lang-zh="7x24 小时运行，持续沉淀高质量联系人（邮箱/电话/WhatsApp）。" data-lang-en="Runs 24/7, continuously enriching high-quality contacts (email/phone/WhatsApp)."></p>
+                        <p data-lang-zh="7x24 小时运行，持续沉淀高质量联系人（邮箱/电话/WhatsApp）。"
+                            data-lang-en="Runs 24/7, continuously enriching high-quality contacts (email/phone/WhatsApp).">
+                        </p>
                     </div>
                 </div>
             </div>
@@ -614,7 +686,8 @@
                     </div>
                     <div class="new-feature-card card-hover-effect card-aurora" style="text-align: left;">
                         <div class="icon-wrapper" style="text-align: center;"><i class='bx bx-search-alt'></i></div>
-                        <h3 data-lang-zh="智贸云梯 | MediaMingle 专业版" data-lang-en="SmartTrade CloudLadder | MediaMingle Professional"></h3>
+                        <h3 data-lang-zh="智贸云梯 | MediaMingle 专业版"
+                            data-lang-en="SmartTrade CloudLadder | MediaMingle Professional"></h3>
                         <p data-lang-zh="综合搜索引擎邮件挖掘工具，支持Google、Bing、DuckDuckGo等多个搜索引擎，智能爬取企业网站，深度挖掘高质量商业邮箱，为您的B2B营销提供精准的联系方式。"
                             data-lang-en="Comprehensive search engine email mining tool supporting Google, Bing, DuckDuckGo and more. Intelligently crawls business websites to deeply mine high-quality business emails for your B2B marketing campaigns.">
                         </p>
@@ -631,12 +704,13 @@
                             style="margin-top: 1.5rem;" data-lang-zh="了解更多" data-lang-en="Learn More"></a>
                     </div>
                     <div class="new-feature-card card-hover-effect card-aurora" style="text-align: left;">
-                        <div class="icon-wrapper" style="text-align: center;"><i class='bx bxl-whatsapp-square'></i></div>
-                        <h3 data-lang-zh="WhatsApp批量真实性检测" data-lang-en="WhatsApp Validator"></h3>
-                        <p data-lang-zh="批量验证WhatsApp号码的有效性，精准识别活跃用户，同时支持号码生成和用户信息抓取，降低营销成本，确保您的消息直达目标客户。"
-                            data-lang-en="Bulk validate the authenticity of WhatsApp numbers, accurately identify active users, while supporting number generation and user information scraping to reduce marketing costs and ensure your messages reach target customers.">
+                        <div class="icon-wrapper" style="text-align: center;"><i class='bx bxl-whatsapp-square'></i>
+                        </div>
+                        <h3 data-lang-zh="WhatsApp 智能营销助手" data-lang-en="WhatsApp Marketing Assistant"></h3>
+                        <p data-lang-zh="一站式WhatsApp营销工具：批量号码筛选验证 + 智能消息群发 + 消息中心管理。支持多账号轮换、敏感词检测、发送间隔控制，助您高效触达全球客户。"
+                            data-lang-en="All-in-one WhatsApp marketing tool: bulk number validation + smart message broadcasting + message center management. Supports multi-account rotation, sensitive word detection, and sending interval control to help you efficiently reach global customers.">
                         </p>
-                        <a href="./product.html?id=whatsapp-validator" class="btn btn-secondary"
+                        <a href="./product.html?id=whatsapp-marketing" class="btn btn-secondary"
                             style="margin-top: 1.5rem;" data-lang-zh="了解更多" data-lang-en="Learn More"></a>
                     </div>
                     <div class="new-feature-card card-hover-effect card-aurora" style="text-align: left;">
@@ -701,8 +775,9 @@
                             </button>
                         </h2>
                         <div id="faq-answer-home-1" class="faq-answer" hidden>
-                            <p data-lang-zh="智贸云梯提供5款核心产品：<br><br><strong>1. 谷歌地图抓取器</strong> - 从Google Maps批量提取商家信息，自动获取邮箱、电话、社交媒体链接等联系方式，支持多浏览器并行采集。<br><br><strong>2. MediaMingle专业版</strong> - 综合搜索引擎邮件挖掘工具，支持Google、Bing、DuckDuckGo等多个搜索引擎，深度挖掘企业网站邮箱。<br><br><strong>3. MailPro邮件营销大师</strong> - 专业邮箱验证和邮件营销工具，支持多维度邮箱检测、模板管理、批量发送等功能。<br><br><strong>4. WhatsApp验证器</strong> - 批量验证WhatsApp号码真实性，支持号码生成、用户信息抓取、活跃度检测。<br><br><strong>5. 谷歌插件获客</strong> - Chrome浏览器插件，支持智能邮箱查找、AI决策人预测、LinkedIn挖掘、实时验证等功能。" data-lang-en="SmartTrade CloudLadder offers 5 core products:<br><br><strong>1. Google Maps Scraper</strong> - Bulk extract business information from Google Maps, automatically obtain emails, phones, social media links, supports multi-browser parallel collection.<br><br><strong>2. MediaMingle Professional</strong> - Comprehensive search engine email mining tool, supports Google, Bing, DuckDuckGo and other search engines, deeply mines business website emails.<br><br><strong>3. MailPro Email Marketing Master</strong> - Professional email validation and marketing tool, supports multi-dimensional email verification, template management, bulk sending.<br><br><strong>4. WhatsApp Validator</strong> - Bulk validate WhatsApp number authenticity, supports number generation, user information scraping, activity detection.<br><br><strong>5. Email Finder Chrome Extension</strong> - Chrome browser plugin, supports intelligent email finding, AI decision-maker prediction, LinkedIn mining, real-time validation."
-                            </p>
+                            <p data-lang-zh="智贸云梯提供5款核心产品：<br><br><strong>1. 谷歌地图抓取器</strong> - 从Google Maps批量提取商家信息，自动获取邮箱、电话、社交媒体链接等联系方式，支持多浏览器并行采集。<br><br><strong>2. MediaMingle专业版</strong> - 综合搜索引擎邮件挖掘工具，支持Google、Bing、DuckDuckGo等多个搜索引擎，深度挖掘企业网站邮箱。<br><br><strong>3. MailPro邮件营销大师</strong> - 专业邮箱验证和邮件营销工具，支持多维度邮箱检测、模板管理、批量发送等功能。<br><br><strong>4. WhatsApp验证器</strong> - 批量验证WhatsApp号码真实性，支持号码生成、用户信息抓取、活跃度检测。<br><br><strong>5. 谷歌插件获客</strong> - Chrome浏览器插件，支持智能邮箱查找、AI决策人预测、LinkedIn挖掘、实时验证等功能。"
+                                data-lang-en="SmartTrade CloudLadder offers 5 core products:<br><br><strong>1. Google Maps Scraper</strong> - Bulk extract business information from Google Maps, automatically obtain emails, phones, social media links, supports multi-browser parallel collection.<br><br><strong>2. MediaMingle Professional</strong> - Comprehensive search engine email mining tool, supports Google, Bing, DuckDuckGo and other search engines, deeply mines business website emails.<br><br><strong>3. MailPro Email Marketing Master</strong> - Professional email validation and marketing tool, supports multi-dimensional email verification, template management, bulk sending.<br><br><strong>4. WhatsApp Validator</strong> - Bulk validate WhatsApp number authenticity, supports number generation, user information scraping, activity detection.<br><br><strong>5. Email Finder Chrome Extension</strong> - Chrome browser plugin, supports intelligent email finding, AI decision-maker prediction, LinkedIn mining, real-time validation."
+                                </p>
                         </div>
                     </div>
 
@@ -716,8 +791,14 @@
                         </h2>
                         <div id="faq-answer-home-2" class="faq-answer" hidden>
                             <p data-lang-zh="选择建议：<br><br><strong>新市场开拓</strong> - 推荐谷歌地图抓取器，快速获取目标区域商家信息<br><strong>网站邮箱挖掘</strong> - 推荐 MediaMingle专业版，深度挖掘企业网站邮箱<br><strong>邮件营销</strong> - 推荐 MailPro邮件营销大师，验证邮箱并进行营销<br><strong>WhatsApp营销</strong> - 推荐 WhatsApp验证器，确保号码有效性<br><strong>日常获客</strong> - 推荐 谷歌插件获客，浏览网页时随时获取邮箱<br><br><strong>最佳搭配</strong>：地图抓取器获取基础数据 → MailPro验证邮箱 → WhatsApp验证器检测号码 → 开展精准营销"
-                               data-lang-en="Selection recommendations:<br><br><strong>New Market Development</strong> - Recommend 'Google Maps Scraper' for quick business info in target areas<br><strong>Website Email Mining</strong> - Recommend 'MediaMingle Professional' for deep website email extraction<br><strong>Email Marketing</strong> - Recommend 'MailPro Email Marketing Master' for email validation and marketing<br><strong>WhatsApp Marketing</strong> - Recommend 'WhatsApp Validator' to ensure number validity<br><strong>Daily Lead Generation</strong> - Recommend 'Email Finder Extension' for on-the-go email extraction<br><br><strong>Best Combination</strong>: Maps Scraper for basic data → MailPro for email validation → WhatsApp Validator for number verification → Targeted marketing">
-                                选择建议：<br><br><strong>新市场开拓</strong> - 推荐"谷歌地图抓取器"，快速获取目标区域商家信息<br><strong>网站邮箱挖掘</strong> - 推荐"MediaMingle专业版"，深度挖掘企业网站邮箱<br><strong>邮件营销</strong> - 推荐"MailPro邮件营销大师"，验证邮箱并进行营销<br><strong>WhatsApp营销</strong> - 推荐"WhatsApp验证器"，确保号码有效性<br><strong>日常获客</strong> - 推荐"谷歌插件获客"，浏览网页时随时获取邮箱<br><br><strong>最佳搭配</strong>：地图抓取器获取基础数据 → MailPro验证邮箱 → WhatsApp验证器检测号码 → 开展精准营销
+                                data-lang-en="Selection recommendations:<br><br><strong>New Market Development</strong> - Recommend 'Google Maps Scraper' for quick business info in target areas<br><strong>Website Email Mining</strong> - Recommend 'MediaMingle Professional' for deep website email extraction<br><strong>Email Marketing</strong> - Recommend 'MailPro Email Marketing Master' for email validation and marketing<br><strong>WhatsApp Marketing</strong> - Recommend 'WhatsApp Validator' to ensure number validity<br><strong>Daily Lead Generation</strong> - Recommend 'Email Finder Extension' for on-the-go email extraction<br><br><strong>Best Combination</strong>: Maps Scraper for basic data → MailPro for email validation → WhatsApp Validator for number verification → Targeted marketing">
+                                选择建议：<br><br><strong>新市场开拓</strong> -
+                                推荐"谷歌地图抓取器"，快速获取目标区域商家信息<br><strong>网站邮箱挖掘</strong> -
+                                推荐"MediaMingle专业版"，深度挖掘企业网站邮箱<br><strong>邮件营销</strong> -
+                                推荐"MailPro邮件营销大师"，验证邮箱并进行营销<br><strong>WhatsApp营销</strong> -
+                                推荐"WhatsApp验证器"，确保号码有效性<br><strong>日常获客</strong> -
+                                推荐"谷歌插件获客"，浏览网页时随时获取邮箱<br><br><strong>最佳搭配</strong>：地图抓取器获取基础数据 → MailPro验证邮箱 →
+                                WhatsApp验证器检测号码 → 开展精准营销
                             </p>
                         </div>
                     </div>
@@ -731,8 +812,9 @@
                             </button>
                         </h2>
                         <div id="faq-answer-home-3" class="faq-answer" hidden>
-                            <p data-lang-zh="我们的数据来源完全合规：<br><br><strong>公开数据源</strong>：Google Maps商家信息、企业官网联系方式、Facebook/Instagram/LinkedIn等社交媒体公开资料<br><strong>搜索引擎</strong>：Google、Bing、DuckDuckGo等搜索引擎的公开搜索结果<br><strong>合规保证</strong>：所有数据均为商家主动公开发布的信息，不涉及私人或受保护数据<br><br><strong>使用建议</strong>：请遵守当地法律法规（如GDPR、CAN-SPAM法案），在营销时提供退订选项，尊重用户隐私权。我们建议将获取的数据用于B2B商业拓展，避免骚扰性营销。" data-lang-en="Our data sources are fully compliant:<br><br><strong>Public Data Sources</strong>: Google Maps business info, company website contacts, public profiles on Facebook/Instagram/LinkedIn<br><strong>Search Engines</strong>: Public search results from Google, Bing, DuckDuckGo and other search engines<br><strong>Compliance Guarantee</strong>: All data is actively published by businesses, no private or protected data involved<br><br><strong>Usage Guidelines</strong>: Please comply with local laws (GDPR, CAN-SPAM Act), provide unsubscribe options in marketing, respect user privacy. We recommend using the data for B2B business development, avoiding spam marketing."
-                            </p>
+                            <p data-lang-zh="我们的数据来源完全合规：<br><br><strong>公开数据源</strong>：Google Maps商家信息、企业官网联系方式、Facebook/Instagram/LinkedIn等社交媒体公开资料<br><strong>搜索引擎</strong>：Google、Bing、DuckDuckGo等搜索引擎的公开搜索结果<br><strong>合规保证</strong>：所有数据均为商家主动公开发布的信息，不涉及私人或受保护数据<br><br><strong>使用建议</strong>：请遵守当地法律法规（如GDPR、CAN-SPAM法案），在营销时提供退订选项，尊重用户隐私权。我们建议将获取的数据用于B2B商业拓展，避免骚扰性营销。"
+                                data-lang-en="Our data sources are fully compliant:<br><br><strong>Public Data Sources</strong>: Google Maps business info, company website contacts, public profiles on Facebook/Instagram/LinkedIn<br><strong>Search Engines</strong>: Public search results from Google, Bing, DuckDuckGo and other search engines<br><strong>Compliance Guarantee</strong>: All data is actively published by businesses, no private or protected data involved<br><br><strong>Usage Guidelines</strong>: Please comply with local laws (GDPR, CAN-SPAM Act), provide unsubscribe options in marketing, respect user privacy. We recommend using the data for B2B business development, avoiding spam marketing."
+                                </p>
                         </div>
                     </div>
 
@@ -745,8 +827,9 @@
                             </button>
                         </h2>
                         <div id="faq-answer-home-4" class="faq-answer" hidden>
-                            <p data-lang-zh="<strong>零技术门槛</strong>：<br>• 所有产品都采用图形化界面，点击式操作<br>• 内置详细的使用教程和视频指导<br>• 一键启动，自动化运行<br><br><strong>无需代理配置</strong>：<br>• 内置先进的防检测技术<br>• 模拟真人浏览行为<br>• 智能速度控制和间隔设置<br>• 遇到验证码时会智能暂停，提示手动处理<br><br><strong>系统要求</strong>：Windows 10/11，4GB内存，稳定网络连接即可。" data-lang-en="<strong>Zero Technical Barrier</strong>:<br>• All products use graphical interfaces with click-based operations<br>• Built-in detailed tutorials and video guides<br>• One-click start, automated operation<br><br><strong>No Proxy Configuration Needed</strong>:<br>• Built-in advanced anti-detection technology<br>• Simulates human browsing behavior<br>• Intelligent speed control and interval settings<br>• Smart pause when encountering captchas, prompts for manual handling<br><br><strong>System Requirements</strong>: Windows 10/11, 4GB RAM, stable internet connection."
-                            </p>
+                            <p data-lang-zh="<strong>零技术门槛</strong>：<br>• 所有产品都采用图形化界面，点击式操作<br>• 内置详细的使用教程和视频指导<br>• 一键启动，自动化运行<br><br><strong>无需代理配置</strong>：<br>• 内置先进的防检测技术<br>• 模拟真人浏览行为<br>• 智能速度控制和间隔设置<br>• 遇到验证码时会智能暂停，提示手动处理<br><br><strong>系统要求</strong>：Windows 10/11，4GB内存，稳定网络连接即可。"
+                                data-lang-en="<strong>Zero Technical Barrier</strong>:<br>• All products use graphical interfaces with click-based operations<br>• Built-in detailed tutorials and video guides<br>• One-click start, automated operation<br><br><strong>No Proxy Configuration Needed</strong>:<br>• Built-in advanced anti-detection technology<br>• Simulates human browsing behavior<br>• Intelligent speed control and interval settings<br>• Smart pause when encountering captchas, prompts for manual handling<br><br><strong>System Requirements</strong>: Windows 10/11, 4GB RAM, stable internet connection."
+                                </p>
                         </div>
                     </div>
 
@@ -759,8 +842,9 @@
                             </button>
                         </h2>
                         <div id="faq-answer-home-5" class="faq-answer" hidden>
-                            <p data-lang-zh="我们的数据质量行业领先：<br><br><strong>谷歌地图抓取器</strong>：商家信息准确率>95%，邮箱发现率60-80%<br><strong>MediaMingle专业版</strong>：企业邮箱挖掘准确率>90%，支持多层级深度挖掘<br><strong>MailPro邮件营销大师</strong>：邮箱验证准确率>98%，支持语法、域名、SMTP多重验证<br><strong>WhatsApp验证器</strong>：号码有效性检测准确率>95%，实时验证活跃状态<br><strong>谷歌插件获客</strong>：邮箱匹配准确率>92%，AI决策人预测准确率>85%<br><br><strong>质量保证</strong>：内置数据去重、格式标准化、实时验证等功能，确保数据可直接用于营销。" data-lang-en="Our data quality is industry-leading:<br><br><strong>Google Maps Scraper</strong>: Business info accuracy >95%, email discovery rate 60-80%<br><strong>MediaMingle Professional</strong>: Business email mining accuracy >90%, supports multi-level deep extraction<br><strong>MailPro Email Marketing Master</strong>: Email validation accuracy >98%, supports syntax, domain, SMTP multi-verification<br><strong>WhatsApp Validator</strong>: Number validity detection accuracy >95%, real-time active status verification<br><strong>Email Finder Extension</strong>: Email matching accuracy >92%, AI decision-maker prediction accuracy >85%<br><br><strong>Quality Assurance</strong>: Built-in deduplication, format standardization, real-time validation to ensure data is marketing-ready."
-                            </p>
+                            <p data-lang-zh="我们的数据质量行业领先：<br><br><strong>谷歌地图抓取器</strong>：商家信息准确率>95%，邮箱发现率60-80%<br><strong>MediaMingle专业版</strong>：企业邮箱挖掘准确率>90%，支持多层级深度挖掘<br><strong>MailPro邮件营销大师</strong>：邮箱验证准确率>98%，支持语法、域名、SMTP多重验证<br><strong>WhatsApp验证器</strong>：号码有效性检测准确率>95%，实时验证活跃状态<br><strong>谷歌插件获客</strong>：邮箱匹配准确率>92%，AI决策人预测准确率>85%<br><br><strong>质量保证</strong>：内置数据去重、格式标准化、实时验证等功能，确保数据可直接用于营销。"
+                                data-lang-en="Our data quality is industry-leading:<br><br><strong>Google Maps Scraper</strong>: Business info accuracy >95%, email discovery rate 60-80%<br><strong>MediaMingle Professional</strong>: Business email mining accuracy >90%, supports multi-level deep extraction<br><strong>MailPro Email Marketing Master</strong>: Email validation accuracy >98%, supports syntax, domain, SMTP multi-verification<br><strong>WhatsApp Validator</strong>: Number validity detection accuracy >95%, real-time active status verification<br><strong>Email Finder Extension</strong>: Email matching accuracy >92%, AI decision-maker prediction accuracy >85%<br><br><strong>Quality Assurance</strong>: Built-in deduplication, format standardization, real-time validation to ensure data is marketing-ready."
+                                </p>
                         </div>
                     </div>
 
@@ -773,8 +857,9 @@
                             </button>
                         </h2>
                         <div id="faq-answer-home-6" class="faq-answer" hidden>
-                            <p data-lang-zh="<strong>灵活定价</strong>：<br>• 单产品授权：$49-199不等，终身使用<br>• 套餐组合：最高可享受40%折扣<br>• 支持支付宝、微信、PayPal等多种支付方式<br><br><strong>免费试用</strong>：<br>• 所有产品提供免费试用版本<br>• 试用版功能完整，仅限制数据量<br>• 无需信用卡，立即下载体验<br><br><strong>全方位支持</strong>：<br>• 7x24小时技术支持（微信/WhatsApp/QQ）<br>• 详细视频教程和文档<br>• 远程协助安装和配置<br>• 终身免费更新" data-lang-en="<strong>Flexible Pricing</strong>:<br>• Single product license: $49-199, lifetime usage<br>• Bundle packages: Up to 40% discount<br>• Supports Alipay, WeChat Pay, PayPal and more<br><br><strong>Free Trial</strong>:<br>• All products offer free trial versions<br>• Full features in trial, only data volume limited<br>• No credit card required, download immediately<br><br><strong>Comprehensive Support</strong>:<br>• 7x24 technical support (WeChat/WhatsApp/QQ)<br>• Detailed video tutorials and documentation<br>• Remote assistance for installation and configuration<br>• Lifetime free updates"
-                            </p>
+                            <p data-lang-zh="<strong>灵活定价</strong>：<br>• 单产品授权：$49-199不等，终身使用<br>• 套餐组合：最高可享受40%折扣<br>• 支持支付宝、微信、PayPal等多种支付方式<br><br><strong>免费试用</strong>：<br>• 所有产品提供免费试用版本<br>• 试用版功能完整，仅限制数据量<br>• 无需信用卡，立即下载体验<br><br><strong>全方位支持</strong>：<br>• 7x24小时技术支持（微信/WhatsApp/QQ）<br>• 详细视频教程和文档<br>• 远程协助安装和配置<br>• 终身免费更新"
+                                data-lang-en="<strong>Flexible Pricing</strong>:<br>• Single product license: $49-199, lifetime usage<br>• Bundle packages: Up to 40% discount<br>• Supports Alipay, WeChat Pay, PayPal and more<br><br><strong>Free Trial</strong>:<br>• All products offer free trial versions<br>• Full features in trial, only data volume limited<br>• No credit card required, download immediately<br><br><strong>Comprehensive Support</strong>:<br>• 7x24 technical support (WeChat/WhatsApp/QQ)<br>• Detailed video tutorials and documentation<br>• Remote assistance for installation and configuration<br>• Lifetime free updates"
+                                </p>
                         </div>
                     </div>
                 </div>
@@ -872,4 +957,5 @@
         </div>
     </div>
 </body>
+
 </html>
