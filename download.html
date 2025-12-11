@@ -238,6 +238,68 @@
             grid-template-columns: repeat(4, 1fr);
         }
     }
+
+    /* --- 产品已下架样式 --- */
+    .product-discontinued {
+        position: relative;
+        background: linear-gradient(135deg, var(--surface-color) 0%, rgba(148, 163, 184, 0.1) 100%);
+        border-color: #94a3b8;
+    }
+
+    .product-discontinued:hover {
+        transform: none;
+        box-shadow: none;
+    }
+
+    .discontinued-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: white;
+        padding: 0.4rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+        z-index: 10;
+    }
+
+    .discontinued-badge i {
+        font-size: 0.9rem;
+    }
+
+    .discontinued-notice {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.05) 100%);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .discontinued-notice i {
+        font-size: 1.5rem;
+        color: #ef4444;
+        flex-shrink: 0;
+        margin-top: 0.1rem;
+    }
+
+    .discontinued-notice p {
+        margin: 0;
+        font-size: 0.85rem;
+        color: var(--text-secondary-color);
+        line-height: 1.5;
+    }
+
+    html[data-theme="dark"] .discontinued-notice {
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.08) 100%);
+    }
 </style>
 
 <body>
@@ -311,45 +373,57 @@
                         </div>
                     </div>
 
-                    <!-- MediaMingle 专业版 -->
-                    <div class="product-download-card">
+                    <!-- MediaMingle 专业版 - 已下架 -->
+                    <div class="product-download-card product-discontinued">
                         <div class="product-header">
-                            <i class='bx bx-search-alt product-icon'></i>
-                            <h3 data-lang-zh="综合搜引擎专业版" data-lang-en="MediaMingle Pro"></h3>
+                            <div class="discontinued-badge">
+                                <i class='bx bx-block'></i>
+                                <span data-lang-zh="已下架" data-lang-en="Discontinued"></span>
+                            </div>
+                            <i class='bx bx-search-alt product-icon' style="opacity: 0.5;"></i>
+                            <h3 data-lang-zh="综合搜引擎专业版" data-lang-en="MediaMingle Pro" style="opacity: 0.7;"></h3>
                             <p class="product-subtitle" data-lang-zh="综合搜索引擎邮件挖掘工具"
-                                data-lang-en="Search engine email mining tool"></p>
+                                data-lang-en="Search engine email mining tool" style="opacity: 0.7;"></p>
+                        </div>
+                        <div class="discontinued-notice">
+                            <i class='bx bx-info-circle'></i>
+                            <p data-lang-zh="该产品已下架，暂不对外开放。如有疑问请联系客服。"
+                                data-lang-en="This product has been discontinued and is no longer available. Please contact support for inquiries.">
+                            </p>
                         </div>
                         <div class="platform-options">
-                            <div class="platform-item" id="mm-windows-card">
+                            <div class="platform-item" id="mm-windows-card" style="opacity: 0.5;">
                                 <div class="platform-info">
                                     <i class='bx bxl-windows'></i>
                                     <div class="platform-details">
                                         <span class="platform-name" data-lang-zh="Windows"
                                             data-lang-en="Windows"></span>
-                                        <span class="version-info" data-lang-zh="正在获取版本..."
-                                            data-lang-en="Fetching..."></span>
+                                        <span class="version-info" data-lang-zh="暂不可用"
+                                            data-lang-en="Not Available"></span>
                                     </div>
                                 </div>
                                 <div class="platform-action">
-                                    <a href="#" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                                        <i class='bx bxs-download'></i>
-                                        <span data-lang-zh="下载" data-lang-en="Download"></span>
+                                    <a href="javascript:void(0);" class="btn btn-secondary disabled"
+                                        onclick="alert('该产品已下架，暂不对外开放。如有疑问请联系客服。'); return false;">
+                                        <i class='bx bx-block'></i>
+                                        <span data-lang-zh="已下架" data-lang-en="Unavailable"></span>
                                     </a>
                                 </div>
                             </div>
-                            <div class="platform-item" id="mm-macos-card">
+                            <div class="platform-item" id="mm-macos-card" style="opacity: 0.5;">
                                 <div class="platform-info">
                                     <i class='bx bxl-apple'></i>
                                     <div class="platform-details">
                                         <span class="platform-name" data-lang-zh="macOS" data-lang-en="macOS"></span>
-                                        <span class="version-info" data-lang-zh="敬请期待"
-                                            data-lang-en="Coming Soon"></span>
+                                        <span class="version-info" data-lang-zh="暂不可用"
+                                            data-lang-en="Not Available"></span>
                                     </div>
                                 </div>
                                 <div class="platform-action">
-                                    <a href="#" class="btn btn-secondary disabled">
-                                        <i class='bx bx-time'></i>
-                                        <span data-lang-zh="敬请期待" data-lang-en="Soon"></span>
+                                    <a href="javascript:void(0);" class="btn btn-secondary disabled"
+                                        onclick="alert('该产品已下架，暂不对外开放。如有疑问请联系客服。'); return false;">
+                                        <i class='bx bx-block'></i>
+                                        <span data-lang-zh="已下架" data-lang-en="Unavailable"></span>
                                     </a>
                                 </div>
                             </div>
@@ -408,6 +482,7 @@
                             <h3 data-lang-zh="WhatsApp 智能营销助手" data-lang-en="WhatsApp Marketing Assistant"></h3>
                             <p class="product-subtitle" data-lang-zh="一站式WhatsApp营销工具"
                                 data-lang-en="All-in-one WhatsApp marketing tool"></p>
+                            <p class="product-subtitle" data-lang-zh="下载免费试用" data-lang-en="Free trial"></p>
                         </div>
                         <div class="platform-options">
                             <div class="platform-item" id="wv-windows-card">
@@ -753,7 +828,8 @@
             fetchProductRelease({ repoName: 'gogole_maps', windowsCardId: 'gs-windows-card', macosCardId: 'gs-macos-card' });
             fetchProductRelease({ repoName: 'email_validator_repo', windowsCardId: 'ev-windows-card', macosCardId: 'ev-macos-card' });
             fetchProductRelease({ repoName: 'whatsapp_validator_repo', windowsCardId: 'wv-windows-card', macosCardId: 'wv-macos-card' });
-            fetchProductRelease({ repoName: 'mediamingle_pro_repo', windowsCardId: 'mm-windows-card', macosCardId: 'mm-macos-card' });
+            // MediaMingle 专业版已下架，不再获取版本信息
+            // fetchProductRelease({ repoName: 'mediamingle_pro_repo', windowsCardId: 'mm-windows-card', macosCardId: 'mm-macos-card' });
         });
     </script>
 </body>
