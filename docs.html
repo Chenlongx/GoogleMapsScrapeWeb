@@ -4,10 +4,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>文档 | GoogleMapsScraper</title>
-    <meta name="description" content="GoogleMapsScraper 官方文档中心。查找有关如何使用 Google Maps Scraper 的详细指南、API 参考和常见问题解答。">
+    <meta name="theme-color" content="#2563eb">
+
+    <!-- Primary Meta Tags (SEO Optimized) -->
+    <title data-lang-zh="使用文档 - 谷歌地图抓取器教程 邮箱验证指南 | 智贸云梯帮助中心"
+        data-lang-en="Documentation - Google Maps Scraper Tutorial Email Validator Guide | SmartTrade CloudLadder">使用文档
+        - 谷歌地图抓取器教程 邮箱验证指南 | 智贸云梯帮助中心</title>
+    <meta name="description" content="智贸云梯官方使用文档：谷歌地图抓取器操作教程、邮箱验证工具指南、WhatsApp营销助手说明、常见问题解答。图文并茂的详细操作步骤。"
+        data-lang-zh="智贸云梯官方使用文档：谷歌地图抓取器操作教程、邮箱验证工具指南、WhatsApp营销助手说明、常见问题解答。图文并茂的详细操作步骤。"
+        data-lang-en="Official SmartTrade CloudLadder documentation: Google Maps scraper tutorials, email validator guides, WhatsApp marketing assistant instructions. Detailed step-by-step guides with screenshots.">
+    <meta name="keywords"
+        content="谷歌地图抓取教程,邮箱验证使用指南,WhatsApp营销教程,软件使用文档,Google Maps scraper tutorial,email validator guide">
+    <meta name="author" content="智贸云梯 SmartTrade CloudLadder">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+
+    <!-- Canonical & Alternate Languages -->
+    <link rel="canonical" href="https://www.smarttrade-cloudladder.com/docs.html">
+    <link rel="alternate" hreflang="zh-CN" href="https://www.smarttrade-cloudladder.com/docs.html">
+    <link rel="alternate" hreflang="en" href="https://www.smarttrade-cloudladder.com/docs.html?lang=en">
+    <link rel="alternate" hreflang="x-default" href="https://www.smarttrade-cloudladder.com/docs.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://www.smarttrade-cloudladder.com/docs.html">
+    <meta property="og:title" content="智贸云梯使用文档 - 全套工具操作教程">
+    <meta property="og:description" content="官方使用文档：谷歌地图抓取器、邮箱验证工具、WhatsApp营销助手详细操作指南。">
+    <meta property="og:image" content="https://www.smarttrade-cloudladder.com/assets/img/og-docs.jpg">
+    <meta property="og:locale" content="zh_CN">
+    <meta property="og:site_name" content="智贸云梯 SmartTrade CloudLadder">
+    <meta property="article:section" content="Documentation">
+
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="智贸云梯使用文档 - 全套工具操作教程">
+    <meta name="twitter:description" content="官方使用文档：谷歌地图抓取器、邮箱验证工具、WhatsApp营销助手详细操作指南。">
+    <meta name="twitter:image" content="https://www.smarttrade-cloudladder.com/assets/img/og-docs.jpg">
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" href="assets/img/ico/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/svg+xml" href="assets/img/ico/favicon.svg">
+    <link rel="shortcut icon" href="assets/img/ico/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/img/ico/apple-touch-icon.png">
+    <link rel="manifest" href="assets/img/ico/site.webmanifest">
+
+    <!-- Preload Critical Resources -->
+    <link rel="preload" href="./assets/css/style.css" as="style">
+
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="./assets/css/style.css">
+
+    <!-- JavaScript -->
     <script src="./assets/js/main.js" defer></script>
+
+    <!-- Structured Data: BreadcrumbList -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "首页",
+                "item": "https://www.smarttrade-cloudladder.com/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "文档中心",
+                "item": "https://www.smarttrade-cloudladder.com/docs.html"
+            }
+        ]
+    }
+    </script>
+
+    <!-- Structured Data: HowTo for Tutorial Content -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "HowTo",
+        "name": "如何使用谷歌地图抓取器获取商家信息",
+        "description": "使用智贸云梯谷歌地图抓取器批量获取Google Maps商家联系信息的完整教程。",
+        "image": "https://www.smarttrade-cloudladder.com/assets/img/docs-scraping.webp",
+        "totalTime": "PT10M",
+        "estimatedCost": {
+            "@type": "MonetaryAmount",
+            "currency": "USD",
+            "value": "7.13"
+        },
+        "tool": [
+            {
+                "@type": "HowToTool",
+                "name": "智贸云梯谷歌地图抓取器"
+            }
+        ],
+        "step": [
+            {
+                "@type": "HowToStep",
+                "name": "输入搜索关键词",
+                "text": "在搜索框中输入目标行业关键词，如'律师事务所'、'餐厅'等",
+                "image": "https://www.smarttrade-cloudladder.com/assets/img/keyword-input.webp"
+            },
+            {
+                "@type": "HowToStep",
+                "name": "选择目标国家和地区",
+                "text": "从下拉菜单选择目标国家，可进一步选择具体城市或区域",
+                "image": "https://www.smarttrade-cloudladder.com/assets/img/select-country-region.webp"
+            },
+            {
+                "@type": "HowToStep",
+                "name": "开始抓取",
+                "text": "点击开始抓取按钮，程序将自动打开浏览器并开始收集商家信息",
+                "image": "https://www.smarttrade-cloudladder.com/assets/img/start-scrape.webp"
+            },
+            {
+                "@type": "HowToStep",
+                "name": "导出数据",
+                "text": "抓取完成后，将数据导出为Excel或CSV格式",
+                "image": "https://www.smarttrade-cloudladder.com/assets/img/docs-export.png"
+            }
+        ]
+    }
+    </script>
 </head>
 <style>
     .docs-image-container {

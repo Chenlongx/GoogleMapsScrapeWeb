@@ -1,0 +1,39 @@
+# robots.txt for SmartTrade CloudLadder (智贸云梯)
+# https://www.smarttrade-cloudladder.com
+
+User-agent: *
+Allow: /
+
+# Allow all major search engines
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: Sogou
+Allow: /
+
+User-agent: 360Spider
+Allow: /
+
+# Disallow admin and API routes
+Disallow: /.netlify/
+Disallow: /netlify/
+Disallow: /node_modules/
+Disallow: /security-dashboard.html
+Disallow: /*.js$
+Disallow: /*.css$
+
+# Allow JavaScript and CSS for rendering (override above for main assets)
+Allow: /assets/js/*.js
+Allow: /assets/css/*.css
+
+# Sitemap location
+Sitemap: https://www.smarttrade-cloudladder.com/sitemap.xml
+
+# Crawl-delay for politeness (optional, respected by some bots)
+Crawl-delay: 1

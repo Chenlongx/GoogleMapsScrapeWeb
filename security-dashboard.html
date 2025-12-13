@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>安全监控面板</title>
-    <style>
-        * {
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   安全监控面板
+  </title>
+  <style>
+   * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -243,100 +245,153 @@
             background: #0056b3;
             transform: scale(1.1);
         }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>🛡️ 安全监控面板</h1>
-            <p>实时监控系统安全状态和威胁防护</p>
-        </div>
-
-        <div class="dashboard">
-            <!-- 统计卡片 -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-number" id="activeIPs">-</div>
-                    <div class="stat-label">活跃IP数量</div>
-                </div>
-                <div class="stat-card danger">
-                    <div class="stat-number" id="blockedIPs">-</div>
-                    <div class="stat-label">被封禁IP</div>
-                </div>
-                <div class="stat-card warning">
-                    <div class="stat-number" id="suspiciousIPs">-</div>
-                    <div class="stat-label">可疑IP</div>
-                </div>
-                <div class="stat-card success">
-                    <div class="stat-number" id="totalRequests">-</div>
-                    <div class="stat-label">总请求数</div>
-                </div>
-            </div>
-
-            <!-- 被封禁IP管理 -->
-            <div class="section">
-                <h2>🚫 被封禁IP管理</h2>
-                <div class="table-container">
-                    <table id="blockedIPsTable">
-                        <thead>
-                            <tr>
-                                <th>IP地址</th>
-                                <th>封禁时间</th>
-                                <th>操作</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td colspan="3" class="loading">加载中...</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- 可疑IP监控 -->
-            <div class="section">
-                <h2>⚠️ 可疑IP监控</h2>
-                <div class="table-container">
-                    <table id="suspiciousIPsTable">
-                        <thead>
-                            <tr>
-                                <th>IP地址</th>
-                                <th>请求次数</th>
-                                <th>首次发现</th>
-                                <th>最后活动</th>
-                                <th>操作</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td colspan="5" class="loading">加载中...</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- 手动封禁IP -->
-            <div class="section">
-                <h2>🔒 手动封禁IP</h2>
-                <div class="form-group">
-                    <label for="blockIP">IP地址:</label>
-                    <input type="text" id="blockIP" placeholder="例如: 192.168.1.100">
-                </div>
-                <div class="form-group">
-                    <label for="blockDuration">封禁时长 (小时):</label>
-                    <input type="number" id="blockDuration" value="1" min="1" max="24">
-                </div>
-                <button class="btn btn-danger" onclick="blockIP()">封禁IP</button>
-            </div>
-        </div>
+  </style>
+  <link href="assets/img/ico/favicon-96x96.png" rel="icon" sizes="96x96" type="image/png"/>
+  <link href="assets/img/ico/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="assets/img/ico/favicon.ico" rel="shortcut icon"/>
+  <link href="assets/img/ico/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180"/>
+  <link href="assets/img/ico/site.webmanifest" rel="manifest"/>
+ </head>
+ <body>
+  <div class="container">
+   <div class="header">
+    <h1>
+     🛡️ 安全监控面板
+    </h1>
+    <p>
+     实时监控系统安全状态和威胁防护
+    </p>
+   </div>
+   <div class="dashboard">
+    <!-- 统计卡片 -->
+    <div class="stats-grid">
+     <div class="stat-card">
+      <div class="stat-number" id="activeIPs">
+       -
+      </div>
+      <div class="stat-label">
+       活跃IP数量
+      </div>
+     </div>
+     <div class="stat-card danger">
+      <div class="stat-number" id="blockedIPs">
+       -
+      </div>
+      <div class="stat-label">
+       被封禁IP
+      </div>
+     </div>
+     <div class="stat-card warning">
+      <div class="stat-number" id="suspiciousIPs">
+       -
+      </div>
+      <div class="stat-label">
+       可疑IP
+      </div>
+     </div>
+     <div class="stat-card success">
+      <div class="stat-number" id="totalRequests">
+       -
+      </div>
+      <div class="stat-label">
+       总请求数
+      </div>
+     </div>
     </div>
-
-    <button class="refresh-btn" onclick="refreshData()" title="刷新数据">🔄</button>
-
-    <script>
-        // 动态检测环境并设置 API 基础 URL
+    <!-- 被封禁IP管理 -->
+    <div class="section">
+     <h2>
+      🚫 被封禁IP管理
+     </h2>
+     <div class="table-container">
+      <table id="blockedIPsTable">
+       <thead>
+        <tr>
+         <th>
+          IP地址
+         </th>
+         <th>
+          封禁时间
+         </th>
+         <th>
+          操作
+         </th>
+        </tr>
+       </thead>
+       <tbody>
+        <tr>
+         <td class="loading" colspan="3">
+          加载中...
+         </td>
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <!-- 可疑IP监控 -->
+    <div class="section">
+     <h2>
+      ⚠️ 可疑IP监控
+     </h2>
+     <div class="table-container">
+      <table id="suspiciousIPsTable">
+       <thead>
+        <tr>
+         <th>
+          IP地址
+         </th>
+         <th>
+          请求次数
+         </th>
+         <th>
+          首次发现
+         </th>
+         <th>
+          最后活动
+         </th>
+         <th>
+          操作
+         </th>
+        </tr>
+       </thead>
+       <tbody>
+        <tr>
+         <td class="loading" colspan="5">
+          加载中...
+         </td>
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <!-- 手动封禁IP -->
+    <div class="section">
+     <h2>
+      🔒 手动封禁IP
+     </h2>
+     <div class="form-group">
+      <label for="blockIP">
+       IP地址:
+      </label>
+      <input id="blockIP" placeholder="例如: 192.168.1.100" type="text"/>
+     </div>
+     <div class="form-group">
+      <label for="blockDuration">
+       封禁时长 (小时):
+      </label>
+      <input id="blockDuration" max="24" min="1" type="number" value="1"/>
+     </div>
+     <button class="btn btn-danger" onclick="blockIP()">
+      封禁IP
+     </button>
+    </div>
+   </div>
+  </div>
+  <button class="refresh-btn" onclick="refreshData()" title="刷新数据">
+   🔄
+  </button>
+  <script>
+   // 动态检测环境并设置 API 基础 URL
         const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
         const API_BASE = isLocal ? '/.netlify/functions/security-admin' : '/api/security-admin';
         let adminKey = '';
@@ -606,6 +661,6 @@
                 alertDiv.remove();
             }, 5000);
         }
-    </script>
-</body>
+  </script>
+ </body>
 </html>

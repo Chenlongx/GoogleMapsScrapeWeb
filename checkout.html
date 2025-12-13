@@ -1,16 +1,24 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-theme="light">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-lang-zh="安全支付 | LeadScout" data-lang-en="Secure Checkout | LeadScout"></title>
-    <link rel="stylesheet" href="./assets/css/style.css">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <script src="./assets/js/main.js" defer></script>
-    <script src="./assets/js/referral-tracker.js" defer></script>
-    <style>
-        /* ===== 页面整体与卡片基础样式 (无变动) ===== */
+<html data-theme="light" lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title data-lang-en="Secure Checkout | LeadScout" data-lang-zh="安全支付 | LeadScout">
+   Secure Checkout | LeadScout
+  </title>
+  <link href="assets/img/ico/favicon-96x96.png" rel="icon" sizes="96x96" type="image/png"/>
+  <link href="assets/img/ico/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="assets/img/ico/favicon.ico" rel="shortcut icon"/>
+  <link href="assets/img/ico/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180"/>
+  <link href="assets/img/ico/site.webmanifest" rel="manifest"/>
+  <link href="./assets/css/style.css" rel="stylesheet"/>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"/>
+  <script defer="" src="./assets/js/main.js">
+  </script>
+  <script defer="" src="./assets/js/referral-tracker.js">
+  </script>
+  <style>
+   /* ===== 页面整体与卡片基础样式 (无变动) ===== */
         .checkout-section {
             padding: 4rem 0;
             /* 减小上下边距 */
@@ -443,207 +451,304 @@
         #order-details li:last-child {
             border-bottom: none;
         }
-    </style>
-</head>
-
-<body>
-    <header id="main-header" class="main-header"></header>
-
-    <main>
-        <section class="page-header">
-            <div class="container">
-                <h1 data-lang-zh="安全支付中心" data-lang-en="Secure Checkout Center"></h1>
-                <p data-lang-zh="我们采用行业领先的加密技术，保障您的每一次支付安全。"
-                    data-lang-en="We use industry-leading encryption to secure every payment."></p>
-            </div>
-        </section>
-
-        <section class="checkout-section">
-            <div class="container">
-
-                <div class="renewal-section">
-                    <div class="renewal-content">
-                        <div class="renewal-info">
-                            <h2 data-lang-zh="谷歌地图抓取器账户续费" data-lang-en="Existing User Renewal"></h2>
-                            <p data-lang-zh="输入您的账户邮箱，选择时长即可快速续费。"
-                                data-lang-en="Enter your account email and select a duration to renew."></p>
-                        </div>
-                        <div class="renewal-form">
-                            <input type="text" id="renewal_email" placeholder="输入您的邮箱或账户名"
-                                data-lang-en-placeholder="Your Email or Username" required>
-                            <select id="renewal_duration">
-                                <option value="monthly" data-price="7.13" data-lang-zh="月度续费 - ¥49.90"
-                                    data-lang-en="Monthly - $7.13"></option>
-                                <option value="quarterly" data-price="21.39" data-lang-zh="季度续费 - ¥149.70"
-                                    data-lang-en="Quarterly - $21.39"></option>
-                                <option value="yearly" data-price="85.54" data-lang-zh="年度续费 - ¥598.80"
-                                    data-lang-en="Yearly - $85.54"></option>
-                            </select>
-                            <button class="btn btn-primary" id="renewal-pay-button">立即续费</button>
-                        </div>
-                    </div>
-                </div>
-                <h2 class="section-title" data-lang-zh="或者，购买新许可" data-lang-en="Or, Purchase a New License"></h2>
-
-                <div class="checkout-grid">
-                    <div class="product-card" id="gmaps-card">
-                        <h2 data-lang-zh="谷歌地图抓取器" data-lang-en="Google Maps Scraper"></h2>
-                        <p class="plan-description" data-lang-zh="按月收费"
-                            data-lang-en="Monthly subscription, cancel anytime"></p>
-                        <div class="plan-selector">
-                            <button class="plan-btn" data-price="4.90" data-plan="standard" data-lang-zh="首月体验版"
-                                data-lang-en="First Month Trial"></button>
-                            <button class="plan-btn active" data-price="7.13" data-plan="premium" data-lang-zh="高级版"
-                                data-lang-en="Premium"></button>
-                        </div>
-                        <div class="product-price">$7.13<span class="price-period" data-lang-zh="/月"
-                                data-lang-en="/mo"></span></div>
-                        <ul class="product-features"></ul>
-                        <label for="gmaps_email" data-lang-zh="输入您要开通的账户邮箱"
-                            data-lang-en="Enter account email to activate"></label>
-                        <input type="email" id="gmaps_email" placeholder="your-account@example.com" required>
-                        <button class="btn btn-primary" data-product-id="gmaps">立即开通高级版</button>
-                        <div class="secure-payment-badge">
-                            <i class='bx bxs-lock-alt'></i> <span data-lang-zh="支付宝安全支付"
-                                data-lang-en="Secure Payment by Alipay"></span>
-                        </div>
-                    </div>
-
-                    <div class="product-card" id="validator-card">
-                        <h2 data-lang-zh="MailPro邮件营销大师" data-lang-en="MailPro Email Marketing Master"></h2>
-                        <p class="plan-description" data-lang-zh="按年收费，功能强大"
-                            data-lang-en="Annual subscription, powerful features"></p>
-                        <div class="plan-selector">
-                            <button class="plan-btn" data-price="29.00" data-plan="standard" data-lang-zh="标准版"
-                                data-lang-en="Standard"></button>
-                            <button class="plan-btn active" data-price="79.00" data-plan="premium" data-lang-zh="高级版"
-                                data-lang-en="Premium"></button>
-                        </div>
-                        <div class="product-price">$79<span class="price-period" data-lang-zh="/年"
-                                data-lang-en="/year"></span></div>
-                        <ul class="product-features"></ul>
-                        <label for="validator_email" data-lang-zh="输入接收激活码的邮箱"
-                            data-lang-en="Enter email to receive license key"></label>
-                        <input type="email" id="validator_email" placeholder="your-email@example.com" required>
-                        <button class="btn btn-primary" data-product-id="validator">购买高级版激活码</button>
-                        <div class="secure-payment-badge">
-                            <i class='bx bxs-lock-alt'></i> <span data-lang-zh="支付宝安全支付"
-                                data-lang-en="Secure Payment by Alipay"></span>
-                        </div>
-                    </div>
-
-                    <div class="product-card" id="whatsapp-validator-card">
-                        <h2 data-lang-zh="WhatsApp 智能营销助手" data-lang-en="WhatsApp Marketing Assistant"></h2>
-                        <p class="plan-description" data-lang-zh="按年收费，一站式营销"
-                            data-lang-en="Annual subscription, all-in-one marketing"></p>
-                        <div class="plan-selector">
-                            <button class="plan-btn" data-price="29.00" data-plan="standard" data-lang-zh="标准版"
-                                data-lang-en="Standard"></button>
-                            <button class="plan-btn active" data-price="49.00" data-plan="premium" data-lang-zh="高级版"
-                                data-lang-en="Premium"></button>
-                        </div>
-                        <div class="product-price">$49<span class="price-period" data-lang-zh="/年"
-                                data-lang-en="/year"></span></div>
-                        <ul class="product-features"></ul>
-                        <label for="whatsapp_validator_email" data-lang-zh="输入接收激活码的邮箱"
-                            data-lang-en="Enter email to receive license key"></label>
-                        <input type="email" id="whatsapp_validator_email" placeholder="your-email@example.com" required>
-                        <button class="btn btn-primary" data-product-id="whatsapp-validator">购买高级版激活码</button>
-                        <div class="secure-payment-badge">
-                            <i class='bx bxs-lock-alt'></i> <span data-lang-zh="支付宝安全支付"
-                                data-lang-en="Secure Payment by Alipay"></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="trust-section">
-        </section>
-
-        <div id="payment-modal" class="modal">
-            <div id="payment-box" class="modal-box">
-                <button id="modal-close-btn" class="modal-close-btn" aria-label="Close">&times;</button>
-                <p data-lang-zh="请使用支付宝扫码支付" data-lang-en="Please use Alipay to scan and pay"></p>
-                <div id="qrcode"></div>
-                <p id="payment-status" data-lang-zh="等待支付中..." data-lang-en="Waiting for payment..."></p>
-                <p id="payment-timer" style="font-size: 0.9rem; color: var(--text-secondary-color);"></p>
-            </div>
-        </div>
-
-        <div id="success-modal" class="modal">
-            <div id="success-box" class="modal-box">
-                <button id="success-close-btn" class="modal-close-btn" aria-label="Close">&times;</button>
-                <i class='bx bxs-check-circle icon'></i>
-                <h3 data-lang-zh="支付成功" data-lang-en="Payment Successful"></h3>
-                <p class="message" data-lang-zh="您的订单已处理完毕，相关信息已发送至您的邮箱。"
-                    data-lang-en="Your order has been processed. Details have been sent to your email."></p>
-                <ul id="order-details">
-                </ul>
-                <button id="success-confirm-btn" class="btn btn-primary" data-lang-zh="好的"
-                    data-lang-en="Confirm"></button>
-            </div>
-        </div>
-
-        <div id="renewal-modal" class="modal">
-            <div id="renewal-box" class="modal-box">
-                <button id="renewal-close-btn" class="modal-close-btn" aria-label="Close">&times;</button>
-                <p data-lang-zh="请使用支付宝扫码续费" data-lang-en="Please use Alipay to scan and renew"></p>
-                <div id="renewal-qrcode"></div>
-                <p id="renewal-status" data-lang-zh="等待支付中..." data-lang-en="Waiting for payment..."></p>
-                <p id="renewal-timer" style="font-size: 0.9rem; color: var(--text-secondary-color);"></p>
-            </div>
-        </div>
-
-        <div id="error-modal" class="modal">
-            <div id="error-box" class="modal-box">
-                <button id="error-close-btn" class="modal-close-btn" aria-label="Close">&times;</button>
-                <i class='bx bxs-x-circle icon'></i>
-                <h3 data-lang-zh="操作失败" data-lang-en="Operation Failed"></h3>
-                <p id="error-message" class="message"></p>
-                <button id="error-confirm-btn" class="btn btn-primary" data-lang-zh="好的" data-lang-en="OK"></button>
-            </div>
-        </div>
-    </main>
-
-    <footer id="main-footer" class="main-footer"></footer>
-
-    <div class="floating-contact-container">
-        <button id="contact-fab" class="contact-fab" aria-label="Contact Us">
-            <i class='bx bxs-message-dots'></i>
+  </style>
+ </head>
+ <body>
+  <header class="main-header" id="main-header">
+  </header>
+  <main>
+   <section class="page-header">
+    <div class="container">
+     <h1 data-lang-en="Secure Checkout Center" data-lang-zh="安全支付中心">
+      Secure Checkout Center
+     </h1>
+     <p data-lang-en="We use industry-leading encryption to secure every payment." data-lang-zh="我们采用行业领先的加密技术，保障您的每一次支付安全。">
+      We use industry-leading encryption to secure every payment.
+     </p>
+    </div>
+   </section>
+   <section class="checkout-section">
+    <div class="container">
+     <div class="renewal-section">
+      <div class="renewal-content">
+       <div class="renewal-info">
+        <h2 data-lang-en="Existing User Renewal" data-lang-zh="谷歌地图抓取器账户续费">
+         Existing User Renewal
+        </h2>
+        <p data-lang-en="Enter your account email and select a duration to renew." data-lang-zh="输入您的账户邮箱，选择时长即可快速续费。">
+         Enter your account email and select a duration to renew.
+        </p>
+       </div>
+       <div class="renewal-form">
+        <input data-lang-en-placeholder="Your Email or Username" id="renewal_email" placeholder="输入您的邮箱或账户名" required="" type="text"/>
+        <select id="renewal_duration">
+         <option data-lang-en="Monthly - $7.13" data-lang-zh="月度续费 - ¥49.90" data-price="7.13" value="monthly">
+          Monthly - $7.13
+         </option>
+         <option data-lang-en="Quarterly - $21.39" data-lang-zh="季度续费 - ¥149.70" data-price="21.39" value="quarterly">
+          Quarterly - $21.39
+         </option>
+         <option data-lang-en="Yearly - $85.54" data-lang-zh="年度续费 - ¥598.80" data-price="85.54" value="yearly">
+          Yearly - $85.54
+         </option>
+        </select>
+        <button class="btn btn-primary" id="renewal-pay-button">
+         立即续费
         </button>
+       </div>
+      </div>
+     </div>
+     <h2 class="section-title" data-lang-en="Or, Purchase a New License" data-lang-zh="或者，购买新许可">
+      Or, Purchase a New License
+     </h2>
+     <div class="checkout-grid">
+      <div class="product-card" id="gmaps-card">
+       <h2 data-lang-en="Google Maps Scraper" data-lang-zh="谷歌地图抓取器">
+        Google Maps Scraper
+       </h2>
+       <p class="plan-description" data-lang-en="Monthly subscription, cancel anytime" data-lang-zh="按月收费">
+        Monthly subscription, cancel anytime
+       </p>
+       <div class="plan-selector">
+        <button class="plan-btn" data-lang-en="First Month Trial" data-lang-zh="首月体验版" data-plan="standard" data-price="4.90">
+         First Month Trial
+        </button>
+        <button class="plan-btn active" data-lang-en="Premium" data-lang-zh="高级版" data-plan="premium" data-price="7.13">
+         Premium
+        </button>
+       </div>
+       <div class="product-price">
+        $7.13
+        <span class="price-period" data-lang-en="/mo" data-lang-zh="/月">
+         /mo
+        </span>
+       </div>
+       <ul class="product-features">
+       </ul>
+       <label data-lang-en="Enter account email to activate" data-lang-zh="输入您要开通的账户邮箱" for="gmaps_email">
+        Enter account email to activate
+       </label>
+       <input id="gmaps_email" placeholder="your-account@example.com" required="" type="email"/>
+       <button class="btn btn-primary" data-product-id="gmaps">
+        立即开通高级版
+       </button>
+       <div class="secure-payment-badge">
+        <i class="bx bxs-lock-alt">
+        </i>
+        <span data-lang-en="Secure Payment by Alipay" data-lang-zh="支付宝安全支付">
+         Secure Payment by Alipay
+        </span>
+       </div>
+      </div>
+      <div class="product-card" id="validator-card">
+       <h2 data-lang-en="MailPro Email Marketing Master" data-lang-zh="MailPro邮件营销大师">
+        MailPro Email Marketing Master
+       </h2>
+       <p class="plan-description" data-lang-en="Annual subscription, powerful features" data-lang-zh="按年收费，功能强大">
+        Annual subscription, powerful features
+       </p>
+       <div class="plan-selector">
+        <button class="plan-btn" data-lang-en="Standard" data-lang-zh="标准版" data-plan="standard" data-price="29.00">
+         Standard
+        </button>
+        <button class="plan-btn active" data-lang-en="Premium" data-lang-zh="高级版" data-plan="premium" data-price="79.00">
+         Premium
+        </button>
+       </div>
+       <div class="product-price">
+        $79
+        <span class="price-period" data-lang-en="/year" data-lang-zh="/年">
+         /year
+        </span>
+       </div>
+       <ul class="product-features">
+       </ul>
+       <label data-lang-en="Enter email to receive license key" data-lang-zh="输入接收激活码的邮箱" for="validator_email">
+        Enter email to receive license key
+       </label>
+       <input id="validator_email" placeholder="your-email@example.com" required="" type="email"/>
+       <button class="btn btn-primary" data-product-id="validator">
+        购买高级版激活码
+       </button>
+       <div class="secure-payment-badge">
+        <i class="bx bxs-lock-alt">
+        </i>
+        <span data-lang-en="Secure Payment by Alipay" data-lang-zh="支付宝安全支付">
+         Secure Payment by Alipay
+        </span>
+       </div>
+      </div>
+      <div class="product-card" id="whatsapp-validator-card">
+       <h2 data-lang-en="WhatsApp Marketing Assistant" data-lang-zh="WhatsApp 智能营销助手">
+        WhatsApp Marketing Assistant
+       </h2>
+       <p class="plan-description" data-lang-en="Annual subscription, all-in-one marketing" data-lang-zh="按年收费，一站式营销">
+        Annual subscription, all-in-one marketing
+       </p>
+       <div class="plan-selector">
+        <button class="plan-btn" data-lang-en="Standard" data-lang-zh="标准版" data-plan="standard" data-price="29.00">
+         Standard
+        </button>
+        <button class="plan-btn active" data-lang-en="Premium" data-lang-zh="高级版" data-plan="premium" data-price="49.00">
+         Premium
+        </button>
+       </div>
+       <div class="product-price">
+        $49
+        <span class="price-period" data-lang-en="/year" data-lang-zh="/年">
+         /year
+        </span>
+       </div>
+       <ul class="product-features">
+       </ul>
+       <label data-lang-en="Enter email to receive license key" data-lang-zh="输入接收激活码的邮箱" for="whatsapp_validator_email">
+        Enter email to receive license key
+       </label>
+       <input id="whatsapp_validator_email" placeholder="your-email@example.com" required="" type="email"/>
+       <button class="btn btn-primary" data-product-id="whatsapp-validator">
+        购买高级版激活码
+       </button>
+       <div class="secure-payment-badge">
+        <i class="bx bxs-lock-alt">
+        </i>
+        <span data-lang-en="Secure Payment by Alipay" data-lang-zh="支付宝安全支付">
+         Secure Payment by Alipay
+        </span>
+       </div>
+      </div>
+     </div>
     </div>
-
-    <div id="contact-modal-container" class="modal-container">
-        <div class="modal-content">
-            <button id="contact-modal-close-btn" class="modal-close-btn" aria-label="Close">&times;</button>
-            <h2 data-lang-zh="联系我们" data-lang-en="Contact Us">联系我们</h2>
-            <div class="contact-channels">
-                <div class="contact-channel">
-                    <i class='bx bxl-whatsapp'></i>
-                    <h3 data-lang-zh="WhatsApp" data-lang-en="WhatsApp">WhatsApp</h3>
-                    <a href="https://wa.me/8619189026051" target="_blank" class="btn btn-secondary">+8619189026051</a>
-                </div>
-                <div class="contact-channel">
-                    <i class='bx bxl-weixin'></i>
-                    <h3 data-lang-zh="微信客服" data-lang-en="WeChat Support">微信客服</h3>
-                    <img src="assets/img/wechat.png" alt="微信二维码" class="qr-code">
-                    <p data-lang-zh="扫码添加好友" data-lang-en="Scan QR to Add">扫码添加好友</p>
-                </div>
-                <div class="contact-channel">
-                    <i class='bx bxl-qq'></i>
-                    <h3 data-lang-zh="QQ客服" data-lang-en="QQ Support">QQ客服</h3>
-                    <img src="assets/img/qqchat.jpg" alt="QQ二维码" class="qr-code">
-                    <p data-lang-zh="扫码添加好友" data-lang-en="Scan QR to Add">扫码添加好友</p>
-                </div>
-            </div>
-        </div>
+   </section>
+   <section class="trust-section">
+   </section>
+   <div class="modal" id="payment-modal">
+    <div class="modal-box" id="payment-box">
+     <button aria-label="Close" class="modal-close-btn" id="modal-close-btn">
+      ×
+     </button>
+     <p data-lang-en="Please use Alipay to scan and pay" data-lang-zh="请使用支付宝扫码支付">
+      Please use Alipay to scan and pay
+     </p>
+     <div id="qrcode">
+     </div>
+     <p data-lang-en="Waiting for payment..." data-lang-zh="等待支付中..." id="payment-status">
+      Waiting for payment...
+     </p>
+     <p id="payment-timer" style="font-size: 0.9rem; color: var(--text-secondary-color);">
+     </p>
     </div>
-
-
-    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator/qrcode.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
+   </div>
+   <div class="modal" id="success-modal">
+    <div class="modal-box" id="success-box">
+     <button aria-label="Close" class="modal-close-btn" id="success-close-btn">
+      ×
+     </button>
+     <i class="bx bxs-check-circle icon">
+     </i>
+     <h3 data-lang-en="Payment Successful" data-lang-zh="支付成功">
+      Payment Successful
+     </h3>
+     <p class="message" data-lang-en="Your order has been processed. Details have been sent to your email." data-lang-zh="您的订单已处理完毕，相关信息已发送至您的邮箱。">
+      Your order has been processed. Details have been sent to your email.
+     </p>
+     <ul id="order-details">
+     </ul>
+     <button class="btn btn-primary" data-lang-en="Confirm" data-lang-zh="好的" id="success-confirm-btn">
+      Confirm
+     </button>
+    </div>
+   </div>
+   <div class="modal" id="renewal-modal">
+    <div class="modal-box" id="renewal-box">
+     <button aria-label="Close" class="modal-close-btn" id="renewal-close-btn">
+      ×
+     </button>
+     <p data-lang-en="Please use Alipay to scan and renew" data-lang-zh="请使用支付宝扫码续费">
+      Please use Alipay to scan and renew
+     </p>
+     <div id="renewal-qrcode">
+     </div>
+     <p data-lang-en="Waiting for payment..." data-lang-zh="等待支付中..." id="renewal-status">
+      Waiting for payment...
+     </p>
+     <p id="renewal-timer" style="font-size: 0.9rem; color: var(--text-secondary-color);">
+     </p>
+    </div>
+   </div>
+   <div class="modal" id="error-modal">
+    <div class="modal-box" id="error-box">
+     <button aria-label="Close" class="modal-close-btn" id="error-close-btn">
+      ×
+     </button>
+     <i class="bx bxs-x-circle icon">
+     </i>
+     <h3 data-lang-en="Operation Failed" data-lang-zh="操作失败">
+      Operation Failed
+     </h3>
+     <p class="message" id="error-message">
+     </p>
+     <button class="btn btn-primary" data-lang-en="OK" data-lang-zh="好的" id="error-confirm-btn">
+      OK
+     </button>
+    </div>
+   </div>
+  </main>
+  <footer class="main-footer" id="main-footer">
+  </footer>
+  <div class="floating-contact-container">
+   <button aria-label="Contact Us" class="contact-fab" id="contact-fab">
+    <i class="bx bxs-message-dots">
+    </i>
+   </button>
+  </div>
+  <div class="modal-container" id="contact-modal-container">
+   <div class="modal-content">
+    <button aria-label="Close" class="modal-close-btn" id="contact-modal-close-btn">
+     ×
+    </button>
+    <h2 data-lang-en="Contact Us" data-lang-zh="联系我们">
+     联系我们
+    </h2>
+    <div class="contact-channels">
+     <div class="contact-channel">
+      <i class="bx bxl-whatsapp">
+      </i>
+      <h3 data-lang-en="WhatsApp" data-lang-zh="WhatsApp">
+       WhatsApp
+      </h3>
+      <a class="btn btn-secondary" href="https://wa.me/8619189026051" target="_blank">
+       +8619189026051
+      </a>
+     </div>
+     <div class="contact-channel">
+      <i class="bx bxl-weixin">
+      </i>
+      <h3 data-lang-en="WeChat Support" data-lang-zh="微信客服">
+       微信客服
+      </h3>
+      <img alt="微信二维码" class="qr-code" src="assets/img/wechat.png"/>
+      <p data-lang-en="Scan QR to Add" data-lang-zh="扫码添加好友">
+       扫码添加好友
+      </p>
+     </div>
+     <div class="contact-channel">
+      <i class="bx bxl-qq">
+      </i>
+      <h3 data-lang-en="QQ Support" data-lang-zh="QQ客服">
+       QQ客服
+      </h3>
+      <img alt="QQ二维码" class="qr-code" src="assets/img/qqchat.jpg"/>
+      <p data-lang-en="Scan QR to Add" data-lang-zh="扫码添加好友">
+       扫码添加好友
+      </p>
+     </div>
+    </div>
+   </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode-generator/qrcode.js">
+  </script>
+  <script>
+   document.addEventListener('DOMContentLoaded', () => {
             // ===================================================================
             // 1. 全局常量和配置
             // ===================================================================
@@ -1275,7 +1380,6 @@
 
         // 初始化时也更新一次
         updateRenewalOptions();
-    </script>
-</body>
-
+  </script>
+ </body>
 </html>
