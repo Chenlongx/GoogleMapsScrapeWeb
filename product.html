@@ -2173,7 +2173,7 @@
             var captionText = document.getElementById('lightbox-caption');
             var closeBtn = document.querySelector('.lightbox-close');
 
-            // 获取所有触发点击的图片链接
+            // 获取所有触发点击的图片链接 (.lightbox-trigger)
             var triggers = document.querySelectorAll('.lightbox-trigger');
 
             // 为每个链接添加点击事件
@@ -2183,6 +2183,20 @@
                     lightbox.style.display = 'block'; // 显示黑色蒙层
                     lightboxImg.src = this.href;      // 将大图的路径赋给弹窗中的图片
                     captionText.innerHTML = this.querySelector('img').alt; // 用小图的alt属性作为图片说明
+                });
+            });
+
+            // 为 .step-visual-content 容器内的图片添加 lightbox 功能
+            var stepVisualImages = document.querySelectorAll('.step-visual-content img');
+            stepVisualImages.forEach(function (img) {
+                // 添加可点击样式
+                img.style.cursor = 'zoom-in';
+
+                img.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    lightbox.style.display = 'block';
+                    lightboxImg.src = this.src; // 直接使用图片的 src
+                    captionText.innerHTML = this.alt || ''; // 使用图片的 alt 属性作为说明
                 });
             });
 
