@@ -123,24 +123,70 @@ exports.handler = async (event) => {
 
         // 从 PayPal 获取订单详情
         const purchaseUnit = captureData.purchase_units[0];
-        const referenceId = purchaseUnit.reference_id; // 我们的订单号
+        const referenceId = purchaseUnit.reference_id; // 我们的订单号 (格式: PP-productCode-timestamp-base64Email)
 
-        // 更新订单状态
-        const { data: orderData, error: orderQueryError } = await supabase
+        // 尝试从数据库获取订单
+        let orderData = null;
+        const { data: dbOrder, error: orderQueryError } = await supabase
             .from('orders')
             .select('*')
             .eq('out_trade_no', referenceId || outTradeNo)
             .single();
 
-        if (orderQueryError || !orderData) {
-            console.error('Order not found:', referenceId || outTradeNo);
-            // 即使数据库订单未找到，支付仍然成功
+        if (dbOrder) {
+            orderData = dbOrder;
+        } else {
+            // 订单不在数据库中，从 reference_id 解码信息
+            console.log('Order not found in DB, decoding from reference_id:', referenceId);
+
+            // 解析 reference_id 格式: PP-productCode-timestamp-base64Email
+            const parts = (referenceId || outTradeNo || '').split('-');
+            if (parts.length >= 4) {
+                const productCode = parts[1]; // gp, gs, vs, vp, wvs, wvp
+                const base64Email = parts.slice(3).join('-'); // base64编码的邮箱
+
+                // 解码邮箱
+                let customerEmail = '';
+                try {
+                    customerEmail = Buffer.from(base64Email, 'base64').toString('utf8');
+                } catch (e) {
+                    console.error('Failed to decode email from reference_id');
+                }
+
+                // 映射 productCode 到 product_id
+                const productCodeMap = {
+                    'gs': 'gmaps_standard', 'gp': 'gmaps_premium',
+                    'vs': 'validator_standard', 'vp': 'validator_premium',
+                    'wvs': 'whatsapp-validator_standard', 'wvp': 'whatsapp-validator_premium'
+                };
+
+                const productId = productCodeMap[productCode];
+
+                if (productId && customerEmail) {
+                    orderData = {
+                        out_trade_no: referenceId,
+                        product_id: productId,
+                        customer_email: customerEmail,
+                        status: 'PENDING'
+                    };
+
+                    // 尝试保存到数据库
+                    const { error: insertError } = await supabase.from('orders').insert([orderData]);
+                    if (insertError) {
+                        console.warn('Failed to save order to DB:', insertError);
+                    }
+                }
+            }
+        }
+
+        if (!orderData) {
+            console.error('Unable to get order data from DB or reference_id');
             return {
                 statusCode: 200,
                 headers,
                 body: JSON.stringify({
                     success: true,
-                    message: 'Payment completed but order not found in database',
+                    message: 'Payment completed but order details could not be determined. Please contact support.',
                     paypalOrderId: orderId,
                     status: 'COMPLETED'
                 })
