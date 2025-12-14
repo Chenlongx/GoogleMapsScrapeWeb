@@ -163,6 +163,17 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <li><a href="./terms.html" data-lang-zh="服务条款" data-lang-en="Terms of Service">服务条款</a></li>
                             </ul>
                         </div>
+                        <div class="footer-links">
+                            <h3 data-lang-zh="关注我们" data-lang-en="Follow Us">关注我们</h3>
+                            <div class="footer-social">
+                                <a href="https://www.facebook.com/profile.php?id=61585049761237" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="social-link">
+                                    <i class='bx bxl-facebook-circle'></i>
+                                </a>
+                                <a href="https://www.youtube.com/@SmartTradeCloudLadder" target="_blank" rel="noopener noreferrer" aria-label="YouTube" class="social-link">
+                                    <i class='bx bxl-youtube'></i>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                     <div class="footer-bottom">
                         <p>&copy; ${new Date().getFullYear()} SmartTrade CloudLadder. All rights reserved.</p>

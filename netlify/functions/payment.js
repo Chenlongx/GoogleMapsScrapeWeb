@@ -20,14 +20,14 @@ function formatKey(key, type) {
     return key.replace(header, `${header}\n`).replace(footer, `\n${footer}`);
 }
 
-// 后端权威价格表 (人民币, CNY)
+// 后端权威价格表 (人民币, CNY) - 支付宝支付使用
 const productPriceMap = {
-    'gmaps_standard': 34.30,
-    'gmaps_premium': 49.90,
-    'validator_standard': 203.00,
-    'validator_premium': 553.00,
-    'whatsapp-validator_standard': 203.00,
-    'whatsapp-validator_premium': 343.00,
+    'gmaps_standard': 34.30,      // 首月体验版
+    'gmaps_premium': 49.90,       // 高级版
+    'validator_standard': 203.00, // MailPro 标准版
+    'validator_premium': 553.00,  // MailPro 高级版
+    'whatsapp-validator_standard': 203.00,  // WhatsApp 标准版
+    'whatsapp-validator_premium': 343.00,   // WhatsApp 高级版
     'gmaps_renewal_monthly': 49.90,
     'gmaps_renewal_quarterly': 149.70,
     'gmaps_renewal_yearly': 598.80
@@ -51,19 +51,19 @@ exports.handler = async (event) => {
     if (event.httpMethod !== 'POST') {
         return { statusCode: 405, headers, body: 'Method Not Allowed' };
     }
-    
+
     try {
         // 检查必要的环境变量
         const requiredEnvVars = ['ALIPAY_APP_ID', 'ALIPAY_PRIVATE_KEY', 'ALIPAY_PUBLIC_KEY', 'SUPABASE_URL', 'SUPABASE_ANON_KEY'];
         const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
-        
+
         if (missingVars.length > 0) {
             console.error('Missing environment variables:', missingVars);
             return {
                 statusCode: 500,
                 headers,
-                body: JSON.stringify({ 
-                    success: false, 
+                body: JSON.stringify({
+                    success: false,
                     message: 'Server configuration error. Please contact support.',
                     error: 'Missing environment variables'
                 })
@@ -88,10 +88,10 @@ exports.handler = async (event) => {
             console.error(`[Security Error] Invalid productId received: ${productId}`);
             return { statusCode: 400, headers, body: JSON.stringify({ success: false, message: 'Invalid product' }) };
         }
-        
+
         const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
-        
-        let finalIdentifier = identifierFromFrontend; 
+
+        let finalIdentifier = identifierFromFrontend;
 
         // ▼▼▼【核心修改】根据您的数据库结构进行简化和修正 ▼▼▼
         if (productId.startsWith('gmaps_renewal')) {
@@ -99,12 +99,12 @@ exports.handler = async (event) => {
 
             // 1. 逻辑简化：不再区分邮箱和账号，统一在 'account' 字段中查询
             const { data: userRecord, error: dbQueryError } = await supabase
-                .from('user_accounts') 
+                .from('user_accounts')
                 .select('account') // 只查询存在的 'account' 字段
                 .eq('account', identifierFromFrontend) // 在 'account' 字段中匹配前端传来的值
                 .single();
 
-            if (dbQueryError && dbQueryError.code !== 'PGRST116') { 
+            if (dbQueryError && dbQueryError.code !== 'PGRST116') {
                 console.error('Supabase query error during renewal user check:', dbQueryError);
                 throw new Error('Database query failed during user validation.');
             }
@@ -117,7 +117,7 @@ exports.handler = async (event) => {
                     body: JSON.stringify({ success: false, message: '续费失败：该账户不存在。' })
                 };
             }
-            
+
             // 2. 使用从数据库中查到的、权威的账户信息作为最终标识符
             finalIdentifier = userRecord.account;
             console.log(`[Info] User validated. Proceeding with identifier: ${finalIdentifier}`);
@@ -180,7 +180,7 @@ exports.handler = async (event) => {
                     agent_code: agentCode,
                     created_at: new Date().toISOString()
                 }]);
-                
+
                 if (referralError) {
                     console.log('推广信息临时存储失败，但不影响订单创建:', referralError.message);
                 }
