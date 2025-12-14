@@ -147,13 +147,11 @@ exports.handler = async (event) => {
             };
         }
 
-        // 更新订单状态为已支付
+        // 更新订单状态为已支付 - 只更新存在的字段
         const { error: updateError } = await supabase
             .from('orders')
             .update({
-                status: 'PAID',
-                paypal_capture_id: captureData.id,
-                paid_at: new Date().toISOString()
+                status: 'PAID'
             })
             .eq('out_trade_no', orderData.out_trade_no);
 

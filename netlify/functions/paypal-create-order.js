@@ -176,16 +176,12 @@ exports.handler = async (event) => {
 
         const orderData = await orderResponse.json();
 
-        // 保存订单到数据库
+        // 保存订单到数据库 - 使用与 payment.js 相同的字段
         const dbOrderData = {
             out_trade_no: outTradeNo,
-            paypal_order_id: orderData.id,
             product_id: productId,
             customer_email: email,
-            amount: price,
-            currency: 'USD',
-            status: 'PENDING',
-            payment_method: 'paypal'
+            status: 'PENDING'
         };
 
         if (referralCode) {
