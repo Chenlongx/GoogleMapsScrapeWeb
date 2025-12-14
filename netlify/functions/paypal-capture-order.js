@@ -240,28 +240,35 @@ exports.handler = async (event) => {
 
                 if (existingUser) {
                     // 计算新的到期时间（从当前到期时间或现在开始）
-                    const currentExpiry = new Date(existingUser.expire_time);
+                    const currentExpiry = new Date(existingUser.expiry_at);
                     const startDate = currentExpiry > new Date() ? currentExpiry : new Date();
                     const newExpiry = new Date(startDate);
                     newExpiry.setDate(newExpiry.getDate() + validityDays);
 
                     await supabase
                         .from('user_accounts')
-                        .update({ expire_time: newExpiry.toISOString() })
+                        .update({ expiry_at: newExpiry.toISOString() })
                         .eq('account', customerEmail);
+
+                    console.log(`[PayPal] Account renewed: ${customerEmail}, new expiry: ${newExpiry.toISOString()}`);
                 }
             } else {
                 // 新购：创建新账户
-                await supabase
+                const { error: upsertError } = await supabase
                     .from('user_accounts')
-                    .upsert({
+                    .insert({
                         account: customerEmail,
                         password: password,
-                        expire_time: expireDate.toISOString(),
+                        user_type: productId.includes('premium') ? 'premium' : 'regular',
                         status: 'active',
-                        product_type: productId.includes('premium') ? 'premium' : 'standard',
-                        created_at: new Date().toISOString()
-                    }, { onConflict: 'account' });
+                        expiry_at: expireDate.toISOString()
+                    });
+
+                if (upsertError) {
+                    console.error('[PayPal] Failed to create user account:', upsertError);
+                } else {
+                    console.log(`[PayPal] New account created successfully: ${customerEmail}`);
+                }
 
                 // 发送账户信息邮件
                 console.log(`[PayPal] New account created: ${customerEmail}, Password: ${password}`);
