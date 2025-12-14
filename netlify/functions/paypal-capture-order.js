@@ -1,6 +1,7 @@
 // paypal-capture-order.js
 // PayPal 支付确认/捕获接口
 const { createClient } = require('@supabase/supabase-js');
+const { Resend } = require('resend');
 
 // 允许的来源白名单
 const allowedOrigins = [
@@ -260,38 +261,144 @@ exports.handler = async (event) => {
                         created_at: new Date().toISOString()
                     }, { onConflict: 'account' });
 
-                // 发送账户信息邮件（这里可以调用邮件发送函数）
+                // 发送账户信息邮件
                 console.log(`[PayPal] New account created: ${customerEmail}, Password: ${password}`);
+
+                try {
+                    const resend = new Resend(process.env.RESEND_API_KEY);
+                    const planType = productId.includes('premium') ? 'Premium' : 'Standard';
+                    const formattedExpiry = expireDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+                    await resend.emails.send({
+                        from: 'GlobalFlow <GlobalFlow@mediamingle.cn>',
+                        to: customerEmail,
+                        subject: '【GlobalFlow】Your Google Maps Scraper Account is Ready!',
+                        html: `
+                        <div style="background-color: #f3f4f6; padding: 20px; font-family: Arial, sans-serif; line-height: 1.6;">
+                            <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; padding: 40px;">
+                                <h1 style="color: #1e293b; font-size: 24px; text-align: center;">Account Successfully Activated!</h1>
+                                <p style="color: #475569; font-size: 16px;">Hello,</p>
+                                <p style="color: #475569; font-size: 16px;">Thank you for your purchase! Your <strong style="color: #3b82f6;">Google Maps Scraper ${planType}</strong> account has been activated.</p>
+                                
+                                <div style="background-color: #f1f5f9; border: 1px dashed #cbd5e1; border-radius: 8px; padding: 20px; margin: 20px 0;">
+                                    <p style="color: #475569; font-size: 14px; margin: 5px 0;"><strong>Account:</strong> ${customerEmail}</p>
+                                    <p style="font-size: 18px; font-weight: bold; color: #1e293b; margin: 10px 0;"><strong>Password:</strong> ${password}</p>
+                                    <p style="color: #475569; font-size: 14px; margin: 5px 0;"><strong>Expires:</strong> ${formattedExpiry}</p>
+                                </div>
+                                
+                                <p style="color: #475569; font-size: 16px;">Please use the above credentials to log in to the desktop application. For security, we recommend changing your password after first login.</p>
+                                
+                                <div style="text-align: center; margin-top: 30px;">
+                                    <a href="https://mediamingle.cn/download.html" target="_blank" style="background-color: #3b82f6; color: #ffffff; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-size: 16px; font-weight: bold;">Download Application</a>
+                                </div>
+                                
+                                <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 40px 0;">
+                                <p style="color: #94a3b8; font-size: 12px; text-align: center;">If you did not make this purchase, please ignore this email. This is an automated message, please do not reply directly.</p>
+                            </div>
+                        </div>`
+                    });
+                    console.log(`[PayPal] Email sent to ${customerEmail}`);
+                } catch (emailError) {
+                    console.error('[PayPal] Failed to send email:', emailError);
+                }
             }
         } else {
-            // 生成激活码
-            const generateLicenseKey = () => {
-                const segments = [];
-                for (let i = 0; i < 4; i++) {
-                    let segment = '';
-                    for (let j = 0; j < 5; j++) {
-                        segment += 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'.charAt(Math.floor(Math.random() * 32));
-                    }
-                    segments.push(segment);
+            // Email Validator 或 WhatsApp Validator - 从数据库获取激活码
+            let licenseKey = null;
+            let productDisplayName = '';
+            let downloadUrl = '';
+
+            if (productId.startsWith('validator')) {
+                // Email Validator
+                productDisplayName = 'MailPro Email Marketing Master';
+                downloadUrl = 'https://mediamingle.cn/products/email-validator';
+
+                const { data: license, error: findError } = await supabase
+                    .from('licenses')
+                    .select('key')
+                    .eq('status', 'available')
+                    .limit(1)
+                    .single();
+
+                if (findError || !license) {
+                    console.error('[PayPal] No available license keys for Email Validator');
+                } else {
+                    licenseKey = license.key;
+                    await supabase
+                        .from('licenses')
+                        .update({
+                            status: 'activated',
+                            activation_date: new Date().toISOString(),
+                            customer_email: customerEmail
+                        })
+                        .eq('key', licenseKey);
                 }
-                return segments.join('-');
-            };
+            } else if (productId.startsWith('whatsapp-validator')) {
+                // WhatsApp Validator
+                productDisplayName = 'WhatsApp Marketing Assistant';
+                downloadUrl = 'https://mediamingle.cn/products/whatsapp-validator';
 
-            const licenseKey = generateLicenseKey();
+                const { data: license, error: findError } = await supabase
+                    .from('whatsapp_activation_code')
+                    .select('key')
+                    .eq('status', 'available')
+                    .limit(1)
+                    .single();
 
-            // 保存激活码
-            await supabase
-                .from('activation_keys')
-                .insert({
-                    license_key: licenseKey,
-                    product_id: productId,
-                    customer_email: customerEmail,
-                    expire_date: expireDate.toISOString(),
-                    status: 'active',
-                    created_at: new Date().toISOString()
-                });
+                if (findError || !license) {
+                    console.error('[PayPal] No available license keys for WhatsApp Validator');
+                } else {
+                    licenseKey = license.key;
+                    await supabase
+                        .from('whatsapp_activation_code')
+                        .update({
+                            status: 'activated',
+                            activation_date: new Date().toISOString(),
+                            customer_email: customerEmail
+                        })
+                        .eq('key', licenseKey);
+                }
+            }
 
-            console.log(`[PayPal] License key generated: ${licenseKey} for ${customerEmail}`);
+            if (licenseKey) {
+                console.log(`[PayPal] License key activated: ${licenseKey} for ${customerEmail}`);
+
+                // 发送激活码邮件
+                try {
+                    const resend = new Resend(process.env.RESEND_API_KEY);
+                    const planType = productId.includes('premium') ? 'Premium' : 'Standard';
+
+                    await resend.emails.send({
+                        from: 'GlobalFlow <GlobalFlow@mediamingle.cn>',
+                        to: customerEmail,
+                        subject: `【GlobalFlow】Your ${productDisplayName} License Key`,
+                        html: `
+                        <div style="background-color: #f3f4f6; padding: 20px; font-family: Arial, sans-serif; line-height: 1.6;">
+                            <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; padding: 40px;">
+                                <h1 style="color: #1e293b; font-size: 24px; text-align: center;">Thank You for Your Purchase!</h1>
+                                <p style="color: #475569; font-size: 16px;">Hello,</p>
+                                <p style="color: #475569; font-size: 16px;">This is your activation key for <strong style="color: #3b82f6;">${productDisplayName} ${planType}</strong>. Please use it to activate your product.</p>
+                                
+                                <div style="background-color: #f1f5f9; border: 1px dashed #cbd5e1; border-radius: 8px; padding: 20px; text-align: center; margin: 20px 0;">
+                                    <p style="font-size: 20px; font-weight: bold; color: #1e293b; letter-spacing: 1px; margin: 0;">${licenseKey}</p>
+                                </div>
+                                
+                                <p style="color: #475569; font-size: 16px;">If you haven't downloaded the software yet, you can get it by clicking the button below.</p>
+                                
+                                <div style="text-align: center; margin-top: 30px;">
+                                    <a href="${downloadUrl}" target="_blank" style="background-color: #3b82f6; color: #ffffff; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-size: 16px; font-weight: bold;">Download Software</a>
+                                </div>
+                                
+                                <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 40px 0;">
+                                <p style="color: #94a3b8; font-size: 12px; text-align: center;">If you did not make this purchase, please ignore this email. This is an automated message, please do not reply directly.</p>
+                            </div>
+                        </div>`
+                    });
+                    console.log(`[PayPal] License email sent to ${customerEmail}`);
+                } catch (emailError) {
+                    console.error('[PayPal] Failed to send license email:', emailError);
+                }
+            }
         }
 
         return {
