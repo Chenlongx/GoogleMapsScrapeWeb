@@ -1077,9 +1077,6 @@
                 purchaseBtn.addEventListener('click', async (e) => {
                     e.preventDefault();
                     const lang = document.documentElement.lang.startsWith('zh') ? 'zh' : 'en';
-                    if (lang === 'en') {
-                        alert('Alipay is only available for payments in CNY. Please switch the language to Chinese to proceed.'); return;
-                    }
 
                     const productIdBase = purchaseBtn.dataset.productId;
                     const activePlan = card.querySelector('.plan-btn.active').dataset.plan;
@@ -1088,27 +1085,60 @@
                     const email = emailInput.value;
 
                     if (!email || !email.includes('@')) {
-                        alert('请输入有效的邮箱地址！'); return;
+                        alert(lang === 'zh' ? '请输入有效的邮箱地址！' : 'Please enter a valid email address!');
+                        return;
                     }
 
-                    const modalElements = {
-                        modal: document.getElementById('payment-modal'),
-                        qrcodeContainer: document.getElementById('qrcode'),
-                        statusEl: document.getElementById('payment-status'),
-                        timerEl: document.getElementById('payment-timer')
-                    };
                     // 获取推广信息
                     let referralData = window.getReferralData ? window.getReferralData() : null;
-
-                    // 如果当前页面没有推广信息，尝试从存储中恢复
                     if (!referralData) {
                         referralData = restoreReferralFromStorage();
                     }
-
                     const referralCode = referralData ? referralData.fullCode : null;
                     const agentCode = referralData ? referralData.agentCode : null;
 
-                    await processPayment(productId, email, modalElements, referralCode, agentCode);
+                    if (lang === 'en') {
+                        // 英文用户使用 PayPal 支付
+                        try {
+                            purchaseBtn.disabled = true;
+                            purchaseBtn.textContent = 'Processing...';
+
+                            const response = await fetch(`${backendUrl}paypal-create-order`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    productId,
+                                    email,
+                                    referralCode,
+                                    agentCode
+                                })
+                            });
+                            const data = await response.json();
+
+                            if (data.success && data.approvalUrl) {
+                                // 跳转到 PayPal 支付页面
+                                window.location.href = data.approvalUrl;
+                            } else {
+                                alert(data.message || 'Failed to create PayPal order. Please try again.');
+                                purchaseBtn.disabled = false;
+                                purchaseBtn.textContent = 'Buy Now';
+                            }
+                        } catch (error) {
+                            console.error('PayPal error:', error);
+                            alert('Payment service error. Please try again later.');
+                            purchaseBtn.disabled = false;
+                            purchaseBtn.textContent = 'Buy Now';
+                        }
+                    } else {
+                        // 中文用户使用支付宝支付
+                        const modalElements = {
+                            modal: document.getElementById('payment-modal'),
+                            qrcodeContainer: document.getElementById('qrcode'),
+                            statusEl: document.getElementById('payment-status'),
+                            timerEl: document.getElementById('payment-timer')
+                        };
+                        await processPayment(productId, email, modalElements, referralCode, agentCode);
+                    }
                 });
             });
 
