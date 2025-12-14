@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +11,7 @@
       padding: 0;
       box-sizing: border-box;
     }
-    
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -20,7 +21,7 @@
       justify-content: center;
       padding: 20px;
     }
-    
+
     .container {
       background: white;
       border-radius: 16px;
@@ -29,31 +30,31 @@
       width: 100%;
       padding: 32px 24px;
     }
-    
+
     .header {
       text-align: center;
       margin-bottom: 28px;
     }
-    
+
     .header h1 {
       font-size: 24px;
       color: #1f2937;
       margin-bottom: 8px;
       font-weight: 600;
     }
-    
+
     .header p {
       color: #6b7280;
       font-size: 14px;
     }
-    
+
     .order-card {
       background: #f9fafb;
       border-radius: 12px;
       padding: 20px;
       margin-bottom: 24px;
     }
-    
+
     .order-item {
       display: flex;
       justify-content: space-between;
@@ -62,47 +63,47 @@
       padding-bottom: 12px;
       border-bottom: 1px solid #e5e7eb;
     }
-    
+
     .order-item:last-child {
       margin-bottom: 0;
       padding-bottom: 0;
       border-bottom: none;
     }
-    
+
     .order-label {
       color: #6b7280;
       font-size: 14px;
     }
-    
+
     .order-value {
       color: #1f2937;
       font-size: 16px;
       font-weight: 500;
     }
-    
+
     .order-value.amount {
       color: #ef4444;
       font-size: 24px;
       font-weight: 700;
     }
-    
+
     .payment-section {
       margin-bottom: 24px;
     }
-    
+
     .payment-section h3 {
       font-size: 16px;
       color: #1f2937;
       margin-bottom: 12px;
       font-weight: 600;
     }
-    
+
     .payment-methods {
       display: flex;
       gap: 12px;
       margin-bottom: 16px;
     }
-    
+
     .payment-method {
       flex: 1;
       border: 2px solid #e5e7eb;
@@ -112,28 +113,28 @@
       cursor: pointer;
       transition: all 0.2s;
     }
-    
+
     .payment-method:hover {
       border-color: #667eea;
       background: #f9fafb;
     }
-    
+
     .payment-method.selected {
       border-color: #667eea;
       background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
     }
-    
+
     .method-icon {
       font-size: 32px;
       margin-bottom: 8px;
     }
-    
+
     .method-name {
       font-size: 14px;
       color: #1f2937;
       font-weight: 500;
     }
-    
+
     .payment-info {
       background: #fef3c7;
       border: 1px solid #fbbf24;
@@ -141,25 +142,25 @@
       padding: 16px;
       margin-bottom: 20px;
     }
-    
+
     .payment-info h4 {
       font-size: 14px;
       color: #92400e;
       margin-bottom: 8px;
       font-weight: 600;
     }
-    
+
     .payment-info ol {
       margin-left: 20px;
       color: #78350f;
       font-size: 13px;
       line-height: 1.6;
     }
-    
+
     .payment-info li {
       margin-bottom: 6px;
     }
-    
+
     .btn {
       width: 100%;
       padding: 14px;
@@ -171,33 +172,33 @@
       transition: all 0.2s;
       margin-bottom: 12px;
     }
-    
+
     .btn-primary {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
     }
-    
+
     .btn-primary:hover {
       transform: translateY(-2px);
       box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
     }
-    
+
     .btn-primary:disabled {
       opacity: 0.5;
       cursor: not-allowed;
       transform: none;
     }
-    
+
     .btn-secondary {
       background: white;
       color: #667eea;
       border: 2px solid #667eea;
     }
-    
+
     .btn-secondary:hover {
       background: #f9fafb;
     }
-    
+
     .loading {
       display: inline-block;
       width: 16px;
@@ -209,44 +210,47 @@
       margin-right: 8px;
       vertical-align: middle;
     }
-    
+
     @keyframes spin {
-      to { transform: rotate(360deg); }
+      to {
+        transform: rotate(360deg);
+      }
     }
-    
+
     .success-icon {
       text-align: center;
       font-size: 64px;
       margin-bottom: 16px;
     }
-    
+
     .success-message {
       text-align: center;
       margin-bottom: 24px;
     }
-    
+
     .success-message h2 {
       font-size: 20px;
       color: #10b981;
       margin-bottom: 8px;
     }
-    
+
     .success-message p {
       font-size: 14px;
       color: #6b7280;
     }
-    
+
     .hidden {
       display: none !important;
     }
   </style>
-    <link rel="icon" type="image/png" href="assets/img/ico/favicon-96x96.png" sizes="96x96">
-    <link rel="icon" type="image/svg+xml" href="assets/img/ico/favicon.svg">
-    <link rel="shortcut icon" href="assets/img/ico/favicon.ico">
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/img/ico/apple-touch-icon.png">
-    <link rel="manifest" href="assets/img/ico/site.webmanifest">
+  <link rel="icon" type="image/png" href="assets/img/ico/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/svg+xml" href="assets/img/ico/favicon.svg">
+  <link rel="shortcut icon" href="assets/img/ico/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/img/ico/apple-touch-icon.png">
+  <link rel="manifest" href="assets/img/ico/site.webmanifest">
 
 </head>
+
 <body>
   <div class="container">
     <!-- 订单信息 -->
@@ -255,7 +259,7 @@
         <h1>📱 扫码成功</h1>
         <p>请选择支付方式完成付款</p>
       </div>
-      
+
       <div class="order-card">
         <div class="order-item">
           <span class="order-label">订单号</span>
@@ -270,7 +274,7 @@
           <span class="order-value amount" id="amount">¥0</span>
         </div>
       </div>
-      
+
       <div class="payment-section">
         <h3>选择支付方式</h3>
         <div class="payment-methods">
@@ -284,28 +288,28 @@
           </div>
         </div>
       </div>
-      
+
       <div class="payment-info">
         <h4>📋 支付流程说明</h4>
         <ol>
           <li>请使用<strong>微信</strong>或<strong>支付宝</strong>向以下账号转账：<br>
-              <strong>账号：mediamingle@example.com</strong>
+            <strong>账号：mediamingle@example.com</strong>
           </li>
           <li>转账时请备注您的<strong>订单号</strong></li>
           <li>完成转账后，点击下方"我已完成支付"按钮</li>
           <li>管理员将在<strong>1-5分钟</strong>内确认并升级您的账号</li>
         </ol>
       </div>
-      
+
       <button class="btn btn-primary" id="confirmBtn">
         ✅ 我已完成支付
       </button>
-      
+
       <button class="btn btn-secondary" id="cancelBtn">
         返回
       </button>
     </div>
-    
+
     <!-- 确认成功 -->
     <div id="successSection" class="hidden">
       <div class="success-icon">✅</div>
@@ -313,7 +317,7 @@
         <h2>提交成功</h2>
         <p>您的支付确认已提交<br>管理员确认后将自动升级您的账号</p>
       </div>
-      
+
       <div class="order-card">
         <div class="order-item">
           <span class="order-label">订单号</span>
@@ -324,90 +328,200 @@
           <span class="order-value" id="successAmount">¥0</span>
         </div>
       </div>
-      
+
       <button class="btn btn-secondary" onclick="window.close()">
         关闭页面
       </button>
     </div>
   </div>
-  
+
   <script>
-    const API_BASE_URL = 'https://mediamingle.cn/.netlify/functions';
-    
+    // 检测环境
+    let API_BASE_URL;
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.port === '8888') {
+      API_BASE_URL = 'http://localhost:5001/.netlify/functions';
+    } else {
+      API_BASE_URL = '/.netlify/functions';
+    }
+
     // 从URL获取参数
     const urlParams = new URLSearchParams(window.location.search);
+
+    // PayPal 回调参数
+    const paypalToken = urlParams.get('token');
+    const payerID = urlParams.get('PayerID');
+    const paypalOrderId = urlParams.get('orderId');
+
+    // 普通订单参数
     const orderId = urlParams.get('order_id');
     const amount = urlParams.get('amount');
     const planName = urlParams.get('plan');
-    
-    // 显示订单信息
-    document.getElementById('orderId').textContent = orderId || '-';
-    document.getElementById('planName').textContent = decodeURIComponent(planName || '-');
-    document.getElementById('amount').textContent = `¥${amount || '0'}`;
-    
-    // 支付方式选择
-    const paymentMethods = document.querySelectorAll('.payment-method');
-    let selectedMethod = 'wechat';
-    
-    paymentMethods.forEach(method => {
-      method.addEventListener('click', () => {
-        paymentMethods.forEach(m => m.classList.remove('selected'));
-        method.classList.add('selected');
-        selectedMethod = method.dataset.method;
-      });
-    });
-    
-    // 确认支付按钮
-    const confirmBtn = document.getElementById('confirmBtn');
-    confirmBtn.addEventListener('click', async () => {
-      if (!orderId) {
-        alert('订单信息错误，请重新扫码');
-        return;
-      }
-      
-      // 禁用按钮
-      confirmBtn.disabled = true;
-      const originalHTML = confirmBtn.innerHTML;
-      confirmBtn.innerHTML = '<div class="loading"></div> 提交中...';
-      
+
+    // 检测是否是 PayPal 回调
+    if (paypalToken && payerID) {
+      // PayPal 支付回调 - 自动处理
+      handlePayPalCallback();
+    } else {
+      // 普通订单确认流程
+      initNormalPayment();
+    }
+
+    // 处理 PayPal 回调
+    async function handlePayPalCallback() {
+      const orderSection = document.getElementById('orderSection');
+      const successSection = document.getElementById('successSection');
+
+      // 显示处理中状态
+      orderSection.innerHTML = `
+            <div class="header">
+                <h1>⏳ Processing Payment</h1>
+                <p>Please wait while we confirm your PayPal payment...</p>
+            </div>
+            <div style="text-align: center; padding: 40px;">
+                <div class="loading" style="width: 48px; height: 48px; border-width: 4px; margin: 0 auto 20px;"></div>
+                <p style="color: #6b7280;">Connecting to PayPal...</p>
+            </div>
+        `;
+
       try {
-        // 调用确认接口（手机端专用）
-        const response = await fetch(`${API_BASE_URL}/email-finder-confirm-payment-mobile`, {
+        // 调用后端确认 PayPal 支付
+        const response = await fetch(`${API_BASE_URL}/paypal-capture-order`, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            order_id: orderId
+            orderId: paypalToken, // PayPal 的 token 就是订单 ID
+            outTradeNo: paypalOrderId
           })
         });
-        
+
         const result = await response.json();
-        
+
         if (result.success) {
-          // 显示成功页面
-          document.getElementById('orderSection').classList.add('hidden');
-          document.getElementById('successSection').classList.remove('hidden');
-          document.getElementById('successOrderId').textContent = orderId;
-          document.getElementById('successAmount').textContent = `¥${amount}`;
+          // 支付成功
+          orderSection.classList.add('hidden');
+          successSection.classList.remove('hidden');
+
+          // 更新成功页面内容
+          successSection.innerHTML = `
+                    <div class="success-icon">✅</div>
+                    <div class="success-message">
+                        <h2 style="color: #10b981;">Payment Successful!</h2>
+                        <p>Your payment has been confirmed.<br>Check your email for account details.</p>
+                    </div>
+                    
+                    <div class="order-card">
+                        <div class="order-item">
+                            <span class="order-label">Order ID</span>
+                            <span class="order-value">${result.outTradeNo || paypalOrderId || '-'}</span>
+                        </div>
+                        <div class="order-item">
+                            <span class="order-label">Email</span>
+                            <span class="order-value">${result.email || '-'}</span>
+                        </div>
+                        <div class="order-item">
+                            <span class="order-label">Product</span>
+                            <span class="order-value">${result.productId || '-'}</span>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="window.location.href='./checkout.html'">
+                        Continue Shopping
+                    </button>
+                    
+                    <button class="btn btn-secondary" onclick="window.location.href='./index.html'">
+                        Return to Home
+                    </button>
+                `;
         } else {
-          throw new Error(result.message || '提交失败');
+          throw new Error(result.message || 'Payment capture failed');
         }
       } catch (error) {
-        console.error('确认失败:', error);
-        alert('提交失败：' + error.message);
-        
-        // 恢复按钮
-        confirmBtn.disabled = false;
-        confirmBtn.innerHTML = originalHTML;
+        console.error('PayPal capture error:', error);
+
+        // 显示错误
+        orderSection.innerHTML = `
+                <div class="success-icon">❌</div>
+                <div class="success-message">
+                    <h2 style="color: #ef4444;">Payment Failed</h2>
+                    <p>${error.message || 'Unable to confirm your payment. Please contact support.'}</p>
+                </div>
+                
+                <button class="btn btn-primary" onclick="window.location.href='./checkout.html'">
+                    Try Again
+                </button>
+                
+                <button class="btn btn-secondary" onclick="window.location.href='./contact.html'">
+                    Contact Support
+                </button>
+            `;
       }
-    });
-    
-    // 取消按钮
-    document.getElementById('cancelBtn').addEventListener('click', () => {
-      window.close();
-    });
+    }
+
+    // 初始化普通支付确认流程
+    function initNormalPayment() {
+      // 显示订单信息
+      document.getElementById('orderId').textContent = orderId || '-';
+      document.getElementById('planName').textContent = decodeURIComponent(planName || '-');
+      document.getElementById('amount').textContent = `¥${amount || '0'}`;
+
+      // 支付方式选择
+      const paymentMethods = document.querySelectorAll('.payment-method');
+      let selectedMethod = 'wechat';
+
+      paymentMethods.forEach(method => {
+        method.addEventListener('click', () => {
+          paymentMethods.forEach(m => m.classList.remove('selected'));
+          method.classList.add('selected');
+          selectedMethod = method.dataset.method;
+        });
+      });
+
+      // 确认支付按钮
+      const confirmBtn = document.getElementById('confirmBtn');
+      confirmBtn.addEventListener('click', async () => {
+        if (!orderId) {
+          alert('订单信息错误，请重新扫码');
+          return;
+        }
+
+        // 禁用按钮
+        confirmBtn.disabled = true;
+        const originalHTML = confirmBtn.innerHTML;
+        confirmBtn.innerHTML = '<div class="loading"></div> 提交中...';
+
+        try {
+          // 调用确认接口
+          const response = await fetch(`${API_BASE_URL}/email-finder-confirm-payment-mobile`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ order_id: orderId })
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            // 显示成功页面
+            document.getElementById('orderSection').classList.add('hidden');
+            document.getElementById('successSection').classList.remove('hidden');
+            document.getElementById('successOrderId').textContent = orderId;
+            document.getElementById('successAmount').textContent = `¥${amount}`;
+          } else {
+            throw new Error(result.message || '提交失败');
+          }
+        } catch (error) {
+          console.error('确认失败:', error);
+          alert('提交失败：' + error.message);
+          confirmBtn.disabled = false;
+          confirmBtn.innerHTML = originalHTML;
+        }
+      });
+
+      // 取消按钮
+      document.getElementById('cancelBtn').addEventListener('click', () => {
+        window.close();
+      });
+    }
   </script>
 </body>
-</html>
 
+</html>
