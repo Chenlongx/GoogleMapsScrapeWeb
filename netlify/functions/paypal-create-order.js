@@ -98,7 +98,7 @@ exports.handler = async (event) => {
         // 初始化 Supabase
         const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
 
-        // 生成订单号
+        // 生成订单号 - 使用完整的 base64 编码邮箱
         const productCodeMap = {
             'gmaps_standard': 'gs', 'gmaps_premium': 'gp',
             'validator_standard': 'vs', 'validator_premium': 'vp',
@@ -107,7 +107,8 @@ exports.handler = async (event) => {
         };
         const productCode = productCodeMap[productId] || 'unknown';
         const encodedEmail = Buffer.from(email).toString('base64');
-        const outTradeNo = `PP-${productCode}-${Date.now()}-${encodedEmail.substring(0, 20)}`;
+        // PayPal reference_id 最大 127 字符，使用完整的 base64 邮箱
+        const outTradeNo = `${productCode}-${Date.now()}-${encodedEmail}`;
 
         // 获取 PayPal Access Token
         const paypalAuth = Buffer.from(`${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_CLIENT_SECRET}`).toString('base64');

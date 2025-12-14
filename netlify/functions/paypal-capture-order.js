@@ -140,18 +140,20 @@ exports.handler = async (event) => {
             // 订单不在数据库中，从 reference_id 解码信息
             console.log('Order not found in DB, decoding from reference_id:', referenceId);
 
-            // 解析 reference_id 格式: PP-productCode-timestamp-base64Email
-            const parts = (referenceId || outTradeNo || '').split('-');
-            if (parts.length >= 4) {
-                const productCode = parts[1]; // gp, gs, vs, vp, wvs, wvp
-                const base64Email = parts.slice(3).join('-'); // base64编码的邮箱
+            // 解析 reference_id 格式: productCode-timestamp-base64Email
+            const refId = referenceId || outTradeNo || '';
+            const parts = refId.split('-');
+            if (parts.length >= 3) {
+                const productCode = parts[0]; // gp, gs, vs, vp, wvs, wvp
+                // timestamp is parts[1]
+                const base64Email = parts.slice(2).join('-'); // base64编码的邮箱（可能包含特殊字符）
 
                 // 解码邮箱
                 let customerEmail = '';
                 try {
                     customerEmail = Buffer.from(base64Email, 'base64').toString('utf8');
                 } catch (e) {
-                    console.error('Failed to decode email from reference_id');
+                    console.error('Failed to decode email from reference_id:', e);
                 }
 
                 // 映射 productCode 到 product_id
