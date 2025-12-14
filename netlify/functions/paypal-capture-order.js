@@ -47,7 +47,7 @@ exports.handler = async (event) => {
 
     try {
         // 检查必要的环境变量
-        const requiredEnvVars = ['PAYPAL_CLIENT_ID', 'PAYPAL_CLIENT_SECRET', 'SUPABASE_URL', 'SERVICE_ROLE_KEY'];
+        const requiredEnvVars = ['PAYPAL_CLIENT_ID', 'PAYPAL_CLIENT_SECRET', 'SUPABASE_URL', 'SUPABASE_SERVICE_ROLE_KEY'];
         const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
 
         if (missingVars.length > 0) {
@@ -119,8 +119,9 @@ exports.handler = async (event) => {
             };
         }
 
-        // 使用 SERVICE_ROLE_KEY 初始化 Supabase（具有更高权限）
-        const supabase = createClient(process.env.SUPABASE_URL, process.env.SERVICE_ROLE_KEY);
+        // 使用 SUPABASE_SERVICE_ROLE_KEY 初始化 Supabase（具有更高权限）
+        const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SERVICE_ROLE_KEY || process.env.SUPABASE_KEY;
+        const supabase = createClient(process.env.SUPABASE_URL, supabaseKey);
 
         // 从 PayPal 获取订单详情
         const purchaseUnit = captureData.purchase_units[0];
