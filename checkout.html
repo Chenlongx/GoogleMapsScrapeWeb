@@ -89,6 +89,36 @@
             box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
         }
 
+        /* 促销标签样式 */
+        .promo-badge {
+            background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+            color: #fff;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            animation: pulse 2s infinite;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.02);
+            }
+        }
+
+        .promo-badge.hidden {
+            display: none;
+        }
+
         .product-price {
             font-size: 3rem;
             font-weight: 700;
@@ -410,24 +440,31 @@
                         <h2 data-lang-en="Google Maps Scraper" data-lang-zh="谷歌地图抓取器">
                             Google Maps Scraper
                         </h2>
-                        <p class="plan-description" data-lang-en="Monthly subscription, cancel anytime"
-                            data-lang-zh="按月收费">
-                            Monthly subscription, cancel anytime
+                        <p class="plan-description" data-lang-en="Flexible billing options" data-lang-zh="灵活的计费方式">
+                            Flexible billing options
                         </p>
                         <div class="plan-selector">
-                            <button class="plan-btn" data-lang-en="First Month Trial" data-lang-zh="首月体验版"
-                                data-plan="standard" data-price="9.90" data-price-cny="34.30">
-                                First Month Trial
+                            <button class="plan-btn" data-lang-en="Monthly" data-lang-zh="按月" data-plan="monthly"
+                                data-price="20.00" data-price-cny="49.90">
+                                Monthly
                             </button>
-                            <button class="plan-btn active" data-lang-en="Premium" data-lang-zh="高级版"
-                                data-plan="premium" data-price="20.00" data-price-cny="49.90">
-                                Premium
+                            <button class="plan-btn" data-lang-en="Quarterly" data-lang-zh="按季" data-plan="quarterly"
+                                data-price="60.00" data-price-cny="147.00">
+                                Quarterly
+                            </button>
+                            <button class="plan-btn active" data-lang-en="Yearly" data-lang-zh="按年" data-plan="yearly"
+                                data-price="199.00" data-price-cny="588.00">
+                                Yearly
                             </button>
                         </div>
-                        <div class="product-price" data-price-en="$20" data-price-zh="¥49.90">
-                            $20
-                            <span class="price-period" data-lang-en="/mo" data-lang-zh="/月">
-                                /mo
+                        <div class="promo-badge" id="gmaps-promo-badge" data-lang-en="🎁 Buy 1 Year, Get 1 Year Free!"
+                            data-lang-zh="🎁 买一年送一年！">
+                            🎁 买一年送一年！
+                        </div>
+                        <div class="product-price" data-price-en="$199" data-price-zh="¥588">
+                            $199
+                            <span class="price-period" data-lang-en="/2 years" data-lang-zh="/2年">
+                                /2 years
                             </span>
                         </div>
                         <ul class="product-features">
@@ -437,8 +474,9 @@
                             Enter account email to activate
                         </label>
                         <input id="gmaps_email" placeholder="your-account@example.com" required="" type="email" />
-                        <button class="btn btn-primary" data-product-id="gmaps">
-                            立即开通高级版
+                        <button class="btn btn-primary" data-product-id="gmaps" data-lang-en="Subscribe Now"
+                            data-lang-zh="立即开通">
+                            立即开通
                         </button>
                         <div class="secure-payment-badge">
                             <i class="bx bxs-lock-alt">
@@ -686,27 +724,32 @@
 
             const plans = {
                 gmaps: {
-                    standard: {
-                        price: '9.90',      // USD
-                        price_cny: '34.30', // CNY
+                    monthly: {
+                        price: '20.00',      // USD
+                        price_cny: '49.90',  // CNY
                         features_zh: [
-                            '每天50次导出',
-                            '基础技术支持',
-                            '谷歌地图商户抓取',
-                            '基础数据字段'
+                            '无限数据',
+                            '优先技术支持',
+                            '无限导出',
+                            '完整商户信息抓取',
+                            '邮箱和电话提取',
+                            '多格式数据导出'
                         ],
                         features_en: [
-                            '50 exports per day',
-                            'Basic Support',
-                            'Google Maps Business Scraping',
-                            'Basic Data Fields'
+                            'Unlimited Records',
+                            'Priority Support',
+                            'Unlimited Export',
+                            'Complete Business Info Scraping',
+                            'Email & Phone Extraction',
+                            'Multi-format Data Export'
                         ],
                         period_zh: '/月',
-                        period_en: '/mo'
+                        period_en: '/mo',
+                        showPromo: false
                     },
-                    premium: {
-                        price: '20.00',     // USD
-                        price_cny: '49.90', // CNY
+                    quarterly: {
+                        price: '60.00',      // USD
+                        price_cny: '147.00', // CNY
                         features_zh: [
                             '无限数据',
                             '<strong>优先</strong>技术支持',
@@ -714,7 +757,7 @@
                             '完整商户信息抓取',
                             '邮箱和电话提取',
                             '多格式数据导出',
-                            '批量地区搜索'
+                            '<strong>节省 ¥10</strong>'
                         ],
                         features_en: [
                             'Unlimited Records',
@@ -723,10 +766,38 @@
                             'Complete Business Info Scraping',
                             'Email & Phone Extraction',
                             'Multi-format Data Export',
-                            'Bulk Region Search'
+                            '<strong>Save $0</strong>'
                         ],
-                        period_zh: '/月',
-                        period_en: '/mo'
+                        period_zh: '/季',
+                        period_en: '/quarter',
+                        showPromo: false
+                    },
+                    yearly: {
+                        price: '199.00',     // USD
+                        price_cny: '588.00', // CNY
+                        features_zh: [
+                            '无限数据',
+                            '<strong>专属</strong>技术支持',
+                            '无限导出',
+                            '完整商户信息抓取',
+                            '邮箱和电话提取',
+                            '多格式数据导出',
+                            '批量地区搜索',
+                            '<strong>🎁 买一年送一年</strong>'
+                        ],
+                        features_en: [
+                            'Unlimited Records',
+                            '<strong>Dedicated</strong> Support',
+                            'Unlimited Export',
+                            'Complete Business Info Scraping',
+                            'Email & Phone Extraction',
+                            'Multi-format Data Export',
+                            'Bulk Region Search',
+                            '<strong>🎁 Buy 1 Year, Get 1 Year Free!</strong>'
+                        ],
+                        period_zh: '/2年',
+                        period_en: '/2 years',
+                        showPromo: true
                     }
                 },
                 validator: {
@@ -1030,6 +1101,8 @@
 
                 const selectedPlan = activePlanBtn.dataset.plan;
                 const planData = plans[productId][selectedPlan];
+                if (!planData) return; // Safety check
+
                 const lang = document.documentElement.lang.startsWith('zh') ? 'zh' : 'en';
 
                 const priceEl = cardElement.querySelector('.product-price');
@@ -1048,17 +1121,39 @@
                 const features = planData['features_' + lang];
                 featuresEl.innerHTML = features.map(f => `<li><i class='bx bx-check'></i>${f}</li>`).join('');
 
+                // 处理促销标签显示/隐藏
+                const promoBadge = cardElement.querySelector('.promo-badge');
+                if (promoBadge) {
+                    if (planData.showPromo) {
+                        promoBadge.classList.remove('hidden');
+                    } else {
+                        promoBadge.classList.add('hidden');
+                    }
+                }
+
                 const purchaseBtn = cardElement.querySelector('.btn[data-product-id]');
                 purchaseBtn.dataset.price = planData.price;
 
-                const btnTextKey = `btn_text_${selectedPlan}_${lang}`;
-                const btnTexts = {
-                    btn_text_standard_zh: productId === 'gmaps' ? '开通标准版' : '购买标准版激活码',
-                    btn_text_standard_en: productId === 'gmaps' ? 'Activate Standard' : 'Buy Standard License',
-                    btn_text_premium_zh: productId === 'gmaps' ? '立即开通高级版' : '购买高级版激活码',
-                    btn_text_premium_en: productId === 'gmaps' ? 'Activate Premium' : 'Buy Premium License',
-                };
-                purchaseBtn.textContent = btnTexts[btnTextKey] || (lang === 'zh' ? '立即购买' : 'Buy Now');
+                // 更新按钮文本
+                let btnText;
+                if (productId === 'gmaps') {
+                    const planTextMap = {
+                        monthly: { zh: '立即开通(按月)', en: 'Subscribe Monthly' },
+                        quarterly: { zh: '立即开通(按季)', en: 'Subscribe Quarterly' },
+                        yearly: { zh: '🎁 立即开通(按年)', en: '🎁 Subscribe Yearly' }
+                    };
+                    btnText = planTextMap[selectedPlan] ? planTextMap[selectedPlan][lang] : (lang === 'zh' ? '立即开通' : 'Subscribe Now');
+                } else {
+                    const btnTextKey = `btn_text_${selectedPlan}_${lang}`;
+                    const btnTexts = {
+                        btn_text_standard_zh: '购买标准版激活码',
+                        btn_text_standard_en: 'Buy Standard License',
+                        btn_text_premium_zh: '购买高级版激活码',
+                        btn_text_premium_en: 'Buy Premium License',
+                    };
+                    btnText = btnTexts[btnTextKey] || (lang === 'zh' ? '立即购买' : 'Buy Now');
+                }
+                purchaseBtn.textContent = btnText;
             }
 
             // --- 新购产品卡片的事件绑定 ---

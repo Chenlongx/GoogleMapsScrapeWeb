@@ -69,7 +69,7 @@ async function processBusinessLogic(orderParams) {
                     .select('expiry_at')
                     .eq('account', customerEmail)
                     .single();
-                
+
                 if (findError || !user) {
                     throw new Error(`Renewal failed: User account ${customerEmail} not found.`);
                 }
@@ -77,16 +77,16 @@ async function processBusinessLogic(orderParams) {
                 // 2. 计算新的到期时间
                 const currentExpiry = new Date(user.expiry_at);
                 const now = new Date();
-                
+
                 console.log(`[Renewal] 当前到期时间: ${currentExpiry.toISOString()}`);
                 console.log(`[Renewal] 当前时间: ${now.toISOString()}`);
-                
+
                 // 如果账户已过期，则从当前时间开始计算；否则从原到期时间延长
                 const startDate = currentExpiry < now ? now : currentExpiry;
                 console.log(`[Renewal] 续费起始时间: ${startDate.toISOString()}`);
-                
+
                 const newExpiryDate = new Date(startDate);
-                
+
                 // 🔒 【修复】优先使用 product_id 判断续费时长，更可靠
                 let renewalMonths = 0;
                 if (productId) {
@@ -99,7 +99,7 @@ async function processBusinessLogic(orderParams) {
                     }
                     console.log(`[Renewal] 从 product_id (${productId}) 判断: ${renewalMonths} 个月`);
                 }
-                
+
                 // 如果 product_id 没有匹配，回退到 subject 文本判断
                 if (renewalMonths === 0) {
                     if (subjectText.includes('月度') || subjectText.includes('月付') || subjectText.includes('1个月')) {
@@ -111,13 +111,13 @@ async function processBusinessLogic(orderParams) {
                     }
                     console.log(`[Renewal] 从 subject (${subjectText}) 判断: ${renewalMonths} 个月`);
                 }
-                
+
                 // 如果还是没有匹配，默认为1个月
                 if (renewalMonths === 0) {
                     console.warn(`[Renewal] 无法判断续费时长，默认为1个月`);
                     renewalMonths = 1;
                 }
-                
+
                 // 计算新的到期时间
                 newExpiryDate.setMonth(newExpiryDate.getMonth() + renewalMonths);
                 console.log(`[Renewal] 新的到期时间: ${newExpiryDate.toISOString()} (延长 ${renewalMonths} 个月)`);
@@ -125,17 +125,17 @@ async function processBusinessLogic(orderParams) {
                 // 3. 更新数据库
                 const { error: updateError } = await supabase
                     .from('user_accounts')
-                    .update({ 
+                    .update({
                         expiry_at: newExpiryDate.toISOString(),
                         status: 'active', // 确保账户状态为激活
                         user_type: 'regular' // 【修复】续费后确保是正式用户
                     })
                     .eq('account', customerEmail);
-                
+
                 if (updateError) {
                     throw new Error(`Failed to update expiry date for ${customerEmail}: ${updateError.message}`);
                 }
-                
+
                 emailSubject = '【GlobalFlow】您的 Google Maps Scraper 账户已成功续费！';
                 // 将 newExpiryDate 对象格式化为 YYYY-MM-DD 格式的日期字符串
                 const formattedExpiry = newExpiryDate.toLocaleDateString('sv-SE'); // 使用 sv-SE 格式可以稳定地得到 YYYY-MM-DD
@@ -158,9 +158,18 @@ async function processBusinessLogic(orderParams) {
 
             } else {
                 const password = generatePassword();
-                const userType = subjectText.includes('高级版') ? 'premium' : 'regular'; // 【修正】将 'standard' 修改为 'regular'
+                const userType = 'premium'; // 所有新购方案都是高级版
+
+                // 根据产品计算有效期
+                let validityDays = 30; // 默认30天
+                if (productId) {
+                    if (productId.includes('monthly')) validityDays = 30;
+                    else if (productId.includes('quarterly')) validityDays = 90;
+                    else if (productId.includes('yearly')) validityDays = 730; // 买一年送一年
+                }
+
                 const expiryDate = new Date();
-                expiryDate.setDate(expiryDate.getDate() + 30);
+                expiryDate.setDate(expiryDate.getDate() + validityDays);
 
                 const { error } = await supabase.from('user_accounts').insert({ account: customerEmail, password, user_type: userType, status: 'active', expiry_at: expiryDate.toISOString() });
                 if (error) throw new Error(`Failed to create user account: ${error.message}`);
@@ -230,14 +239,14 @@ async function processBusinessLogic(orderParams) {
             }
 
             const activationCode = license.key;
-            
+
             // 将激活码状态更新为已激活，并关联客户邮箱
             const { error: updateError } = await supabase
                 .from('whatsapp_activation_code')
-                .update({ 
-                    status: 'activated', 
-                    activation_date: new Date().toISOString(), 
-                    customer_email: customerEmail 
+                .update({
+                    status: 'activated',
+                    activation_date: new Date().toISOString(),
+                    customer_email: customerEmail
                 })
                 .eq('key', activationCode);
 
@@ -264,7 +273,7 @@ async function processBusinessLogic(orderParams) {
                     <p style="color: #94a3b8; font-size: 12px; text-align: center;">如果您没有进行此操作，请忽略此邮件。这是一个自动发送的邮件，请勿直接回复。</p>
                 </div>
             </div>`;
-        // ▲▲▲ 新增结束 ▲▲▲
+            // ▲▲▲ 新增结束 ▲▲▲
         } else {
             console.warn('[Info] Unknown product subject:', subjectText);
             return { success: false, error: `Unknown productId: ${productId}` };
@@ -278,10 +287,10 @@ async function processBusinessLogic(orderParams) {
         });
 
         console.log(`[processBusinessLogic] Email sent to ${customerEmail}`);
-        
+
         // 处理推广佣金
         await processReferralCommission(outTradeNo, customerEmail, productId);
-        
+
         return { success: true };
 
     } catch (err) {
@@ -293,204 +302,209 @@ async function processBusinessLogic(orderParams) {
 
 // 处理推广佣金
 async function processReferralCommission(outTradeNo, customerEmail, productId) {
-        try {
-            console.log('开始处理推广佣金:', { outTradeNo, customerEmail, productId });
-            
-            const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
-            
-            // 获取订单信息
-            const { data: order, error: orderError } = await supabase
-                .from('orders')
-                .select('*')
-                .eq('out_trade_no', outTradeNo)
+    try {
+        console.log('开始处理推广佣金:', { outTradeNo, customerEmail, productId });
+
+        const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
+
+        // 获取订单信息
+        const { data: order, error: orderError } = await supabase
+            .from('orders')
+            .select('*')
+            .eq('out_trade_no', outTradeNo)
+            .single();
+
+        if (orderError || !order) {
+            console.log('未找到订单信息，跳过推广佣金处理:', orderError);
+            return;
+        }
+
+        console.log('找到订单信息:', order);
+
+        // 检查订单中是否有推广信息
+        let referralCode = order.referral_code;
+        let agentCode = order.agent_code;
+
+        console.log('订单推广信息:', { referralCode, agentCode });
+
+        // 如果订单表中没有推广信息，尝试从临时表中获取
+        if ((!referralCode || !agentCode)) {
+            try {
+                const { data: referralData, error: referralError } = await supabase
+                    .from('referral_tracking')
+                    .select('referral_code, agent_code')
+                    .eq('out_trade_no', outTradeNo)
+                    .single();
+
+                if (!referralError && referralData) {
+                    referralCode = referralCode || referralData.referral_code;
+                    agentCode = agentCode || referralData.agent_code;
+                    console.log('从临时表获取推广信息:', referralData);
+                }
+            } catch (error) {
+                console.log('从临时表获取推广信息失败:', error.message);
+            }
+        }
+
+        // 检查是否有推广信息
+        const hasReferralInfo = (referralCode && referralCode.trim() !== '') ||
+            (agentCode && agentCode.trim() !== '');
+
+        if (!hasReferralInfo) {
+            console.log('订单无推广信息，跳过推广佣金处理');
+            return;
+        }
+
+        console.log('开始处理推广佣金，推广码:', referralCode, '代理码:', agentCode);
+
+        // 获取产品价格
+        const productPriceMap = {
+            // Google Maps 新购方案
+            'gmaps_monthly': 49.90,
+            'gmaps_quarterly': 147.00,
+            'gmaps_yearly': 588.00,
+            // Google Maps 续费方案
+            'gmaps_renewal_monthly': 49.90,
+            'gmaps_renewal_quarterly': 147.00,
+            'gmaps_renewal_yearly': 588.00,
+            // MailPro 邮件营销大师
+            'validator_standard': 203.00,
+            'validator_premium': 553.00,
+            // WhatsApp 智能营销助手
+            'whatsapp-validator_standard': 203.00,
+            'whatsapp-validator_premium': 343.00
+        };
+
+        const orderAmount = productPriceMap[productId] || 0;
+        if (orderAmount === 0) {
+            console.log('无法确定订单金额，跳过推广佣金处理');
+            return;
+        }
+
+        let agentId = null;
+        let commissionAmount = 0;
+
+        // 通过推广码查找代理
+        if (referralCode) {
+            const { data: promotion, error: promotionError } = await supabase
+                .from('product_promotions')
+                .select('agent_id, commission_rate')
+                .eq('promotion_code', referralCode)
                 .single();
 
-            if (orderError || !order) {
-                console.log('未找到订单信息，跳过推广佣金处理:', orderError);
-                return;
+            if (!promotionError && promotion) {
+                agentId = promotion.agent_id;
+                commissionAmount = orderAmount * promotion.commission_rate;
+            }
+        }
+
+        // 通过代理代码查找代理
+        if (!agentId && agentCode) {
+            const { data: agent, error: agentError } = await supabase
+                .from('agent_profiles')
+                .select('id')
+                .eq('agent_code', agentCode)
+                .single();
+
+            if (!agentError && agent) {
+                agentId = agent.id;
+                // 使用默认分佣比例
+                const defaultCommissionRate = 0.15; // 15%
+                commissionAmount = orderAmount * defaultCommissionRate;
+            }
+        }
+
+        if (agentId && commissionAmount > 0) {
+            // 创建产品订单记录
+            const { data: productOrder, error: orderInsertError } = await supabase
+                .from('product_orders')
+                .insert([{
+                    customer_email: customerEmail,
+                    product_type: getProductType(productId),
+                    promotion_code: referralCode,
+                    order_amount: orderAmount,
+                    commission_amount: commissionAmount,
+                    agent_id: agentId,
+                    status: 'paid',
+                    payment_method: 'alipay',
+                    payment_id: outTradeNo
+                }])
+                .select()
+                .single();
+
+            if (orderInsertError) {
+                console.error('创建产品订单失败:', orderInsertError);
+            } else {
+                console.log('产品订单创建成功:', productOrder.id);
             }
 
-            console.log('找到订单信息:', order);
-
-            // 检查订单中是否有推广信息
-            let referralCode = order.referral_code;
-            let agentCode = order.agent_code;
-
-            console.log('订单推广信息:', { referralCode, agentCode });
-
-            // 如果订单表中没有推广信息，尝试从临时表中获取
-            if ((!referralCode || !agentCode)) {
-                try {
-                    const { data: referralData, error: referralError } = await supabase
-                        .from('referral_tracking')
-                        .select('referral_code, agent_code')
-                        .eq('out_trade_no', outTradeNo)
-                        .single();
-
-                    if (!referralError && referralData) {
-                        referralCode = referralCode || referralData.referral_code;
-                        agentCode = agentCode || referralData.agent_code;
-                        console.log('从临时表获取推广信息:', referralData);
-                    }
-                } catch (error) {
-                    console.log('从临时表获取推广信息失败:', error.message);
-                }
-            }
-
-            // 检查是否有推广信息
-            const hasReferralInfo = (referralCode && referralCode.trim() !== '') || 
-                                  (agentCode && agentCode.trim() !== '');
-            
-            if (!hasReferralInfo) {
-                console.log('订单无推广信息，跳过推广佣金处理');
-                return;
-            }
-
-            console.log('开始处理推广佣金，推广码:', referralCode, '代理码:', agentCode);
-
-            // 获取产品价格
-            const productPriceMap = {
-                'gmaps_standard': 34.30,
-                'gmaps_premium': 49.90,
-                'validator_standard': 203.00,
-                'validator_premium': 553.00,
-                'whatsapp-validator_standard': 203.00,
-                'whatsapp-validator_premium': 343.00,
-                'gmaps_renewal_monthly': 49.90,
-                'gmaps_renewal_quarterly': 149.70,
-                'gmaps_renewal_yearly': 598.80
-            };
-
-            const orderAmount = productPriceMap[productId] || 0;
-            if (orderAmount === 0) {
-                console.log('无法确定订单金额，跳过推广佣金处理');
-                return;
-            }
-
-            let agentId = null;
-            let commissionAmount = 0;
-
-            // 通过推广码查找代理
+            // 更新推广记录的转化次数和佣金
             if (referralCode) {
-                const { data: promotion, error: promotionError } = await supabase
+                // 先获取当前记录
+                const { data: currentPromotion, error: fetchError } = await supabase
                     .from('product_promotions')
-                    .select('agent_id, commission_rate')
+                    .select('conversions_count, total_commission')
                     .eq('promotion_code', referralCode)
                     .single();
 
-                if (!promotionError && promotion) {
-                    agentId = promotion.agent_id;
-                    commissionAmount = orderAmount * promotion.commission_rate;
-                }
-            }
+                if (!fetchError && currentPromotion) {
+                    const newConversionsCount = (currentPromotion.conversions_count || 0) + 1;
+                    const newTotalCommission = (currentPromotion.total_commission || 0) + commissionAmount;
 
-            // 通过代理代码查找代理
-            if (!agentId && agentCode) {
-                const { data: agent, error: agentError } = await supabase
-                    .from('agent_profiles')
-                    .select('id')
-                    .eq('agent_code', agentCode)
-                    .single();
-
-                if (!agentError && agent) {
-                    agentId = agent.id;
-                    // 使用默认分佣比例
-                    const defaultCommissionRate = 0.15; // 15%
-                    commissionAmount = orderAmount * defaultCommissionRate;
-                }
-            }
-
-            if (agentId && commissionAmount > 0) {
-                // 创建产品订单记录
-                const { data: productOrder, error: orderInsertError } = await supabase
-                    .from('product_orders')
-                    .insert([{
-                        customer_email: customerEmail,
-                        product_type: getProductType(productId),
-                        promotion_code: referralCode,
-                        order_amount: orderAmount,
-                        commission_amount: commissionAmount,
-                        agent_id: agentId,
-                        status: 'paid',
-                        payment_method: 'alipay',
-                        payment_id: outTradeNo
-                    }])
-                    .select()
-                    .single();
-
-                if (orderInsertError) {
-                    console.error('创建产品订单失败:', orderInsertError);
-                } else {
-                    console.log('产品订单创建成功:', productOrder.id);
-                }
-
-                // 更新推广记录的转化次数和佣金
-                if (referralCode) {
-                    // 先获取当前记录
-                    const { data: currentPromotion, error: fetchError } = await supabase
+                    const { error: updatePromotionError } = await supabase
                         .from('product_promotions')
-                        .select('conversions_count, total_commission')
-                        .eq('promotion_code', referralCode)
-                        .single();
-
-                    if (!fetchError && currentPromotion) {
-                        const newConversionsCount = (currentPromotion.conversions_count || 0) + 1;
-                        const newTotalCommission = (currentPromotion.total_commission || 0) + commissionAmount;
-
-                        const { error: updatePromotionError } = await supabase
-                            .from('product_promotions')
-                            .update({ 
-                                conversions_count: newConversionsCount,
-                                total_commission: newTotalCommission,
-                                updated_at: new Date().toISOString()
-                            })
-                            .eq('promotion_code', referralCode);
-
-                        if (updatePromotionError) {
-                            console.error('更新推广记录失败:', updatePromotionError);
-                        } else {
-                            console.log(`推广记录更新成功: 转化数+1, 佣金+${commissionAmount}`);
-                        }
-                    } else {
-                        console.error('获取推广记录失败:', fetchError);
-                    }
-                }
-
-                // 更新代理余额
-                // 先获取当前代理信息
-                const { data: currentAgent, error: fetchAgentError } = await supabase
-                    .from('agent_profiles')
-                    .select('total_commission, available_balance')
-                    .eq('id', agentId)
-                    .single();
-
-                if (!fetchAgentError && currentAgent) {
-                    const newTotalCommission = (currentAgent.total_commission || 0) + commissionAmount;
-                    const newAvailableBalance = (currentAgent.available_balance || 0) + commissionAmount;
-
-                    const { error: updateBalanceError } = await supabase
-                        .from('agent_profiles')
-                        .update({ 
+                        .update({
+                            conversions_count: newConversionsCount,
                             total_commission: newTotalCommission,
-                            available_balance: newAvailableBalance,
                             updated_at: new Date().toISOString()
                         })
-                        .eq('id', agentId);
+                        .eq('promotion_code', referralCode);
 
-                    if (updateBalanceError) {
-                        console.error('更新代理余额失败:', updateBalanceError);
+                    if (updatePromotionError) {
+                        console.error('更新推广记录失败:', updatePromotionError);
                     } else {
-                        console.log(`代理 ${agentId} 获得佣金 ${commissionAmount} 元，总佣金: ${newTotalCommission}，可用余额: ${newAvailableBalance}`);
+                        console.log(`推广记录更新成功: 转化数+1, 佣金+${commissionAmount}`);
                     }
                 } else {
-                    console.error('获取代理信息失败:', fetchAgentError);
+                    console.error('获取推广记录失败:', fetchError);
                 }
             }
 
-        } catch (error) {
-            console.error('处理推广佣金失败:', error);
+            // 更新代理余额
+            // 先获取当前代理信息
+            const { data: currentAgent, error: fetchAgentError } = await supabase
+                .from('agent_profiles')
+                .select('total_commission, available_balance')
+                .eq('id', agentId)
+                .single();
+
+            if (!fetchAgentError && currentAgent) {
+                const newTotalCommission = (currentAgent.total_commission || 0) + commissionAmount;
+                const newAvailableBalance = (currentAgent.available_balance || 0) + commissionAmount;
+
+                const { error: updateBalanceError } = await supabase
+                    .from('agent_profiles')
+                    .update({
+                        total_commission: newTotalCommission,
+                        available_balance: newAvailableBalance,
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('id', agentId);
+
+                if (updateBalanceError) {
+                    console.error('更新代理余额失败:', updateBalanceError);
+                } else {
+                    console.log(`代理 ${agentId} 获得佣金 ${commissionAmount} 元，总佣金: ${newTotalCommission}，可用余额: ${newAvailableBalance}`);
+                }
+            } else {
+                console.error('获取代理信息失败:', fetchAgentError);
+            }
         }
+
+    } catch (error) {
+        console.error('处理推广佣金失败:', error);
     }
+}
 
 // 获取产品类型
 function getProductType(productId) {

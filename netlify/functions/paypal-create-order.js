@@ -12,28 +12,38 @@ const allowedOrigins = [
 
 // 后端权威价格表 (USD)
 const productPriceMap = {
-    'gmaps_standard': 9.90,      // 首月体验版
-    'gmaps_premium': 20.00,      // 高级版
-    'validator_standard': 59.00,  // MailPro 标准版
-    'validator_premium': 99.00,   // MailPro 高级版
-    'whatsapp-validator_standard': 99.00,   // WhatsApp 标准版
-    'whatsapp-validator_premium': 199.00,   // WhatsApp 高级版
+    // Google Maps 新购方案
+    'gmaps_monthly': 20.00,       // 按月
+    'gmaps_quarterly': 60.00,     // 按季
+    'gmaps_yearly': 199.00,       // 按年（买一年送一年，实际2年）
+    // Google Maps 续费方案
     'gmaps_renewal_monthly': 20.00,
-    'gmaps_renewal_quarterly': 55.00,
-    'gmaps_renewal_yearly': 200.00
+    'gmaps_renewal_quarterly': 60.00,
+    'gmaps_renewal_yearly': 199.00,
+    // MailPro 邮件营销大师
+    'validator_standard': 59.00,
+    'validator_premium': 99.00,
+    // WhatsApp 智能营销助手
+    'whatsapp-validator_standard': 99.00,
+    'whatsapp-validator_premium': 199.00
 };
 
 // 产品名称映射
 const productNameMap = {
-    'gmaps_standard': 'Google Maps Scraper - First Month Trial',
-    'gmaps_premium': 'Google Maps Scraper - Premium',
-    'validator_standard': 'MailPro Email Marketing Master - Standard',
-    'validator_premium': 'MailPro Email Marketing Master - Premium',
-    'whatsapp-validator_standard': 'WhatsApp Marketing Assistant - Standard',
-    'whatsapp-validator_premium': 'WhatsApp Marketing Assistant - Premium',
+    // Google Maps 新购方案
+    'gmaps_monthly': 'Google Maps Scraper - Monthly',
+    'gmaps_quarterly': 'Google Maps Scraper - Quarterly',
+    'gmaps_yearly': 'Google Maps Scraper - Yearly (Buy 1 Get 1 Free)',
+    // Google Maps 续费方案
     'gmaps_renewal_monthly': 'Google Maps Scraper - Monthly Renewal',
     'gmaps_renewal_quarterly': 'Google Maps Scraper - Quarterly Renewal',
-    'gmaps_renewal_yearly': 'Google Maps Scraper - Annual Renewal'
+    'gmaps_renewal_yearly': 'Google Maps Scraper - Annual Renewal',
+    // MailPro 邮件营销大师
+    'validator_standard': 'MailPro Email Marketing Master - Standard',
+    'validator_premium': 'MailPro Email Marketing Master - Premium',
+    // WhatsApp 智能营销助手
+    'whatsapp-validator_standard': 'WhatsApp Marketing Assistant - Standard',
+    'whatsapp-validator_premium': 'WhatsApp Marketing Assistant - Premium'
 };
 
 exports.handler = async (event) => {
@@ -100,10 +110,14 @@ exports.handler = async (event) => {
 
         // 生成订单号 - 使用完整的 base64 编码邮箱
         const productCodeMap = {
-            'gmaps_standard': 'gs', 'gmaps_premium': 'gp',
+            // Google Maps 新购方案
+            'gmaps_monthly': 'gm', 'gmaps_quarterly': 'gq', 'gmaps_yearly': 'gy',
+            // Google Maps 续费方案
+            'gmaps_renewal_monthly': 'grm', 'gmaps_renewal_quarterly': 'grq', 'gmaps_renewal_yearly': 'gry',
+            // MailPro 邮件营销大师
             'validator_standard': 'vs', 'validator_premium': 'vp',
-            'whatsapp-validator_standard': 'wvs', 'whatsapp-validator_premium': 'wvp',
-            'gmaps_renewal_monthly': 'grm', 'gmaps_renewal_quarterly': 'grq', 'gmaps_renewal_yearly': 'gry'
+            // WhatsApp 智能营销助手
+            'whatsapp-validator_standard': 'wvs', 'whatsapp-validator_premium': 'wvp'
         };
         const productCode = productCodeMap[productId] || 'unknown';
         const encodedEmail = Buffer.from(email).toString('base64');

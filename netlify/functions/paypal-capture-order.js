@@ -13,15 +13,20 @@ const allowedOrigins = [
 
 // 产品对应的有效期设置（天数）
 const productValidityDays = {
-    'gmaps_standard': 30,
-    'gmaps_premium': 30,
-    'validator_standard': 365,
-    'validator_premium': 365,
-    'whatsapp-validator_standard': 365,
-    'whatsapp-validator_premium': 365,
+    // Google Maps 新购方案
+    'gmaps_monthly': 30,
+    'gmaps_quarterly': 90,
+    'gmaps_yearly': 730,      // 买一年送一年，实际2年
+    // Google Maps 续费方案
     'gmaps_renewal_monthly': 30,
     'gmaps_renewal_quarterly': 90,
-    'gmaps_renewal_yearly': 365
+    'gmaps_renewal_yearly': 365,
+    // MailPro 邮件营销大师
+    'validator_standard': 365,
+    'validator_premium': 365,
+    // WhatsApp 智能营销助手
+    'whatsapp-validator_standard': 365,
+    'whatsapp-validator_premium': 365
 };
 
 exports.handler = async (event) => {
@@ -159,8 +164,13 @@ exports.handler = async (event) => {
 
                 // 映射 productCode 到 product_id
                 const productCodeMap = {
-                    'gs': 'gmaps_standard', 'gp': 'gmaps_premium',
+                    // Google Maps 新购方案
+                    'gm': 'gmaps_monthly', 'gq': 'gmaps_quarterly', 'gy': 'gmaps_yearly',
+                    // Google Maps 续费方案
+                    'grm': 'gmaps_renewal_monthly', 'grq': 'gmaps_renewal_quarterly', 'gry': 'gmaps_renewal_yearly',
+                    // MailPro 邮件营销大师
                     'vs': 'validator_standard', 'vp': 'validator_premium',
+                    // WhatsApp 智能营销助手
                     'wvs': 'whatsapp-validator_standard', 'wvp': 'whatsapp-validator_premium'
                 };
 

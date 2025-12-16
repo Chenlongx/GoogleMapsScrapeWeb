@@ -22,15 +22,20 @@ function formatKey(key, type) {
 
 // 后端权威价格表 (人民币, CNY) - 支付宝支付使用
 const productPriceMap = {
-    'gmaps_standard': 34.30,      // 首月体验版
-    'gmaps_premium': 49.90,       // 高级版
-    'validator_standard': 203.00, // MailPro 标准版
-    'validator_premium': 553.00,  // MailPro 高级版
-    'whatsapp-validator_standard': 203.00,  // WhatsApp 标准版
-    'whatsapp-validator_premium': 343.00,   // WhatsApp 高级版
+    // Google Maps 新购方案
+    'gmaps_monthly': 49.90,       // 按月
+    'gmaps_quarterly': 147.00,    // 按季
+    'gmaps_yearly': 588.00,       // 按年（买一年送一年，实际2年）
+    // Google Maps 续费方案
     'gmaps_renewal_monthly': 49.90,
-    'gmaps_renewal_quarterly': 149.70,
-    'gmaps_renewal_yearly': 598.80
+    'gmaps_renewal_quarterly': 147.00,
+    'gmaps_renewal_yearly': 588.00,
+    // MailPro 邮件营销大师
+    'validator_standard': 203.00, // 标准版
+    'validator_premium': 553.00,  // 高级版
+    // WhatsApp 智能营销助手
+    'whatsapp-validator_standard': 203.00,  // 标准版
+    'whatsapp-validator_premium': 343.00    // 高级版
 };
 
 exports.handler = async (event) => {
@@ -125,9 +130,14 @@ exports.handler = async (event) => {
         // ▲▲▲ 修改结束 ▲▲▲
 
         const productCodeMap = {
-            'gmaps_standard': 'gs', 'gmaps_premium': 'gp', 'validator_standard': 'vs',
-            'validator_premium': 'vp', 'whatsapp-validator_standard': 'wvs', 'whatsapp-validator_premium': 'wvp',
-            'gmaps_renewal_monthly': 'grm', 'gmaps_renewal_quarterly': 'grq', 'gmaps_renewal_yearly': 'gry'
+            // Google Maps 新购方案
+            'gmaps_monthly': 'gm', 'gmaps_quarterly': 'gq', 'gmaps_yearly': 'gy',
+            // Google Maps 续费方案
+            'gmaps_renewal_monthly': 'grm', 'gmaps_renewal_quarterly': 'grq', 'gmaps_renewal_yearly': 'gry',
+            // MailPro 邮件营销大师
+            'validator_standard': 'vs', 'validator_premium': 'vp',
+            // WhatsApp 智能营销助手
+            'whatsapp-validator_standard': 'wvs', 'whatsapp-validator_premium': 'wvp'
         };
         const productCode = productCodeMap[productId] || 'unknown';
 
@@ -140,7 +150,9 @@ exports.handler = async (event) => {
             else if (productId.includes('quarterly')) subject = 'Google Maps Scraper - 季度续费';
             else if (productId.includes('yearly')) subject = 'Google Maps Scraper - 年度续费';
         } else if (productId.startsWith('gmaps')) {
-            subject = productId.includes('premium') ? 'Google Maps Scraper 高级版' : 'Google Maps Scraper 标准版';
+            if (productId.includes('monthly')) subject = 'Google Maps Scraper - 按月订阅';
+            else if (productId.includes('quarterly')) subject = 'Google Maps Scraper - 按季订阅';
+            else if (productId.includes('yearly')) subject = 'Google Maps Scraper - 按年订阅(买一年送一年)';
         } else if (productId.startsWith('validator')) {
             subject = productId.includes('premium') ? 'Email Validator 高级版激活码' : 'Email Validator 标准版激活码';
         } else if (productId.startsWith('whatsapp-validator')) {
