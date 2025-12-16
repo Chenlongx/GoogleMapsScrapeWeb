@@ -855,9 +855,9 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const GITHUB_USERNAME = 'Chenlongx';
-            // 动态检测环境并设置 API 基础 URL
-            const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-            const API_BASE_URL = isLocal ? '/.netlify/functions/github/' : '/api/github/';
+            // 直接使用 GitHub API（绕过代理服务器403问题）
+            // GitHub API 对未认证请求每小时限制60次，通过缓存机制可以显著降低请求频率
+            const API_BASE_URL = 'https://api.github.com/repos/';
 
             // 缓存配置 - 缓存 1 小时
             const CACHE_DURATION = 60 * 60 * 1000; // 1小时（毫秒）
