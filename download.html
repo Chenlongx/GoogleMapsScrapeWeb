@@ -859,6 +859,39 @@
             // GitHub API 对未认证请求每小时限制60次，通过缓存机制可以显著降低请求频率
             const API_BASE_URL = 'https://api.github.com/repos/';
 
+            // 中国用户备用下载配置（123云盘）
+            // 当 GitHub API 失败时，自动切换到国内下载链接
+            const CHINA_FALLBACK_CONFIG = {
+                // 谷歌地图抓取器的国内下载代理 (EXE版本)
+                'gogole_maps': {
+                    proxyUrl: '/api/china-download?product=google-maps-scraper',
+                    directUrl: 'https://www.123865.com/s/71mwjv-axCl',  // EXE 下载链接
+                    productName: '谷歌地图抓取器'
+                },
+                // WhatsApp智能营销助手的国内下载代理 (EXE版本)
+                'whatsapp_validator_repo': {
+                    proxyUrl: '/api/china-download?product=whatsapp-marketing',
+                    directUrl: 'https://www.123865.com/s/71mwjv-BxCl',  // EXE 下载链接
+                    productName: 'WhatsApp智能营销助手'
+                }
+            };
+
+            /**
+             * 检测是否可能是中国用户（简单检测）
+             * 基于语言偏好和时区
+             */
+            function isLikelyChinaUser() {
+                const lang = navigator.language || navigator.userLanguage || '';
+                const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+
+                // 检查语言是否为中文
+                const isChineseLang = lang.toLowerCase().startsWith('zh');
+                // 检查时区是否为中国时区
+                const isChinaTimezone = timezone.includes('Shanghai') || timezone.includes('Asia/Chongqing');
+
+                return isChineseLang || isChinaTimezone;
+            }
+
             // 缓存配置 - 缓存 1 小时
             const CACHE_DURATION = 60 * 60 * 1000; // 1小时（毫秒）
 
@@ -1086,6 +1119,43 @@
                                 // 如果所有重试次数都已用尽，则显示最终的错误信息
                                 console.error(`获取 ${config.repoName} 在所有重试后均失败.`);
 
+                                // 🔧 中国用户备用下载机制
+                                // 检查是否有该产品的国内下载链接配置
+                                const chinaFallback = CHINA_FALLBACK_CONFIG[config.repoName];
+
+                                if (chinaFallback && isLikelyChinaUser()) {
+                                    // 对于中国用户，无感切换到国内下载链接
+                                    console.log(`🇨🇳 检测到中国用户，启用国内备用下载: ${chinaFallback.productName}`);
+
+                                    const currentLang = document.documentElement.lang || 'zh';
+                                    const fallbackTextZh = '已切换至国内下载';
+                                    const fallbackTextEn = 'Switched to China mirror';
+
+                                    windowsVersionInfo.setAttribute('data-lang-zh', fallbackTextZh);
+                                    windowsVersionInfo.setAttribute('data-lang-en', fallbackTextEn);
+                                    windowsVersionInfo.textContent = (currentLang.startsWith('zh')) ? fallbackTextZh : fallbackTextEn;
+
+                                    // 设置下载按钮为国内代理链接
+                                    // 使用服务器代理，实现 302 跳转，用户体验：点一下 = 直接下载
+                                    windowsDownloadBtn.href = chinaFallback.proxyUrl;
+                                    windowsDownloadBtn.target = '_self'; // 不需要新标签页
+                                    windowsDownloadBtn.removeAttribute('onclick');
+
+                                    // 添加点击处理：如果代理失败，回退到直接链接
+                                    windowsDownloadBtn.addEventListener('click', function (e) {
+                                        console.log('🇨🇳 使用国内下载代理:', chinaFallback.proxyUrl);
+                                        // 默认行为会跳转到代理URL
+                                    });
+
+                                    // 存储备用信息
+                                    windowsDownloadBtn.dataset.chinaFallback = 'true';
+                                    windowsDownloadBtn.dataset.directUrl = chinaFallback.directUrl;
+
+                                    console.log('✅ 国内下载链接已启用:', chinaFallback.proxyUrl);
+                                    return; // 不显示错误提示
+                                }
+
+                                // 非中国用户或没有备用链接，显示原有的错误信息
                                 let errorTextZh, errorTextEn, alertMessage;
 
                                 if (error.status === 429) {

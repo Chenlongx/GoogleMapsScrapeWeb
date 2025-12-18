@@ -37,6 +37,13 @@
   status = 200
   force = true
 
+# 中国用户下载代理（123云盘）
+[[redirects]]
+  from = "/api/china-download"
+  to = "/.netlify/functions/china-download-proxy"
+  status = 200
+  force = true
+
 # Email Finder 用户认证 API
 [[redirects]]
   from = "/api/auth/register"
