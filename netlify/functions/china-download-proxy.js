@@ -34,8 +34,17 @@ const PRODUCT_SHARE_LINKS = {
         url: 'https://www.123865.com/s/71mwjv-IxCl',  // ZIP 备用下载链接
         name: 'WhatsApp智能营销助手(ZIP)',
         password: ''
+    },
+    'email-marketing': {
+        url: 'https://www.123865.com/s/71mwjv-0xCl',  // EXE 下载链接
+        name: '邮件营销大师',
+        password: ''
+    },
+    'email-marketing-zip': {
+        url: 'https://www.123865.com/s/71mwjv-KxCl',  // ZIP 备用下载链接
+        name: '邮件营销大师(ZIP)',
+        password: ''
     }
-    // 可以添加更多产品
 };
 
 // 第三方解析 API 列表（按优先级排序，会依次尝试）
