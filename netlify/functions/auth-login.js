@@ -23,14 +23,15 @@ const hashPassword = (password) => {
   return crypto.createHash('sha256').update(password).digest('hex');
 };
 
-// 生成 JWT token
-const generateToken = (userId, email) => {
+// 生成 JWT token（包含会话标识）
+const generateToken = (userId, email, sessionToken) => {
   const jwtSecret = process.env.JWT_SECRET || 'your-secret-key-please-change-in-production';
-  
+
   return jwt.sign(
-    { 
+    {
       userId: userId,
       email: email,
+      sessionToken: sessionToken,  // 🆕 包含会话标识，用于单设备验证
       type: 'access'
     },
     jwtSecret,
@@ -41,9 +42,9 @@ const generateToken = (userId, email) => {
 // 生成 Refresh Token
 const generateRefreshToken = (userId, email) => {
   const jwtSecret = process.env.JWT_SECRET || 'your-secret-key-please-change-in-production';
-  
+
   return jwt.sign(
-    { 
+    {
       userId: userId,
       email: email,
       type: 'refresh'
@@ -88,9 +89,9 @@ exports.handler = async (event, context) => {
     return {
       statusCode: 405,
       headers,
-      body: JSON.stringify({ 
-        success: false, 
-        message: '只允许 POST 请求' 
+      body: JSON.stringify({
+        success: false,
+        message: '只允许 POST 请求'
       })
     };
   }
@@ -132,7 +133,7 @@ exports.handler = async (event, context) => {
         })
       };
     }
-    
+
     console.log('✅ 找到用户:', user.email, '账号类型:', user.account_type);
 
     // 2. 检查邮箱是否已验证
@@ -163,25 +164,32 @@ exports.handler = async (event, context) => {
 
     // 4. user_profiles.id 就是 auth.users 的 UUID，直接使用
     const authUserId = user.id;  // user_profiles.id 引用 auth.users(id)
-    
+
     console.log('✅ 用户UUID:', authUserId);
 
-    // 5. 生成 token
-    const accessToken = generateToken(authUserId, user.email);
+    // 5. 🆕 生成唯一的会话标识（用于单设备登录限制）
+    const sessionToken = crypto.randomUUID();
+    console.log('🔑 生成新会话标识:', sessionToken.substring(0, 8) + '...');
+
+    // 6. 生成 token（包含会话标识）
+    const accessToken = generateToken(authUserId, user.email, sessionToken);
     const refreshToken = generateRefreshToken(authUserId, user.email);
 
-    // 6. 更新登录信息到 user_profiles
+    // 7. 更新登录信息到 user_profiles（包含会话标识）
     try {
       await supabaseAdmin
         .from('user_profiles')
         .update({
           last_login_at: new Date().toISOString(),
           login_count: (user.login_count || 0) + 1,
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
+          // 🆕 单设备登录：存储当前会话标识（覆盖旧的，使旧设备失效）
+          current_session_token: sessionToken,
+          session_created_at: new Date().toISOString()
         })
         .eq('id', user.id);
-      
-      console.log('✅ 登录信息已更新');
+
+      console.log('✅ 登录信息已更新，旧设备会话已失效');
     } catch (updateError) {
       console.error('更新登录信息失败:', updateError);
       // 不影响登录流程
@@ -217,7 +225,7 @@ exports.handler = async (event, context) => {
 
   } catch (error) {
     console.error('服务器错误:', error);
-    
+
     return {
       statusCode: 500,
       headers,

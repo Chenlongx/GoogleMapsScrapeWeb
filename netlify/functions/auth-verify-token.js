@@ -24,7 +24,7 @@ const getSupabaseClient = () => {
 // 验证 JWT Token
 const verifyAccessToken = (token) => {
   const secret = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
-  
+
   try {
     const decoded = jwt.verify(token, secret);
     return { valid: true, payload: decoded };
@@ -56,9 +56,9 @@ exports.handler = async (event, context) => {
     return {
       statusCode: 405,
       headers,
-      body: JSON.stringify({ 
-        success: false, 
-        message: '只允许 POST 请求' 
+      body: JSON.stringify({
+        success: false,
+        message: '只允许 POST 请求'
       })
     };
   }
@@ -66,7 +66,7 @@ exports.handler = async (event, context) => {
   try {
     // 从 Authorization 头部获取 token
     const authHeader = event.headers['authorization'] || event.headers['Authorization'];
-    
+
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return {
         statusCode: 401,
@@ -97,6 +97,31 @@ exports.handler = async (event, context) => {
 
     // 初始化 Supabase
     const supabase = getSupabaseClient();
+
+    // 🆕 单设备登录验证：检查会话标识是否与数据库中的一致
+    if (payload.sessionToken) {
+      const { data: userProfile, error: profileError } = await supabase
+        .from('user_profiles')
+        .select('current_session_token')
+        .eq('id', payload.userId)
+        .single();
+
+      if (profileError) {
+        console.error('查询用户会话失败:', profileError);
+      } else if (userProfile && userProfile.current_session_token !== payload.sessionToken) {
+        // 会话标识不匹配，说明在其他设备登录了
+        console.log('🚫 会话已被新登录覆盖，当前设备被踢出');
+        return {
+          statusCode: 401,
+          headers,
+          body: JSON.stringify({
+            success: false,
+            message: '您的账号已在其他设备登录，当前会话已失效',
+            kicked: true  // 🆕 标记为被踢出
+          })
+        };
+      }
+    }
 
     // 从数据库验证会话是否存在且未过期
     const { data: session, error: sessionError } = await supabase
@@ -199,7 +224,7 @@ exports.handler = async (event, context) => {
 
   } catch (error) {
     console.error('服务器错误:', error);
-    
+
     return {
       statusCode: 500,
       headers,
