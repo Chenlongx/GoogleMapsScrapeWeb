@@ -123,55 +123,14 @@ exports.handler = async (event, context) => {
       }
     }
 
-    // 从数据库验证会话是否存在且未过期
-    const { data: session, error: sessionError } = await supabase
-      .from('email_finder_sessions')
-      .select('*')
-      .eq('access_token', token)
-      .single();
+    // 🆕 跳过旧的 email_finder_sessions 表检查
+    // 新的登录流程使用 user_profiles.current_session_token 进行单设备验证
+    // 上面的 sessionToken 检查已经完成了会话验证
 
-    if (sessionError || !session) {
-      return {
-        statusCode: 401,
-        headers,
-        body: JSON.stringify({
-          success: false,
-          message: '会话不存在或已失效'
-        })
-      };
-    }
-
-    // 检查会话是否过期
-    const now = new Date();
-    const expiresAt = new Date(session.expires_at);
-
-    if (now > expiresAt) {
-      // 删除过期会话
-      await supabase
-        .from('email_finder_sessions')
-        .delete()
-        .eq('id', session.id);
-
-      return {
-        statusCode: 401,
-        headers,
-        body: JSON.stringify({
-          success: false,
-          message: '会话已过期，请重新登录'
-        })
-      };
-    }
-
-    // 更新会话最后使用时间
-    await supabase
-      .from('email_finder_sessions')
-      .update({ last_used_at: new Date().toISOString() })
-      .eq('id', session.id);
-
-    // 获取用户信息
+    // 获取用户信息（从 user_profiles 表）
     const { data: user, error: userError } = await supabase
-      .from('email_finder_users')
-      .select('id, email, username, email_verified, status, created_at, last_login_at')
+      .from('user_profiles')
+      .select('id, email, username, email_verified, account_type, status, created_at, last_login_at, expiry_date, subscription_end')
       .eq('id', payload.userId)
       .single();
 
@@ -187,7 +146,7 @@ exports.handler = async (event, context) => {
     }
 
     // 检查用户状态
-    if (user.status !== 'active') {
+    if (user.status && user.status !== 'active') {
       return {
         statusCode: 403,
         headers,
@@ -211,12 +170,12 @@ exports.handler = async (event, context) => {
             email: user.email,
             username: user.username,
             email_verified: user.email_verified,
+            account_type: user.account_type,
             status: user.status,
             created_at: user.created_at,
-            last_login_at: user.last_login_at
-          },
-          session: {
-            expires_at: session.expires_at
+            last_login_at: user.last_login_at,
+            expiry_date: user.expiry_date,
+            subscription_end: user.subscription_end
           }
         }
       })

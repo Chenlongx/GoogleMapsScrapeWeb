@@ -1,0 +1,15 @@
+name = "email-finder-api-proxy"
+main = "src/index.js"
+compatibility_date = "2024-01-01"
+
+# 绑定 KV 命名空间（用于缓存）
+# 需要在 Cloudflare Dashboard 创建 KV 后填写 id
+[[kv_namespaces]]
+binding = "SESSION_CACHE"
+id = "fe6196d8be014a568c1ef3aa67722e90"
+
+# 环境变量
+[vars]
+NETLIFY_API_BASE = "https://mediamingle.cn/.netlify/functions"
+JWT_SECRET = "d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5"
+CACHE_TTL = "300"  # 缓存时间 5 分钟（秒）
