@@ -533,22 +533,23 @@
                         </div>
                         <div class="platform-options">
                             <!-- 单一主要下载按钮 -->
-                            <div class="platform-item"
+                            <div class="platform-item" id="ce-download-card"
                                 style="justify-content: center; background: transparent; border: none; padding: 0;">
                                 <div class="platform-action" style="width: 100%;">
                                     <a class="btn btn-primary" href="#" rel="noopener noreferrer" target="_blank"
                                         style="width: 100%; justify-content: center; padding: 1rem 2rem; font-size: 1.1rem; border-radius: 8px;">
-                                        <i class="bx bxl-chrome" style="font-size: 1.5rem;"></i>
-                                        <span data-lang-en="Download Extension" data-lang-zh="下载插件 (.zip)">
-                                            Download Extension
+                                        <i class="bx bxs-download" style="font-size: 1.5rem;"></i>
+                                        <span data-lang-en="Download Extension (.zip)" data-lang-zh="下载插件 (.zip)">
+                                            下载插件 (.zip)
                                         </span>
                                     </a>
                                 </div>
                             </div>
                             <div style="text-align: center; margin-top: 1rem;">
-                                <span class="version-info" data-lang-en="Supports Chrome" data-lang-zh="支持 Chrome"
+                                <span class="version-info" id="ce-version-info" data-lang-en="Fetching..."
+                                    data-lang-zh="正在获取版本..."
                                     style="font-size: 0.85rem; color: var(--text-secondary-color);">
-                                    支持 Chrome 浏览器
+                                    正在获取版本...
                                 </span>
                             </div>
                         </div>
@@ -1217,6 +1218,118 @@
             fetchZipBackupLink({ repoName: 'gogole_maps', zipBtnId: 'gs-zip-download-btn' });
             // 获取WhatsApp智能营销助手的ZIP备份下载链接
             fetchZipBackupLink({ repoName: 'whatsapp_validator_repo', zipBtnId: 'wv-zip-download-btn' });
+
+            // --- Chrome 插件获客 - 特殊处理（只下载ZIP） ---
+            fetchChromeExtensionRelease();
+
+            /**
+             * 获取 Chrome 插件获客的版本信息和 ZIP 下载链接
+             */
+            function fetchChromeExtensionRelease() {
+                const repoName = 'Email-Finder-mediamingle';
+                const apiUrl = `${API_BASE_URL}${GITHUB_USERNAME}/${repoName}/releases/latest`;
+                const cacheKey = `github_release_${repoName}`;
+
+                const downloadCard = document.getElementById('ce-download-card');
+                const versionInfo = document.getElementById('ce-version-info');
+
+                if (!downloadCard || !versionInfo) return;
+
+                const downloadBtn = downloadCard.querySelector('.btn');
+                if (!downloadBtn) return;
+
+                // 重试配置
+                const MAX_RETRIES = 3;
+                const INITIAL_DELAY = 2000;
+
+                /**
+                 * 更新 UI
+                 */
+                function updateUI(data) {
+                    if (!data.tag_name) throw new Error('No release found');
+
+                    const version = data.tag_name;
+                    const publishedDate = new Date(data.published_at).toLocaleDateString();
+                    const versionTextZh = `版本 ${version.replace('v', '')} | ${publishedDate} | 支持 Chrome`;
+                    const versionTextEn = `Version ${version.replace('v', '')} | ${publishedDate} | Supports Chrome`;
+
+                    // 查找 ZIP 文件
+                    const zipAsset = data.assets.find(asset => asset.name.endsWith('.zip'));
+
+                    if (zipAsset) {
+                        versionInfo.setAttribute('data-lang-zh', versionTextZh);
+                        versionInfo.setAttribute('data-lang-en', versionTextEn);
+
+                        const currentLang = document.documentElement.lang || 'zh';
+                        versionInfo.textContent = (currentLang.startsWith('zh')) ? versionTextZh : versionTextEn;
+
+                        // 设置下载链接
+                        downloadBtn.href = zipAsset.browser_download_url;
+                        downloadBtn.target = '_blank';
+                        downloadBtn.rel = 'noopener noreferrer';
+
+                        console.log('✅ Chrome 插件下载链接已设置:', zipAsset.browser_download_url);
+                    } else {
+                        throw new Error('No ZIP asset found for Chrome extension.');
+                    }
+                }
+
+                // 先检查缓存
+                const cachedData = getCache(cacheKey);
+                if (cachedData) {
+                    updateUI(cachedData);
+                    return;
+                }
+
+                /**
+                 * 尝试获取数据
+                 */
+                function attemptFetch(retriesLeft, delay) {
+                    fetch(apiUrl)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(`API error: ${response.status}`);
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            setCache(cacheKey, data);
+                            updateUI(data);
+                        })
+                        .catch(error => {
+                            console.error(`获取 ${repoName} 失败, 剩余重试次数: ${retriesLeft - 1}. 错误:`, error);
+
+                            if (retriesLeft > 1) {
+                                const currentLang = document.documentElement.lang || 'zh';
+                                const retryTextZh = `获取失败, ${Math.ceil(delay / 1000)}秒后重试...`;
+                                const retryTextEn = `Failed, retrying in ${Math.ceil(delay / 1000)}s...`;
+                                versionInfo.textContent = (currentLang.startsWith('zh')) ? retryTextZh : retryTextEn;
+
+                                setTimeout(() => {
+                                    attemptFetch(retriesLeft - 1, delay * 2);
+                                }, delay);
+                            } else {
+                                // 所有重试都失败
+                                const currentLang = document.documentElement.lang || 'zh';
+                                const errorTextZh = '获取失败, 请刷新或联系客服';
+                                const errorTextEn = 'Failed to fetch, please refresh or contact support';
+
+                                versionInfo.setAttribute('data-lang-zh', errorTextZh);
+                                versionInfo.setAttribute('data-lang-en', errorTextEn);
+                                versionInfo.textContent = (currentLang.startsWith('zh')) ? errorTextZh : errorTextEn;
+
+                                downloadBtn.onclick = (e) => {
+                                    e.preventDefault();
+                                    alert('版本信息获取失败，无法下载。\n\n建议：\n1. 刷新页面重试\n2. 联系客服获取下载链接');
+                                    return false;
+                                };
+                                downloadBtn.href = 'javascript:void(0);';
+                            }
+                        });
+                }
+
+                attemptFetch(MAX_RETRIES, INITIAL_DELAY);
+            }
         });
     </script>
 </body>
