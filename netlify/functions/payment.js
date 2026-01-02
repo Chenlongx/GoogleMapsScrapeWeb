@@ -21,22 +21,20 @@ function formatKey(key, type) {
 }
 
 // 后端权威价格表 (人民币, CNY) - 支付宝支付使用
-// 基准价格: 1250元/年, 标准版为高级版一半
+// 2024年新价格: GMaps 49/148/499, MailPro/WhatsApp 499/年
 const productPriceMap = {
     // Google Maps 新购方案
-    'gmaps_monthly': 104.20,       // 按月 (1250/12)
-    'gmaps_quarterly': 312.50,    // 按季 (1250/4)
-    'gmaps_yearly': 1250.00,      // 按年
+    'gmaps_monthly': 49.00,        // 按月
+    'gmaps_quarterly': 148.00,     // 按季
+    'gmaps_yearly': 499.00,        // 按年
     // Google Maps 续费方案
-    'gmaps_renewal_monthly': 104.20,
-    'gmaps_renewal_quarterly': 312.50,
-    'gmaps_renewal_yearly': 1250.00,
-    // MailPro 邮件营销大师
-    'validator_standard': 625.00, // 标准版 (1250/2)
-    'validator_premium': 1250.00,  // 高级版 (年付)
-    // WhatsApp 智能营销助手
-    'whatsapp-validator_standard': 625.00,  // 标准版 (1250/2)
-    'whatsapp-validator_premium': 1250.00    // 高级版 (年付)
+    'gmaps_renewal_monthly': 49.00,
+    'gmaps_renewal_quarterly': 148.00,
+    'gmaps_renewal_yearly': 499.00,
+    // MailPro 邮件营销大师 (仅高级版)
+    'validator_premium': 499.00,   // 高级版 (年付)
+    // WhatsApp 智能营销助手 (仅高级版)
+    'whatsapp-validator_premium': 499.00    // 高级版 (年付)
 };
 
 exports.handler = async (event) => {
@@ -135,10 +133,10 @@ exports.handler = async (event) => {
             'gmaps_monthly': 'gm', 'gmaps_quarterly': 'gq', 'gmaps_yearly': 'gy',
             // Google Maps 续费方案
             'gmaps_renewal_monthly': 'grm', 'gmaps_renewal_quarterly': 'grq', 'gmaps_renewal_yearly': 'gry',
-            // MailPro 邮件营销大师
-            'validator_standard': 'vs', 'validator_premium': 'vp',
-            // WhatsApp 智能营销助手
-            'whatsapp-validator_standard': 'wvs', 'whatsapp-validator_premium': 'wvp'
+            // MailPro 邮件营销大师 (仅高级版)
+            'validator_premium': 'vp',
+            // WhatsApp 智能营销助手 (仅高级版)
+            'whatsapp-validator_premium': 'wvp'
         };
         const productCode = productCodeMap[productId] || 'unknown';
 
