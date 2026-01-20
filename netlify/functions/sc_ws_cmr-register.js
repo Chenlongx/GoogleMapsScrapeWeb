@@ -54,10 +54,16 @@ exports.handler = async (event) => {
         });
 
         if (createError) {
-            // 如果错误是 "User already registered"，说明是老用户
-            // 我们需要获取这个老用户的 ID
-            if (createError.message && createError.message.includes('already been registered')) {
-                console.log('User exists, fetching ID via RPC...');
+            console.log('Create User Error:', createError);
+
+            // 如果错误包含 "registered" 或 "duplicate"，说明是老用户 (Supabase API varies)
+            const isExistingUserError =
+                (createError.message && createError.message.toLowerCase().includes('registered')) ||
+                (createError.message && createError.message.toLowerCase().includes('already created')) ||
+                createError.status === 422;
+
+            if (isExistingUserError) {
+                console.log('User exists (detected via error), fetching ID via RPC...');
 
                 // 调用 RPC 获取 ID (需要先在数据库创建函数)
                 const { data: foundId, error: rpcError } = await supabase
