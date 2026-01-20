@@ -40,65 +40,52 @@ exports.handler = async (event) => {
 
         if (verifyError || !verifyRecord) throw new Error('验证码无效或已过期');
 
-        // 2. 尝试创建用户 (默认 assume 新用户)
+        // 2. 核心逻辑：先检查用户是否存在 (通过 RPC 安全检查)
+        // 这种Check-First模式比Try-Catch-Create更稳定，不受错误信息语言/格式影响
         let userId = null;
         let isNewUser = false;
-        const randomPassword = crypto.randomBytes(16).toString('hex');
 
-        // 尝试注册
-        const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
-            email,
-            password: randomPassword,
-            email_confirm: true,
-            user_metadata: { full_name: username || email.split('@')[0] }
-        });
+        console.log('Checking if user exists via RPC...');
+        // 注意：get_user_id_by_email 必须在 public schema 中或被正确授权
+        const { data: existingUserId, error: rpcError } = await supabase
+            .rpc('get_user_id_by_email', { email_input: email });
 
-        if (createError) {
-            console.log('Create User Error:', createError);
+        if (existingUserId) {
+            // [A] 用户已存在 -> 登录流程
+            console.log('User exists (RPC found ID):', existingUserId);
+            userId = existingUserId;
+            isNewUser = false;
+        } else {
+            // [B] 用户不存在 -> 注册流程
+            console.log('User not found, creating new user...');
+            const randomPassword = crypto.randomBytes(16).toString('hex');
 
-            // 如果错误包含 "registered" 或 "duplicate"，说明是老用户 (Supabase API varies)
-            const isExistingUserError =
-                (createError.message && createError.message.toLowerCase().includes('registered')) ||
-                (createError.message && createError.message.toLowerCase().includes('already created')) ||
-                createError.status === 422;
+            const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
+                email,
+                password: randomPassword,
+                email_confirm: true,
+                user_metadata: { full_name: username || email.split('@')[0] }
+            });
 
-            if (isExistingUserError) {
-                console.log('User exists (detected via error), fetching ID via RPC...');
+            if (createError) {
+                // 极罕见并发情况：RPC 没查到，但 Create 说已存在
+                console.error('Create User Error:', createError);
 
-                // 调用 RPC 获取 ID (需要先在数据库创建函数)
-                const { data: foundId, error: rpcError } = await supabase
-                    .rpc('get_user_id_by_email', { email_input: email }); // schema('whatsapp') ? No, rpc is usually public or specified in function name if namespaced like whatsapp.get... wait.
-                // If function is whatsapp.get_user_id_by_email, we call rpc('get_user_id_by_email') if exposed? 
-                // Supabase js client rpc calls function by name. If it's in a schema, we might need to include schema in name or use exposed schema.
-                // Usually functions are in public or exposed schemas. 
-                // Let's assume user created it in 'whatsapp' schema and exposed it OR public.
-                // My SQL script put it in 'whatsapp' schema. 
-                // Client rpc: supabase.rpc('get_user_id_by_email') calls function in search_path.
-                // So we might need to fix SQL to putting it in public or ensure whatsapp is in search_path.
-                // Actually, the previous tool put it in whatsapp. So we should call it carefully. 
-                // BUT Supabase Client RPC assumes function is in 'public' unless we specify differently? 
-                // Wait, `supabase.rpc` call usually doesn't support schema chaining nicely for RPC unless it's in exposed schema.
-                // If function is `whatsapp.get_user_id_by_email`...
-                // Let's rely on the user running the SQL which sets it to whatsapp.
-                // BUT for safety, let's try to query public if I made a mistake, or assume the function name is fully qualified? No RPC doesn't work like table.
-                // *Correction*: RPC only works for functions in the "Exposed schemas". We exposed `whatsapp`.
-                // So `supabase.rpc('get_user_id_by_email')` should work IF `whatsapp` is in exposed schemas.
+                // 尝试最后的兜底检查 (不论错误消息是什么，只要是创建失败，我们再试一次 RPC)
+                const { data: retryId } = await supabase
+                    .rpc('get_user_id_by_email', { email_input: email });
 
-                if (rpcError || !foundId) {
-                    // Fallback: Try listUsers (slow but works if RPC missing)
-                    const { data: { users } } = await supabase.auth.admin.listUsers();
-                    const u = users.find(x => x.email === email);
-                    if (u) userId = u.id;
-                    else throw new Error('无法定位已有用户ID');
+                if (retryId) {
+                    userId = retryId;
+                    isNewUser = false;
                 } else {
-                    userId = foundId;
+                    // 真的失败了
+                    throw createError;
                 }
             } else {
-                throw createError; // 其他真实错误
+                userId = newUser.user.id;
+                isNewUser = true;
             }
-        } else {
-            userId = newUser.user.id;
-            isNewUser = true;
         }
 
         // 3. 标记验证码已使用
@@ -122,26 +109,37 @@ exports.handler = async (event) => {
             .single();
 
         // 5. 获取 AI 使用统计 (当月)
-        const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString();
-        const { data: usageData } = await supabase
-            .schema('whatsapp')
-            .from('ai_usage_logs')
-            .select('total_tokens')
-            .eq('user_id', userId)
-            .gte('created_at', startOfMonth);
+        let totalTokens = 0;
+        try {
+            const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString();
+            const { data: usageData } = await supabase
+                .schema('whatsapp')
+                .from('ai_usage_logs')
+                .select('total_tokens')
+                .eq('user_id', userId)
+                .gte('created_at', startOfMonth);
 
-        const totalTokens = usageData ? usageData.reduce((acc, curr) => acc + (curr.total_tokens || 0), 0) : 0;
+            totalTokens = usageData ? usageData.reduce((acc, curr) => acc + (curr.total_tokens || 0), 0) : 0;
+        } catch (e) {
+            console.warn('Failed to fetch usage stats:', e);
+        }
 
         // 6. 获取订阅信息
-        const { data: subData } = await supabase
-            .schema('whatsapp')
-            .from('subscriptions')
-            .select('*')
-            .eq('user_id', userId)
-            .eq('status', 'active')
-            .order('end_time', { ascending: false })
-            .limit(1)
-            .single();
+        let subData = null;
+        try {
+            const { data: sub } = await supabase
+                .schema('whatsapp')
+                .from('subscriptions')
+                .select('*')
+                .eq('user_id', userId)
+                .eq('status', 'active')
+                .order('end_time', { ascending: false })
+                .limit(1)
+                .single();
+            subData = sub;
+        } catch (e) {
+            console.warn('Failed to fetch subscription:', e);
+        }
 
         return {
             statusCode: 200,
@@ -167,7 +165,7 @@ exports.handler = async (event) => {
         return {
             statusCode: 500,
             headers: { 'Access-Control-Allow-Origin': '*' },
-            body: JSON.stringify({ success: false, message: error.message })
+            body: JSON.stringify({ success: false, message: error.message || 'Server Error' })
         };
     }
 };
