@@ -103,7 +103,6 @@ exports.handler = async (event) => {
             .eq('id', verifyRecord.id);
 
         // 4. 确保 Profiles 存在 (Upsert)
-        // 即使是老用户，可能还没有 whatsapp.profiles 数据，所以我们要 Upsert
         const { data: profile } = await supabase
             .schema('whatsapp')
             .from('profiles')
@@ -112,8 +111,30 @@ exports.handler = async (event) => {
                 email: email,
                 nickname: username || email.split('@')[0],
                 updated_at: new Date().toISOString()
-            }, { onConflict: 'id' }) // 基于 ID 冲突更新
+            }, { onConflict: 'id' })
             .select()
+            .single();
+
+        // 5. 获取 AI 使用统计 (当月)
+        const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString();
+        const { data: usageData } = await supabase
+            .schema('whatsapp')
+            .from('ai_usage_logs')
+            .select('total_tokens')
+            .eq('user_id', userId)
+            .gte('created_at', startOfMonth);
+
+        const totalTokens = usageData ? usageData.reduce((acc, curr) => acc + (curr.total_tokens || 0), 0) : 0;
+
+        // 6. 获取订阅信息
+        const { data: subData } = await supabase
+            .schema('whatsapp')
+            .from('subscriptions')
+            .select('*')
+            .eq('user_id', userId)
+            .eq('status', 'active')
+            .order('end_time', { ascending: false })
+            .limit(1)
             .single();
 
         return {
@@ -128,7 +149,9 @@ exports.handler = async (event) => {
                     nickname: profile?.nickname,
                     avatar_url: profile?.avatar_url,
                     balance: profile?.balance || 0,
-                    role: profile?.role
+                    role: profile?.role,
+                    ai_usage: totalTokens,
+                    subscription: subData || null
                 }
             })
         };
