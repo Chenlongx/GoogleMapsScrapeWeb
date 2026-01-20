@@ -37,13 +37,13 @@ exports.handler = async (event) => {
 
         // 1. 验证验证码
         const { data: verifyRecord, error: verifyError } = await supabase
+            .schema('whatsapp')
             .from('verification_codes')
             .select('*')
             .eq('email', email)
             .eq('code', code)
             .eq('is_used', false)
             .gt('expires_at', new Date().toISOString())
-            .schema('whatsapp') // Schema is critical
             .single();
 
         if (verifyError || !verifyRecord) {
@@ -77,17 +77,17 @@ exports.handler = async (event) => {
 
         // 3. 标记验证码已使用
         await supabase
+            .schema('whatsapp')
             .from('verification_codes')
             .update({ is_used: true })
-            .eq('id', verifyRecord.id)
-            .schema('whatsapp');
+            .eq('id', verifyRecord.id);
 
         // 4. 获取详细资料 (Profiles)
         const { data: profile } = await supabase
+            .schema('whatsapp')
             .from('profiles')
             .select('*')
             .eq('id', authUser.id)
-            .schema('whatsapp')
             .single();
 
         return {

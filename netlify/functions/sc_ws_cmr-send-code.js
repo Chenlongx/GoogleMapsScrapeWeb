@@ -34,10 +34,10 @@ exports.handler = async (event) => {
         // 1. 检查是否已注册 (Auth Users)
         // 注意：这里我们查询的是 whatsapp.profiles，因为它通过触发器与 auth.users 同步
         const { data: existingUser } = await supabase
+            .schema('whatsapp') // 指定 Schema 必须在 from 之前
             .from('profiles')
             .select('id')
             .eq('email', email)
-            .schema('whatsapp') // 指定 Schema
             .single();
 
         if (existingUser) {
@@ -55,6 +55,7 @@ exports.handler = async (event) => {
         // 3. 存储验证码 (Upsert)
         // 需要确保数据库里有 whatsapp.verification_codes 表
         const { error: dbError } = await supabase
+            .schema('whatsapp')
             .from('verification_codes')
             .upsert({
                 email,
@@ -63,8 +64,7 @@ exports.handler = async (event) => {
                 expires_at: expiresAt,
                 is_used: false,
                 created_at: new Date().toISOString()
-            }, { onConflict: 'email' })
-            .schema('whatsapp');
+            }, { onConflict: 'email' });
 
         if (dbError) {
             console.error('DB Error:', dbError);
