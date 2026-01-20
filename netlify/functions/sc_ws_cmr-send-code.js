@@ -31,22 +31,9 @@ exports.handler = async (event) => {
 
         const supabase = getSupabaseAdmin();
 
-        // 1. 检查是否已注册 (Auth Users)
-        // 注意：这里我们查询的是 whatsapp.profiles，因为它通过触发器与 auth.users 同步
-        const { data: existingUser } = await supabase
-            .schema('whatsapp') // 指定 Schema 必须在 from 之前
-            .from('profiles')
-            .select('id')
-            .eq('email', email)
-            .single();
-
-        if (existingUser) {
-            return {
-                statusCode: 409,
-                headers,
-                body: JSON.stringify({ success: false, message: '该邮箱已被注册' })
-            };
-        }
+        // 1. (已移除) 不再拦截已注册用户，允许发送登录验证码
+        // 统一为 Login/Register Code
+        console.log('Generating code for:', email);
 
         // 2. 生成验证码
         const code = Math.floor(100000 + Math.random() * 900000).toString();
