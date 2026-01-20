@@ -95,7 +95,9 @@ exports.handler = async (event) => {
             .update({ is_used: true })
             .eq('id', verifyRecord.id);
 
-        // 4. 确保 Profiles 存在 (Upsert)
+        // 4. 确保 Profiles 存在 (Upsert) 并更新 Session Token
+        const sessionToken = crypto.randomBytes(32).toString('hex');
+
         const { data: profile } = await supabase
             .schema('whatsapp')
             .from('profiles')
@@ -103,6 +105,7 @@ exports.handler = async (event) => {
                 id: userId,
                 email: email,
                 nickname: username || email.split('@')[0],
+                session_token: sessionToken, // <--- New Token
                 updated_at: new Date().toISOString()
             }, { onConflict: 'id' })
             .select()
@@ -147,6 +150,7 @@ exports.handler = async (event) => {
             body: JSON.stringify({
                 success: true,
                 message: isNewUser ? '注册成功' : '登录成功',
+                token: sessionToken, // <--- Return to Client
                 user: {
                     id: userId,
                     email: email,
