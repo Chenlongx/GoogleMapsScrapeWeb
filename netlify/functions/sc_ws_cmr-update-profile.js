@@ -12,7 +12,12 @@ const getSupabaseAdmin = () => {
     const supabaseUrl = process.env.SUPABASE_URL;
     const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
     if (!supabaseUrl || !supabaseServiceKey) throw new Error('Missing Supabase Credentials');
-    return createClient(supabaseUrl, supabaseServiceKey);
+
+    // Explicitly set schema in options for compatibility
+    return createClient(supabaseUrl, supabaseServiceKey, {
+        db: { schema: 'whatsapp' },
+        auth: { persistSession: false }
+    });
 };
 
 exports.handler = async (event) => {
@@ -23,13 +28,16 @@ exports.handler = async (event) => {
         'Content-Type': 'application/json'
     };
 
-    if (event.httpMethod === 'OPTIONS') return { statusCode: 200, headers, body: '' };
-
-    if (event.httpMethod !== 'POST') {
-        return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method Not Allowed' }) };
+    // Pre-flight check
+    if (event.httpMethod === 'OPTIONS') {
+        return { statusCode: 200, headers, body: '' };
     }
 
     try {
+        if (event.httpMethod !== 'POST') {
+            return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method Not Allowed' }) };
+        }
+
         // 1. 验证 Authorization Header
         const authHeader = event.headers.authorization || event.headers.Authorization;
         if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -37,8 +45,15 @@ exports.handler = async (event) => {
         }
         const sessionToken = authHeader.split(' ')[1];
 
-        // 2. 解析请求体
-        const { nickname, avatar_url } = JSON.parse(event.body || '{}');
+        // 2. 解析请求体 (Safe Parse)
+        let body;
+        try {
+            body = JSON.parse(event.body || '{}');
+        } catch (e) {
+            return { statusCode: 400, headers, body: JSON.stringify({ error: '无效的 JSON 请求体' }) };
+        }
+
+        const { nickname, avatar_url } = body;
 
         // 至少需要更新一个字段
         if (!nickname && !avatar_url) {
@@ -47,16 +62,20 @@ exports.handler = async (event) => {
 
         const supabase = getSupabaseAdmin();
 
-        // 3. 验证 session_token 并获取用户
+        // 3. 验证 session_token 并获取用户 (Using configured schema)
         const { data: users, error: authError } = await supabase
-            .schema('whatsapp')
             .from('profiles')
             .select('id, email, nickname, avatar_url')
             .eq('session_token', sessionToken)
             .limit(1);
 
-        if (authError || !users || users.length === 0) {
-            console.error('[Update Profile] Auth failed:', authError);
+        if (authError) {
+            console.error('[Update Profile] DB Error:', authError);
+            throw new Error(`Auth DB Error: ${authError.message}`);
+        }
+
+        if (!users || users.length === 0) {
+            console.warn('[Update Profile] Invalid session token');
             return { statusCode: 401, headers, body: JSON.stringify({ error: '会话已过期，请重新登录' }) };
         }
 
@@ -73,16 +92,15 @@ exports.handler = async (event) => {
             updateData.nickname = nickname.trim();
         }
         if (avatar_url !== undefined && avatar_url !== null) {
-            // 简单验证 URL 格式
-            if (avatar_url && !avatar_url.startsWith('http://') && !avatar_url.startsWith('https://') && !avatar_url.startsWith('data:image/')) {
-                return { statusCode: 400, headers, body: JSON.stringify({ error: '头像URL格式无效' }) };
+            // 简单验证 URL 格式 (允许 http/https/data)
+            if (avatar_url && !avatar_url.startsWith('http') && !avatar_url.startsWith('data:image/')) {
+                return { statusCode: 400, headers, body: JSON.stringify({ error: '头像格式无效' }) };
             }
             updateData.avatar_url = avatar_url;
         }
 
         // 5. 更新数据库
         const { data: updatedUser, error: updateError } = await supabase
-            .schema('whatsapp')
             .from('profiles')
             .update(updateData)
             .eq('id', user.id)
@@ -91,10 +109,10 @@ exports.handler = async (event) => {
 
         if (updateError) {
             console.error('[Update Profile] Update failed:', updateError);
-            return { statusCode: 500, headers, body: JSON.stringify({ error: '更新失败，请稍后重试' }) };
+            throw new Error(`Update DB Error: ${updateError.message}`);
         }
 
-        console.log(`[Update Profile] Successfully updated user ${user.id}:`, updateData);
+        console.log(`[Update Profile] Successfully updated user ${user.id}`);
 
         return {
             statusCode: 200,
@@ -110,8 +128,8 @@ exports.handler = async (event) => {
         console.error('[Update Profile] Exception:', err);
         return {
             statusCode: 500,
-            headers,
-            body: JSON.stringify({ error: '服务器错误: ' + err.message })
+            headers, // 确保返回 CORS 头
+            body: JSON.stringify({ error: '服务器错误: ' + (err.message || 'Unknown Error') })
         };
     }
 };
