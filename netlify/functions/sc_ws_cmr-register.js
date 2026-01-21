@@ -157,6 +157,7 @@ exports.handler = async (event) => {
                     nickname: profile?.nickname,
                     avatar_url: profile?.avatar_url,
                     balance: profile?.balance || 0,
+                    ai_balance: profile?.ai_balance,
                     role: profile?.role,
                     ai_usage: totalTokens,
                     subscription: subData || null
