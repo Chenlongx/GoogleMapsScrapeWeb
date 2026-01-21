@@ -104,7 +104,7 @@ exports.handler = async (event) => {
             .from('profiles')
             .update(updateData)
             .eq('id', user.id)
-            .select('id, email, nickname, avatar_url, account_type, ai_balance')
+            .select('id, email, nickname, avatar_url, ai_balance')
             .single();
 
         if (updateError) {
