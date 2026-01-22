@@ -3,6 +3,9 @@
  * POST /api/sc_ws_cmr/google-login
  * 
  * 接收 Google authorization code，换取用户信息，创建/登录用户
+ * 
+ * 注意：Google OAuth 密钥 (GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET) 需存储在 
+ * Supabase 的 "whatsapp.secrets" 表中，以避免 Netlify 环境变量 4KB 限制。
  */
 
 const { createClient } = require('@supabase/supabase-js');
@@ -13,6 +16,34 @@ const getSupabaseAdmin = () => {
     const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
     if (!supabaseUrl || !supabaseServiceKey) throw new Error('Missing Supabase Credentials');
     return createClient(supabaseUrl, supabaseServiceKey);
+};
+
+// 从 Supabase 获取 Google OAuth 密钥
+const getGoogleCredentials = async (supabase) => {
+    const { data, error } = await supabase
+        .schema('whatsapp')
+        .from('secrets')
+        .select('key, value')
+        .in('key', ['GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET']);
+
+    if (error) {
+        console.error('[Google OAuth] Failed to fetch secrets:', error);
+        throw new Error('Failed to fetch Google credentials from DB');
+    }
+
+    // 转换数组为对象
+    const credentials = {};
+    if (data) {
+        data.forEach(item => {
+            credentials[item.key] = item.value;
+        });
+    }
+
+    if (!credentials.GOOGLE_CLIENT_ID || !credentials.GOOGLE_CLIENT_SECRET) {
+        throw new Error('Google OAuth credentials not found in whatsapp.secrets table');
+    }
+
+    return credentials;
 };
 
 exports.handler = async (event) => {
@@ -30,23 +61,21 @@ exports.handler = async (event) => {
         const { code, redirect_uri } = JSON.parse(event.body);
         if (!code) throw new Error('Authorization code is required');
 
-        // Google OAuth 配置
-        const clientId = process.env.GOOGLE_CLIENT_ID;
-        const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
+        const supabase = getSupabaseAdmin();
 
-        if (!clientId || !clientSecret) {
-            throw new Error('Google OAuth credentials not configured');
-        }
+        // 1. 获取动态配置的密钥
+        console.log('[Google OAuth] Fetching credentials from DB...');
+        const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } = await getGoogleCredentials(supabase);
 
-        // 1. 用 authorization code 换取 tokens
+        // 2. 用 authorization code 换取 tokens
         console.log('[Google OAuth] Exchanging code for tokens...');
         const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: new URLSearchParams({
                 code,
-                client_id: clientId,
-                client_secret: clientSecret,
+                client_id: GOOGLE_CLIENT_ID,
+                client_secret: GOOGLE_CLIENT_SECRET,
                 redirect_uri: redirect_uri || 'http://localhost',
                 grant_type: 'authorization_code'
             })
@@ -59,7 +88,7 @@ exports.handler = async (event) => {
             throw new Error(tokenData.error_description || 'Failed to exchange code');
         }
 
-        // 2. 获取用户信息
+        // 3. 获取用户信息
         console.log('[Google OAuth] Fetching user info...');
         const userInfoResponse = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
             headers: { 'Authorization': `Bearer ${tokenData.access_token}` }
@@ -73,8 +102,7 @@ exports.handler = async (event) => {
 
         console.log('[Google OAuth] User:', googleUser.email);
 
-        // 3. 在 Supabase 中查找/创建用户
-        const supabase = getSupabaseAdmin();
+        // 4. 在 Supabase 中查找/创建用户
         let userId = null;
         let isNewUser = false;
 
@@ -120,7 +148,7 @@ exports.handler = async (event) => {
             }
         }
 
-        // 4. 更新 Profile 并生成 Session Token
+        // 5. 更新 Profile 并生成 Session Token
         const sessionToken = crypto.randomBytes(32).toString('hex');
 
         const { data: profile } = await supabase
@@ -137,7 +165,7 @@ exports.handler = async (event) => {
             .select()
             .single();
 
-        // 5. 获取 AI 使用统计 (当月)
+        // 6. 获取 AI 使用统计 (当月)
         let totalTokens = 0;
         try {
             const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString();
@@ -153,7 +181,7 @@ exports.handler = async (event) => {
             console.warn('Failed to fetch usage stats:', e);
         }
 
-        // 6. 获取订阅信息
+        // 7. 获取订阅信息
         let subData = null;
         try {
             const { data: sub } = await supabase
