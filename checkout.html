@@ -676,7 +676,7 @@
                 </h2>
                 <div class="checkout-grid">
                     <div class="product-card" id="gmaps-card">
-                        <h2 data-lang-en="Google Maps Scraper" data-lang-zh="谷歌地图抓取器">
+                        <h2 data-lang-en="Google Maps Scraper" data-lang-zh="Global Merchant Helper">
                             Google Maps Scraper
                         </h2>
                         <p class="plan-description" data-lang-en="Flexible billing options" data-lang-zh="灵活的计费方式">
@@ -746,8 +746,10 @@
                                     data-lang-zh="批量邮件群发">批量邮件群发</span></li>
                             <li><i class="bx bx-check"></i> <span data-lang-en="Smart Template Editor"
                                     data-lang-zh="智能模板编辑器">智能模板编辑器</span></li>
-                            <li><i class="bx bx-check"></i> <span data-lang-en="Advanced variable detection avoidance (works with platforms like QQ Mail, 163 Mail, Outlook, etc.)"
-                                    data-lang-zh="高级变量防检测（过国外企业邮箱、QQ邮箱、163邮箱、outlook等平台）">高级变量防检测（过国外企业邮箱、QQ邮箱、163邮箱、outlook等平台）</span></li>
+                            <li><i class="bx bx-check"></i> <span
+                                    data-lang-en="Advanced variable detection avoidance (works with platforms like QQ Mail, 163 Mail, Outlook, etc.)"
+                                    data-lang-zh="高级变量防检测（过国外企业邮箱、QQ邮箱、163邮箱、outlook等平台）">高级变量防检测（过国外企业邮箱、QQ邮箱、163邮箱、outlook等平台）</span>
+                            </li>
                             <li><i class="bx bx-check"></i> <span data-lang-en="Multi-account Management"
                                     data-lang-zh="多账号管理">多账号管理</span></li>
                             <li><i class="bx bx-check"></i> <span data-lang-en="Email Tracking Analytics"
@@ -848,8 +850,10 @@
                         </div>
                         <ul class="product-features">
                             <li><i class="bx bx-check"></i> <span data-lang-en="Social Media Lead Generation"
-                                    data-lang-zh="社媒公式化平台拓客（fecbook、linkedin、twitter、whatsapp、">社媒公式化平台拓客（fecbook、linkedin、twitter、whatsapp）</span></li>
-                            <li><i class="bx bx-check"></i> <span data-lang-en="Fully automated Google verification, 24/7 uninterrupted service."
+                                    data-lang-zh="社媒公式化平台拓客（fecbook、linkedin、twitter、whatsapp、">社媒公式化平台拓客（fecbook、linkedin、twitter、whatsapp）</span>
+                            </li>
+                            <li><i class="bx bx-check"></i> <span
+                                    data-lang-en="Fully automated Google verification, 24/7 uninterrupted service."
                                     data-lang-zh="自动过谷歌验证，7*24小时不间断">自动过谷歌验证，7*24小时不间断</span></li>
                             <li><i class="bx bx-check"></i> <span data-lang-en="Smart Lead Discovery"
                                     data-lang-zh="智能线索发现">智能线索发现</span></li>
@@ -1243,13 +1247,13 @@
                 const productId = details.product; // 接收完整的 productId
 
                 if (productId.includes('renewal')) {
-                    productName = lang === 'zh' ? '谷歌地图抓取器 - 续费' : 'Google Maps Scraper - Renewal';
+                    productName = lang === 'zh' ? 'Global Merchant Helper - 续费' : 'Google Maps Scraper - Renewal';
                     const durationMap = { monthly: '月度', quarterly: '季度', yearly: '年度' };
                     const durationMapEn = { monthly: 'Monthly', quarterly: 'Quarterly', yearly: 'Yearly' };
                     planText = lang === 'zh' ? durationMap[details.plan] || details.plan : durationMapEn[details.plan] || details.plan;
                 } else {
                     const productMap = {
-                        gmaps: { zh: '谷歌地图抓取器', en: 'Google Maps Scraper' },
+                        gmaps: { zh: 'Global Merchant Helper', en: 'Google Maps Scraper' },
                         validator: { zh: '邮箱批量验证器', en: 'Email Validator' },
                         'whatsapp-validator': { zh: 'WhatsApp 智能营销助手', en: 'WhatsApp Marketing Assistant' }
                     };

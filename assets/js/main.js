@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <li class="nav-item-dropdown">
                                 <a href="javascript:void(0);" class="dropdown-toggle" data-lang-zh="产品" data-lang-en="Product">产品 <i class='bx bx-chevron-down'></i></a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="./product.html?id=maps-scraper" data-lang-zh="智贸云梯 | 谷歌地图抓取器" data-lang-en="Google Maps Scraper">Google Maps Scraper</a></li>
+                                    <li><a href="./product.html?id=maps-scraper" data-lang-zh="智贸云梯 | Global Merchant Helper" data-lang-en="Google Maps Scraper">Google Maps Scraper</a></li>
                                     <li><a href="./product.html?id=email-validator" data-lang-zh="智贸云梯 | 邮件营销大师" data-lang-en="MailPro Email Marketing Master">MailPro Email Marketing Master</a></li>
                                     <li><a href="./product.html?id=whatsapp-marketing" data-lang-zh="智贸云梯 | WhatsApp营销" data-lang-en="WhatsApp Marketing Assistant">WhatsApp Marketing Assistant</a></li>
                                     <li><a href="./product.html?id=email-finder-extension" data-lang-zh="智贸云梯 | 谷歌插件获客" data-lang-en="Email Finder Chrome Extension">Email Finder Chrome Extension</a></li>

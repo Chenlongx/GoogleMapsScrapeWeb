@@ -86,10 +86,29 @@ exports.handler = async (event) => {
             console.log('DEV MODE - Code:', code);
         }
 
+        // 3.5 检查用户是否存在 (用于前端判断是否显示密码框)
+        // 使用与 register 相同的 RPC 方法
+        let isNewUser = true;
+        try {
+            const { data: existingUserId } = await supabase
+                .rpc('get_user_id_by_email', { email_input: email });
+
+            if (existingUserId) {
+                isNewUser = false;
+            }
+        } catch (e) {
+            console.warn('Check user existence failed:', e);
+            // 默认认为是新用户或忽略错误，不阻塞发送验证码
+        }
+
         return {
             statusCode: 200,
             headers,
-            body: JSON.stringify({ success: true, message: '验证码已发送' })
+            body: JSON.stringify({
+                success: true,
+                message: '验证码已发送',
+                isNewUser: isNewUser // 返回给前端
+            })
         };
 
     } catch (error) {

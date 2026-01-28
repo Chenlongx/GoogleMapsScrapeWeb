@@ -58,11 +58,13 @@ exports.handler = async (event) => {
         } else {
             // [B] 用户不存在 -> 注册流程
             console.log('User not found, creating new user...');
+            const { password: userPassword } = JSON.parse(event.body); // 获取前端传来的密码
             const randomPassword = crypto.randomBytes(16).toString('hex');
+            const finalPassword = userPassword || randomPassword; // 优先使用用户密码
 
             const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
                 email,
-                password: randomPassword,
+                password: finalPassword,
                 email_confirm: true,
                 user_metadata: { full_name: username || email.split('@')[0] }
             });
