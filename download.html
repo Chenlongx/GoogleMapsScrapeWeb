@@ -800,6 +800,10 @@
             // GitHub API 对未认证请求每小时限制60次，通过缓存机制可以显著降低请求频率
             const API_BASE_URL = 'https://api.github.com/repos/';
 
+            // ⚡ Cloudflare Worker 下载代理配置
+            // 通过你自己的域名下载，提升国内用户体验
+            const WORKER_DOWNLOAD_BASE_URL = 'https://mediamingle.cn';
+
             // 中国用户备用下载配置（123云盘）
             // 当 GitHub API 失败时，自动切换到国内下载链接
             const CHINA_FALLBACK_CONFIG = {
@@ -948,18 +952,23 @@
                         const currentLang = document.documentElement.lang || 'zh';
                         versionInfo.textContent = (currentLang.startsWith('zh')) ? versionTextZh : versionTextEn;
 
-                        // 所有用户统一使用GitHub直接下载链接
-                        const finalDownloadUrl = asset.browser_download_url;
-                        console.log('使用GitHub直接下载链接:', finalDownloadUrl);
+                        // ⚡ 通过 Cloudflare Worker 代理下载
+                        // URL 格式: {WORKER_BASE}/download/{repo}/{tag}/{filename}
+                        const proxyDownloadUrl = `${WORKER_DOWNLOAD_BASE_URL}/download/${config.repoName}/${version}/${asset.name}`;
+                        const githubDirectUrl = asset.browser_download_url;  // 保留直接链接作为备用
 
-                        // 设置下载链接
-                        downloadBtn.href = finalDownloadUrl;
+                        console.log('使用 Cloudflare Worker 代理下载:', proxyDownloadUrl);
+                        console.log('GitHub 直接下载链接 (备用):', githubDirectUrl);
+
+                        // 设置下载链接为代理链接
+                        downloadBtn.href = proxyDownloadUrl;
                         downloadBtn.target = '_blank';
                         downloadBtn.rel = 'noopener noreferrer';
 
                         // 存储下载信息到按钮数据属性
-                        downloadBtn.dataset.githubUrl = asset.browser_download_url;  // GitHub原始链接
-                        downloadBtn.dataset.currentUrl = finalDownloadUrl;  // 当前使用的链接
+                        downloadBtn.dataset.githubUrl = githubDirectUrl;  // GitHub原始链接（备用）
+                        downloadBtn.dataset.proxyUrl = proxyDownloadUrl;  // Cloudflare Worker 代理链接
+                        downloadBtn.dataset.currentUrl = proxyDownloadUrl;  // 当前使用的链接
                         downloadBtn.dataset.filename = asset.name;
 
                         // 添加智能下载处理
