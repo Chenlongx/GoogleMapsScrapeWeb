@@ -10,6 +10,7 @@
 const AlipaySdk = require('alipay-sdk').default || require('alipay-sdk');
 const { createClient } = require('@supabase/supabase-js');
 const { createNativeOrder, getCreateConfigValidation } = require('./utils/wechat-pay.js');
+const { resolvePaymentSecrets } = require('./utils/payment-secrets.js');
 
 // 格式化密钥的辅助函数
 function formatKey(key, type) {
@@ -106,8 +107,31 @@ exports.handler = async (event, context) => {
       };
     }
 
+    const paymentSecrets = await resolvePaymentSecrets([
+      'ALIPAY_APP_ID',
+      'ALIPAY_PRIVATE_KEY',
+      'ALIPAY_PUBLIC_KEY',
+      'WECHAT_MCH_ID',
+      'WECHAT_MCH_SERIAL_NO',
+      'WECHAT_PRIVATE_KEY',
+      'WECHAT_APP_ID',
+      'WECHAT_NOTIFY_URL',
+      'WECHATPAY_PUBLIC_KEY',
+      'WECHAT_API_V3_KEY'
+    ], supabase);
+
+    const wechatConfigOverride = {
+      mchId: paymentSecrets.WECHAT_MCH_ID,
+      serialNo: paymentSecrets.WECHAT_MCH_SERIAL_NO,
+      privateKey: paymentSecrets.WECHAT_PRIVATE_KEY,
+      appId: paymentSecrets.WECHAT_APP_ID,
+      notifyUrl: paymentSecrets.WECHAT_NOTIFY_URL,
+      platformPublicKey: paymentSecrets.WECHATPAY_PUBLIC_KEY,
+      apiV3Key: paymentSecrets.WECHAT_API_V3_KEY
+    };
+
     if (isWeChatNative) {
-      const { missing } = getCreateConfigValidation();
+      const { missing } = getCreateConfigValidation(wechatConfigOverride);
       if (missing.length > 0) {
         console.error('❌ 缺少微信支付配置:', missing);
         return {
@@ -122,7 +146,7 @@ exports.handler = async (event, context) => {
       }
     } else {
       const requiredEnvVars = ['ALIPAY_APP_ID', 'ALIPAY_PRIVATE_KEY', 'ALIPAY_PUBLIC_KEY'];
-      const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
+      const missingVars = requiredEnvVars.filter(varName => !paymentSecrets[varName]);
 
       if (missingVars.length > 0) {
         console.error('❌ 缺少支付宝配置:', missingVars);
@@ -235,7 +259,8 @@ exports.handler = async (event, context) => {
       const result = await createNativeOrder({
         orderId,
         description: productSubject,
-        amount
+        amount,
+        configOverride: wechatConfigOverride
       });
       paymentUrl = result.code_url;
       if (!paymentUrl) {
@@ -244,9 +269,9 @@ exports.handler = async (event, context) => {
       console.log(`✅ 微信支付二维码生成成功: ${paymentUrl}`);
     } else {
       const alipaySdk = new AlipaySdk({
-        appId: process.env.ALIPAY_APP_ID,
-        privateKey: formatKey(process.env.ALIPAY_PRIVATE_KEY, 'private'),
-        alipayPublicKey: formatKey(process.env.ALIPAY_PUBLIC_KEY, 'public'),
+        appId: paymentSecrets.ALIPAY_APP_ID,
+        privateKey: formatKey(paymentSecrets.ALIPAY_PRIVATE_KEY, 'private'),
+        alipayPublicKey: formatKey(paymentSecrets.ALIPAY_PUBLIC_KEY, 'public'),
         gateway: "https://openapi.alipay.com/gateway.do",
         timeout: 30000
       });

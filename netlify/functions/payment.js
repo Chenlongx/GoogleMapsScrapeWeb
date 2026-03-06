@@ -1,6 +1,7 @@
 // payment.js
 const AlipaySdk = require('alipay-sdk').default || require('alipay-sdk');
 const { createClient } = require('@supabase/supabase-js');
+const { resolvePaymentSecrets } = require('./utils/payment-secrets.js');
 
 // 允许的来源白名单
 const allowedOrigins = [
@@ -65,7 +66,7 @@ exports.handler = async (event) => {
 
     try {
         // 检查必要的环境变量
-        const requiredEnvVars = ['ALIPAY_APP_ID', 'ALIPAY_PRIVATE_KEY', 'ALIPAY_PUBLIC_KEY', 'SUPABASE_URL'];
+        const requiredEnvVars = ['SUPABASE_URL'];
         const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
         const supabaseKey = getSupabaseKey();
 
@@ -86,10 +87,27 @@ exports.handler = async (event) => {
             };
         }
 
+        const supabase = createClient(process.env.SUPABASE_URL, supabaseKey);
+        const paymentSecrets = await resolvePaymentSecrets(['ALIPAY_APP_ID', 'ALIPAY_PRIVATE_KEY', 'ALIPAY_PUBLIC_KEY'], supabase);
+        const missingPaymentSecrets = ['ALIPAY_APP_ID', 'ALIPAY_PRIVATE_KEY', 'ALIPAY_PUBLIC_KEY'].filter((key) => !paymentSecrets[key]);
+
+        if (missingPaymentSecrets.length > 0) {
+            console.error('Missing payment secrets:', missingPaymentSecrets);
+            return {
+                statusCode: 500,
+                headers,
+                body: JSON.stringify({
+                    success: false,
+                    message: 'Server configuration error. Please contact support.',
+                    error: `Missing payment secrets: ${missingPaymentSecrets.join(', ')}`
+                })
+            };
+        }
+
         const alipaySdk = new AlipaySdk({
-            appId: process.env.ALIPAY_APP_ID,
-            privateKey: formatKey(process.env.ALIPAY_PRIVATE_KEY, 'private'),
-            alipayPublicKey: formatKey(process.env.ALIPAY_PUBLIC_KEY, 'public'),
+            appId: paymentSecrets.ALIPAY_APP_ID,
+            privateKey: formatKey(paymentSecrets.ALIPAY_PRIVATE_KEY, 'private'),
+            alipayPublicKey: formatKey(paymentSecrets.ALIPAY_PUBLIC_KEY, 'public'),
             gateway: "https://openapi.alipay.com/gateway.do",
             timeout: 30000
         });
@@ -104,8 +122,6 @@ exports.handler = async (event) => {
             console.error(`[Security Error] Invalid productId received: ${productId}`);
             return { statusCode: 400, headers, body: JSON.stringify({ success: false, message: 'Invalid product' }) };
         }
-
-        const supabase = createClient(process.env.SUPABASE_URL, supabaseKey);
 
         let finalIdentifier = identifierFromFrontend;
 

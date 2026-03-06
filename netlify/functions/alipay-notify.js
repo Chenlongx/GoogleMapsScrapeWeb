@@ -1,5 +1,6 @@
 const AlipaySdk = require('alipay-sdk').default || require('alipay-sdk');
 const { createClient } = require('@supabase/supabase-js');
+const { getSupabaseAdmin, resolvePaymentSecrets } = require('./utils/payment-secrets.js');
 const { processBusinessLogic } = require('./business-logic.js'); // 引入核心业务逻辑
 
 // 格式化密钥的辅助函数
@@ -31,10 +32,12 @@ exports.handler = async (event) => {
         
         console.log('📦 [alipay-notify] 回调参数:', JSON.stringify(paramsJSON, null, 2));
 
+        const supabaseAdmin = getSupabaseAdmin();
+        const paymentSecrets = await resolvePaymentSecrets(['ALIPAY_APP_ID', 'ALIPAY_PRIVATE_KEY', 'ALIPAY_PUBLIC_KEY'], supabaseAdmin);
         const alipaySdk = new AlipaySdk({
-            appId: process.env.ALIPAY_APP_ID,
-            privateKey: formatKey(process.env.ALIPAY_PRIVATE_KEY, 'private'),
-            alipayPublicKey: formatKey(process.env.ALIPAY_PUBLIC_KEY, 'public'),
+            appId: paymentSecrets.ALIPAY_APP_ID,
+            privateKey: formatKey(paymentSecrets.ALIPAY_PRIVATE_KEY, 'private'),
+            alipayPublicKey: formatKey(paymentSecrets.ALIPAY_PUBLIC_KEY, 'public'),
             gateway: process.env.ALIPAY_GATEWAY,
         });
 
@@ -59,7 +62,7 @@ exports.handler = async (event) => {
                 return { statusCode: 200, body: 'failure' };
             }
 
-            const supabase = createClient(process.env.SUPABASE_URL, supabaseKey);
+            const supabase = supabaseAdmin || createClient(process.env.SUPABASE_URL, supabaseKey);
             
             // ▼▼▼ 防止重复处理的关键检查 ▼▼▼
             const { data: existingOrder, error } = await supabase

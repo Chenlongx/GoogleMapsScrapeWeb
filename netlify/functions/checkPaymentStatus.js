@@ -12,6 +12,7 @@ const AlipaySdk = require('alipay-sdk').default || require('alipay-sdk');
 const { createClient } = require('@supabase/supabase-js');
 const { processBusinessLogic } = require('./business-logic.js');
 const { getQueryConfigValidation, isWeChatOrderId, queryOrderByOutTradeNo } = require('./utils/wechat-pay.js');
+const { resolvePaymentSecrets } = require('./utils/payment-secrets.js');
 
 // 格式化密钥的辅助函数
 function formatKey(key, type) {
@@ -191,11 +192,29 @@ exports.handler = async (event, context) => {
         console.log(`🔍 订单状态为 PENDING，主动查询微信 Native 订单状态...`);
 
         try {
-          const { missing } = getQueryConfigValidation();
+          const paymentSecrets = await resolvePaymentSecrets([
+            'WECHAT_MCH_ID',
+            'WECHAT_MCH_SERIAL_NO',
+            'WECHAT_PRIVATE_KEY',
+            'WECHAT_APP_ID',
+            'WECHAT_NOTIFY_URL',
+            'WECHATPAY_PUBLIC_KEY',
+            'WECHAT_API_V3_KEY'
+          ], supabase);
+          const wechatConfigOverride = {
+            mchId: paymentSecrets.WECHAT_MCH_ID,
+            serialNo: paymentSecrets.WECHAT_MCH_SERIAL_NO,
+            privateKey: paymentSecrets.WECHAT_PRIVATE_KEY,
+            appId: paymentSecrets.WECHAT_APP_ID,
+            notifyUrl: paymentSecrets.WECHAT_NOTIFY_URL,
+            platformPublicKey: paymentSecrets.WECHATPAY_PUBLIC_KEY,
+            apiV3Key: paymentSecrets.WECHAT_API_V3_KEY
+          };
+          const { missing } = getQueryConfigValidation(wechatConfigOverride);
           if (missing.length > 0) {
             console.warn(`⚠️ 微信支付配置缺失，跳过主动查单: ${missing.join(', ')}`);
           } else {
-            const queryResult = await queryOrderByOutTradeNo(orderId);
+            const queryResult = await queryOrderByOutTradeNo(orderId, wechatConfigOverride);
             console.log(`📊 微信订单查询结果:`, JSON.stringify(queryResult, null, 2));
 
             const tradeState = queryResult.trade_state;
@@ -257,10 +276,11 @@ exports.handler = async (event, context) => {
         console.log(`🔍 订单状态为 PENDING，主动查询支付宝订单状态...`);
 
         try {
+          const paymentSecrets = await resolvePaymentSecrets(['ALIPAY_APP_ID', 'ALIPAY_PRIVATE_KEY', 'ALIPAY_PUBLIC_KEY'], supabase);
           const alipaySdk = new AlipaySdk({
-            appId: process.env.ALIPAY_APP_ID,
-            privateKey: formatKey(process.env.ALIPAY_PRIVATE_KEY, 'private'),
-            alipayPublicKey: formatKey(process.env.ALIPAY_PUBLIC_KEY, 'public'),
+            appId: paymentSecrets.ALIPAY_APP_ID,
+            privateKey: formatKey(paymentSecrets.ALIPAY_PRIVATE_KEY, 'private'),
+            alipayPublicKey: formatKey(paymentSecrets.ALIPAY_PUBLIC_KEY, 'public'),
             gateway: "https://openapi.alipay.com/gateway.do",
             timeout: 30000
           });

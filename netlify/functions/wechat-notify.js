@@ -5,6 +5,7 @@ const {
   getNotifyConfigValidation,
   verifyNotifySignature
 } = require('./utils/wechat-pay.js');
+const { getSupabaseAdmin, resolvePaymentSecrets } = require('./utils/payment-secrets.js');
 
 function getHeader(headers, name) {
   return headers?.[name] || headers?.[name.toLowerCase()] || headers?.[name.toUpperCase()] || '';
@@ -62,7 +63,26 @@ exports.handler = async (event) => {
     const nonce = getHeader(event.headers, 'Wechatpay-Nonce');
     const signature = getHeader(event.headers, 'Wechatpay-Signature');
 
-    const { config, missing } = getNotifyConfigValidation();
+    const supabase = getSupabaseAdmin();
+    const paymentSecrets = await resolvePaymentSecrets([
+      'WECHAT_MCH_ID',
+      'WECHAT_MCH_SERIAL_NO',
+      'WECHAT_PRIVATE_KEY',
+      'WECHAT_APP_ID',
+      'WECHAT_NOTIFY_URL',
+      'WECHATPAY_PUBLIC_KEY',
+      'WECHAT_API_V3_KEY'
+    ], supabase);
+    const wechatConfigOverride = {
+      mchId: paymentSecrets.WECHAT_MCH_ID,
+      serialNo: paymentSecrets.WECHAT_MCH_SERIAL_NO,
+      privateKey: paymentSecrets.WECHAT_PRIVATE_KEY,
+      appId: paymentSecrets.WECHAT_APP_ID,
+      notifyUrl: paymentSecrets.WECHAT_NOTIFY_URL,
+      platformPublicKey: paymentSecrets.WECHATPAY_PUBLIC_KEY,
+      apiV3Key: paymentSecrets.WECHAT_API_V3_KEY
+    };
+    const { config, missing } = getNotifyConfigValidation(wechatConfigOverride);
     if (missing.length > 0) {
       console.error(`[wechat-notify] 缺少微信回调配置: ${missing.join(', ')}`);
       return failResponse('配置错误');
@@ -102,8 +122,6 @@ exports.handler = async (event) => {
       console.error('[wechat-notify] 缺少 out_trade_no');
       return failResponse('缺少订单号');
     }
-
-    const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
 
     const { data: orderRow, error: orderError } = await supabase
       .from('orders')

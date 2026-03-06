@@ -18,21 +18,21 @@ function normalizePemKey(key) {
   return normalized;
 }
 
-function getWeChatBaseConfig() {
+function getWeChatBaseConfig(overrides = {}) {
   return {
-    mchId: process.env.WECHAT_MCH_ID,
-    serialNo: process.env.WECHAT_MCH_SERIAL_NO,
-    privateKey: normalizePemKey(process.env.WECHAT_PRIVATE_KEY),
-    platformPublicKey: normalizePemKey(process.env.WECHATPAY_PUBLIC_KEY),
-    apiV3Key: process.env.WECHAT_API_V3_KEY
+    mchId: overrides.mchId || process.env.WECHAT_MCH_ID,
+    serialNo: overrides.serialNo || process.env.WECHAT_MCH_SERIAL_NO,
+    privateKey: normalizePemKey(overrides.privateKey || process.env.WECHAT_PRIVATE_KEY),
+    platformPublicKey: normalizePemKey(overrides.platformPublicKey || process.env.WECHATPAY_PUBLIC_KEY),
+    apiV3Key: overrides.apiV3Key || process.env.WECHAT_API_V3_KEY
   };
 }
 
-function getWeChatCreateConfig() {
+function getWeChatCreateConfig(overrides = {}) {
   return {
-    ...getWeChatBaseConfig(),
-    appId: process.env.WECHAT_APP_ID,
-    notifyUrl: process.env.WECHAT_NOTIFY_URL
+    ...getWeChatBaseConfig(overrides),
+    appId: overrides.appId || process.env.WECHAT_APP_ID,
+    notifyUrl: overrides.notifyUrl || process.env.WECHAT_NOTIFY_URL
   };
 }
 
@@ -40,24 +40,24 @@ function getMissingKeys(config, requiredKeys) {
   return requiredKeys.filter((key) => !config[key]);
 }
 
-function getCreateConfigValidation() {
-  const config = getWeChatCreateConfig();
+function getCreateConfigValidation(overrides = {}) {
+  const config = getWeChatCreateConfig(overrides);
   return {
     config,
     missing: getMissingKeys(config, ['mchId', 'serialNo', 'privateKey', 'appId', 'notifyUrl'])
   };
 }
 
-function getQueryConfigValidation() {
-  const config = getWeChatBaseConfig();
+function getQueryConfigValidation(overrides = {}) {
+  const config = getWeChatBaseConfig(overrides);
   return {
     config,
     missing: getMissingKeys(config, ['mchId', 'serialNo', 'privateKey'])
   };
 }
 
-function getNotifyConfigValidation() {
-  const config = getWeChatBaseConfig();
+function getNotifyConfigValidation(overrides = {}) {
+  const config = getWeChatBaseConfig(overrides);
   return {
     config,
     missing: getMissingKeys(config, ['apiV3Key'])
@@ -141,8 +141,8 @@ function requestWeChatPay(config, method, urlPath, bodyObject) {
   });
 }
 
-async function createNativeOrder({ orderId, description, amount }) {
-  const { config, missing } = getCreateConfigValidation();
+async function createNativeOrder({ orderId, description, amount, configOverride }) {
+  const { config, missing } = getCreateConfigValidation(configOverride);
   if (missing.length > 0) {
     throw new Error(`Missing WeChat Pay config: ${missing.join(', ')}`);
   }
@@ -162,8 +162,8 @@ async function createNativeOrder({ orderId, description, amount }) {
   return response.data;
 }
 
-async function queryOrderByOutTradeNo(orderId) {
-  const { config, missing } = getQueryConfigValidation();
+async function queryOrderByOutTradeNo(orderId, configOverride) {
+  const { config, missing } = getQueryConfigValidation(configOverride);
   if (missing.length > 0) {
     throw new Error(`Missing WeChat Pay config: ${missing.join(', ')}`);
   }

@@ -1,6 +1,7 @@
 const { createClient } = require('@supabase/supabase-js');
 const AlipaySdk = require('alipay-sdk').default || require('alipay-sdk');
 const { processBusinessLogic } = require('./business-logic.js');
+const { resolvePaymentSecrets } = require('./utils/payment-secrets.js');
 
 const allowedOrigins = [
     'http://localhost:8888',
@@ -96,10 +97,11 @@ exports.handler = async (event) => {
 
         console.log(`[check-status] Order ${outTradeNo} is PENDING. Querying Alipay...`);
 
+        const paymentSecrets = await resolvePaymentSecrets(['ALIPAY_APP_ID', 'ALIPAY_PRIVATE_KEY', 'ALIPAY_PUBLIC_KEY'], supabase);
         const alipaySdk = new AlipaySdk({
-            appId: process.env.ALIPAY_APP_ID,
-            privateKey: formatKey(process.env.ALIPAY_PRIVATE_KEY, 'private'),
-            alipayPublicKey: formatKey(process.env.ALIPAY_PUBLIC_KEY, 'public'),
+            appId: paymentSecrets.ALIPAY_APP_ID,
+            privateKey: formatKey(paymentSecrets.ALIPAY_PRIVATE_KEY, 'private'),
+            alipayPublicKey: formatKey(paymentSecrets.ALIPAY_PUBLIC_KEY, 'public'),
             gateway: "https://openapi.alipay.com/gateway.do",
             timeout: 30000
         });
