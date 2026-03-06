@@ -23,6 +23,15 @@ function formatKey(key, type) {
     return key.replace(header, `${header}\n`).replace(footer, `\n${footer}`);
 }
 
+function encodeOrderIdentifier(value) {
+  return Buffer
+    .from(String(value || ''), 'utf8')
+    .toString('base64')
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/g, '');
+}
+
 // 初始化Supabase客户端
 let supabase = null;
 try {
@@ -221,7 +230,7 @@ exports.handler = async (event, context) => {
       ? (wechatCodeMap[productId] || 'wxm')
       : (productCodeMap[productId] || 'grm');
     
-    const encodedIdentifier = Buffer.from(username || userId).toString('base64');
+    const encodedIdentifier = encodeOrderIdentifier(username || userId);
     const orderId = `${productCode}-${Date.now()}-${encodedIdentifier}`;
 
     // 🔒 【真实支付】创建订单记录（使用与payment.js相同的orders表）

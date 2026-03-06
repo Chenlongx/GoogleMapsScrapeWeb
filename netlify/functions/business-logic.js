@@ -13,6 +13,15 @@ function getSupabaseKey() {
         process.env.SUPABASE_ANON_KEY;
 }
 
+function decodeOrderIdentifier(encodedValue) {
+    const normalized = String(encodedValue || '')
+        .replace(/-/g, '+')
+        .replace(/_/g, '/');
+    const paddingLength = (4 - (normalized.length % 4)) % 4;
+    const padded = normalized + '='.repeat(paddingLength);
+    return Buffer.from(padded, 'base64').toString('utf8');
+}
+
 // --- 核心业务逻辑 ---
 async function processBusinessLogic(orderParams) {
     // ... (这部分代码与你 alipay-notify.js 中的 processBusinessLogic 完全相同)
@@ -31,7 +40,7 @@ async function processBusinessLogic(orderParams) {
 
     let customerEmail;
     try {
-        customerEmail = Buffer.from(outTradeNo.split('-')[2] || '', 'base64').toString('ascii');
+        customerEmail = decodeOrderIdentifier(outTradeNo.split('-')[2] || '');
     } catch (err) {
         console.error(`[Critical] Failed to decode email for ${outTradeNo}:`, err.message);
         return { success: false, error: 'Failed to decode email' };
