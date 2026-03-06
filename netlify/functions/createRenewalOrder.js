@@ -1,14 +1,15 @@
 /**
- * 创建续费订单 - 生成支付宝支付链接
+ * 创建续费订单 - 生成支付宝/微信支付链接
  * 
  * 功能：
  * 1. 创建续费订单记录
- * 2. 生成支付宝支付链接（使用真实的支付宝SDK）
+ * 2. 生成支付宝或微信 Native 支付链接
  * 3. 返回订单ID和支付URL
  */
 
 const AlipaySdk = require('alipay-sdk').default || require('alipay-sdk');
 const { createClient } = require('@supabase/supabase-js');
+const { createNativeOrder, getCreateConfigValidation } = require('./utils/wechat-pay.js');
 
 // 格式化密钥的辅助函数
 function formatKey(key, type) {
@@ -87,33 +88,55 @@ exports.handler = async (event, context) => {
       };
     }
 
-    const requiredEnvVars = ['ALIPAY_APP_ID', 'ALIPAY_PRIVATE_KEY', 'ALIPAY_PUBLIC_KEY'];
-    const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
-    
-    if (missingVars.length > 0) {
-      console.error('❌ 缺少支付宝配置:', missingVars);
+    // 解析请求体
+    const { userId, username, renewalType, amount, duration, productName, payChannel } = JSON.parse(event.body);
+
+    const normalizedChannel = String(payChannel || 'alipay').toLowerCase();
+    const isWeChatNative = ['wechat', 'wechat_native', 'wechatpay', 'wx'].includes(normalizedChannel);
+    const isAlipay = ['alipay', 'ali', ''].includes(normalizedChannel);
+
+    if (!isWeChatNative && !isAlipay) {
       return {
-        statusCode: 500,
+        statusCode: 400,
         headers,
         body: JSON.stringify({
           success: false,
-          message: '支付配置错误，请联系管理员',
-          error: '缺少支付宝配置'
+          message: '不支持的支付方式'
         })
       };
     }
 
-    // 初始化支付宝SDK
-    const alipaySdk = new AlipaySdk({
-      appId: process.env.ALIPAY_APP_ID,
-      privateKey: formatKey(process.env.ALIPAY_PRIVATE_KEY, 'private'),
-      alipayPublicKey: formatKey(process.env.ALIPAY_PUBLIC_KEY, 'public'),
-      gateway: "https://openapi.alipay.com/gateway.do",
-      timeout: 30000
-    });
-    
-    // 解析请求体
-    const { userId, username, renewalType, amount, duration, productName } = JSON.parse(event.body);
+    if (isWeChatNative) {
+      const { missing } = getCreateConfigValidation();
+      if (missing.length > 0) {
+        console.error('❌ 缺少微信支付配置:', missing);
+        return {
+          statusCode: 500,
+          headers,
+          body: JSON.stringify({
+            success: false,
+            message: '微信支付配置错误，请联系管理员',
+            error: `缺少微信支付配置: ${missing.join(', ')}`
+          })
+        };
+      }
+    } else {
+      const requiredEnvVars = ['ALIPAY_APP_ID', 'ALIPAY_PRIVATE_KEY', 'ALIPAY_PUBLIC_KEY'];
+      const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
+
+      if (missingVars.length > 0) {
+        console.error('❌ 缺少支付宝配置:', missingVars);
+        return {
+          statusCode: 500,
+          headers,
+          body: JSON.stringify({
+            success: false,
+            message: '支付配置错误，请联系管理员',
+            error: '缺少支付宝配置'
+          })
+        };
+      }
+    }
 
     // 验证必填参数
     if (!userId || !renewalType || !amount) {
@@ -165,7 +188,14 @@ exports.handler = async (event, context) => {
       'gmaps_renewal_quarterly': 'grq',
       'gmaps_renewal_yearly': 'gry'
     };
-    const productCode = productCodeMap[productId] || 'grm';
+    const wechatCodeMap = {
+      'gmaps_renewal_monthly': 'wxm',
+      'gmaps_renewal_quarterly': 'wxq',
+      'gmaps_renewal_yearly': 'wxy'
+    };
+    const productCode = isWeChatNative
+      ? (wechatCodeMap[productId] || 'wxm')
+      : (productCodeMap[productId] || 'grm');
     
     const encodedIdentifier = Buffer.from(username || userId).toString('base64');
     const orderId = `${productCode}-${Date.now()}-${encodedIdentifier}`;
@@ -196,26 +226,43 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // 🔒 【真实支付】使用支付宝扫码支付（与payment.js保持一致）
     const productSubject = productName || `谷歌地图商家爬虫-${PRICES[renewalType]?.duration || ''}续费`;
-    
-    console.log(`✅ 开始生成支付二维码: 订单ID=${orderId}, 金额=¥${amount.toFixed(2)}, 商品=${productSubject}`);
+    console.log(`✅ 开始生成支付二维码: 订单ID=${orderId}, 金额=¥${amount.toFixed(2)}, 商品=${productSubject}, 渠道=${isWeChatNative ? 'wechat_native' : 'alipay'}`);
 
-    // 🔒 【修复】使用 alipay.trade.precreate（扫码支付）生成二维码URL
-    // 回调 URL 改为 alipay-notify（它会调用 business-logic.js 处理续费）
-    const result = await alipaySdk.exec('alipay.trade.precreate', {
-      bizContent: {
-        out_trade_no: orderId,
-        total_amount: amount.toFixed(2),
-        subject: productSubject,
-        notify_url: 'https://mediamingle.cn/.netlify/functions/alipay-notify'
+    let paymentUrl = '';
+
+    if (isWeChatNative) {
+      const result = await createNativeOrder({
+        orderId,
+        description: productSubject,
+        amount
+      });
+      paymentUrl = result.code_url;
+      if (!paymentUrl) {
+        throw new Error('微信 Native 下单成功但未返回 code_url');
       }
-    });
+      console.log(`✅ 微信支付二维码生成成功: ${paymentUrl}`);
+    } else {
+      const alipaySdk = new AlipaySdk({
+        appId: process.env.ALIPAY_APP_ID,
+        privateKey: formatKey(process.env.ALIPAY_PRIVATE_KEY, 'private'),
+        alipayPublicKey: formatKey(process.env.ALIPAY_PUBLIC_KEY, 'public'),
+        gateway: "https://openapi.alipay.com/gateway.do",
+        timeout: 30000
+      });
 
-    // precreate 返回的是一个短链接，适合生成二维码
-    const paymentUrl = result.qrCode;
-    
-    console.log(`✅ 支付二维码生成成功: ${paymentUrl}`);
+      const result = await alipaySdk.exec('alipay.trade.precreate', {
+        bizContent: {
+          out_trade_no: orderId,
+          total_amount: amount.toFixed(2),
+          subject: productSubject,
+          notify_url: 'https://mediamingle.cn/.netlify/functions/alipay-notify'
+        }
+      });
+
+      paymentUrl = result.qrCode;
+      console.log(`✅ 支付宝二维码生成成功: ${paymentUrl}`);
+    }
 
     // 返回成功响应
     return {

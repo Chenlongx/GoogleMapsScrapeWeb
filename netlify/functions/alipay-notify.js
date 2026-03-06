@@ -10,6 +10,13 @@ function formatKey(key, type) {
     return key.replace(header, `${header}\n`).replace(footer, `\n${footer}`);
 }
 
+function getSupabaseKey() {
+    return process.env.SUPABASE_SERVICE_ROLE_KEY ||
+        process.env.SERVICE_ROLE_KEY ||
+        process.env.SUPABASE_KEY ||
+        process.env.SUPABASE_ANON_KEY;
+}
+
 exports.handler = async (event) => {
     console.log('🔔 [alipay-notify] 收到支付宝回调');
     
@@ -46,7 +53,13 @@ exports.handler = async (event) => {
         console.log(`📊 [alipay-notify] 订单状态: ${tradeStatus}, 订单号: ${outTradeNo}`);
 
         if (tradeStatus === 'TRADE_SUCCESS') {
-            const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
+            const supabaseKey = getSupabaseKey();
+            if (!process.env.SUPABASE_URL || !supabaseKey) {
+                console.error('[alipay-notify] Missing Supabase configuration.');
+                return { statusCode: 200, body: 'failure' };
+            }
+
+            const supabase = createClient(process.env.SUPABASE_URL, supabaseKey);
             
             // ▼▼▼ 防止重复处理的关键检查 ▼▼▼
             const { data: existingOrder, error } = await supabase

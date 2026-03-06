@@ -11,6 +11,7 @@
 const AlipaySdk = require('alipay-sdk').default || require('alipay-sdk');
 const { createClient } = require('@supabase/supabase-js');
 const { processBusinessLogic } = require('./business-logic.js');
+const { getQueryConfigValidation, isWeChatOrderId, queryOrderByOutTradeNo } = require('./utils/wechat-pay.js');
 
 // 格式化密钥的辅助函数
 function formatKey(key, type) {
@@ -47,6 +48,23 @@ const PRICES = {
   quarterly: { amount: 149.70, duration: '3个月', months: 3 },
   yearly: { amount: 598.80, duration: '1年', months: 12 }
 };
+
+function getRenewalTypeByProductId(productId) {
+  if (String(productId || '').includes('quarterly')) return 'quarterly';
+  if (String(productId || '').includes('yearly')) return 'yearly';
+  return 'monthly';
+}
+
+function getRenewalLabel(productId) {
+  const renewalType = getRenewalTypeByProductId(productId);
+  if (renewalType === 'quarterly') return '季付';
+  if (renewalType === 'yearly') return '年付';
+  return '月付';
+}
+
+function isCompletedStatus(status) {
+  return ['COMPLETED', 'SUCCESS', 'completed', 'success'].includes(status);
+}
 
 exports.handler = async (event, context) => {
   // CORS headers
@@ -133,12 +151,9 @@ exports.handler = async (event, context) => {
     console.log(`✅ 找到订单: status=${orderData.status}, product_id=${orderData.product_id}`);
 
     // 🔒 【修复】检查订单是否已完成（状态可能是 COMPLETED 或 SUCCESS）
-    if (orderData.status === 'COMPLETED' || orderData.status === 'SUCCESS') {
-      // 从 product_id 提取续费类型
-      let renewalType = 'monthly';
-      if (orderData.product_id.includes('quarterly')) renewalType = 'quarterly';
-      else if (orderData.product_id.includes('yearly')) renewalType = 'yearly';
-      
+    if (isCompletedStatus(orderData.status)) {
+      const renewalType = getRenewalTypeByProductId(orderData.product_id);
+
       // 查询用户的新到期时间
       const { data: userData, error: userError } = await supabase
         .from('user_accounts')
@@ -165,101 +180,151 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // 🔒 【关键修复】如果订单还在 PENDING 状态，主动查询支付宝订单状态
-    if (orderData.status === 'PENDING') {
-      console.log(`🔍 订单状态为 PENDING，主动查询支付宝订单状态...`);
-      
-      try {
-        // 初始化支付宝SDK
-        const alipaySdk = new AlipaySdk({
-          appId: process.env.ALIPAY_APP_ID,
-          privateKey: formatKey(process.env.ALIPAY_PRIVATE_KEY, 'private'),
-          alipayPublicKey: formatKey(process.env.ALIPAY_PUBLIC_KEY, 'public'),
-          gateway: "https://openapi.alipay.com/gateway.do",
-          timeout: 30000
-        });
-        
-        // 调用支付宝订单查询接口
-        const queryResult = await alipaySdk.exec('alipay.trade.query', {
-          bizContent: {
-            out_trade_no: orderId
+    let currentStatus = orderData.status;
+
+    // 🔒 【关键修复】如果订单还在 PENDING 状态，主动查询支付网关状态
+    if (orderData.status === 'PENDING' || orderData.status === 'pending') {
+      const renewalLabel = getRenewalLabel(orderData.product_id);
+      const renewalType = getRenewalTypeByProductId(orderData.product_id);
+
+      if (isWeChatOrderId(orderId)) {
+        console.log(`🔍 订单状态为 PENDING，主动查询微信 Native 订单状态...`);
+
+        try {
+          const { missing } = getQueryConfigValidation();
+          if (missing.length > 0) {
+            console.warn(`⚠️ 微信支付配置缺失，跳过主动查单: ${missing.join(', ')}`);
+          } else {
+            const queryResult = await queryOrderByOutTradeNo(orderId);
+            console.log(`📊 微信订单查询结果:`, JSON.stringify(queryResult, null, 2));
+
+            const tradeState = queryResult.trade_state;
+            if (tradeState === 'SUCCESS') {
+              console.log(`✅ 微信支付确认订单已支付，开始更新订单状态...`);
+
+              await supabase
+                .from('orders')
+                .update({ status: 'COMPLETED' })
+                .eq('out_trade_no', orderId);
+
+              const mockParams = new URLSearchParams();
+              mockParams.append('out_trade_no', orderId);
+              mockParams.append('trade_status', 'TRADE_SUCCESS');
+              mockParams.append('total_amount', ((queryResult.amount?.total || 0) / 100).toFixed(2));
+              mockParams.append('trade_no', queryResult.transaction_id || '');
+              mockParams.append('product_id', orderData.product_id);
+              mockParams.append('subject', `Google Maps Scraper - 续费 - ${renewalLabel}`);
+
+              console.log(`🔧 开始调用 business-logic.js 处理微信续费...`);
+              await processBusinessLogic(mockParams);
+              console.log(`✅ 微信续费业务处理完成`);
+
+              const { data: userData } = await supabase
+                .from('user_accounts')
+                .select('expiry_at')
+                .eq('account', orderData.customer_email)
+                .single();
+
+              return {
+                statusCode: 200,
+                headers,
+                body: JSON.stringify({
+                  success: true,
+                  paid: true,
+                  orderId: orderId,
+                  renewalType: renewalType,
+                  amount: PRICES[renewalType]?.amount || 0,
+                  newExpiryDate: userData?.expiry_at || null,
+                  message: '支付已完成'
+                })
+              };
+            }
+
+            if (['CLOSED', 'REVOKED', 'PAYERROR'].includes(tradeState)) {
+              await supabase
+                .from('orders')
+                .update({ status: tradeState })
+                .eq('out_trade_no', orderId);
+              currentStatus = tradeState;
+            }
+
+            console.log(`⏳ 微信订单状态: ${tradeState}，等待支付...`);
           }
-        });
-        
-        console.log(`📊 支付宝订单查询结果:`, JSON.stringify(queryResult, null, 2));
-        
-        // 检查支付状态
-        const tradeStatus = queryResult.tradeStatus;
-        
-        if (tradeStatus === 'TRADE_SUCCESS' || tradeStatus === 'TRADE_FINISHED') {
-          console.log(`✅ 支付宝确认订单已支付，开始更新订单状态...`);
-          
-          // 更新订单状态为 COMPLETED
-          await supabase
-            .from('orders')
-            .update({ status: 'COMPLETED' })
-            .eq('out_trade_no', orderId);
-          
-          console.log(`✅ 订单状态已更新为 COMPLETED`);
-          
-          // 🔒 【关键修复】调用 business-logic.js 处理续费逻辑
-          // 构建模拟的支付宝回调参数（必须包含 subject 和 product_id）
-          const mockParams = new URLSearchParams();
-          mockParams.append('out_trade_no', orderId);
-          mockParams.append('trade_status', 'TRADE_SUCCESS');
-          mockParams.append('total_amount', queryResult.totalAmount || '0');
-          mockParams.append('trade_no', queryResult.tradeNo || '');
-          // ✅ 关键：添加 product_id，让 business-logic.js 能正确判断续费时长
-          mockParams.append('product_id', orderData.product_id);
-          // ✅ 关键：添加 subject，作为备用判断方式
-          // mockParams.append('subject', `Google Maps Scraper - 续费`);
-          // 在第216-217行
-          const renewalLabel = orderData.product_id.includes('monthly') ? '月付' : 
-          orderData.product_id.includes('quarterly') ? '季付' : '年付';
-          mockParams.append('subject', `Google Maps Scraper - 续费 - ${renewalLabel}`);
-          
-          console.log(`🔧 开始调用 business-logic.js 处理续费...`);
-          console.log(`📦 传入参数: product_id=${orderData.product_id}, out_trade_no=${orderId}`);
-          await processBusinessLogic(mockParams);
-          console.log(`✅ business-logic.js 处理完成`);
-          
-          // 重新查询用户的新到期时间
-          const { data: userData } = await supabase
-            .from('user_accounts')
-            .select('expiry_at')
-            .eq('account', orderData.customer_email)
-            .single();
-          
-          // 从 product_id 提取续费类型
-          let renewalType = 'monthly';
-          if (orderData.product_id.includes('quarterly')) renewalType = 'quarterly';
-          else if (orderData.product_id.includes('yearly')) renewalType = 'yearly';
-          
-          const newExpiryDate = userData?.expiry_at || null;
-          
-          console.log(`✅ 续费成功！renewalType=${renewalType}, newExpiry=${newExpiryDate}`);
-          
-          return {
-            statusCode: 200,
-            headers,
-            body: JSON.stringify({
-              success: true,
-              paid: true,
-              orderId: orderId,
-              renewalType: renewalType,
-              amount: PRICES[renewalType]?.amount || 0,
-              newExpiryDate: newExpiryDate,
-              message: '支付已完成'
-            })
-          };
+        } catch (wechatError) {
+          console.error(`⚠️ 查询微信订单失败: ${wechatError.message}`);
         }
-        
-        // 订单还未支付
-        console.log(`⏳ 支付宝订单状态: ${tradeStatus}，等待支付...`);
-        
-      } catch (alipayError) {
-        console.error(`⚠️ 查询支付宝订单失败: ${alipayError.message}`);
-        // 查询失败不影响返回，继续返回等待支付状态
+      } else {
+        console.log(`🔍 订单状态为 PENDING，主动查询支付宝订单状态...`);
+
+        try {
+          const alipaySdk = new AlipaySdk({
+            appId: process.env.ALIPAY_APP_ID,
+            privateKey: formatKey(process.env.ALIPAY_PRIVATE_KEY, 'private'),
+            alipayPublicKey: formatKey(process.env.ALIPAY_PUBLIC_KEY, 'public'),
+            gateway: "https://openapi.alipay.com/gateway.do",
+            timeout: 30000
+          });
+
+          const queryResult = await alipaySdk.exec('alipay.trade.query', {
+            bizContent: {
+              out_trade_no: orderId
+            }
+          });
+
+          console.log(`📊 支付宝订单查询结果:`, JSON.stringify(queryResult, null, 2));
+
+          const tradeStatus = queryResult.tradeStatus;
+
+          if (tradeStatus === 'TRADE_SUCCESS' || tradeStatus === 'TRADE_FINISHED') {
+            console.log(`✅ 支付宝确认订单已支付，开始更新订单状态...`);
+
+            await supabase
+              .from('orders')
+              .update({ status: 'COMPLETED' })
+              .eq('out_trade_no', orderId);
+
+            const mockParams = new URLSearchParams();
+            mockParams.append('out_trade_no', orderId);
+            mockParams.append('trade_status', 'TRADE_SUCCESS');
+            mockParams.append('total_amount', queryResult.totalAmount || '0');
+            mockParams.append('trade_no', queryResult.tradeNo || '');
+            mockParams.append('product_id', orderData.product_id);
+            mockParams.append('subject', `Google Maps Scraper - 续费 - ${renewalLabel}`);
+
+            console.log(`🔧 开始调用 business-logic.js 处理续费...`);
+            console.log(`📦 传入参数: product_id=${orderData.product_id}, out_trade_no=${orderId}`);
+            await processBusinessLogic(mockParams);
+            console.log(`✅ business-logic.js 处理完成`);
+
+            const { data: userData } = await supabase
+              .from('user_accounts')
+              .select('expiry_at')
+              .eq('account', orderData.customer_email)
+              .single();
+
+            const newExpiryDate = userData?.expiry_at || null;
+
+            console.log(`✅ 续费成功！renewalType=${renewalType}, newExpiry=${newExpiryDate}`);
+
+            return {
+              statusCode: 200,
+              headers,
+              body: JSON.stringify({
+                success: true,
+                paid: true,
+                orderId: orderId,
+                renewalType: renewalType,
+                amount: PRICES[renewalType]?.amount || 0,
+                newExpiryDate: newExpiryDate,
+                message: '支付已完成'
+              })
+            };
+          }
+
+          console.log(`⏳ 支付宝订单状态: ${tradeStatus}，等待支付...`);
+        } catch (alipayError) {
+          console.error(`⚠️ 查询支付宝订单失败: ${alipayError.message}`);
+        }
       }
     }
     
@@ -271,7 +336,7 @@ exports.handler = async (event, context) => {
         success: true,
         paid: false,
         orderId: orderId,
-        status: orderData.status,
+        status: currentStatus,
         message: '等待支付'
       })
     };

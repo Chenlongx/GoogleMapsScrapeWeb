@@ -9,6 +9,13 @@ const allowedOrigins = [
     'https://mediamingle.cn'
 ];
 
+function getSupabaseKey() {
+    return process.env.SUPABASE_SERVICE_ROLE_KEY ||
+        process.env.SERVICE_ROLE_KEY ||
+        process.env.SUPABASE_KEY ||
+        process.env.SUPABASE_ANON_KEY;
+}
+
 // 格式化密钥的辅助函数
 function formatKey(key, type) {
     if (!key || key.includes('\n')) {
@@ -58,8 +65,13 @@ exports.handler = async (event) => {
 
     try {
         // 检查必要的环境变量
-        const requiredEnvVars = ['ALIPAY_APP_ID', 'ALIPAY_PRIVATE_KEY', 'ALIPAY_PUBLIC_KEY', 'SUPABASE_URL', 'SUPABASE_ANON_KEY'];
+        const requiredEnvVars = ['ALIPAY_APP_ID', 'ALIPAY_PRIVATE_KEY', 'ALIPAY_PUBLIC_KEY', 'SUPABASE_URL'];
         const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
+        const supabaseKey = getSupabaseKey();
+
+        if (!supabaseKey) {
+            missingVars.push('SUPABASE_SERVICE_ROLE_KEY|SUPABASE_ANON_KEY');
+        }
 
         if (missingVars.length > 0) {
             console.error('Missing environment variables:', missingVars);
@@ -93,7 +105,7 @@ exports.handler = async (event) => {
             return { statusCode: 400, headers, body: JSON.stringify({ success: false, message: 'Invalid product' }) };
         }
 
-        const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
+        const supabase = createClient(process.env.SUPABASE_URL, supabaseKey);
 
         let finalIdentifier = identifierFromFrontend;
 

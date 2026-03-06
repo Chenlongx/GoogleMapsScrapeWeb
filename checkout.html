@@ -1306,7 +1306,19 @@
                             agentCode
                         })
                     });
-                    const data = await response.json();
+                    const rawResponseText = await response.text();
+                    let data = {};
+
+                    try {
+                        data = rawResponseText ? JSON.parse(rawResponseText) : {};
+                    } catch (parseError) {
+                        console.error('Payment response is not valid JSON:', rawResponseText);
+                        throw new Error(`Payment API returned an invalid response (HTTP ${response.status})`);
+                    }
+
+                    if (!response.ok) {
+                        throw new Error(data.message || `Payment request failed (HTTP ${response.status})`);
+                    }
 
                     if (!data.success || !data.qrCodeUrl) {
                         throw new Error(data.message || 'Failed to get QR code');

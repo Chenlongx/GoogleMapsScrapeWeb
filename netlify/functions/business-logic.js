@@ -6,6 +6,13 @@ function generatePassword() {
     return Math.random().toString(36).slice(-8);
 }
 
+function getSupabaseKey() {
+    return process.env.SUPABASE_SERVICE_ROLE_KEY ||
+        process.env.SERVICE_ROLE_KEY ||
+        process.env.SUPABASE_KEY ||
+        process.env.SUPABASE_ANON_KEY;
+}
+
 // --- 核心业务逻辑 ---
 async function processBusinessLogic(orderParams) {
     // ... (这部分代码与你 alipay-notify.js 中的 processBusinessLogic 完全相同)
@@ -31,7 +38,13 @@ async function processBusinessLogic(orderParams) {
     }
 
     const subjectText = decodeURIComponent((rawSubject || '').replace(/\+/g, ' '));
-    const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
+    const supabaseKey = getSupabaseKey();
+    if (!process.env.SUPABASE_URL || !supabaseKey) {
+        console.error('[Critical] Missing Supabase configuration in processBusinessLogic.');
+        return { success: false, error: 'Missing Supabase configuration' };
+    }
+
+    const supabase = createClient(process.env.SUPABASE_URL, supabaseKey);
     const resend = new Resend(process.env.RESEND_API_KEY);
 
     // 如果通知参数中没有携带 product_id（如来自支付宝异步通知），则从数据库回填
@@ -305,7 +318,13 @@ async function processReferralCommission(outTradeNo, customerEmail, productId) {
     try {
         console.log('开始处理推广佣金:', { outTradeNo, customerEmail, productId });
 
-        const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
+        const supabaseKey = getSupabaseKey();
+        if (!process.env.SUPABASE_URL || !supabaseKey) {
+            console.error('Missing Supabase configuration, skipping referral commission processing.');
+            return;
+        }
+
+        const supabase = createClient(process.env.SUPABASE_URL, supabaseKey);
 
         // 获取订单信息
         const { data: order, error: orderError } = await supabase

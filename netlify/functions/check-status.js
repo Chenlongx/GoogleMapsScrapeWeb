@@ -15,6 +15,13 @@ function formatKey(key, type) {
     return key.replace(header, `${header}\n`).replace(footer, `\n${footer}`);
 }
 
+function getSupabaseKey() {
+    return process.env.SUPABASE_SERVICE_ROLE_KEY ||
+        process.env.SERVICE_ROLE_KEY ||
+        process.env.SUPABASE_KEY ||
+        process.env.SUPABASE_ANON_KEY;
+}
+
 exports.handler = async (event) => {
     const origin = event.headers.origin;
     const headers = {
@@ -51,7 +58,19 @@ exports.handler = async (event) => {
         };
     }
 
-    const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
+    const supabaseKey = getSupabaseKey();
+    if (!process.env.SUPABASE_URL || !supabaseKey) {
+        return {
+            statusCode: 200,
+            headers,
+            body: JSON.stringify({
+                status: 'error',
+                message: 'Supabase configuration missing'
+            })
+        };
+    }
+
+    const supabase = createClient(process.env.SUPABASE_URL, supabaseKey);
 
     try {
         const { data: order, error } = await supabase
