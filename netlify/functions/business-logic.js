@@ -188,6 +188,7 @@ async function processBusinessLogic(orderParams) {
                             <p style="font-size: 20px; font-weight: bold; color: #1e293b; letter-spacing: 1px; margin: 0;">${formattedExpiry}</p>
                         </div>
                         <p style="color: #475569; font-size: 16px;">感谢您的支持。</p>
+                        <p style="color: #475569; font-size: 16px;">如您当前已打开桌面程序，请先完全退出后重新启动，续费状态才会刷新生效。</p>
                         <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 40px 0;">
                         <p style="color: #94a3b8; font-size: 12px; text-align: center;">如果您没有进行此操作，请忽略此邮件。这是一个自动发送的邮件，请勿直接回复。</p>
                     </div>
@@ -196,6 +197,7 @@ async function processBusinessLogic(orderParams) {
             } else {
                 const password = generatePassword();
                 const userType = 'regular';
+                let upgradedExistingAccount = false;
 
                 const expiryDate = buildGoogleMapsExpiry(productId);
 
@@ -210,6 +212,7 @@ async function processBusinessLogic(orderParams) {
                 }
 
                 if (existingUser) {
+                    upgradedExistingAccount = true;
                     const upgradedExpiry = buildGoogleMapsExpiry(productId, existingUser.expiry_at);
                     const { error: upgradeError } = await supabase
                         .from('user_accounts')
@@ -239,27 +242,46 @@ async function processBusinessLogic(orderParams) {
                     if (error) throw new Error(`Failed to create user account: ${error.message}`);
                 }
 
-                emailSubject = '【GlobalFlow】您的 Google Maps Scraper 账户已成功开通！';
-                emailHtml = `
-                <div style="background-color: #f3f4f6; padding: 20px; font-family: Arial, sans-serif; line-height: 1.6;">
-                    <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; padding: 40px;">
-                        <h1 style="color: #1e293b; font-size: 24px; text-align: center;">账户开通成功！</h1>
-                        <p style="color: #475569; font-size: 16px;">您好，</p>
-                        <p style="color: #475569; font-size: 16px;">感谢您的订阅！您用于 <strong style="color: #3b82f6;">Google Maps Scraper</strong> 的账户 (<span style="color: #3b82f6;">${customerEmail}</span>) 已经成功开通。</p>
-                        <p style="color: #475569; font-size: 16px;">您的初始登录密码是：</p>
-                        <div style="background-color: #f1f5f9; border: 1px dashed #cbd5e1; border-radius: 8px; padding: 20px; text-align: center; margin: 20px 0;">
-                            <p style="font-size: 20px; font-weight: bold; color: #1e293b; letter-spacing: 2px; margin: 0;">${password}</p>
+                if (upgradedExistingAccount) {
+                    emailSubject = '【GlobalFlow】您的 Google Maps Scraper 账户已成功升级！';
+                    emailHtml = `
+                    <div style="background-color: #f3f4f6; padding: 20px; font-family: Arial, sans-serif; line-height: 1.6;">
+                        <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; padding: 40px;">
+                            <h1 style="color: #1e293b; font-size: 24px; text-align: center;">账户升级成功！</h1>
+                            <p style="color: #475569; font-size: 16px;">您好，</p>
+                            <p style="color: #475569; font-size: 16px;">您用于 <strong style="color: #3b82f6;">Google Maps Scraper</strong> 的账户 (<span style="color: #3b82f6;">${customerEmail}</span>) 已成功升级为正式账户。</p>
+                            <p style="color: #475569; font-size: 16px;">请继续使用您原来的账户密码登录，无需重置或使用新密码。</p>
+                            <p style="color: #475569; font-size: 16px;">如您当前已打开桌面程序，请先完全退出后重新启动，升级状态才会刷新生效。</p>
+                            <p style="color: #475569; font-size: 16px;">如果您还没有安装应用程序，可以点击下方按钮下载。</p>
+                            <div style="text-align: center; margin-top: 30px;">
+                                <a href="https://mediamingle.cn/download.html" target="_blank" style="background-color: #3b82f6; color: #ffffff; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-size: 16px; font-weight: bold;">下载应用程序</a>
+                            </div>
+                            <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 40px 0;">
+                            <p style="color: #94a3b8; font-size: 12px; text-align: center;">如果您没有进行此操作，请忽略此邮件。这是一个自动发送的邮件，请勿直接回复。</p>
                         </div>
-                        <p style="color: #475569; font-size: 16px;">请在您的桌面应用程序中使用以上账户和密码进行登录。为了您的账户安全，建议登录后立即修改密码。</p>
-                        <p style="color: #475569; font-size: 16px;">如果您还没有安装应用程序，可以点击下方按钮下载。</p>
-                        <div style="text-align: center; margin-top: 30px;">
-                        <div style="text-align: center; margin-top: 30px;">
-                            <a href="https://mediamingle.cn/download.html" target="_blank" style="background-color: #3b82f6; color: #ffffff; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-size: 16px; font-weight: bold;">下载应用程序</a>
+                    </div>`;
+                } else {
+                    emailSubject = '【GlobalFlow】您的 Google Maps Scraper 账户已成功开通！';
+                    emailHtml = `
+                    <div style="background-color: #f3f4f6; padding: 20px; font-family: Arial, sans-serif; line-height: 1.6;">
+                        <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; padding: 40px;">
+                            <h1 style="color: #1e293b; font-size: 24px; text-align: center;">账户开通成功！</h1>
+                            <p style="color: #475569; font-size: 16px;">您好，</p>
+                            <p style="color: #475569; font-size: 16px;">感谢您的订阅！您用于 <strong style="color: #3b82f6;">Google Maps Scraper</strong> 的账户 (<span style="color: #3b82f6;">${customerEmail}</span>) 已经成功开通。</p>
+                            <p style="color: #475569; font-size: 16px;">您的初始登录密码是：</p>
+                            <div style="background-color: #f1f5f9; border: 1px dashed #cbd5e1; border-radius: 8px; padding: 20px; text-align: center; margin: 20px 0;">
+                                <p style="font-size: 20px; font-weight: bold; color: #1e293b; letter-spacing: 2px; margin: 0;">${password}</p>
+                            </div>
+                            <p style="color: #475569; font-size: 16px;">请在您的桌面应用程序中使用以上账户和密码进行登录。为了您的账户安全，建议登录后立即修改密码。</p>
+                            <p style="color: #475569; font-size: 16px;">如果您还没有安装应用程序，可以点击下方按钮下载。</p>
+                            <div style="text-align: center; margin-top: 30px;">
+                                <a href="https://mediamingle.cn/download.html" target="_blank" style="background-color: #3b82f6; color: #ffffff; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-size: 16px; font-weight: bold;">下载应用程序</a>
+                            </div>
+                            <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 40px 0;">
+                            <p style="color: #94a3b8; font-size: 12px; text-align: center;">如果您没有进行此操作，请忽略此邮件。这是一个自动发送的邮件，请勿直接回复。</p>
                         </div>
-                        <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 40px 0;">
-                        <p style="color: #94a3b8; font-size: 12px; text-align: center;">如果您没有进行此操作，请忽略此邮件。这是一个自动发送的邮件，请勿直接回复。</p>
-                    </div>
-                </div>`;
+                    </div>`;
+                }
             }
 
         } else if (subjectText.includes('Email Validator')) {
