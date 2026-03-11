@@ -240,7 +240,7 @@ exports.handler = async (event, context) => {
 
               const { data: userData } = await supabase
                 .from('user_accounts')
-                .select('expiry_at')
+                .select('expiry_at, user_type')
                 .eq('account', orderData.customer_email)
                 .single();
 
@@ -254,6 +254,7 @@ exports.handler = async (event, context) => {
                   renewalType: renewalType,
                   amount: PRICES[renewalType]?.amount || 0,
                   newExpiryDate: userData?.expiry_at || null,
+                  userType: userData?.user_type || 'regular',
                   message: '支付已完成'
                 })
               };
@@ -318,7 +319,7 @@ exports.handler = async (event, context) => {
 
             const { data: userData } = await supabase
               .from('user_accounts')
-              .select('expiry_at')
+              .select('expiry_at, user_type')
               .eq('account', orderData.customer_email)
               .single();
 
@@ -336,6 +337,7 @@ exports.handler = async (event, context) => {
                 renewalType: renewalType,
                 amount: PRICES[renewalType]?.amount || 0,
                 newExpiryDate: newExpiryDate,
+                userType: userData?.user_type || 'regular',
                 message: '支付已完成'
               })
             };

@@ -56,6 +56,7 @@ exports.handler = async (event) => {
         }
 
         const EXPORT_LIMITS = {
+            'standard': 2,
             'trial': 2,
             'regular': 50,
             'premium': 99999

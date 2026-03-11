@@ -22,6 +22,21 @@ function decodeOrderIdentifier(encodedValue) {
     return Buffer.from(padded, 'base64').toString('utf8');
 }
 
+function getGoogleMapsValidityDays(productId) {
+    if (String(productId || '').includes('quarterly')) return 90;
+    if (String(productId || '').includes('yearly')) return 730;
+    return 30;
+}
+
+function buildGoogleMapsExpiry(productId, currentExpiryAt = null) {
+    const now = new Date();
+    const currentExpiry = currentExpiryAt ? new Date(currentExpiryAt) : null;
+    const startDate = currentExpiry && currentExpiry > now ? currentExpiry : now;
+    const nextExpiry = new Date(startDate);
+    nextExpiry.setDate(nextExpiry.getDate() + getGoogleMapsValidityDays(productId));
+    return nextExpiry;
+}
+
 // --- 核心业务逻辑 ---
 async function processBusinessLogic(orderParams) {
     // ... (这部分代码与你 alipay-notify.js 中的 processBusinessLogic 完全相同)
@@ -180,21 +195,49 @@ async function processBusinessLogic(orderParams) {
 
             } else {
                 const password = generatePassword();
-                const userType = 'premium'; // 所有新购方案都是高级版
+                const userType = 'regular';
 
-                // 根据产品计算有效期
-                let validityDays = 30; // 默认30天
-                if (productId) {
-                    if (productId.includes('monthly')) validityDays = 30;
-                    else if (productId.includes('quarterly')) validityDays = 90;
-                    else if (productId.includes('yearly')) validityDays = 730; // 买一年送一年
+                const expiryDate = buildGoogleMapsExpiry(productId);
+
+                const { data: existingUser, error: existingUserError } = await supabase
+                    .from('user_accounts')
+                    .select('id, expiry_at')
+                    .eq('account', customerEmail)
+                    .maybeSingle();
+
+                if (existingUserError) {
+                    throw new Error(`Failed to query user account: ${existingUserError.message}`);
                 }
 
-                const expiryDate = new Date();
-                expiryDate.setDate(expiryDate.getDate() + validityDays);
+                if (existingUser) {
+                    const upgradedExpiry = buildGoogleMapsExpiry(productId, existingUser.expiry_at);
+                    const { error: upgradeError } = await supabase
+                        .from('user_accounts')
+                        .update({
+                            user_type: userType,
+                            status: 'active',
+                            expiry_at: upgradedExpiry.toISOString(),
+                            trial_search_used: false,
+                            daily_export_count: 0,
+                            last_export_date: null
+                        })
+                        .eq('id', existingUser.id);
 
-                const { error } = await supabase.from('user_accounts').insert({ account: customerEmail, password, user_type: userType, status: 'active', expiry_at: expiryDate.toISOString() });
-                if (error) throw new Error(`Failed to create user account: ${error.message}`);
+                    if (upgradeError) {
+                        throw new Error(`Failed to upgrade existing user account: ${upgradeError.message}`);
+                    }
+                } else {
+                    const { error } = await supabase.from('user_accounts').insert({
+                        account: customerEmail,
+                        password,
+                        user_type: userType,
+                        status: 'active',
+                        expiry_at: expiryDate.toISOString(),
+                        trial_search_used: false,
+                        daily_export_count: 0
+                    });
+                    if (error) throw new Error(`Failed to create user account: ${error.message}`);
+                }
 
                 emailSubject = '【GlobalFlow】您的 Google Maps Scraper 账户已成功开通！';
                 emailHtml = `
