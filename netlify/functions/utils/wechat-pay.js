@@ -68,6 +68,20 @@ function isWeChatOrderId(orderId) {
   return String(orderId || '').toLowerCase().startsWith('wx');
 }
 
+function validateWeChatOutTradeNo(orderId) {
+  const normalized = String(orderId || '');
+  if (!normalized) {
+    throw new Error('Invalid WeChat out_trade_no: empty');
+  }
+  if (normalized.length < 6 || normalized.length > 32) {
+    throw new Error(`Invalid WeChat out_trade_no length: ${normalized.length}, expected 6-32`);
+  }
+  if (!/^[A-Za-z0-9_-]+$/.test(normalized)) {
+    throw new Error('Invalid WeChat out_trade_no characters: only letters, digits, "_" and "-" are allowed');
+  }
+  return normalized;
+}
+
 function buildAuthorizationHeader(config, method, urlPath, bodyText) {
   const timestamp = String(Math.floor(Date.now() / 1000));
   const nonceStr = crypto.randomBytes(16).toString('hex');
@@ -146,12 +160,13 @@ async function createNativeOrder({ orderId, description, amount, configOverride 
   if (missing.length > 0) {
     throw new Error(`Missing WeChat Pay config: ${missing.join(', ')}`);
   }
+  const validatedOrderId = validateWeChatOutTradeNo(orderId);
 
   const response = await requestWeChatPay(config, 'POST', '/v3/pay/transactions/native', {
     appid: config.appId,
     mchid: config.mchId,
     description,
-    out_trade_no: orderId,
+    out_trade_no: validatedOrderId,
     notify_url: config.notifyUrl,
     amount: {
       total: Math.round(Number(amount) * 100),
@@ -167,8 +182,9 @@ async function queryOrderByOutTradeNo(orderId, configOverride) {
   if (missing.length > 0) {
     throw new Error(`Missing WeChat Pay config: ${missing.join(', ')}`);
   }
+  const validatedOrderId = validateWeChatOutTradeNo(orderId);
 
-  const path = `/v3/pay/transactions/out-trade-no/${encodeURIComponent(orderId)}?mchid=${encodeURIComponent(config.mchId)}`;
+  const path = `/v3/pay/transactions/out-trade-no/${encodeURIComponent(validatedOrderId)}?mchid=${encodeURIComponent(config.mchId)}`;
   const response = await requestWeChatPay(config, 'GET', path, null);
   return response.data;
 }
@@ -212,6 +228,7 @@ module.exports = {
   getQueryConfigValidation,
   isWeChatOrderId,
   queryOrderByOutTradeNo,
+  validateWeChatOutTradeNo,
   verifyNotifySignature,
   decryptNotifyResource
 };

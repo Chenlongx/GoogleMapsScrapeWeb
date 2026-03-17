@@ -8,6 +8,7 @@
  */
 
 const AlipaySdk = require('alipay-sdk').default || require('alipay-sdk');
+const crypto = require('crypto');
 const { createClient } = require('@supabase/supabase-js');
 const { createNativeOrder, getCreateConfigValidation } = require('./utils/wechat-pay.js');
 const { resolvePaymentSecrets } = require('./utils/payment-secrets.js');
@@ -30,6 +31,17 @@ function encodeOrderIdentifier(value) {
     .replace(/\+/g, '-')
     .replace(/\//g, '_')
     .replace(/=+$/g, '');
+}
+
+function buildWeChatOrderId(productCode, identifier) {
+  const timestampPart = String(Date.now());
+  const hashPart = crypto
+    .createHash('sha256')
+    .update(String(identifier || ''), 'utf8')
+    .digest('hex')
+    .slice(0, 12);
+
+  return `${String(productCode || 'wxm')}${timestampPart}${hashPart}`.slice(0, 32);
 }
 
 // 初始化Supabase客户端
@@ -231,7 +243,9 @@ exports.handler = async (event, context) => {
       : (productCodeMap[productId] || 'grm');
     
     const encodedIdentifier = encodeOrderIdentifier(username || userId);
-    const orderId = `${productCode}-${Date.now()}-${encodedIdentifier}`;
+    const orderId = isWeChatNative
+      ? buildWeChatOrderId(productCode, username || userId)
+      : `${productCode}-${Date.now()}-${encodedIdentifier}`;
 
     // 🔒 【真实支付】创建订单记录（使用与payment.js相同的orders表）
     const { data: orderData, error: orderError } = await supabase
