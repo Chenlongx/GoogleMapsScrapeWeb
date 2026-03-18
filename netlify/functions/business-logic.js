@@ -53,14 +53,6 @@ async function processBusinessLogic(orderParams) {
 
     console.log('[Debug] processBusinessLogic params:', { rawSubject, outTradeNo, productId });
 
-    let customerEmail;
-    try {
-        customerEmail = decodeOrderIdentifier(outTradeNo.split('-')[2] || '');
-    } catch (err) {
-        console.error(`[Critical] Failed to decode email for ${outTradeNo}:`, err.message);
-        return { success: false, error: 'Failed to decode email' };
-    }
-
     const subjectText = decodeURIComponent((rawSubject || '').replace(/\+/g, ' '));
     const supabaseKey = getSupabaseKey();
     if (!process.env.SUPABASE_URL || !supabaseKey) {
@@ -71,23 +63,40 @@ async function processBusinessLogic(orderParams) {
     const supabase = createClient(process.env.SUPABASE_URL, supabaseKey);
     const resend = new Resend(process.env.RESEND_API_KEY);
 
-    // 如果通知参数中没有携带 product_id（如来自支付宝异步通知），则从数据库回填
-    if (!productId) {
-        try {
-            const { data: orderRow, error: orderFetchError } = await supabase
-                .from('orders')
-                .select('product_id')
-                .eq('out_trade_no', outTradeNo)
-                .single();
-            if (!orderFetchError && orderRow && orderRow.product_id) {
+    let orderRow = null;
+    try {
+        const { data, error: orderFetchError } = await supabase
+            .from('orders')
+            .select('product_id, customer_email')
+            .eq('out_trade_no', outTradeNo)
+            .single();
+
+        if (!orderFetchError && data) {
+            orderRow = data;
+            if (!productId && orderRow.product_id) {
                 productId = orderRow.product_id;
                 console.log('[Debug] Fallback loaded product_id from DB:', productId);
-            } else {
-                console.warn('[Warn] Unable to load product_id from DB for out_trade_no:', outTradeNo, orderFetchError);
             }
-        } catch (e) {
-            console.warn('[Warn] Exception when loading product_id from DB:', e.message);
+        } else {
+            console.warn('[Warn] Unable to load order row for out_trade_no:', outTradeNo, orderFetchError);
         }
+    } catch (e) {
+        console.warn('[Warn] Exception when loading order row from DB:', e.message);
+    }
+
+    let customerEmail = String(orderRow?.customer_email || '').trim();
+    if (!customerEmail) {
+        try {
+            customerEmail = decodeOrderIdentifier(outTradeNo.split('-')[2] || '');
+        } catch (err) {
+            console.error(`[Critical] Failed to decode email for ${outTradeNo}:`, err.message);
+            return { success: false, error: 'Failed to decode email' };
+        }
+    }
+
+    if (!customerEmail) {
+        console.error(`[Critical] Missing customer email for ${outTradeNo}.`);
+        return { success: false, error: 'Missing customer email' };
     }
 
     let emailSubject = '';

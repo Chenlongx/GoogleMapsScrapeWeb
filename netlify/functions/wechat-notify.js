@@ -140,11 +140,6 @@ exports.handler = async (event) => {
     }
 
     if (tradeState === 'SUCCESS') {
-      await supabase
-        .from('orders')
-        .update({ status: 'COMPLETED' })
-        .eq('out_trade_no', outTradeNo);
-
       const mockParams = new URLSearchParams();
       mockParams.append('out_trade_no', outTradeNo);
       mockParams.append('trade_status', 'TRADE_SUCCESS');
@@ -154,7 +149,17 @@ exports.handler = async (event) => {
       mockParams.append('subject', `Google Maps Scraper - 续费 - ${buildRenewalLabel(orderRow.product_id)}`);
 
       console.log(`[wechat-notify] 开始处理续费业务: ${outTradeNo}`);
-      await processBusinessLogic(mockParams);
+      const businessResult = await processBusinessLogic(mockParams);
+      if (!businessResult?.success) {
+        console.error(`[wechat-notify] 续费业务处理失败: ${outTradeNo}`, businessResult?.error || '');
+        return failResponse(businessResult?.error || '续费处理失败');
+      }
+
+      await supabase
+        .from('orders')
+        .update({ status: 'COMPLETED' })
+        .eq('out_trade_no', outTradeNo);
+
       console.log(`[wechat-notify] 续费业务处理完成: ${outTradeNo}`);
       return successResponse();
     }

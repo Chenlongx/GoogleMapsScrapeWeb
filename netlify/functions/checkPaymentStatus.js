@@ -67,6 +67,31 @@ function isCompletedStatus(status) {
   return ['COMPLETED', 'SUCCESS', 'completed', 'success'].includes(status);
 }
 
+function buildBusinessLogicParams(orderId, orderData, renewalLabel, totalAmount, tradeNo) {
+  const params = new URLSearchParams();
+  params.append('out_trade_no', orderId);
+  params.append('trade_status', 'TRADE_SUCCESS');
+  params.append('total_amount', String(totalAmount || '0'));
+  params.append('trade_no', tradeNo || '');
+  params.append('product_id', orderData.product_id || '');
+  params.append('subject', `Google Maps Scraper - 续费 - ${renewalLabel}`);
+  return params;
+}
+
+async function fetchRenewalUserState(orderData) {
+  const { data: userData, error: userError } = await supabase
+    .from('user_accounts')
+    .select('expiry_at, user_type')
+    .eq('account', orderData.customer_email)
+    .single();
+
+  return {
+    userData,
+    userError,
+    hasValidExpiry: Boolean(userData?.expiry_at)
+  };
+}
+
 exports.handler = async (event, context) => {
   // CORS headers
   const headers = {
@@ -154,16 +179,36 @@ exports.handler = async (event, context) => {
     // 🔒 【修复】检查订单是否已完成（状态可能是 COMPLETED 或 SUCCESS）
     if (isCompletedStatus(orderData.status)) {
       const renewalType = getRenewalTypeByProductId(orderData.product_id);
+      let { userData, hasValidExpiry } = await fetchRenewalUserState(orderData);
 
-      // 查询用户的新到期时间
-      const { data: userData, error: userError } = await supabase
-        .from('user_accounts')
-        .select('expiry_at')
-        .eq('account', orderData.customer_email)
-        .single();
-      
+      if (!hasValidExpiry) {
+        console.warn(`⚠️ 订单 ${orderId} 已标记完成，但账号续费结果缺失，开始补偿执行业务逻辑`);
+        const repairParams = buildBusinessLogicParams(
+          orderId,
+          orderData,
+          getRenewalLabel(orderData.product_id),
+          PRICES[renewalType]?.amount || 0,
+          ''
+        );
+        const repairResult = await processBusinessLogic(repairParams);
+        if (!repairResult?.success) {
+          console.error(`❌ 订单 ${orderId} 补偿续费失败: ${repairResult?.error || 'unknown error'}`);
+          return {
+            statusCode: 200,
+            headers,
+            body: JSON.stringify({
+              success: false,
+              paid: false,
+              orderId,
+              message: repairResult?.error || '续费处理失败'
+            })
+          };
+        }
+
+        ({ userData, hasValidExpiry } = await fetchRenewalUserState(orderData));
+      }
+
       const newExpiryDate = userData?.expiry_at || null;
-      
       console.log(`✅ 支付已完成: renewalType=${renewalType}, newExpiry=${newExpiryDate}`);
       
       return {
@@ -220,29 +265,38 @@ exports.handler = async (event, context) => {
             const tradeState = queryResult.trade_state;
             if (tradeState === 'SUCCESS') {
               console.log(`✅ 微信支付确认订单已支付，开始更新订单状态...`);
+              const mockParams = buildBusinessLogicParams(
+                orderId,
+                orderData,
+                renewalLabel,
+                ((queryResult.amount?.total || 0) / 100).toFixed(2),
+                queryResult.transaction_id || ''
+              );
+
+              console.log(`🔧 开始调用 business-logic.js 处理微信续费...`);
+              const businessResult = await processBusinessLogic(mockParams);
+              if (!businessResult?.success) {
+                console.error(`❌ 微信续费业务处理失败: ${businessResult?.error || 'unknown error'}`);
+                return {
+                  statusCode: 200,
+                  headers,
+                  body: JSON.stringify({
+                    success: false,
+                    paid: false,
+                    orderId,
+                    message: businessResult?.error || '续费处理失败'
+                  })
+                };
+              }
 
               await supabase
                 .from('orders')
                 .update({ status: 'COMPLETED' })
                 .eq('out_trade_no', orderId);
 
-              const mockParams = new URLSearchParams();
-              mockParams.append('out_trade_no', orderId);
-              mockParams.append('trade_status', 'TRADE_SUCCESS');
-              mockParams.append('total_amount', ((queryResult.amount?.total || 0) / 100).toFixed(2));
-              mockParams.append('trade_no', queryResult.transaction_id || '');
-              mockParams.append('product_id', orderData.product_id);
-              mockParams.append('subject', `Google Maps Scraper - 续费 - ${renewalLabel}`);
-
-              console.log(`🔧 开始调用 business-logic.js 处理微信续费...`);
-              await processBusinessLogic(mockParams);
               console.log(`✅ 微信续费业务处理完成`);
 
-              const { data: userData } = await supabase
-                .from('user_accounts')
-                .select('expiry_at, user_type')
-                .eq('account', orderData.customer_email)
-                .single();
+              const { userData } = await fetchRenewalUserState(orderData);
 
               return {
                 statusCode: 200,
@@ -298,30 +352,39 @@ exports.handler = async (event, context) => {
 
           if (tradeStatus === 'TRADE_SUCCESS' || tradeStatus === 'TRADE_FINISHED') {
             console.log(`✅ 支付宝确认订单已支付，开始更新订单状态...`);
+            const mockParams = buildBusinessLogicParams(
+              orderId,
+              orderData,
+              renewalLabel,
+              queryResult.totalAmount || '0',
+              queryResult.tradeNo || ''
+            );
+
+            console.log(`🔧 开始调用 business-logic.js 处理续费...`);
+            console.log(`📦 传入参数: product_id=${orderData.product_id}, out_trade_no=${orderId}`);
+            const businessResult = await processBusinessLogic(mockParams);
+            if (!businessResult?.success) {
+              console.error(`❌ 支付宝续费业务处理失败: ${businessResult?.error || 'unknown error'}`);
+              return {
+                statusCode: 200,
+                headers,
+                body: JSON.stringify({
+                  success: false,
+                  paid: false,
+                  orderId,
+                  message: businessResult?.error || '续费处理失败'
+                })
+              };
+            }
 
             await supabase
               .from('orders')
               .update({ status: 'COMPLETED' })
               .eq('out_trade_no', orderId);
 
-            const mockParams = new URLSearchParams();
-            mockParams.append('out_trade_no', orderId);
-            mockParams.append('trade_status', 'TRADE_SUCCESS');
-            mockParams.append('total_amount', queryResult.totalAmount || '0');
-            mockParams.append('trade_no', queryResult.tradeNo || '');
-            mockParams.append('product_id', orderData.product_id);
-            mockParams.append('subject', `Google Maps Scraper - 续费 - ${renewalLabel}`);
-
-            console.log(`🔧 开始调用 business-logic.js 处理续费...`);
-            console.log(`📦 传入参数: product_id=${orderData.product_id}, out_trade_no=${orderId}`);
-            await processBusinessLogic(mockParams);
             console.log(`✅ business-logic.js 处理完成`);
 
-            const { data: userData } = await supabase
-              .from('user_accounts')
-              .select('expiry_at, user_type')
-              .eq('account', orderData.customer_email)
-              .single();
+            const { userData } = await fetchRenewalUserState(orderData);
 
             const newExpiryDate = userData?.expiry_at || null;
 

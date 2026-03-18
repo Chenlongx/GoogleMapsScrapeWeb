@@ -83,11 +83,15 @@ exports.handler = async (event) => {
             }
             // ▲▲▲ 检查结束 ▲▲▲
 
+            // 调用核心业务逻辑
+            const businessResult = await processBusinessLogic(params);
+            if (!businessResult?.success) {
+                console.error(`[alipay-notify] Business logic failed for ${outTradeNo}:`, businessResult?.error || '');
+                return { statusCode: 200, body: 'failure' };
+            }
+
             console.log(`[alipay-notify] Updating order status for ${outTradeNo}...`);
             await supabase.from('orders').update({ status: 'completed' }).eq('out_trade_no', outTradeNo);
-            
-            // 调用核心业务逻辑
-            await processBusinessLogic(params);
         }
 
         return { statusCode: 200, body: 'success' };
