@@ -800,32 +800,16 @@
             // GitHub API 对未认证请求每小时限制60次，通过缓存机制可以显著降低请求频率
             const API_BASE_URL = 'https://api.github.com/repos/';
 
-            // ⚡ Cloudflare Worker 下载代理配置
-            // 通过你自己的域名下载，提升国内用户体验
+            // 主站下载域名
             const WORKER_DOWNLOAD_BASE_URL = 'https://mediamingle.cn';
 
-            // 中国用户备用下载配置（123云盘）
-            // 当 GitHub API 失败时，自动切换到国内下载链接
-            const CHINA_FALLBACK_CONFIG = {
-                // Global Merchant Helper的国内下载代理 (EXE版本)
-                'gogole_maps': {
-                    proxyUrl: '/api/china-download?product=google-maps-scraper',
-                    directUrl: 'https://www.123865.com/s/71mwjv-gnCl',  // EXE 下载链接
-                    productName: 'Global Merchant Helper'
-                },
-                // WhatsApp智能营销助手的国内下载代理 (EXE版本)
-                'whatsapp_validator_repo': {
-                    proxyUrl: '/api/china-download?product=whatsapp-marketing',
-                    directUrl: 'https://www.123865.com/s/71mwjv-BxCl',  // EXE 下载链接
-                    productName: 'WhatsApp智能营销助手'
-                },
-                // 邮件营销大师的国内下载代理 (EXE版本)
-                'email_validator_repo': {
-                    proxyUrl: '/api/china-download?product=email-marketing',
-                    directUrl: 'https://www.123865.com/s/71mwjv-0xCl',  // EXE 下载链接
-                    productName: '邮件营销大师'
-                }
+            // R2 主下载地址
+            const R2_DOWNLOAD_URLS = {
+                'gogole_maps': 'https://downloads.mediamingle.cn/global-merchant-helper/v1.0.8/GlobalMerchantHelper-Setup.exe'
             };
+
+            // 不再保留 123865 国内备用下载
+            const CHINA_FALLBACK_CONFIG = {};
 
             /**
              * 检测是否可能是中国用户（简单检测）
@@ -952,23 +936,20 @@
                         const currentLang = document.documentElement.lang || 'zh';
                         versionInfo.textContent = (currentLang.startsWith('zh')) ? versionTextZh : versionTextEn;
 
-                        // ⚡ 通过 Cloudflare Worker 代理下载
-                        // URL 格式: {WORKER_BASE}/download/{repo}/{tag}/{filename}
                         const proxyDownloadUrl = `${WORKER_DOWNLOAD_BASE_URL}/download/${config.repoName}/${version}/${asset.name}`;
-                        const githubDirectUrl = asset.browser_download_url;  // 保留直接链接作为备用
+                        const githubDirectUrl = asset.browser_download_url;  // 保留 GitHub 作为备用
+                        const preferredDownloadUrl = R2_DOWNLOAD_URLS[config.repoName] || proxyDownloadUrl;
 
-                        console.log('使用 Cloudflare Worker 代理下载:', proxyDownloadUrl);
+                        console.log('默认下载链接:', preferredDownloadUrl);
                         console.log('GitHub 直接下载链接 (备用):', githubDirectUrl);
 
-                        // 设置下载链接为代理链接
-                        downloadBtn.href = proxyDownloadUrl;
-                        downloadBtn.target = '_blank';
+                        downloadBtn.href = preferredDownloadUrl;
+                        downloadBtn.target = preferredDownloadUrl === proxyDownloadUrl ? '_blank' : '_self';
                         downloadBtn.rel = 'noopener noreferrer';
 
-                        // 存储下载信息到按钮数据属性
                         downloadBtn.dataset.githubUrl = githubDirectUrl;  // GitHub原始链接（备用）
                         downloadBtn.dataset.proxyUrl = proxyDownloadUrl;  // Cloudflare Worker 代理链接
-                        downloadBtn.dataset.currentUrl = proxyDownloadUrl;  // 当前使用的链接
+                        downloadBtn.dataset.currentUrl = preferredDownloadUrl;  // 当前使用的链接
                         downloadBtn.dataset.filename = asset.name;
 
                         // 添加智能下载处理
